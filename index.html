@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#eef3ef">
+<meta name="theme-color" content="#eef2fb">
 <title>Market Analysts · سیگنال نقره</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="icon.png">
@@ -267,47 +267,20 @@
   .rb:active{transform:translateY(3px)}
   .rb.cur{outline:3px solid rgba(255,255,255,.9);outline-offset:-6px}
 
-  /* ===== برند Market Analysts ===== */
-  :root{
-    --bg:#eef3ef; --bg2:#dfe9e2; --text:#0c120e; --muted:#5f6d64; --soft:#8b978f;
-    --blue:#00963f; --blue2:#006b2c; --glow:rgba(0,150,63,.35); --brand:#00963f; --ink:#0c120e;
-    --buy:#00963f; --buy-bg:rgba(0,150,63,.12);
-    --blob1:#cfe8d7; --blob2:#e3efe6;
-    --sh:0 22px 44px -14px rgba(20,50,32,.28),0 8px 18px -8px rgba(20,50,32,.18),inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 6px rgba(20,50,32,.06);
-    --raise:7px 9px 18px rgba(40,70,52,.18),-5px -5px 12px rgba(255,255,255,.95),inset 0 1.5px 0 #fff,inset 0 -2px 4px rgba(40,70,52,.08);
-    --sh-in:inset 3px 4px 8px rgba(40,70,52,.13),inset -3px -3px 7px rgba(255,255,255,.95);
-    --tile:linear-gradient(145deg,#ffffff,#e6eee8);
-    --gl:linear-gradient(160deg,rgba(255,255,255,.93),rgba(234,243,237,.6));
-  }
-  :root[data-theme="dark"]{
-    --bg:#0b100d; --bg2:#111a14; --text:#eef5f0; --muted:#98a89d; --soft:#748479;
-    --blob1:#123d22; --blob2:#0f2a19;
-    --tile:linear-gradient(145deg,#1f2b23,#151e18); --gl:linear-gradient(160deg,rgba(32,44,36,.88),rgba(18,26,21,.62));
-  }
-  .cta,.add,.vplay,.chips button.on,.nav .pill,.banner .bi{background:linear-gradient(180deg,#22c466 0%,#00963f 50%,#006b2c 100%);
-    box-shadow:0 16px 28px -8px rgba(0,120,50,.5),0 4px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,30,10,.3)}
-  .nav .pill{box-shadow:0 10px 20px -6px rgba(0,120,50,.5),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,30,10,.3)}
-  .cta:active,.add:active,.vplay:active{box-shadow:0 8px 16px -8px rgba(0,120,50,.5),0 1px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.4)}
-  .field:focus-within,.in:focus{border-color:rgba(0,150,63,.55)!important;box-shadow:0 0 0 4px rgba(0,150,63,.14),var(--sh)!important}
-  .ring .fg{stroke:var(--brand)}
-  .livebar.busy .ldot{background:var(--brand)}
-  .vwave i.on{background:var(--brand)}
-  .stat.b b{color:var(--ink)} :root[data-theme="dark"] .stat.b b{color:var(--text)}
-  .role{color:#fff;background:linear-gradient(180deg,#2a332d,#0c120e);box-shadow:0 4px 10px -4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+  /* ===== لوگو ===== */
   .lgo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise);border:1px solid rgba(255,255,255,.7)}
-  .lgo img{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(0,60,25,.3))}
+  .lgo img{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(30,40,80,.25))}
   :root[data-theme="dark"] .lgo img,:root[data-theme="dark"] .logo img{filter:invert(1) hue-rotate(180deg) drop-shadow(0 3px 4px rgba(0,0,0,.5))}
   .wm{display:flex;flex-direction:column;line-height:1.05}
   .wm b{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:2.5px;font-size:15px;direction:ltr;text-align:right;border-bottom:1.5px solid currentColor;padding-bottom:2px}
   .wm small{font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:5.2px;font-size:8.5px;font-weight:500;direction:ltr;text-align:right;margin-top:2px;color:var(--muted)}
   .brand{gap:11px}
   .logo{width:132px;height:132px;border-radius:38px}
-  .logo img{width:94px;height:94px;filter:drop-shadow(0 10px 14px rgba(0,60,25,.3));animation:bob 5s cubic-bezier(.45,0,.55,1) infinite}
+  .logo img{width:94px;height:94px;filter:drop-shadow(0 10px 14px rgba(30,40,80,.25));animation:bob 5s cubic-bezier(.45,0,.55,1) infinite}
   .bigwm{text-align:center;margin:0 0 4px;color:var(--text)}
   .bigwm b{display:inline-block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:7px;font-size:26px;border-bottom:2px solid currentColor;padding:0 0 4px 7px;direction:ltr}
   .bigwm small{display:block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:11px;font-size:13px;margin-top:4px;padding-left:11px;direction:ltr;color:var(--muted)}
   .login h1{font-size:22px;margin-top:14px}
-
   /* ===== حرکت نرم و روان ===== */
   .rise{animation:rise .9s cubic-bezier(.16,1,.3,1) forwards;animation-delay:calc(var(--i,0) * 80ms);transform:translateY(22px) scale(.98)}
   @keyframes rise{to{opacity:1;transform:none}}
@@ -373,13 +346,13 @@ const CONTACT = "برای تمدید اشتراک با مدیر تماس بگی�
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fa = n => Number(n).toLocaleString("fa-AF", {maximumFractionDigits: 4});
-const fmtDate = d => new Date(d).toLocaleDateString("fa-AF", {month:"long", day:"numeric"});
+const esc = s => String(s ?? "").replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String((d.charCodeAt(0) & 15))).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fa = n => Number(n).toLocaleString("en-US", {maximumFractionDigits: 4});
+const fmtDate = d => new Date(d).toLocaleDateString("fa-AF-u-nu-latn", {month:"long", day:"numeric"});
 const DAY = 86400000;
-const STATUS = { active:"در جریان", tp1:"تیک پروفیت ۱ خورد", tp2:"تیک پروفیت ۲ خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
+const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const fmtFull = d => { const x = new Date(d);
-  return x.toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF", {hour:"2-digit", minute:"2-digit", hour12:false}); };
+  return x.toLocaleDateString("fa-AF-u-nu-latn", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF-u-nu-latn", {hour:"2-digit", minute:"2-digit", hour12:false}); };
 const ago = fmtFull;
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 
@@ -412,7 +385,7 @@ document.addEventListener("pointerdown", e => {
 const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
 const PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5"/></svg>';
 const urlCache = {};
-const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0").replace(/\d/g, d => fa(d)); };
+const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0"); };
 function voiceHTML(path, src = ""){
   let h = 0; for (const c of path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const bars = Array.from({length: 30}, (_, i) => { h = (h * 1103515245 + 12345) >>> 0; const v = 25 + (h % 75); return `<i style="height:${v}%"></i>`; }).join("");
@@ -514,8 +487,8 @@ function resultHTML(s){
 }
 /* سیگنال‌ها */
 const lv = s => `<div class="lvls">
-  <div class="lv tp"><small>تارگت ۱</small><b class="num">${s.tp1!=null?fa(s.tp1):"—"}</b></div>
-  <div class="lv tp"><small>تارگت ۲</small><b class="num">${s.tp2!=null?fa(s.tp2):"—"}</b></div>
+  <div class="lv tp"><small>تارگت 1</small><b class="num">${s.tp1!=null?fa(s.tp1):"—"}</b></div>
+  <div class="lv tp"><small>تارگت 2</small><b class="num">${s.tp2!=null?fa(s.tp2):"—"}</b></div>
   <div class="lv sl"><small>حد ضرر</small><b class="num">${s.sl!=null?fa(s.sl):"—"}</b></div></div>`;
 function hero(s){
   const b = s.type === "buy";

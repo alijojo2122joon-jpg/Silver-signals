@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#eef3ef">
+<meta name="theme-color" content="#eef2fb">
 <title>پنل مدیریت · Market Analysts</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="icon.png">
@@ -254,47 +254,20 @@
   .rb:active{transform:translateY(3px)}
   .rb.cur{outline:3px solid rgba(255,255,255,.9);outline-offset:-6px}
 
-  /* ===== برند Market Analysts ===== */
-  :root{
-    --bg:#eef3ef; --bg2:#dfe9e2; --text:#0c120e; --muted:#5f6d64; --soft:#8b978f;
-    --blue:#00963f; --blue2:#006b2c; --glow:rgba(0,150,63,.35); --brand:#00963f; --ink:#0c120e;
-    --buy:#00963f; --buy-bg:rgba(0,150,63,.12);
-    --blob1:#cfe8d7; --blob2:#e3efe6;
-    --sh:0 22px 44px -14px rgba(20,50,32,.28),0 8px 18px -8px rgba(20,50,32,.18),inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 6px rgba(20,50,32,.06);
-    --raise:7px 9px 18px rgba(40,70,52,.18),-5px -5px 12px rgba(255,255,255,.95),inset 0 1.5px 0 #fff,inset 0 -2px 4px rgba(40,70,52,.08);
-    --sh-in:inset 3px 4px 8px rgba(40,70,52,.13),inset -3px -3px 7px rgba(255,255,255,.95);
-    --tile:linear-gradient(145deg,#ffffff,#e6eee8);
-    --gl:linear-gradient(160deg,rgba(255,255,255,.93),rgba(234,243,237,.6));
-  }
-  :root[data-theme="dark"]{
-    --bg:#0b100d; --bg2:#111a14; --text:#eef5f0; --muted:#98a89d; --soft:#748479;
-    --blob1:#123d22; --blob2:#0f2a19;
-    --tile:linear-gradient(145deg,#1f2b23,#151e18); --gl:linear-gradient(160deg,rgba(32,44,36,.88),rgba(18,26,21,.62));
-  }
-  .cta,.add,.vplay,.chips button.on,.nav .pill,.banner .bi{background:linear-gradient(180deg,#22c466 0%,#00963f 50%,#006b2c 100%);
-    box-shadow:0 16px 28px -8px rgba(0,120,50,.5),0 4px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,30,10,.3)}
-  .nav .pill{box-shadow:0 10px 20px -6px rgba(0,120,50,.5),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,30,10,.3)}
-  .cta:active,.add:active,.vplay:active{box-shadow:0 8px 16px -8px rgba(0,120,50,.5),0 1px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.4)}
-  .field:focus-within,.in:focus{border-color:rgba(0,150,63,.55)!important;box-shadow:0 0 0 4px rgba(0,150,63,.14),var(--sh)!important}
-  .ring .fg{stroke:var(--brand)}
-  .livebar.busy .ldot{background:var(--brand)}
-  .vwave i.on{background:var(--brand)}
-  .stat.b b{color:var(--ink)} :root[data-theme="dark"] .stat.b b{color:var(--text)}
-  .role{color:#fff;background:linear-gradient(180deg,#2a332d,#0c120e);box-shadow:0 4px 10px -4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+  /* ===== لوگو ===== */
   .lgo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise);border:1px solid rgba(255,255,255,.7)}
-  .lgo img{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(0,60,25,.3))}
+  .lgo img{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(30,40,80,.25))}
   :root[data-theme="dark"] .lgo img,:root[data-theme="dark"] .logo img{filter:invert(1) hue-rotate(180deg) drop-shadow(0 3px 4px rgba(0,0,0,.5))}
   .wm{display:flex;flex-direction:column;line-height:1.05}
   .wm b{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:2.5px;font-size:15px;direction:ltr;text-align:right;border-bottom:1.5px solid currentColor;padding-bottom:2px}
   .wm small{font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:5.2px;font-size:8.5px;font-weight:500;direction:ltr;text-align:right;margin-top:2px;color:var(--muted)}
   .brand{gap:11px}
   .logo{width:132px;height:132px;border-radius:38px}
-  .logo img{width:94px;height:94px;filter:drop-shadow(0 10px 14px rgba(0,60,25,.3));animation:bob 5s cubic-bezier(.45,0,.55,1) infinite}
+  .logo img{width:94px;height:94px;filter:drop-shadow(0 10px 14px rgba(30,40,80,.25));animation:bob 5s cubic-bezier(.45,0,.55,1) infinite}
   .bigwm{text-align:center;margin:0 0 4px;color:var(--text)}
   .bigwm b{display:inline-block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:7px;font-size:26px;border-bottom:2px solid currentColor;padding:0 0 4px 7px;direction:ltr}
   .bigwm small{display:block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:11px;font-size:13px;margin-top:4px;padding-left:11px;direction:ltr;color:var(--muted)}
   .login h1{font-size:22px;margin-top:14px}
-
   /* ===== حرکت نرم و روان ===== */
   .rise{animation:rise .9s cubic-bezier(.16,1,.3,1) forwards;animation-delay:calc(var(--i,0) * 80ms);transform:translateY(22px) scale(.98)}
   @keyframes rise{to{opacity:1;transform:none}}
@@ -363,15 +336,15 @@ const MEMBER_URL   = "https://alijojo2122joon-jpg.github.io/Silver-signals/";
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fa = n => Number(n).toLocaleString("fa-AF", {maximumFractionDigits: 4});
-const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) : "—";
+const esc = s => String(s ?? "").replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String((d.charCodeAt(0) & 15))).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fa = n => Number(n).toLocaleString("en-US", {maximumFractionDigits: 4});
+const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF-u-nu-latn", {year:"numeric", month:"long", day:"numeric"}) : "—";
 const fmtFull = d => { const x = new Date(d);
-  return x.toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF", {hour:"2-digit", minute:"2-digit", hour12:false}); };
+  return x.toLocaleDateString("fa-AF-u-nu-latn", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF-u-nu-latn", {hour:"2-digit", minute:"2-digit", hour12:false}); };
 const ago = fmtFull;
 const num = v => (v === "" || v == null) ? null : Number(v);
 const DAY = 86400000;
-const STATUS = { active:"در جریان", tp1:"تیک پروفیت ۱ خورد", tp2:"تیک پروفیت ۲ خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
+const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 const mState = m => {
   if (m.disabled) return ["off", "غیرفعال"];
@@ -414,7 +387,7 @@ document.addEventListener("pointerdown", e => {
 const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
 const PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5"/></svg>';
 const urlCache = {};
-const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0").replace(/\d/g, d => fa(d)); };
+const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0"); };
 function voiceHTML(path, src = ""){
   let h = 0; for (const c of path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const bars = Array.from({length: 30}, (_, i) => { h = (h * 1103515245 + 12345) >>> 0; const v = 25 + (h % 75); return `<i style="height:${v}%"></i>`; }).join("");
@@ -513,9 +486,9 @@ function renderPanel(){
       <div class="icons"><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
     <div class="stats">
-      <div class="stat glass sw g rise" style="--i:1"><span class="shine"></span><small>اعضای فعال</small><b class="num" id="s1">۰</b></div>
-      <div class="stat glass sw r rise" style="--i:2;--sd:.4s"><span class="shine"></span><small>تمام‌شده</small><b class="num" id="s2">۰</b></div>
-      <div class="stat glass sw b rise" style="--i:3;--sd:.8s"><span class="shine"></span><small>سیگنال باز</small><b class="num" id="s3">۰</b></div>
+      <div class="stat glass sw g rise" style="--i:1"><span class="shine"></span><small>اعضای فعال</small><b class="num" id="s1">0</b></div>
+      <div class="stat glass sw r rise" style="--i:2;--sd:.4s"><span class="shine"></span><small>تمام‌شده</small><b class="num" id="s2">0</b></div>
+      <div class="stat glass sw b rise" style="--i:3;--sd:.8s"><span class="shine"></span><small>سیگنال باز</small><b class="num" id="s3">0</b></div>
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
@@ -593,12 +566,12 @@ function sheetNewSignal(){
   openSheet(`<h2>سیگنال جدید</h2><p class="hint">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
     <form id="sf">
       <div class="tog" id="tg"><span class="k"></span><button type="button" class="on" data-s="buy">خرید ↑</button><button type="button" data-s="sell">فروش ↓</button></div>
-      <div class="two"><div><label class="l">قیمت ورود از</label><input class="in num" id="ef" type="number" step="any" inputmode="decimal" required placeholder="۵۱"></div>
-        <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="number" step="any" inputmode="decimal" placeholder="۵۲"></div></div>
-      <div class="two"><div><label class="l">تارگت ۱</label><input class="in num" id="tp1" type="number" step="any" inputmode="decimal" placeholder="۵۴"></div>
-        <div><label class="l">تارگت ۲ (اختیاری)</label><input class="in num" id="tp2" type="number" step="any" inputmode="decimal"></div></div>
-      <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="number" step="any" inputmode="decimal" placeholder="۴۹">
-      <label class="l">توضیحات تحلیل</label><textarea class="in" id="note" rows="4" placeholder="توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای ۵۱ وارد شوید و نصف سرمایه را در تارگت ۱ بفروشید."></textarea>
+      <div class="two"><div><label class="l">قیمت ورود از</label><input class="in num" id="ef" type="number" step="any" inputmode="decimal" required placeholder="51"></div>
+        <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="number" step="any" inputmode="decimal" placeholder="52"></div></div>
+      <div class="two"><div><label class="l">تارگت 1</label><input class="in num" id="tp1" type="number" step="any" inputmode="decimal" placeholder="54"></div>
+        <div><label class="l">تارگت 2 (اختیاری)</label><input class="in num" id="tp2" type="number" step="any" inputmode="decimal"></div></div>
+      <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="number" step="any" inputmode="decimal" placeholder="49">
+      <label class="l">توضیحات تحلیل</label><textarea class="in" id="note" rows="4" placeholder="توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای 51 وارد شوید و نصف سرمایه را در تارگت 1 بفروشید."></textarea>
       <label class="l">پیام صوتی (اختیاری)</label><div class="rec" id="rec"></div>
       <button class="cta press" id="pub">انتشار سیگنال</button>
     </form>`);
@@ -655,7 +628,7 @@ function setupRecorder(box){
       <label class="recfile">یا انتخاب فایل<input type="file" accept="audio/*" id="rfile"></label></div>`;
     box.querySelector("#rmic").onclick = start;
     box.querySelector("#rfile").onchange = e => { const f = e.target.files[0]; if (!f) return;
-      if (f.size > 25 * 1048576) return toast("حجم فایل باید کمتر از ۲۵ مگابایت باشد", true); setBlob(f); };
+      if (f.size > 25 * 1048576) return toast("حجم فایل باید کمتر از 25 مگابایت باشد", true); setBlob(f); };
   };
   const setBlob = b => {
     blob = b; if (url) URL.revokeObjectURL(url); url = URL.createObjectURL(b);
@@ -676,7 +649,7 @@ function setupRecorder(box){
       toWav(b).then(setBlob).catch(() => setBlob(b)); };
     mr.start(); t0 = Date.now();
     box.innerHTML = `<div class="recrow"><button type="button" class="mic live" id="rstop">${STOP_SVG}</button>
-      <div class="rectxt"><b id="rtime">۰:۰۰</b>در حال ضبط… برای پایان بزنید</div></div>`;
+      <div class="rectxt"><b id="rtime">0:00</b>در حال ضبط… برای پایان بزنید</div></div>`;
     box.querySelector("#rstop").onclick = () => mr && mr.stop();
     timer = setInterval(() => { const el = box.querySelector("#rtime"); if (el) el.textContent = mmss((Date.now() - t0) / 1000);
       if (Date.now() - t0 > 5 * 60000 && mr) mr.stop(); }, 250);
@@ -697,15 +670,15 @@ function sheetSignal(s){
   if (!s) return;
   const b = s.type === "buy";
   openSheet(`<div class="head"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف ۲: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
+      <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
     ${s.note ? `<div class="box" style="white-space:pre-wrap">${esc(s.note)}</div>` : ""}
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
     <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
     ${resultHTML(s)}
     <label class="l">${s.status === "active" ? "نتیجه‌ی معامله را ثبت کنید" : "تغییر نتیجه"}</label>
     <div class="resgrid">
-      <button class="rb g ${s.status==="tp1"?"cur":""}" data-st="tp1"><span>✓</span>تیک پروفیت ۱<small>${s.tp1!=null?"در "+fa(s.tp1):""}</small></button>
-      <button class="rb g ${s.status==="tp2"?"cur":""}" data-st="tp2"><span>✓✓</span>تیک پروفیت ۲<small>${s.tp2!=null?"در "+fa(s.tp2):""}</small></button>
+      <button class="rb g ${s.status==="tp1"?"cur":""}" data-st="tp1"><span>✓</span>تیک پروفیت 1<small>${s.tp1!=null?"در "+fa(s.tp1):""}</small></button>
+      <button class="rb g ${s.status==="tp2"?"cur":""}" data-st="tp2"><span>✓✓</span>تیک پروفیت 2<small>${s.tp2!=null?"در "+fa(s.tp2):""}</small></button>
       <button class="rb r ${s.status==="sl"?"cur":""}" data-st="sl"><span>✗</span>استاپ لاس<small>${s.sl!=null?"در "+fa(s.sl):""}</small></button>
       <button class="rb n ${s.status==="closed"?"cur":""}" data-st="closed"><span>■</span>بسته شد<small>بدون نتیجه</small></button>
     </div>
@@ -731,7 +704,7 @@ function sheetNewMember(){
     <form id="mf">
       <label class="l">نام صراف</label><input class="in" id="mn" required>
       <label class="l">ایمیل</label><input class="in ltr" id="me" type="email" required style="text-align:right">
-      <label class="l">رمز (حداقل ۶ حرف)</label><input class="in ltr" id="mp" required minlength="6" autocomplete="off" style="text-align:right">
+      <label class="l">رمز (حداقل 6 حرف)</label><input class="in ltr" id="mp" required minlength="6" autocomplete="off" style="text-align:right">
       <label class="l">مدت اشتراک</label>
       <div class="chips" id="mm">${[1,2,3,6,12].map(n => `<button type="button" data-m="${n}" class="${n===1?"on":""}">${fa(n)} ماه</button>`).join("")}</div>
       <button class="cta press" id="mb">ساختن حساب</button>
@@ -754,7 +727,7 @@ function sheetNewMember(){
       $("cl").onclick = closeSheet;
     } catch (x) {
       busy(b, false, "ساختن حساب");
-      toast(x.message === "email_exists" ? "این ایمیل قبلاً ثبت شده است" : x.message === "invalid_input" ? "ایمیل درست و رمز ۶ حرفی لازم است" : "خطا: " + x.message, true);
+      toast(x.message === "email_exists" ? "این ایمیل قبلاً ثبت شده است" : x.message === "invalid_input" ? "ایمیل درست و رمز 6 حرفی لازم است" : "خطا: " + x.message, true);
     }
   };
 }
@@ -765,7 +738,7 @@ function sheetMember(m){
   const [c, lab] = mState(m);
   openSheet(`<div class="head">${avatar(m)}<div><h2>${esc(m.name)}</h2><div class="hint ltr" style="text-align:right">${esc(m.email)}</div></div></div>
     <div class="box">وضعیت: <span class="chip ${c}">${lab}</span><br>اعتبار تا: <b>${fmtDate(m.expires_at)}</b></div>
-    <button class="cta press" data-a="ext">تمدید ۱ ماه</button>
+    <button class="cta press" data-a="ext">تمدید 1 ماه</button>
     <div class="acts" style="margin-top:10px">
       <button class="ghost" data-a="tog">${m.disabled ? "فعال کردن" : "غیرفعال کردن"}</button>
       <button class="ghost" data-a="pw">رمز جدید</button>
@@ -783,7 +756,7 @@ function sheetMember(m){
         await sb.from("profiles").update({ disabled: !m.disabled }).eq("id", m.id);
         toast(m.disabled ? "حساب فعال شد ✓" : "حساب غیرفعال شد");
       } else if (a === "pw") {
-        const pw = prompt(`رمز جدید برای «${m.name}» (حداقل ۶ حرف):`); if (!pw) return;
+        const pw = prompt(`رمز جدید برای «${m.name}» (حداقل 6 حرف):`); if (!pw) return;
         await callFn({ action: "password", id: m.id, password: pw }); toast("رمز عوض شد ✓");
       } else if (a === "del") {
         if (!confirm(`حساب «${m.name}» برای همیشه حذف شود؟`)) return;
