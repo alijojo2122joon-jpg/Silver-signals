@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#eef2fb">
-<title>پنل مدیریت</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#eef3ef">
+<title>پنل مدیریت · Market Analysts</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
   :root{
     --bg:#eef2fb; --bg2:#dfe7f8; --glass:rgba(255,255,255,.66); --glass2:rgba(255,255,255,.88);
@@ -227,6 +229,119 @@
   .chip,.st{position:relative;overflow:hidden}
   .chip::after,.st::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:chipsw 2.8s ease-in-out infinite}
   @keyframes chipsw{0%{transform:translateX(120%)}50%,100%{transform:translateX(-120%)}}
+
+  /* ===== نتیجه‌ی معامله ===== */
+  .res{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border-radius:18px;box-shadow:var(--raise);border:1px solid rgba(255,255,255,.6);position:relative;overflow:hidden}
+  .res .ri{width:40px;height:40px;flex:none;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:20px;font-weight:900}
+  .res b{display:block;font-size:15px;font-weight:900}
+  .res small{font-size:12px;color:var(--muted)}
+  .res.win{background:linear-gradient(145deg,#ecfbf4,#d2f3e3)} .res.win b{color:var(--buy)}
+  .res.win .ri{background:linear-gradient(180deg,#34d896,#0e8f5b);box-shadow:0 8px 16px -6px rgba(18,164,107,.6),inset 0 2px 0 rgba(255,255,255,.4)}
+  .res.lose{background:linear-gradient(145deg,#fff1f1,#fbd9da)} .res.lose b{color:var(--sell)}
+  .res.lose .ri{background:linear-gradient(180deg,#ff7a7e,#c93036);box-shadow:0 8px 16px -6px rgba(229,72,77,.6),inset 0 2px 0 rgba(255,255,255,.4)}
+  .res.neutral{background:var(--tile)} .res.neutral .ri{background:linear-gradient(180deg,#9aa4bd,#6b7593)}
+  :root[data-theme="dark"] .res.win{background:linear-gradient(145deg,#173d30,#0f2a21)}
+  :root[data-theme="dark"] .res.lose{background:linear-gradient(145deg,#45202a,#2d141a)}
+  .res::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(130%);animation:resw 4.5s cubic-bezier(.45,0,.2,1) infinite}
+  @keyframes resw{0%{transform:translateX(130%)}45%,100%{transform:translateX(-130%)}}
+  .resgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+  .rb{position:relative;overflow:hidden;border:0;border-radius:18px;padding:14px 10px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:900;color:#fff;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s,box-shadow .15s}
+  .rb span{font-size:22px;line-height:1}
+  .rb small{font-size:11px;font-weight:600;opacity:.9}
+  .rb.g{background:linear-gradient(180deg,#34d896,#12a46b 55%,#0b7d50);box-shadow:0 14px 24px -10px rgba(18,164,107,.7),0 4px 0 #0a6a44,inset 0 2px 0 rgba(255,255,255,.4)}
+  .rb.r{background:linear-gradient(180deg,#ff8286,#e5484d 55%,#b92b31);box-shadow:0 14px 24px -10px rgba(229,72,77,.7),0 4px 0 #9b2227,inset 0 2px 0 rgba(255,255,255,.4)}
+  .rb.n{background:linear-gradient(180deg,#a7b0c7,#7a84a1 55%,#5d6683);box-shadow:0 14px 24px -10px rgba(90,100,130,.6),0 4px 0 #4d5571,inset 0 2px 0 rgba(255,255,255,.35)}
+  .rb:active{transform:translateY(3px)}
+  .rb.cur{outline:3px solid rgba(255,255,255,.9);outline-offset:-6px}
+
+  /* ===== برند Market Analysts ===== */
+  :root{
+    --bg:#eef3ef; --bg2:#dfe9e2; --text:#0c120e; --muted:#5f6d64; --soft:#8b978f;
+    --blue:#00963f; --blue2:#006b2c; --glow:rgba(0,150,63,.35); --brand:#00963f; --ink:#0c120e;
+    --buy:#00963f; --buy-bg:rgba(0,150,63,.12);
+    --blob1:#cfe8d7; --blob2:#e3efe6;
+    --sh:0 22px 44px -14px rgba(20,50,32,.28),0 8px 18px -8px rgba(20,50,32,.18),inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 6px rgba(20,50,32,.06);
+    --raise:7px 9px 18px rgba(40,70,52,.18),-5px -5px 12px rgba(255,255,255,.95),inset 0 1.5px 0 #fff,inset 0 -2px 4px rgba(40,70,52,.08);
+    --sh-in:inset 3px 4px 8px rgba(40,70,52,.13),inset -3px -3px 7px rgba(255,255,255,.95);
+    --tile:linear-gradient(145deg,#ffffff,#e6eee8);
+    --gl:linear-gradient(160deg,rgba(255,255,255,.93),rgba(234,243,237,.6));
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b100d; --bg2:#111a14; --text:#eef5f0; --muted:#98a89d; --soft:#748479;
+    --blob1:#123d22; --blob2:#0f2a19;
+    --tile:linear-gradient(145deg,#1f2b23,#151e18); --gl:linear-gradient(160deg,rgba(32,44,36,.88),rgba(18,26,21,.62));
+  }
+  .cta,.add,.vplay,.chips button.on,.nav .pill,.banner .bi{background:linear-gradient(180deg,#22c466 0%,#00963f 50%,#006b2c 100%);
+    box-shadow:0 16px 28px -8px rgba(0,120,50,.5),0 4px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,30,10,.3)}
+  .nav .pill{box-shadow:0 10px 20px -6px rgba(0,120,50,.5),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,30,10,.3)}
+  .cta:active,.add:active,.vplay:active{box-shadow:0 8px 16px -8px rgba(0,120,50,.5),0 1px 0 #004d20,inset 0 2px 0 rgba(255,255,255,.4)}
+  .field:focus-within,.in:focus{border-color:rgba(0,150,63,.55)!important;box-shadow:0 0 0 4px rgba(0,150,63,.14),var(--sh)!important}
+  .ring .fg{stroke:var(--brand)}
+  .livebar.busy .ldot{background:var(--brand)}
+  .vwave i.on{background:var(--brand)}
+  .stat.b b{color:var(--ink)} :root[data-theme="dark"] .stat.b b{color:var(--text)}
+  .role{color:#fff;background:linear-gradient(180deg,#2a332d,#0c120e);box-shadow:0 4px 10px -4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+  .lgo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise);border:1px solid rgba(255,255,255,.7)}
+  .lgo img{width:30px;height:30px;filter:drop-shadow(0 3px 4px rgba(0,60,25,.3))}
+  :root[data-theme="dark"] .lgo img,:root[data-theme="dark"] .logo img{filter:invert(1) hue-rotate(180deg) drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+  .wm{display:flex;flex-direction:column;line-height:1.05}
+  .wm b{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:2.5px;font-size:15px;direction:ltr;text-align:right;border-bottom:1.5px solid currentColor;padding-bottom:2px}
+  .wm small{font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:5.2px;font-size:8.5px;font-weight:500;direction:ltr;text-align:right;margin-top:2px;color:var(--muted)}
+  .brand{gap:11px}
+  .logo{width:132px;height:132px;border-radius:38px}
+  .logo img{width:94px;height:94px;filter:drop-shadow(0 10px 14px rgba(0,60,25,.3));animation:bob 5s cubic-bezier(.45,0,.55,1) infinite}
+  .bigwm{text-align:center;margin:0 0 4px;color:var(--text)}
+  .bigwm b{display:inline-block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-weight:500;letter-spacing:7px;font-size:26px;border-bottom:2px solid currentColor;padding:0 0 4px 7px;direction:ltr}
+  .bigwm small{display:block;font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:11px;font-size:13px;margin-top:4px;padding-left:11px;direction:ltr;color:var(--muted)}
+  .login h1{font-size:22px;margin-top:14px}
+
+  /* ===== حرکت نرم و روان ===== */
+  .rise{animation:rise .9s cubic-bezier(.16,1,.3,1) forwards;animation-delay:calc(var(--i,0) * 80ms);transform:translateY(22px) scale(.98)}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .blob{animation:morph 18s ease-in-out infinite;will-change:transform,border-radius}
+  .b2{animation-duration:22s;animation-delay:-7s} .b3{animation-duration:26s;animation-delay:-13s}
+  @keyframes morph{
+    0%,100%{transform:translate(0,0) rotate(0) scale(1);border-radius:50% 50% 50% 50%/50% 50% 50% 50%}
+    25%{transform:translate(18px,-22px) rotate(25deg) scale(1.06);border-radius:58% 42% 55% 45%/45% 58% 42% 55%}
+    50%{transform:translate(-10px,14px) rotate(-10deg) scale(.96);border-radius:42% 58% 45% 55%/58% 42% 58% 42%}
+    75%{transform:translate(12px,8px) rotate(15deg) scale(1.03);border-radius:55% 45% 60% 40%/40% 60% 45% 55%}}
+  .hero{animation:rise .9s cubic-bezier(.16,1,.3,1) forwards, drift 7s ease-in-out 1s infinite}
+  @keyframes drift{0%,100%{transform:translateY(0) rotateX(0) rotateY(0)}33%{transform:translateY(-4px) rotateX(1.2deg) rotateY(-1deg)}66%{transform:translateY(-1px) rotateX(-.8deg) rotateY(1.2deg)}}
+  .hero{transform-style:preserve-3d;will-change:transform}
+  .stat:nth-child(1){animation:rise .9s cubic-bezier(.16,1,.3,1) .08s forwards, bobs 6s ease-in-out 1s infinite}
+  .stat:nth-child(2){animation:rise .9s cubic-bezier(.16,1,.3,1) .16s forwards, bobs 6s ease-in-out 1.8s infinite}
+  .stat:nth-child(3){animation:rise .9s cubic-bezier(.16,1,.3,1) .24s forwards, bobs 6s ease-in-out 2.6s infinite}
+  @keyframes bobs{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .lv{animation:bobs 5s ease-in-out infinite}
+  .lv:nth-child(2){animation-delay:-1.6s} .lv:nth-child(3){animation-delay:-3.2s}
+  .av,.arrow{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+  .it:hover .av,.it:active .av{transform:scale(1.1) rotate(-6deg)}
+  .it{transition:background .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}
+  .it:active{transform:scale(.985)}
+  .press,.ib,.cta,.add,.rb,.ghost,.chips button,.stlist button{transition:transform .45s cubic-bezier(.34,1.56,.64,1),box-shadow .35s ease,background .35s ease}
+  .press:active,.ib:active,.ghost:active,.chips button:active{transform:scale(.94)}
+  .seg .pill,.nav .pill,.tog .k{transition:transform .7s cubic-bezier(.34,1.45,.5,1)}
+  .sheet{transition:transform .65s cubic-bezier(.16,1,.3,1)}
+  .veil{transition:opacity .5s ease}
+  .more{transition:grid-template-rows .6s cubic-bezier(.16,1,.3,1)}
+  .toast,.banner{transition:transform .75s cubic-bezier(.34,1.45,.5,1)}
+  .ripple{animation:rip .8s cubic-bezier(.16,1,.3,1) forwards}
+
+  /* نور منحنی و روان */
+  .sw>.shine::after{top:-60%;bottom:auto;height:220%;width:55%;left:0;border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,.55) 0%,rgba(255,255,255,.18) 35%,transparent 65%);
+    transform:none;animation:arc 6.5s cubic-bezier(.45,.05,.55,.95) infinite;animation-delay:var(--sd,0s);opacity:0}
+  :root[data-theme="dark"] .sw>.shine::after{background:radial-gradient(ellipse at center,rgba(140,255,190,.12),transparent 65%)}
+  @keyframes arc{
+    0%{transform:translate(-80%,30%) rotate(-25deg);opacity:0}
+    12%{opacity:1}
+    30%{transform:translate(40%,-10%) rotate(-8deg)}
+    50%{transform:translate(120%,8%) rotate(10deg)}
+    68%{transform:translate(210%,-14%) rotate(22deg);opacity:1}
+    80%,100%{transform:translate(260%,20%) rotate(30deg);opacity:0}}
+  .chip::after,.st::after{background:linear-gradient(100deg,transparent 25%,rgba(255,255,255,.6) 50%,transparent 75%);animation:chipsw 3.8s cubic-bezier(.45,.05,.55,.95) infinite}
+  .ldot{animation:pulse 2.2s cubic-bezier(.16,1,.3,1) infinite}
+  @media (prefers-reduced-motion:reduce){.hero,.stat,.lv,.blob{animation:none!important}}
 </style>
 </head>
 <body>
@@ -251,12 +366,12 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fa = n => Number(n).toLocaleString("fa-AF", {maximumFractionDigits: 4});
 const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) : "—";
-const ago = d => { const m = Math.round((Date.now() - new Date(d)) / 60000);
-  if (m < 1) return "همین حالا"; if (m < 60) return fa(m) + " دقیقه پیش"; if (m < 1440) return fa(Math.round(m/60)) + " ساعت پیش";
-  return new Date(d).toLocaleString("fa-AF", {month:"long", day:"numeric"}); };
+const fmtFull = d => { const x = new Date(d);
+  return x.toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF", {hour:"2-digit", minute:"2-digit", hour12:false}); };
+const ago = fmtFull;
 const num = v => (v === "" || v == null) ? null : Number(v);
 const DAY = 86400000;
-const STATUS = { active:"فعال", tp1:"تارگت ۱ خورد", tp2:"تارگت ۲ خورد", sl:"استاپ خورد", closed:"بسته شد" };
+const STATUS = { active:"در جریان", tp1:"تیک پروفیت ۱ خورد", tp2:"تیک پروفیت ۲ خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 const mState = m => {
   if (m.disabled) return ["off", "غیرفعال"];
@@ -321,12 +436,19 @@ document.addEventListener("click", async e => {
     let src = vp.dataset.src;
     if (!src) {
       const p = vp.dataset.path;
-      if (!urlCache[p]) { const { data, error } = await sb.storage.from("voices").createSignedUrl(p, 3600); if (error) return; urlCache[p] = data.signedUrl; }
+      if (!urlCache[p]) {
+        vp.querySelector(".vt").textContent = "…";
+        const { data, error } = await sb.storage.from("voices").download(p);
+        if (error || !data) { vp.querySelector(".vt").textContent = "خطا"; return; }
+        urlCache[p] = URL.createObjectURL(data);
+      }
       src = urlCache[p];
     }
     curAudio = new Audio(src); curVp = vp;
     curAudio.ontimeupdate = () => paintVp(vp, curAudio);
+    curAudio.preload = "auto";
     curAudio.onloadedmetadata = () => paintVp(vp, curAudio);
+    curAudio.onerror = () => { vp.querySelector(".vt").textContent = "قابل پخش نیست"; };
     curAudio.onended = () => { vp.classList.remove("playing"); vp.querySelector(".vplay").innerHTML = PLAY; curAudio.currentTime = 0; paintVp(vp, curAudio); };
   }
   const a = curAudio;
@@ -362,9 +484,10 @@ async function callFn(body){
 /* ورود مدیر */
 function renderLogin(note = ""){
   $app.innerHTML = `<form class="login" id="f">
-    <div class="logo glass rise"><div class="mark">${I.shield}</div></div>
+    <div class="logo glass rise"><img src="logo-mark.png" alt="Market Analysts"></div>
+    <div class="bigwm rise" style="--i:1"><b>MARKET</b><small>ANALYSTS</small></div>
     <h1 class="rise" style="--i:1">پنل مدیریت</h1>
-    <div class="tag rise" style="--i:2">سیگنال نقره · فقط برای مدیر</div>
+    <div class="tag rise" style="--i:2">فقط برای مدیر</div>
     <label class="field glass rise" style="--i:3">${I.user}<input id="em" type="email" required placeholder="ایمیل مدیر" autocomplete="username"></label>
     <label class="field glass rise" style="--i:4">${I.lock}<input id="pw" type="password" required placeholder="رمز" autocomplete="current-password">
       <button type="button" class="eye" id="eye" aria-label="نمایش رمز">${I.eye}</button></label>
@@ -386,7 +509,7 @@ let tab = "signals", signals = [], members = [], channel = null, q = "";
 
 function renderPanel(){
   $app.innerHTML = `<div class="top rise">
-      <div class="brand"><div class="mark">${I.shield}</div>سیگنال نقره <span class="role">مدیر</span></div>
+      <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div><span class="role">مدیر</span></div>
       <div class="icons"><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
     <div class="stats">
@@ -504,6 +627,24 @@ function sheetNewSignal(){
 }
 
 
+
+/* تبدیل صدا به WAV تا روی همه‌ی گوشی‌ها (اندروید و آیفون) پخش شود */
+async function toWav(blob){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC(); let buf;
+  try { buf = await ctx.decodeAudioData(await blob.arrayBuffer()); } finally { ctx.close && ctx.close(); }
+  const sr = 22050, len = Math.ceil(buf.duration * sr);
+  const off = new OfflineAudioContext(1, len, sr), src = off.createBufferSource();
+  src.buffer = buf; src.connect(off.destination); src.start();
+  const d = (await off.startRendering()).getChannelData(0);
+  const v = new DataView(new ArrayBuffer(44 + d.length * 2));
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, "RIFF"); v.setUint32(4, 36 + d.length * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true);
+  v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, d.length * 2, true);
+  for (let i = 0; i < d.length; i++) { const x = Math.max(-1, Math.min(1, d[i])); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
+  return new Blob([v], { type: "audio/wav" });
+}
 /* ضبط صدا */
 function setupRecorder(box){
   let mr = null, chunks = [], blob = null, url = null, t0 = 0, timer = null, stream = null;
@@ -514,7 +655,7 @@ function setupRecorder(box){
       <label class="recfile">یا انتخاب فایل<input type="file" accept="audio/*" id="rfile"></label></div>`;
     box.querySelector("#rmic").onclick = start;
     box.querySelector("#rfile").onchange = e => { const f = e.target.files[0]; if (!f) return;
-      if (f.size > 10 * 1048576) return toast("حجم فایل باید کمتر از ۱۰ مگابایت باشد", true); setBlob(f); };
+      if (f.size > 25 * 1048576) return toast("حجم فایل باید کمتر از ۲۵ مگابایت باشد", true); setBlob(f); };
   };
   const setBlob = b => {
     blob = b; if (url) URL.revokeObjectURL(url); url = URL.createObjectURL(b);
@@ -530,7 +671,9 @@ function setupRecorder(box){
     mr.ondataavailable = e => e.data.size && chunks.push(e.data);
     mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer);
       const b = new Blob(chunks, { type: mr.mimeType || "audio/webm" }); mr = null;
-      if (b.size < 800) { toast("صدا خیلی کوتاه بود", true); return idle(); } setBlob(b); };
+      if (b.size < 800) { toast("صدا خیلی کوتاه بود", true); return idle(); }
+      box.innerHTML = `<div class="recrow"><div class="rectxt"><b>در حال آماده‌سازی صدا…</b>چند لحظه صبر کنید</div></div>`;
+      toWav(b).then(setBlob).catch(() => setBlob(b)); };
     mr.start(); t0 = Date.now();
     box.innerHTML = `<div class="recrow"><button type="button" class="mic live" id="rstop">${STOP_SVG}</button>
       <div class="rectxt"><b id="rtime">۰:۰۰</b>در حال ضبط… برای پایان بزنید</div></div>`;
@@ -542,20 +685,40 @@ function setupRecorder(box){
   return { blob: () => blob, recording: () => !!mr };
 }
 
+
+function resultHTML(s){
+  if (!s.status || s.status === "active") return "";
+  const cls = s.status.startsWith("tp") ? "win" : s.status === "sl" ? "lose" : "neutral";
+  const ic = cls === "win" ? "✓" : cls === "lose" ? "✗" : "■";
+  return `<div class="res ${cls}"><span class="ri">${ic}</span><div><b>${STATUS[s.status]}</b><small>${s.result_at ? "ثبت نتیجه: " + fmtFull(s.result_at) : ""}</small></div></div>`;
+}
 /* مدیریت سیگنال */
 function sheetSignal(s){
   if (!s) return;
   const b = s.type === "buy";
   openSheet(`<div class="head"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${ago(s.created_at)}${s.tp1!=null?` · هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}</div></div></div>
+      <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف ۲: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
     ${s.note ? `<div class="box" style="white-space:pre-wrap">${esc(s.note)}</div>` : ""}
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
-    <label class="l">وضعیت را برای اعضا به‌روز کنید</label>
-    <div class="stlist">${Object.entries(STATUS).map(([k, v]) => `<button data-st="${k}" class="${k===s.status?"on":""}">${v}<span>${k===s.status?"✓":""}</span></button>`).join("")}</div>
+    <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
+    ${resultHTML(s)}
+    <label class="l">${s.status === "active" ? "نتیجه‌ی معامله را ثبت کنید" : "تغییر نتیجه"}</label>
+    <div class="resgrid">
+      <button class="rb g ${s.status==="tp1"?"cur":""}" data-st="tp1"><span>✓</span>تیک پروفیت ۱<small>${s.tp1!=null?"در "+fa(s.tp1):""}</small></button>
+      <button class="rb g ${s.status==="tp2"?"cur":""}" data-st="tp2"><span>✓✓</span>تیک پروفیت ۲<small>${s.tp2!=null?"در "+fa(s.tp2):""}</small></button>
+      <button class="rb r ${s.status==="sl"?"cur":""}" data-st="sl"><span>✗</span>استاپ لاس<small>${s.sl!=null?"در "+fa(s.sl):""}</small></button>
+      <button class="rb n ${s.status==="closed"?"cur":""}" data-st="closed"><span>■</span>بسته شد<small>بدون نتیجه</small></button>
+    </div>
+    ${s.status !== "active" ? `<button class="ghost" data-st="active">برگرداندن به «در جریان»</button>` : ""}
     <button class="ghost red" id="del">حذف این سیگنال</button>`);
   $("sheet").onclick = async e => {
     const btn = e.target.closest("[data-st]");
-    if (btn) { await sb.from("signals").update({ status: btn.dataset.st }).eq("id", s.id); closeSheet(); toast("وضعیت به‌روز شد ✓"); return loadSignals(); }
+    if (btn) {
+      const st = btn.dataset.st; if (st === s.status) return;
+      if (st !== "active" && !confirm(`نتیجه «${STATUS[st]}» با تاریخ و ساعت الان ثبت شود؟`)) return;
+      const { error } = await sb.from("signals").update({ status: st }).eq("id", s.id);
+      if (error) return toast("خطا: " + error.message, true);
+      closeSheet(); toast(st === "active" ? "به حالت «در جریان» برگشت" : "نتیجه ثبت شد ✓"); return loadSignals(); }
     if (e.target.closest("#del") && confirm("این سیگنال حذف شود؟")) {
       await sb.from("signals").delete().eq("id", s.id); if (s.voice_path) await sb.storage.from("voices").remove([s.voice_path]);
       closeSheet(); toast("حذف شد"); loadSignals(); }
@@ -583,7 +746,7 @@ function sheetNewMember(){
     try {
       await callFn({ action: "create", name, email, password, months });
       loadMembers(); toast(`حساب «${name}» ساخته شد ✓`);
-      const text = `سلام ${name}، اشتراک سیگنال نقره‌ی شما فعال شد.\nلینک: ${MEMBER_URL}\nایمیل: ${email}\nرمز: ${password}`;
+      const text = `سلام ${name}، اشتراک شما در Market Analysts (سیگنال نقره) فعال شد.\nلینک: ${MEMBER_URL}\nایمیل: ${email}\nرمز: ${password}`;
       $("mf").style.display = "none";
       $("shareBox").innerHTML = `<div class="share rise"><b>این پیام را برای صراف بفرستید:</b>\n${esc(text)}</div>
         <button class="cta press" id="cp">کپی پیام</button><button class="ghost" id="cl">بستن</button>`;
