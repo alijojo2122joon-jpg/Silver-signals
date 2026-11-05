@@ -370,12 +370,12 @@
   @keyframes shim{to{background-position:-150% 0}}
   .trsrc{display:block;margin-top:8px;font-size:11px;color:var(--soft)}
 
-  /* ===== بازارها: طلا / نقره / دلار ===== */
+  /* ===== بازارها: طلا / نقره / دالر ===== */
   .mbg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:var(--bg)}
   .mbg i{position:absolute;inset:-12%;background-size:cover;background-position:center;opacity:0;filter:blur(16px) saturate(1.15);transform:scale(1.08);transition:opacity 1.2s cubic-bezier(.16,1,.3,1);animation:kb 26s ease-in-out infinite alternate}
   .mbg i[data-m="xau"]{background-image:url(img/bg-xau.webp)}
   .mbg i[data-m="xag"]{background-image:url(img/bg-xag.webp);animation-duration:30s}
-  .mbg i[data-m="usd"]{background-image:url(img/bg-usd.webp);animation-duration:34s;filter:blur(14px) saturate(1.05)}
+  .mbg i[data-m="usd"]{background:url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_Afghanis_%282022_-_top%29.jpg/960px-1000_Afghanis_%282022_-_top%29.jpg) center 78%%/150%% auto no-repeat,url(img/bg-usd.webp) center 22%%/150%% auto no-repeat,linear-gradient(180deg,#cfe0d8,#e3ece6);animation-duration:34s;filter:blur(14px) saturate(1.05)}
   .mbg i.on{opacity:1}
   .mbg b{position:absolute;inset:0;transition:background 1s}
   @keyframes kb{0%{transform:scale(1.08) translate(0,0) rotate(0)}50%{transform:scale(1.18) translate(-3%,2%) rotate(1.5deg)}100%{transform:scale(1.12) translate(2%,-3%) rotate(-1deg)}}
@@ -480,6 +480,9 @@
   :root[data-market="xau"] .mbg b{background:linear-gradient(180deg,rgba(8,6,3,.25),rgba(8,6,3,.55))}
   :root[data-market="xag"] .mbg b{background:linear-gradient(180deg,rgba(245,247,250,.18),rgba(236,239,243,.5))}
   :root[data-market="usd"] .mbg b{background:linear-gradient(180deg,rgba(236,243,240,.3),rgba(228,238,234,.6))}
+  .mk .dual{position:relative;width:34px;height:28px;flex:none}
+  .mk .dual img{position:absolute;width:26px!important;height:20px!important;border-radius:6px!important;object-fit:cover}
+  .mk .dual img:first-child{top:0;right:0;transform:rotate(6deg)} .mk .dual img:last-child{bottom:0;left:0;transform:rotate(-6deg)}
 </style>
 </head>
 <body>
@@ -611,7 +614,7 @@ function renderLogin(){
       <button type="button" class="eye" id="eye" aria-label="نمایش رمز">${I.eye}</button></label>
     <button class="cta press rise" style="--i:5" id="go"><span id="gl">ورود</span><span class="go">${I.arrowL}</span></button>
     <div class="err" id="er"></div>
-    <div class="foot rise" style="--i:6">تحلیل طلا · نقره · دلار</div>
+    <div class="foot rise" style="--i:6">تحلیل طلا · نقره · دالر</div>
   </form>`;
   $("eye").onclick = () => { const p = $("pw"); p.type = p.type === "password" ? "text" : "password"; };
   $("f").onsubmit = async e => {
@@ -705,9 +708,9 @@ document.addEventListener("click", e => {
 
 /* بازارها */
 const MARKETS = {
-  xau: { name: "طلا", sym: "XAU/USD", unit: "دلار", th: "img/th-xau.webp" },
-  xag: { name: "نقره", sym: "XAG/USD", unit: "دلار", th: "img/th-xag.webp" },
-  usd: { name: "دلار", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
+  xau: { name: "طلا", sym: "XAU/USD", unit: "دالر", th: "img/th-xau.webp" },
+  xag: { name: "نقره", sym: "XAG/USD", unit: "دالر", th: "img/th-xag.webp" },
+  usd: { name: "دالر", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
 };
 const getMk = () => { try { const m = localStorage.getItem("mk"); return MARKETS[m] ? m : "xau"; } catch { return "xau"; } };
 let market = getMk();
@@ -842,7 +845,7 @@ function renderFeed(me){
     strip.txt = `اشتراک: <b class="num">${fa(days)}</b> روز`; strip.warn = days <= 5;
   }
   $app.innerHTML = topbar() + `
-    <div class="mk rise" style="--i:1"><span class="mkpill" id="mkp"></span>${Object.entries(MARKETS).map(([k, v]) => `<button data-m="${k}" class="${k===market?"on":""}"><span class="dot"></span><img src="${v.th}" alt=""><span class="t2"><b>${v.name}</b><small>${v.sym}</small></span></button>`).join("")}</div>
+    <div class="mk rise" style="--i:1"><span class="mkpill" id="mkp"></span>${Object.entries(MARKETS).map(([k, v]) => `<button data-m="${k}" class="${k===market?"on":""}"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_Afghanis_%282022_-_top%29.jpg/960px-1000_Afghanis_%282022_-_top%29.jpg" alt=""></span>`:`<img src="${v.th}" alt="">`}<span class="t2"><b>${v.name}</b><small>${v.sym}</small></span></button>`).join("")}</div>
     <div class="status-line ${strip.warn?"warn":""}" id="lb"><span class="lv2"><span class="ldot"></span><b>زنده</b><span class="lbt" id="lbt">در حال دریافت…</span></span><span class="subtxt">${strip.txt}</span>
       <svg class="ring" viewBox="0 0 24 24" style="display:none"><circle class="bg" cx="12" cy="12" r="10"/><circle class="fg" cx="12" cy="12" r="10"/></svg></div>
     <div id="feed"><div class="sk"></div><div class="sk" style="height:180px"></div></div>
