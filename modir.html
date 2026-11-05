@@ -400,6 +400,15 @@
   .crow textarea{flex:1;resize:none;height:50px;padding:12px 14px;border-radius:16px;border:1px solid var(--stroke);background:var(--field);color:var(--text);font-family:inherit;font-size:15px;outline:none}
   .crow button{width:50px;height:50px;flex:none;border-radius:50%;border:0;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(180deg,#22c466,#00963f 50%,#006b2c)}
   .crow button svg{width:20px;height:20px;transform:scaleX(-1)}
+
+  /* ===== رفع مشکل آیفون در فرم‌ها ===== */
+  .sheet{left:0!important;right:0!important;margin:0 auto;transform:translateY(105%)!important;max-height:88vh;max-height:88dvh;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:linear-gradient(160deg,#ffffff,#f2f6f4)!important}
+  :root[data-theme="dark"] .sheet{background:linear-gradient(160deg,#1d2532,#151b25)!important}
+  .sheet.show{transform:none!important}
+  .sheet .in{font-size:16px;-webkit-user-select:text;user-select:text;touch-action:manipulation}
+  .sheet input,.sheet textarea{-webkit-appearance:none;appearance:none}
+  body.lock{overflow:hidden}
+  .sheet *{touch-action:manipulation}
 </style>
 </head>
 <body>
@@ -427,7 +436,7 @@ const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF-u-nu-latn", {year
 const fmtFull = d => { const x = new Date(d);
   return x.toLocaleDateString("fa-AF-u-nu-latn", {year:"numeric", month:"long", day:"numeric"}) + " · ساعت " + x.toLocaleTimeString("fa-AF-u-nu-latn", {hour:"2-digit", minute:"2-digit", hour12:false}); };
 const ago = fmtFull;
-const num = v => (v === "" || v == null) ? null : Number(v);
+const num = v => { if (v == null) return null; v = String(v).trim().replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String(d.charCodeAt(0) & 15)).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); if (v === "" || isNaN(Number(v))) return null; return Number(v); };
 const DAY = 86400000;
 const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
@@ -529,7 +538,7 @@ function openSheet(html){
 function closeSheet(){ openChatId = null; if (typeof curAudio !== 'undefined' && curAudio) { curAudio.pause(); } $("veil").classList.remove("show"); $("sheet").classList.remove("show"); document.body.classList.remove("lock"); }
 $("veil").onclick = closeSheet;
 let y0 = null;
-$("sheet").addEventListener("touchstart", e => { y0 = $("sheet").scrollTop <= 0 ? e.touches[0].clientY : null; }, {passive:true});
+$("sheet").addEventListener("touchstart", e => { y0 = ($("sheet").scrollTop <= 0 && e.target.closest(".grab,h2,.hint,.head")) ? e.touches[0].clientY : null; }, {passive:true});
 $("sheet").addEventListener("touchend", e => { if (y0 != null && e.changedTouches[0].clientY - y0 > 90) closeSheet(); y0 = null; });
 const busy = (b, on, label) => { b.disabled = on; b.innerHTML = on ? '<span class="spin"></span>' : label; };
 
@@ -677,11 +686,11 @@ function sheetNewSignal(){
       <label class="l" style="margin-top:4px">بازار</label>
       <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}"><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
       <div class="tog" id="tg"><span class="k"></span><button type="button" class="on" data-s="buy">خرید ↑</button><button type="button" data-s="sell">فروش ↓</button></div>
-      <div class="two"><div><label class="l">قیمت ورود از <span class="unit"></span></label><input class="in num" id="ef" type="number" step="any" inputmode="decimal" required placeholder="51"></div>
-        <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="number" step="any" inputmode="decimal" placeholder="52"></div></div>
-      <div class="two"><div><label class="l">تارگت 1</label><input class="in num" id="tp1" type="number" step="any" inputmode="decimal" placeholder="54"></div>
-        <div><label class="l">تارگت 2 (اختیاری)</label><input class="in num" id="tp2" type="number" step="any" inputmode="decimal"></div></div>
-      <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="number" step="any" inputmode="decimal" placeholder="49">
+      <div class="two"><div><label class="l">قیمت ورود از <span class="unit"></span></label><input class="in num" id="ef" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" required placeholder="51"></div>
+        <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="52"></div></div>
+      <div class="two"><div><label class="l">تارگت 1</label><input class="in num" id="tp1" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="54"></div>
+        <div><label class="l">تارگت 2 (اختیاری)</label><input class="in num" id="tp2" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr"></div></div>
+      <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="49">
       <label class="l">توضیحات تحلیل</label><textarea class="in" id="note" rows="4" placeholder="توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای 51 وارد شوید و نصف سرمایه را در تارگت 1 بفروشید."></textarea>
       <label class="l">پیام صوتی (اختیاری)</label><div class="rec" id="rec"></div>
       <button class="cta press" id="pub">انتشار سیگنال</button>
@@ -702,6 +711,7 @@ function sheetNewSignal(){
   $("sf").onsubmit = async e => {
     e.preventDefault(); const b = $("pub");
     if (rec.recording()) return toast("اول ضبط را تمام کنید", true);
+    if (num($("ef").value) == null) { $("ef").focus(); return toast("قیمت ورود را درست وارد کنید", true); }
     busy(b, true);
     let voice_path = null;
     const blob = rec.blob();
