@@ -171,6 +171,62 @@
   .recfile input{display:none}
   .xbtn{border:0;background:var(--sell-bg);color:var(--sell);font-family:inherit;font-weight:800;font-size:12px;border-radius:12px;padding:8px 12px;cursor:pointer}
   .rec .vp{margin-top:0;flex:1}
+
+  /* ===== عمق سه‌بعدی ===== */
+  :root{
+    --sh:0 22px 44px -14px rgba(38,64,160,.30),0 8px 18px -8px rgba(38,64,160,.20),inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 6px rgba(38,64,160,.07);
+    --raise:7px 9px 18px rgba(78,98,170,.20),-5px -5px 12px rgba(255,255,255,.95),inset 0 1.5px 0 #fff,inset 0 -2px 4px rgba(78,98,170,.08);
+    --sh-in:inset 3px 4px 8px rgba(78,98,170,.14),inset -3px -3px 7px rgba(255,255,255,.95);
+    --tile:linear-gradient(145deg,#ffffff,#e7edfb);
+    --gl:linear-gradient(160deg,rgba(255,255,255,.92),rgba(236,242,255,.58));
+  }
+  :root[data-theme="dark"]{
+    --sh:0 22px 44px -14px rgba(0,0,0,.6),0 8px 18px -8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.10),inset 0 -3px 6px rgba(0,0,0,.25);
+    --raise:6px 8px 16px rgba(0,0,0,.45),-4px -4px 10px rgba(255,255,255,.035),inset 0 1px 0 rgba(255,255,255,.08);
+    --sh-in:inset 3px 4px 8px rgba(0,0,0,.4),inset -2px -2px 6px rgba(255,255,255,.04);
+    --tile:linear-gradient(145deg,#26315a,#18203d);
+    --gl:linear-gradient(160deg,rgba(40,52,92,.85),rgba(22,30,58,.6));
+  }
+  .glass{background:var(--gl)}
+  .ib,.coin,.lv,.av,.arrow,.chips button,.stlist button,.ghost,.vp,.note,.box,.st{background:var(--tile);box-shadow:var(--raise);border:1px solid rgba(255,255,255,.7)}
+  :root[data-theme="dark"] .ib,:root[data-theme="dark"] .coin,:root[data-theme="dark"] .lv,:root[data-theme="dark"] .av,:root[data-theme="dark"] .arrow,:root[data-theme="dark"] .vp,:root[data-theme="dark"] .note,:root[data-theme="dark"] .ghost,:root[data-theme="dark"] .box{border-color:rgba(255,255,255,.06)}
+  .av.buy,.arrow.buy,.hero.buy .arrow{background:linear-gradient(145deg,#e9fbf3,#c9f0dd);color:var(--buy)}
+  .av.sell,.hero.sell .arrow{background:linear-gradient(145deg,#fff0f0,#fbd5d6);color:var(--sell)}
+  :root[data-theme="dark"] .av.buy,:root[data-theme="dark"] .hero.buy .arrow{background:linear-gradient(145deg,#1c4a3a,#123327)}
+  :root[data-theme="dark"] .av.sell,:root[data-theme="dark"] .hero.sell .arrow{background:linear-gradient(145deg,#4f2229,#35161b)}
+  .av svg,.arrow svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))}
+  .lv b,.entry b,.stat b{text-shadow:0 2px 0 rgba(255,255,255,.8),0 6px 14px rgba(38,64,160,.18)}
+  :root[data-theme="dark"] .lv b,:root[data-theme="dark"] .entry b,:root[data-theme="dark"] .stat b{text-shadow:0 4px 14px rgba(0,0,0,.5)}
+  .in,.field input,.search input{color:var(--text)}
+  .in,.tog,.seg,.search{box-shadow:var(--sh-in)}
+  .seg{background:rgba(226,233,250,.65)} :root[data-theme="dark"] .seg{background:rgba(10,14,30,.5)}
+  .seg .pill,.nav .pill{box-shadow:var(--raise)}
+  .seg .pill{background:var(--tile)}
+  .cta,.add,.vplay,.mark,.chips button.on{background:linear-gradient(180deg,#5b8aff 0%,#3566ff 45%,#1b3fd1 100%);
+    box-shadow:0 16px 28px -8px rgba(40,80,240,.55),0 4px 0 #1530a8,inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,0,30,.25);transition:transform .15s,box-shadow .15s}
+  .cta:active,.add:active,.vplay:active{transform:translateY(3px);box-shadow:0 8px 16px -8px rgba(40,80,240,.55),0 1px 0 #1530a8,inset 0 2px 0 rgba(255,255,255,.4),inset 0 -2px 4px rgba(0,0,30,.25)}
+  .cta{margin-bottom:4px}
+  .nav .pill{background:linear-gradient(180deg,#5b8aff,#1b3fd1);box-shadow:0 10px 20px -6px rgba(40,80,240,.55),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,30,.25)}
+  .mic{background:linear-gradient(180deg,#ff8285,#e5484d 55%,#bf2f35);box-shadow:0 14px 24px -8px rgba(229,72,77,.6),0 4px 0 #a52429,inset 0 2px 0 rgba(255,255,255,.4)}
+  .tog .k{box-shadow:0 8px 16px -6px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.35)}
+  .tog .k{background:linear-gradient(180deg,#2fd08c,#12a46b)} .tog.sell .k{background:linear-gradient(180deg,#ff7a7e,#d93a40)}
+  .hero{transform:perspective(900px) rotateX(0deg);transition:transform .5s}
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,.6),transparent 38%),var(--gl)}
+  :root[data-theme="dark"] .hero{background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 38%),var(--gl)}
+  .coin span,.logo span{box-shadow:inset 0 0 0 2px rgba(255,255,255,.7),inset -4px -6px 10px rgba(0,0,0,.22),0 8px 16px rgba(60,70,110,.35)}
+  .logo{box-shadow:var(--sh),0 30px 60px -20px rgba(38,64,160,.35)}
+
+  /* ===== نور سوییپ ===== */
+  .sw{position:relative;overflow:hidden;isolation:isolate}
+  .sw>.shine{position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;overflow:hidden}
+  .sw>.shine::after{content:"";position:absolute;top:-20%;bottom:-20%;width:45%;left:-60%;
+    background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0) 20%,rgba(255,255,255,.42) 50%,rgba(255,255,255,0) 80%,transparent 100%);
+    transform:skewX(-18deg);animation:sweep 3.6s cubic-bezier(.4,0,.2,1) infinite;animation-delay:var(--sd,0s)}
+  :root[data-theme="dark"] .sw>.shine::after{background:linear-gradient(105deg,transparent,rgba(255,255,255,.14) 50%,transparent)}
+  @keyframes sweep{0%{left:-60%}55%,100%{left:130%}}
+  .chip,.st{position:relative;overflow:hidden}
+  .chip::after,.st::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:chipsw 2.8s ease-in-out infinite}
+  @keyframes chipsw{0%{transform:translateX(120%)}50%,100%{transform:translateX(-120%)}}
 </style>
 </head>
 <body>
@@ -334,9 +390,9 @@ function renderPanel(){
       <div class="icons"><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
     <div class="stats">
-      <div class="stat glass g rise" style="--i:1"><small>اعضای فعال</small><b class="num" id="s1">۰</b></div>
-      <div class="stat glass r rise" style="--i:2"><small>تمام‌شده</small><b class="num" id="s2">۰</b></div>
-      <div class="stat glass b rise" style="--i:3"><small>سیگنال باز</small><b class="num" id="s3">۰</b></div>
+      <div class="stat glass sw g rise" style="--i:1"><span class="shine"></span><small>اعضای فعال</small><b class="num" id="s1">۰</b></div>
+      <div class="stat glass sw r rise" style="--i:2;--sd:.4s"><span class="shine"></span><small>تمام‌شده</small><b class="num" id="s2">۰</b></div>
+      <div class="stat glass sw b rise" style="--i:3;--sd:.8s"><span class="shine"></span><small>سیگنال باز</small><b class="num" id="s3">۰</b></div>
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
@@ -349,7 +405,10 @@ function renderPanel(){
   loadSignals(); loadMembers();
   if (channel) sb.removeChannel(channel);
   channel = sb.channel("admin").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadSignals).subscribe();
+  clearInterval(window._poll);
+  window._poll = setInterval(() => { if (!document.hidden && !$("sheet").classList.contains("show")) { loadSignals(); loadMembers(); } }, 10000);
 }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && $("s1")) { loadSignals(); loadMembers(); } });
 
 function countUp(el, to){
   const from = Number(el.dataset.v || 0); el.dataset.v = to;
@@ -377,7 +436,7 @@ function drawPane(){
 function drawList(){
   const el = $("list"); if (!el) return;
   if (tab === "signals") {
-    el.innerHTML = `<div class="list glass rise" style="--i:1">${signals.length ? signals.map(s => {
+    el.innerHTML = `<div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${signals.length ? signals.map(s => {
       const b = s.type === "buy";
       const c = s.status === "sl" ? "off" : s.status === "closed" ? "mute" : "on";
       return `<div class="it" data-sig="${s.id}"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
@@ -387,7 +446,7 @@ function drawList(){
   } else {
     const k = q.trim().toLowerCase();
     const rows = members.filter(m => !k || (m.name + " " + m.email).toLowerCase().includes(k));
-    el.innerHTML = `<div class="list glass rise" style="--i:2">${rows.length ? rows.map(m => {
+    el.innerHTML = `<div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rows.length ? rows.map(m => {
       const [c, lab] = mState(m);
       return `<div class="it" data-mem="${m.id}">${avatar(m)}
         <div><div class="t">${esc(m.name)}</div><div class="s ltr" style="text-align:right">${esc(m.email)}</div></div>
@@ -576,6 +635,7 @@ function sheetMember(m){
 let pendingNote = "";
 async function route(session){
   if (channel) { sb.removeChannel(channel); channel = null; }
+  clearInterval(window._poll);
   closeSheet();
   if (!session) { const n = pendingNote; pendingNote = ""; return renderLogin(n); }
   const { data: me } = await sb.from("profiles").select("role,name").eq("id", session.user.id).maybeSingle();

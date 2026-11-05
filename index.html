@@ -160,6 +160,86 @@
   @keyframes vb{to{opacity:.6}}
   .vt{font-size:12px;color:var(--muted);min-width:38px;text-align:left;font-variant-numeric:tabular-nums}
   .vlab{font-size:11px;font-weight:800;color:var(--muted);margin:14px 4px -8px}
+
+  /* ===== عمق سه‌بعدی ===== */
+  :root{
+    --sh:0 22px 44px -14px rgba(38,64,160,.30),0 8px 18px -8px rgba(38,64,160,.20),inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 6px rgba(38,64,160,.07);
+    --raise:7px 9px 18px rgba(78,98,170,.20),-5px -5px 12px rgba(255,255,255,.95),inset 0 1.5px 0 #fff,inset 0 -2px 4px rgba(78,98,170,.08);
+    --sh-in:inset 3px 4px 8px rgba(78,98,170,.14),inset -3px -3px 7px rgba(255,255,255,.95);
+    --tile:linear-gradient(145deg,#ffffff,#e7edfb);
+    --gl:linear-gradient(160deg,rgba(255,255,255,.92),rgba(236,242,255,.58));
+  }
+  :root[data-theme="dark"]{
+    --sh:0 22px 44px -14px rgba(0,0,0,.6),0 8px 18px -8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.10),inset 0 -3px 6px rgba(0,0,0,.25);
+    --raise:6px 8px 16px rgba(0,0,0,.45),-4px -4px 10px rgba(255,255,255,.035),inset 0 1px 0 rgba(255,255,255,.08);
+    --sh-in:inset 3px 4px 8px rgba(0,0,0,.4),inset -2px -2px 6px rgba(255,255,255,.04);
+    --tile:linear-gradient(145deg,#26315a,#18203d);
+    --gl:linear-gradient(160deg,rgba(40,52,92,.85),rgba(22,30,58,.6));
+  }
+  .glass{background:var(--gl)}
+  .ib,.coin,.lv,.av,.arrow,.chips button,.stlist button,.ghost,.vp,.note,.box,.st{background:var(--tile);box-shadow:var(--raise);border:1px solid rgba(255,255,255,.7)}
+  :root[data-theme="dark"] .ib,:root[data-theme="dark"] .coin,:root[data-theme="dark"] .lv,:root[data-theme="dark"] .av,:root[data-theme="dark"] .arrow,:root[data-theme="dark"] .vp,:root[data-theme="dark"] .note,:root[data-theme="dark"] .ghost,:root[data-theme="dark"] .box{border-color:rgba(255,255,255,.06)}
+  .av.buy,.arrow.buy,.hero.buy .arrow{background:linear-gradient(145deg,#e9fbf3,#c9f0dd);color:var(--buy)}
+  .av.sell,.hero.sell .arrow{background:linear-gradient(145deg,#fff0f0,#fbd5d6);color:var(--sell)}
+  :root[data-theme="dark"] .av.buy,:root[data-theme="dark"] .hero.buy .arrow{background:linear-gradient(145deg,#1c4a3a,#123327)}
+  :root[data-theme="dark"] .av.sell,:root[data-theme="dark"] .hero.sell .arrow{background:linear-gradient(145deg,#4f2229,#35161b)}
+  .av svg,.arrow svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.15))}
+  .lv b,.entry b,.stat b{text-shadow:0 2px 0 rgba(255,255,255,.8),0 6px 14px rgba(38,64,160,.18)}
+  :root[data-theme="dark"] .lv b,:root[data-theme="dark"] .entry b,:root[data-theme="dark"] .stat b{text-shadow:0 4px 14px rgba(0,0,0,.5)}
+  .in,.field input,.search input{color:var(--text)}
+  .in,.tog,.seg,.search{box-shadow:var(--sh-in)}
+  .seg{background:rgba(226,233,250,.65)} :root[data-theme="dark"] .seg{background:rgba(10,14,30,.5)}
+  .seg .pill,.nav .pill{box-shadow:var(--raise)}
+  .seg .pill{background:var(--tile)}
+  .cta,.add,.vplay,.mark,.chips button.on{background:linear-gradient(180deg,#5b8aff 0%,#3566ff 45%,#1b3fd1 100%);
+    box-shadow:0 16px 28px -8px rgba(40,80,240,.55),0 4px 0 #1530a8,inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 6px rgba(0,0,30,.25);transition:transform .15s,box-shadow .15s}
+  .cta:active,.add:active,.vplay:active{transform:translateY(3px);box-shadow:0 8px 16px -8px rgba(40,80,240,.55),0 1px 0 #1530a8,inset 0 2px 0 rgba(255,255,255,.4),inset 0 -2px 4px rgba(0,0,30,.25)}
+  .cta{margin-bottom:4px}
+  .nav .pill{background:linear-gradient(180deg,#5b8aff,#1b3fd1);box-shadow:0 10px 20px -6px rgba(40,80,240,.55),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 6px rgba(0,0,30,.25)}
+  .mic{background:linear-gradient(180deg,#ff8285,#e5484d 55%,#bf2f35);box-shadow:0 14px 24px -8px rgba(229,72,77,.6),0 4px 0 #a52429,inset 0 2px 0 rgba(255,255,255,.4)}
+  .tog .k{box-shadow:0 8px 16px -6px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.35)}
+  .tog .k{background:linear-gradient(180deg,#2fd08c,#12a46b)} .tog.sell .k{background:linear-gradient(180deg,#ff7a7e,#d93a40)}
+  .hero{transform:perspective(900px) rotateX(0deg);transition:transform .5s}
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,.6),transparent 38%),var(--gl)}
+  :root[data-theme="dark"] .hero{background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 38%),var(--gl)}
+  .coin span,.logo span{box-shadow:inset 0 0 0 2px rgba(255,255,255,.7),inset -4px -6px 10px rgba(0,0,0,.22),0 8px 16px rgba(60,70,110,.35)}
+  .logo{box-shadow:var(--sh),0 30px 60px -20px rgba(38,64,160,.35)}
+
+  /* ===== نور سوییپ ===== */
+  .sw{position:relative;overflow:hidden;isolation:isolate}
+  .sw>.shine{position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;overflow:hidden}
+  .sw>.shine::after{content:"";position:absolute;top:-20%;bottom:-20%;width:45%;left:-60%;
+    background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0) 20%,rgba(255,255,255,.42) 50%,rgba(255,255,255,0) 80%,transparent 100%);
+    transform:skewX(-18deg);animation:sweep 3.6s cubic-bezier(.4,0,.2,1) infinite;animation-delay:var(--sd,0s)}
+  :root[data-theme="dark"] .sw>.shine::after{background:linear-gradient(105deg,transparent,rgba(255,255,255,.14) 50%,transparent)}
+  @keyframes sweep{0%{left:-60%}55%,100%{left:130%}}
+  .chip,.st{position:relative;overflow:hidden}
+  .chip::after,.st::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);animation:chipsw 2.8s ease-in-out infinite}
+  @keyframes chipsw{0%{transform:translateX(120%)}50%,100%{transform:translateX(-120%)}}
+
+  /* ===== نوار زنده و هشدار ===== */
+  .livebar{display:flex;align-items:center;gap:10px;margin:-4px 0 16px;padding:10px 14px;border-radius:18px;font-size:12px;color:var(--muted)}
+  .livebar b{color:var(--buy);font-weight:900;font-size:13px}
+  .ldot{width:10px;height:10px;border-radius:50%;background:var(--buy);box-shadow:0 0 0 0 rgba(18,164,107,.5);animation:pulse 1.6s infinite;flex:none}
+  .livebar.busy .ldot{background:var(--blue);animation:pulseb 0.9s infinite}
+  @keyframes pulseb{0%{box-shadow:0 0 0 0 rgba(53,102,255,.5)}100%{box-shadow:0 0 0 10px rgba(53,102,255,0)}}
+  .livebar.off b{color:var(--sell)} .livebar.off .ldot{background:var(--sell);animation:none}
+  .lbt{flex:1}
+  .ring{width:26px;height:26px;flex:none;transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:3}
+  .ring .bg{stroke:rgba(120,130,160,.2)}
+  .ring .fg{stroke:var(--blue);stroke-linecap:round;stroke-dasharray:63;stroke-dashoffset:0}
+  .ring.run .fg{animation:cd var(--poll,8s) linear forwards}
+  @keyframes cd{to{stroke-dashoffset:63}}
+  .livebar.busy .ring{animation:rot .8s linear infinite}
+  .banner{position:fixed;z-index:60;top:calc(12px + env(safe-area-inset-top));left:50%;width:min(428px,calc(100% - 24px));transform:translate(-50%,-150%);transition:transform .6s cubic-bezier(.3,1.35,.4,1);display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:22px;cursor:pointer}
+  .banner.show{transform:translate(-50%,0)}
+  .banner .bi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(180deg,#5b8aff,#1b3fd1);box-shadow:0 8px 16px -6px rgba(40,80,240,.6),inset 0 2px 0 rgba(255,255,255,.4);animation:bell 1s ease-in-out 2}
+  @keyframes bell{20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+  .banner b{display:block;font-size:15px}
+  .banner span{font-size:12px;color:var(--muted)}
+  .hero.fresh{animation:fresh 1.2s ease-out 3}
+  @keyframes fresh{0%{box-shadow:var(--sh),0 0 0 0 var(--cg)}60%{box-shadow:var(--sh),0 0 0 14px rgba(0,0,0,0)}100%{box-shadow:var(--sh)}}
 </style>
 </head>
 <body>
@@ -254,7 +334,7 @@ document.addEventListener("click", async e => {
 }, true);
 
 let channel = null;
-const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } };
+const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } clearInterval(pollT); clearInterval(tickT); };
 
 function topbar(){
   return `<div class="top rise">
@@ -309,7 +389,7 @@ const lv = s => `<div class="lvls">
   <div class="lv sl"><small>حد ضرر</small><b class="num">${s.sl!=null?fa(s.sl):"—"}</b></div></div>`;
 function hero(s){
   const b = s.type === "buy";
-  return `<div class="hero glass ${b?"buy":"sell"} rise" style="--i:1">
+  return `<div class="hero glass sw ${b?"buy":"sell"} rise ${s.id===freshId?"fresh":""}" style="--i:1"><span class="shine"></span>
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?"خرید":"فروش"}</div>
       <span class="st ${esc(s.status)}">${STATUS[s.status]||""}</span></div>
     <div class="entry">${b?"قیمت خرید":"قیمت فروش"}<b class="num">${range(s)}</b></div>
@@ -321,7 +401,7 @@ function hero(s){
 function item(s, i){
   const b = s.type === "buy";
   const chip = s.status==="active" ? (b?"buy":"sell") : (s.status==="sl"?"sell":s.status.startsWith("tp")?"buy":"mute");
-  return `<div class="it rise" style="--i:${i+2}">
+  return `<div class="it rise" data-id="${s.id}" style="--i:${i+2}">
     <div class="row"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
       <div><div class="t num">${b?"خرید":"فروش"} ${range(s)}</div><div class="s">${s.tp1!=null?`هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""}</div></div>
       <div class="e"><span class="chip ${chip}">${STATUS[s.status]||""}</span><br>${ago(s.created_at)}</div></div>
@@ -335,24 +415,96 @@ function drawFeed(){
   if (!list.length) { el.innerHTML = `<div class="empty glass rise"><div class="big">📊</div><h2>${all.length?"سیگنالی در این بخش نیست":"هنوز سیگنالی منتشر نشده"}</h2><div>به‌محض انتشار، همین‌جا نمایش داده می‌شود.</div></div>`; return; }
   const [first, ...rest] = list;
   el.innerHTML = `<h3 class="rise">آخرین سیگنال</h3>${hero(first)}`
-    + (rest.length ? `<h3 class="rise" style="--i:2">سیگنال‌های قبلی</h3><div class="list glass rise" style="--i:2">${rest.map(item).join("")}</div>` : "");
+    + (rest.length ? `<h3 class="rise" style="--i:2">سیگنال‌های قبلی</h3><div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rest.map(item).join("")}</div>` : "");
+}
+/* به‌روزرسانی زنده */
+const POLL = 8000;
+let sig = null, topId = null, freshId = null, lastAt = 0, pollT = null, tickT = null, loading = false, failCount = 0, titleT = null;
+let actx = null;
+document.addEventListener("pointerdown", () => { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch {} }, {once:false, passive:true});
+function ding(){
+  try { if (!actx) return; const t = actx.currentTime;
+    [[880,0],[1320,.16]].forEach(([f, d]) => { const o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.25, t + d + .02);
+      g.gain.exponentialRampToValueAtTime(.001, t + d + .45); o.connect(g).connect(actx.destination); o.start(t + d); o.stop(t + d + .5); });
+  } catch {}
+}
+function banner(icon, title, sub){
+  let b = $("banner");
+  if (!b) { b = document.createElement("div"); b.id = "banner"; b.className = "banner glass"; document.body.appendChild(b);
+    b.onclick = () => { b.classList.remove("show"); window.scrollTo({top: 0, behavior: "smooth"}); }; }
+  b.innerHTML = `<span class="bi">${icon}</span><div><b>${title}</b><span>${sub}</span></div>`;
+  requestAnimationFrame(() => b.classList.add("show"));
+  clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("show"), 6000);
+  try { navigator.vibrate && navigator.vibrate([220, 90, 220]); } catch {}
+  ding();
+  if (document.hidden) { const base = "سیگنال نقره"; let on = false; clearInterval(titleT);
+    titleT = setInterval(() => { document.title = (on = !on) ? "🔔 " + title : base; }, 1000); }
+}
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) { clearInterval(titleT); document.title = "سیگنال نقره"; if ($("feed")) loadFeed(); }
+});
+function liveUI(state){
+  const lb = $("lb"); if (!lb) return;
+  lb.classList.toggle("busy", state === "busy"); lb.classList.toggle("off", state === "off");
+  lb.querySelector("b").textContent = state === "off" ? "قطع" : "زنده";
+  const r = lb.querySelector(".ring"); r.classList.remove("run");
+  if (state === "idle") { void r.getBoundingClientRect(); r.classList.add("run"); }
+  tickLabel();
+}
+function tickLabel(){
+  const el = $("lbt"); if (!el) return;
+  const lb = $("lb");
+  if (lb.classList.contains("busy")) return el.textContent = "در حال به‌روزرسانی…";
+  if (lb.classList.contains("off")) return el.textContent = "اتصال برقرار نیست؛ دوباره تلاش می‌شود";
+  const sec = Math.round((Date.now() - lastAt) / 1000);
+  el.textContent = "به‌روزرسانی خودکار · " + (sec < 3 ? "همین حالا" : fa(sec) + " ثانیه پیش");
 }
 async function loadFeed(){
+  if (loading) return; loading = true; liveUI("busy");
+  const started = Date.now();
   const { data, error } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(40);
-  if (error) return renderMsg("⚠️", "دسترسی ممکن نیست", esc(CONTACT));
-  all = data || []; drawFeed();
+  await new Promise(r => setTimeout(r, Math.max(0, 450 - (Date.now() - started))));
+  loading = false;
+  if (error) { failCount++; liveUI("off"); if (failCount > 3) renderMsg("⚠️", "دسترسی ممکن نیست", esc(CONTACT)); return; }
+  failCount = 0; lastAt = Date.now();
+  const list = data || [];
+  const nsig = list.map(x => x.id + ":" + x.status + ":" + (x.note || "").length + ":" + (x.voice_path || "")).join("|");
+  if (sig !== null && list[0] && list[0].id !== topId && !all.some(x => x.id === list[0].id)) {
+    const n = list[0], b = n.type === "buy";
+    freshId = n.id;
+    banner("🔔", `سیگنال جدید: ${b ? "خرید" : "فروش"} ${range(n)}`, `${n.tp1 != null ? "تارگت " + fa(n.tp1) : ""}${n.sl != null ? " · حد ضرر " + fa(n.sl) : ""} — برای دیدن بزنید`);
+  } else if (sig !== null && nsig !== sig) {
+    const ch = list.find(x => { const o = all.find(y => y.id === x.id); return o && o.status !== x.status; });
+    if (ch) banner("📣", `وضعیت سیگنال: ${STATUS[ch.status]}`, `${ch.type === "buy" ? "خرید" : "فروش"} ${range(ch)}`);
+  }
+  topId = list[0]?.id ?? null;
+  if (nsig !== sig) {
+    const open = [...document.querySelectorAll(".it.open")].map(e => e.dataset.id);
+    all = list; sig = nsig; drawFeed();
+    open.forEach(id => document.querySelector(`.it[data-id="${id}"]`)?.classList.add("open"));
+    setTimeout(() => { freshId = null; }, 4000);
+  }
+  liveUI("idle");
+}
+function startPolling(){
+  clearInterval(pollT); clearInterval(tickT);
+  pollT = setInterval(() => { if (!document.hidden) loadFeed(); }, POLL);
+  tickT = setInterval(tickLabel, 1000);
 }
 
 function renderFeed(me){
   let strip = "";
   if (me.role !== "admin") {
     const days = Math.ceil((new Date(me.expires_at) - Date.now()) / DAY);
-    strip = `<div class="sub glass rise ${days<=5?"warn":""}"><span class="live"><i></i>اشتراک فعال</span>
+    strip = `<div class="sub glass sw rise ${days<=5?"warn":""}" style="--sd:.6s"><span class="shine"></span><span class="live"><i></i>اشتراک فعال</span>
       <span>تا <b>${fmtDate(me.expires_at)}</b> · <b class="num">${fa(days)}</b> روز</span></div>`;
   }
   $app.innerHTML = topbar() + strip + `
     <div class="seg glass rise" style="--i:1"><span class="pill" id="pill"></span>
       <button data-f="all" class="on">همه</button><button data-f="buy">خرید</button><button data-f="sell">فروش</button></div>
+    <div class="livebar glass sw" id="lb" style="--poll:${POLL/1000}s;--sd:1.8s"><span class="shine"></span><span class="ldot"></span><b>زنده</b><span class="lbt" id="lbt">در حال دریافت…</span>
+      <svg class="ring" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="fg" cx="12" cy="12" r="10"/></svg></div>
     <div id="feed"><div class="sk"></div><div class="sk" style="height:180px"></div></div>
     <div class="disc">این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت هر معامله با خود شماست.</div>`;
   bindTop();
@@ -363,9 +515,11 @@ function renderFeed(me){
     drawFeed();
   });
   $("feed").onclick = e => { if (e.target.closest(".vp")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
-  loadFeed();
   stopLive();
-  channel = sb.channel("feed").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadFeed).subscribe();
+  sig = null; topId = null; all = [];
+  loadFeed(); startPolling();
+  $("lb").onclick = () => loadFeed();
+  channel = sb.channel("feed").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, () => loadFeed()).subscribe();
 }
 
 async function route(session){
