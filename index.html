@@ -299,6 +299,11 @@
   .top{position:relative;z-index:30}
   .pop{z-index:60;background:linear-gradient(145deg,#ffffff,#f1f5f3)!important;box-shadow:0 20px 40px -12px rgba(0,0,0,.35)!important}
   :root[data-theme="dark"] .pop{background:linear-gradient(145deg,#1f2734,#161c26)!important}
+  .fablab{position:fixed;z-index:49;padding:7px 13px;border-radius:14px;font-size:13px;font-weight:800;white-space:nowrap;color:var(--text);background:var(--tile);box-shadow:var(--sh);border:1px solid var(--stroke);opacity:0;transform:scale(.85);transition:opacity .5s,transform .6s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+  .fablab.show{opacity:1;transform:none}
+  .ib .hb{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--sell);color:#fff;font-size:11px;font-weight:800;display:none;place-items:center;font-family:Montserrat,Arial,sans-serif}
+  .ib .hb.show{display:grid}
+  .top .ib{overflow:visible}
 </style>
 </head>
 <body>
@@ -343,7 +348,7 @@ const L = {
     newA:"تحلیل جدید", tapView:"برای دیدن بزنید", upd:"به‌روزرسانی تحلیل",
     autoTr:"ترجمه‌ی خودکار", trFail:"ترجمه ممکن نشد؛ دوباره بزنید", cantPlay:"قابل پخش نیست", lang:"زبان",
     chatTo:"ارسال پیام به استاد محمد ظریف محمدی", teacher:"استاد محمد ظریف محمدی", typeMsg:"پیام خود را بنویسید…",
-    waiting:"پیام شما در انتظار دیده شدن است", seen:"پیام شما دیده شد", chatEmpty:"سؤال یا پیام خود را برای استاد بنویسید.", sendFail:"ارسال نشد؛ اینترنت را بررسی کنید", newMsg:"پیام جدید از استاد" },
+    waiting:"پیام شما در انتظار دیده شدن است", seen:"پیام شما دیده شد", chatEmpty:"سؤال یا پیام خود را برای استاد بنویسید.", sendFail:"ارسال نشد؛ اینترنت را بررسی کنید", newMsg:"پیام جدید از استاد", msgTeacher:"پیام به استاد 👋", inbox:"پیام‌های اعضا" },
   ps: { dir:"rtl", loc:"ps-AF-u-nu-latn", name:"پښتو",
     welcome:"ښه راغلاست", loginSub:"د تحلیلونو د لیدو لپاره ننوځئ", email:"برېښنالیک", password:"پټنوم", login:"ننوتل",
     badLogin:"برېښنالیک یا پټنوم ناسم دی.", noNet:"انټرنېټ نښلول شوی نه دی. خپل اتصال وګورئ.", foot:"د سرو زرو · سپینو زرو · ډالرو تحلیل",
@@ -360,7 +365,7 @@ const L = {
     newA:"نوی تحلیل", tapView:"د لیدو لپاره کېکاږئ", upd:"د تحلیل تازه حالت",
     autoTr:"اتوماتیک ژباړه", trFail:"ژباړه ونشوه؛ بیا کېکاږئ", cantPlay:"نه غږېږي", lang:"ژبه",
     chatTo:"استاد محمد ظریف محمدي ته پیغام", teacher:"استاد محمد ظریف محمدي", typeMsg:"خپل پیغام ولیکئ…",
-    waiting:"ستاسو پیغام د لیدو په تمه دی", seen:"ستاسو پیغام ولیدل شو", chatEmpty:"خپله پوښتنه یا پیغام استاد ته ولیکئ.", sendFail:"ونه لېږل شو؛ انټرنېټ وګورئ", newMsg:"د استاد نوی پیغام" },
+    waiting:"ستاسو پیغام د لیدو په تمه دی", seen:"ستاسو پیغام ولیدل شو", chatEmpty:"خپله پوښتنه یا پیغام استاد ته ولیکئ.", sendFail:"ونه لېږل شو؛ انټرنېټ وګورئ", newMsg:"د استاد نوی پیغام", msgTeacher:"استاد ته پیغام 👋", inbox:"د غړو پیغامونه" },
   en: { dir:"ltr", loc:"en-GB", name:"English",
     welcome:"Welcome", loginSub:"Sign in to see the analyses", email:"Email", password:"Password", login:"Sign in",
     badLogin:"Wrong email or password.", noNet:"No internet connection. Please check your connection.", foot:"Gold · Silver · Dollar analysis",
@@ -377,7 +382,7 @@ const L = {
     newA:"New analysis", tapView:"tap to view", upd:"Analysis update",
     autoTr:"Auto-translated", trFail:"Translation failed, tap again", cantPlay:"Can't play", lang:"Language",
     chatTo:"Message Ostad Mohammad Zarif Mohammadi", teacher:"Ostad Mohammad Zarif Mohammadi", typeMsg:"Write your message…",
-    waiting:"Your message is waiting to be seen", seen:"Your message was seen", chatEmpty:"Write your question or message to Ostad.", sendFail:"Not sent, check your internet", newMsg:"New message from Ostad" },
+    waiting:"Your message is waiting to be seen", seen:"Your message was seen", chatEmpty:"Write your question or message to Ostad.", sendFail:"Not sent, check your internet", newMsg:"New message from Ostad", msgTeacher:"Message Ostad 👋", inbox:"Members' messages" },
 };
 let lang = store.get("lang", null);
 if (!L[lang]) { const v = (() => { try { return localStorage.getItem("tl"); } catch { return null; } })(); lang = L[v] ? v : "fa"; }
@@ -524,6 +529,7 @@ function topbar(){
   return `<div class="top rise">
     <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div></div>
     <div class="icons">
+      ${view === "feed" ? `<button class="ib" id="hc" aria-label="chat">${I.chat}<span class="hb" id="hbadge"></span></button>` : ""}
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
@@ -534,6 +540,7 @@ function bindTop(){
   $("out").onclick = () => { store.set("cache_me", null); store.set("cache_msgs", []); sb.auth.signOut(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
+  if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
   $("pop").onclick = e => { const b = e.target.closest("[data-lang]"); if (b) setLang(b.dataset.lang); };
 }
 document.addEventListener("click", e => { const p = $("pop"); if (p && !e.target.closest("#pop,#lg")) p.classList.remove("show"); });
@@ -694,7 +701,7 @@ function renderFeed(){
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); } }, 8000);
   }
   loadFeed();
-  if (me.role !== "admin") setupChat();
+  setupChat();
 }
 function rerender(){
   if (view === "login") { const em = $("em")?.value; renderLogin(); if (em && $("em")) $("em").value = em; }
@@ -704,9 +711,10 @@ function rerender(){
 
 /* ===== گفتگو با استاد ===== */
 let msgs = [], msgsLoaded = false, chatOpen = false;
-function removeChat(){ ["fab","chat","cveil"].forEach(id => $(id)?.remove()); chatOpen = false; }
+function removeChat(){ ["fab","chat","cveil","fablab"].forEach(id => $(id)?.remove()); chatOpen = false; }
 function setupChat(){
   if ($("fab")) return;
+  const isAdmin = me.role === "admin";
   const fab = document.createElement("button"); fab.id = "fab"; fab.className = "fab glow"; fab.style.setProperty("--bd", "5s");
   fab.innerHTML = I.chat + '<span class="badge" id="fbadge"></span>';
   const veil = document.createElement("div"); veil.id = "cveil"; veil.className = "cveil";
@@ -722,10 +730,19 @@ function setupChat(){
     if (drag.moved) place(drag.x + dx, drag.y + dy); });
   fab.addEventListener("pointerup", () => { if (!drag) return; const moved = drag.moved; drag = null; fab.classList.remove("drag"); fab.style.transition = "";
     if (moved) { const x = fab.offsetLeft + 31 < innerWidth / 2 ? 12 : innerWidth - 74; place(x, fab.offsetTop); store.set("fabpos", { x: x / innerWidth, y: fab.offsetTop / innerHeight }); }
-    else openChat(); });
+    else if (isAdmin) location.href = "modir.html?tab=msgs"; else openChat(); });
   fab.addEventListener("pointercancel", () => { drag = null; fab.classList.remove("drag"); fab.style.transition = ""; });
   veil.onclick = closeChat;
-  addEventListener("resize", () => place(fab.offsetLeft, fab.offsetTop));
+  const lab = document.createElement("div"); lab.id = "fablab"; lab.className = "fablab";
+  lab.textContent = isAdmin ? T.inbox : T.msgTeacher; document.body.appendChild(lab);
+  const posLabel = () => { const left = fab.offsetLeft + 31 < innerWidth / 2;
+    lab.style.top = (fab.offsetTop + 16) + "px";
+    lab.style.left = left ? (fab.offsetLeft + 72) + "px" : ""; lab.style.right = left ? "" : (innerWidth - fab.offsetLeft + 10) + "px"; };
+  addEventListener("resize", () => { place(fab.offsetLeft, fab.offsetTop); posLabel(); });
+  posLabel(); setTimeout(() => lab.classList.add("show"), 900); setTimeout(() => lab.classList.remove("show"), 7000);
+  fab.addEventListener("pointerdown", () => lab.classList.remove("show"));
+  fab.addEventListener("pointerup", () => setTimeout(posLabel, 600));
+  if (isAdmin) return;
   refreshChatTexts();
   if (!chatCh) chatCh = sb.channel("msgs").on("postgres_changes", {event:"*", schema:"public", table:"messages", filter:`member_id=eq.${me.id}`}, () => loadChat()).subscribe();
   loadChat();
@@ -751,6 +768,7 @@ function drawChat(){
   const b = $("cbody");
   const unread = msgs.filter(m => m.sender === "admin" && !m.seen_at).length, bd = $("fbadge");
   if (bd) { bd.textContent = unread; bd.classList.toggle("show", unread > 0 && !chatOpen); }
+  const hb = $("hbadge"); if (hb) { hb.textContent = unread; hb.classList.toggle("show", unread > 0 && !chatOpen); }
   if (!b) return;
   if (!msgs.length) { b.innerHTML = `<div class="cempty">${T.chatEmpty}</div>`; return; }
   b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"}">${esc(m.body)}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");

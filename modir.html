@@ -572,7 +572,7 @@ function renderLogin(note = ""){
 }
 
 /* پنل */
-let tab = "signals", signals = [], members = [], channel = null, q = "";
+let tab = new URLSearchParams(location.search).get("tab") === "msgs" ? "msgs" : "signals", signals = [], members = [], channel = null, q = "";
 
 function renderPanel(){
   $app.innerHTML = `<div class="top rise">
