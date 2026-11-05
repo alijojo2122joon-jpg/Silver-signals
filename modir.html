@@ -382,6 +382,24 @@
   .mf button{box-shadow:none;border-color:rgba(120,130,160,.18);background:rgba(255,255,255,.55)}
   .note,.box,.vp{box-shadow:none}
   .res{box-shadow:none}
+
+  /* ===== پیام‌ها ===== */
+  .nav{width:min(360px,calc(100% - 32px))!important;grid-template-columns:repeat(3,1fr)!important}
+  .nav .pill{width:calc((100% - 12px)/3)!important}
+  .nav .nb{position:absolute;top:4px;left:12px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#e5484d;color:#fff;font-size:11px;font-weight:800;display:none;place-items:center;font-family:Montserrat,Arial,sans-serif}
+  .nav .nb.show{display:grid}
+  .ub{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#e5484d;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;font-family:Montserrat,Arial,sans-serif}
+  .cbody{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow-y:auto;padding:6px 2px 10px}
+  .bub{max-width:82%;padding:9px 13px;border-radius:18px;font-size:14.5px;line-height:1.75;white-space:pre-wrap;word-wrap:break-word}
+  .bub small{display:block;font-size:10.5px;opacity:.7;margin-top:2px}
+  .bub.mem{align-self:flex-start;background:var(--field);border:1px solid rgba(120,130,160,.18);border-end-start-radius:6px}
+  .bub.adm{align-self:flex-end;background:linear-gradient(180deg,#22c466,#00963f);color:#fff;border-end-end-radius:6px}
+  .cst{text-align:center;font-size:12px;padding:2px 0}
+  .cst.wait{color:#c98a12} .cst.seen{color:#0f9d58}
+  .crow{display:flex;gap:8px;margin-top:8px}
+  .crow textarea{flex:1;resize:none;height:50px;padding:12px 14px;border-radius:16px;border:1px solid var(--stroke);background:var(--field);color:var(--text);font-family:inherit;font-size:15px;outline:none}
+  .crow button{width:50px;height:50px;flex:none;border-radius:50%;border:0;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(180deg,#22c466,#00963f 50%,#006b2c)}
+  .crow button svg{width:20px;height:20px;transform:scaleX(-1)}
 </style>
 </head>
 <body>
@@ -508,7 +526,7 @@ function openSheet(html){
   requestAnimationFrame(() => { $("veil").classList.add("show"); sh.classList.add("show"); });
   document.body.classList.add("lock");
 }
-function closeSheet(){ if (typeof curAudio !== 'undefined' && curAudio) { curAudio.pause(); } $("veil").classList.remove("show"); $("sheet").classList.remove("show"); document.body.classList.remove("lock"); }
+function closeSheet(){ openChatId = null; if (typeof curAudio !== 'undefined' && curAudio) { curAudio.pause(); } $("veil").classList.remove("show"); $("sheet").classList.remove("show"); document.body.classList.remove("lock"); }
 $("veil").onclick = closeSheet;
 let y0 = null;
 $("sheet").addEventListener("touchstart", e => { y0 = $("sheet").scrollTop <= 0 ? e.touches[0].clientY : null; }, {passive:true});
@@ -559,7 +577,7 @@ function renderPanel(){
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button></div>`;
+      <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button></div>`;
   $("out").onclick = () => sb.auth.signOut();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
@@ -567,9 +585,11 @@ function renderPanel(){
   drawPane();
   loadSignals(); loadMembers();
   if (channel) sb.removeChannel(channel);
-  channel = sb.channel("admin").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadSignals).subscribe();
+  channel = sb.channel("admin").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadSignals)
+    .on("postgres_changes", {event:"*", schema:"public", table:"messages"}, () => loadMsgs()).subscribe();
+  loadMsgs();
   clearInterval(window._poll);
-  window._poll = setInterval(() => { if (!document.hidden && !$("sheet").classList.contains("show")) { loadSignals(); loadMembers(); } }, 10000);
+  window._poll = setInterval(() => { if (!document.hidden && !$("sheet").classList.contains("show")) { loadSignals(); loadMembers(); } loadMsgs(); }, 10000);
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden && $("s1")) { loadSignals(); loadMembers(); } });
 
@@ -588,7 +608,8 @@ function drawStats(){
 
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
-  $("np").style.transform = tab === "members" ? "translateX(-100%)" : "none";
+  $("np").style.transform = `translateX(${-["signals","members","msgs"].indexOf(tab) * 100}%)`;
+  if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div>
@@ -598,6 +619,16 @@ function drawPane(){
 }
 function drawList(){
   const el = $("list"); if (!el) return;
+  drawNavBadge();
+  if (tab === "msgs") {
+    const conv = members.map(m => { const ms = allMsgs.filter(x => x.member_id === m.id); return { m, last: ms[ms.length - 1], unread: ms.filter(x => x.sender === "member" && !x.seen_at).length }; })
+      .filter(c => c.last).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
+    el.innerHTML = `<div class="list glass rise" style="--i:1">${conv.length ? conv.map(c => `<div class="it" data-chat="${c.m.id}">${avatar(c.m)}
+        <div><div class="t">${esc(c.m.name)}</div><div class="s">${c.last.sender === "admin" ? "شما: " : ""}${esc(c.last.body).slice(0, 60)}</div></div>
+        ${c.unread ? `<span class="ub">${c.unread}</span>` : `<span class="s">${fmtFull(c.last.created_at).split(" · ")[1] || ""}</span>`}</div>`).join("")
+      : `<div class="empty"><div class="big">💬</div>هنوز پیامی از اعضا نرسیده است.</div>`}</div>`;
+    return;
+  }
   if (tab === "signals") {
     const shown = mfilter === "all" ? signals : signals.filter(x => (x.market || "xag") === mfilter);
     el.innerHTML = `<div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
@@ -627,6 +658,7 @@ function paneClick(e){
   const a = e.target.closest("[data-act]"); if (a) return a.dataset.act === "newSignal" ? sheetNewSignal() : sheetNewMember();
   const s = e.target.closest("[data-sig]"); if (s) return sheetSignal(signals.find(x => String(x.id) === s.dataset.sig));
   const m = e.target.closest("[data-mem]"); if (m) return sheetMember(members.find(x => x.id === m.dataset.mem));
+  const c = e.target.closest("[data-chat]"); if (c) return sheetChat(c.dataset.chat);
 }
 
 const MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
@@ -833,6 +865,50 @@ let backfilled = false;
 async function backfillTranslations(){
   if (backfilled) return; backfilled = true;
   for (const s of signals.filter(x => x.note && (!x.translations?.ps || !x.translations?.en)).slice(0, 15)) await preTranslate(s);
+}
+
+/* ===== پیام‌های اعضا ===== */
+let allMsgs = [], msgCh = null, openChatId = null, knownMsg = null;
+function drawNavBadge(){ const n = allMsgs.filter(x => x.sender === "member" && !x.seen_at).length, b = $("nb"); if (b) { b.textContent = n; b.classList.toggle("show", n > 0); } }
+async function loadMsgs(){
+  const { data, error } = await sb.from("messages").select("*").order("created_at", {ascending:true});
+  if (error) return;
+  const fresh = knownMsg ? (data || []).filter(x => x.sender === "member" && !knownMsg.has(x.id)) : [];
+  knownMsg = new Set((data || []).map(x => x.id));
+  allMsgs = data || [];
+  if (fresh.length && !openChatId) { const m = members.find(x => x.id === fresh[fresh.length - 1].member_id); toast(`💬 پیام جدید از ${m ? m.name : "عضو"}`); try { navigator.vibrate && navigator.vibrate(200); } catch {} }
+  if (openChatId) { drawChatSheet(); markSeenAdmin(openChatId); }
+  drawList();
+}
+async function markSeenAdmin(id){
+  if (!allMsgs.some(x => x.member_id === id && x.sender === "member" && !x.seen_at)) return;
+  await sb.rpc("mark_seen", { p_member: id });
+  allMsgs.forEach(x => { if (x.member_id === id && x.sender === "member" && !x.seen_at) x.seen_at = new Date().toISOString(); });
+  drawList();
+}
+function drawChatSheet(){
+  const b = $("cbody"); if (!b) return;
+  const ms = allMsgs.filter(x => x.member_id === openChatId);
+  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"}">${esc(x.body)}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
+  const last = ms[ms.length - 1];
+  if (last && last.sender === "admin") b.insertAdjacentHTML("beforeend", `<div class="cst ${last.seen_at ? "seen" : "wait"}">${last.seen_at ? "✓✓ دیده شد" : "⏳ هنوز دیده نشده"}</div>`);
+  b.scrollTop = b.scrollHeight;
+}
+function sheetChat(id){
+  const m = members.find(x => x.id === id); if (!m) return;
+  openChatId = id;
+  openSheet(`<div class="head">${avatar(m)}<div><h2>${esc(m.name)}</h2><div class="hint">فقط 10 پیام آخر نگه داشته می‌شود</div></div></div>
+    <div class="cbody" id="cbody"></div>
+    <form class="crow" id="cf"><textarea id="cin" placeholder="پاسخ خود را بنویسید…" maxlength="2000"></textarea><button>${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 3l-6.5 18-3-7.5z"/></svg>'}</button></form>`);
+  drawChatSheet(); markSeenAdmin(id);
+  $("cf").onsubmit = async e => {
+    e.preventDefault(); const body = $("cin").value.trim(); if (!body) return;
+    $("cin").value = "";
+    allMsgs.push({ id: "t" + Date.now(), member_id: id, sender: "admin", body, created_at: new Date().toISOString(), seen_at: null }); drawChatSheet();
+    const { error } = await sb.from("messages").insert({ member_id: id, sender: "admin", body });
+    if (error) { toast("ارسال نشد: " + error.message, true); $("cin").value = body; }
+    loadMsgs();
+  };
 }
 /* مدیریت سیگنال */
 function sheetSignal(s){
