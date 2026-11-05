@@ -356,6 +356,20 @@
   .ntext.load{color:transparent!important;border-radius:10px;background:linear-gradient(100deg,rgba(120,130,160,.10) 30%,rgba(120,130,160,.25) 50%,rgba(120,130,160,.10) 70%);background-size:300% 100%;animation:shim 1.2s infinite}
   @keyframes shim{to{background-position:-150% 0}}
   .trsrc{display:block;margin-top:8px;font-size:11px;color:var(--soft)}
+
+  /* ===== انتخاب بازار ===== */
+  .mksel{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .mksel button{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:8px 4px;cursor:pointer;font-family:inherit;color:var(--text);background:var(--tile);box-shadow:var(--raise);display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .5s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
+  .mksel img{width:42px;height:42px;border-radius:13px;object-fit:cover;box-shadow:0 8px 14px -6px rgba(0,0,0,.4)}
+  .mksel b{font-size:13px;font-weight:900;line-height:1}
+  .mksel small{font-family:"Montserrat",Arial,sans-serif;font-size:10px;font-weight:700;color:var(--muted);direction:ltr}
+  .mksel button.on{transform:translateY(-3px);box-shadow:0 0 0 3px var(--brand),var(--raise)}
+  .mksel button[data-m="xau"].on{box-shadow:0 0 0 3px #d9ad4a,var(--raise)} .mksel button[data-m="xag"].on{box-shadow:0 0 0 3px #8e96a1,var(--raise)} .mksel button[data-m="usd"].on{box-shadow:0 0 0 3px #2f8a5b,var(--raise)}
+  .msym{font-family:"Montserrat",Arial,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.5px;direction:ltr;unicode-bidi:isolate}
+  .mf{display:flex;gap:8px;overflow-x:auto;margin:0 0 12px;padding:2px 2px 6px;scrollbar-width:none}
+  .mf button{flex:none;border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--muted);background:var(--tile);box-shadow:var(--raise);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .35s}
+  .mf button img{width:18px;height:18px;border-radius:6px;object-fit:cover}
+  .mf button.on{color:#fff;background:linear-gradient(180deg,#22c466,#00963f 50%,#006b2c);box-shadow:0 8px 16px -6px rgba(0,120,50,.5),inset 0 2px 0 rgba(255,255,255,.4)}
 </style>
 </head>
 <body>
@@ -573,11 +587,13 @@ function drawPane(){
 function drawList(){
   const el = $("list"); if (!el) return;
   if (tab === "signals") {
-    el.innerHTML = `<div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${signals.length ? signals.map(s => {
+    const shown = mfilter === "all" ? signals : signals.filter(x => (x.market || "xag") === mfilter);
+    el.innerHTML = `<div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
+    <div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${shown.length ? shown.map(s => {
       const b = s.type === "buy";
       const c = s.status === "sl" ? "off" : s.status === "closed" ? "mute" : "on";
       return `<div class="it" data-sig="${s.id}"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-        <div><div class="t num">${b?"خرید":"فروش"} ${range(s)}</div><div class="s">${s.tp1!=null?`هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""} · ${ago(s.created_at)}</div></div>
+        <div><div class="t num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</div><div class="s"><span class="msym">${(MARKETS[s.market]||MARKETS.xag).sym}</span>${s.tp1!=null?` · هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""} · ${ago(s.created_at)}</div></div>
         <span class="chip ${c}">${STATUS[s.status]}</span></div>`; }).join("")
       : `<div class="empty"><div class="big">📈</div>هنوز سیگنالی منتشر نکرده‌اید.<br>دکمه‌ی «سیگنال جدید» را بزنید.</div>`}</div>`;
   } else {
@@ -595,6 +611,7 @@ async function loadSignals(){ const { data } = await sb.from("signals").select("
 async function loadMembers(){ const { data } = await sb.from("profiles").select("*").eq("role","member").order("expires_at",{ascending:true}); members = data || []; drawList(); drawStats(); }
 
 function paneClick(e){
+  const f = e.target.closest("[data-mf]"); if (f) { mfilter = f.dataset.mf; return drawList(); }
   const a = e.target.closest("[data-act]"); if (a) return a.dataset.act === "newSignal" ? sheetNewSignal() : sheetNewMember();
   const s = e.target.closest("[data-sig]"); if (s) return sheetSignal(signals.find(x => String(x.id) === s.dataset.sig));
   const m = e.target.closest("[data-mem]"); if (m) return sheetMember(members.find(x => x.id === m.dataset.mem));
@@ -602,12 +619,21 @@ function paneClick(e){
 
 const MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="3"/></svg>';
+
+const MARKETS = {
+  xau: { name: "طلا", sym: "XAU/USD", unit: "دلار", th: "img/th-xau.webp" },
+  xag: { name: "نقره", sym: "XAG/USD", unit: "دلار", th: "img/th-xag.webp" },
+  usd: { name: "دلار", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
+};
+let mfilter = "all";
 /* سیگنال جدید */
 function sheetNewSignal(){
-  openSheet(`<h2>سیگنال جدید</h2><p class="hint">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
+  openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
     <form id="sf">
+      <label class="l" style="margin-top:4px">بازار</label>
+      <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}"><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
       <div class="tog" id="tg"><span class="k"></span><button type="button" class="on" data-s="buy">خرید ↑</button><button type="button" data-s="sell">فروش ↓</button></div>
-      <div class="two"><div><label class="l">قیمت ورود از</label><input class="in num" id="ef" type="number" step="any" inputmode="decimal" required placeholder="51"></div>
+      <div class="two"><div><label class="l">قیمت ورود از <span class="unit"></span></label><input class="in num" id="ef" type="number" step="any" inputmode="decimal" required placeholder="51"></div>
         <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="number" step="any" inputmode="decimal" placeholder="52"></div></div>
       <div class="two"><div><label class="l">تارگت 1</label><input class="in num" id="tp1" type="number" step="any" inputmode="decimal" placeholder="54"></div>
         <div><label class="l">تارگت 2 (اختیاری)</label><input class="in num" id="tp2" type="number" step="any" inputmode="decimal"></div></div>
@@ -617,6 +643,15 @@ function sheetNewSignal(){
       <button class="cta press" id="pub">انتشار سیگنال</button>
     </form>`);
   let side = "buy";
+  let mk = (() => { try { return localStorage.getItem("amk") || (mfilter !== "all" ? mfilter : "xau"); } catch { return "xau"; } })();
+  const setMk = m => { mk = m; try { localStorage.setItem("amk", m); } catch {}
+    $("mks").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
+    const u = MARKETS[m].unit;
+    const ph = { xau: ["2650","2655","2680","2630"], xag: ["31.5","31.8","32.6","30.9"], usd: ["65","65.5","67","64"] }[m];
+    ["ef","et","tp1","sl"].forEach((id, i) => $(id).placeholder = ph[i]);
+    document.querySelectorAll("#sf .unit").forEach(x => x.textContent = "(" + u + ")"); };
+  $("mks").onclick = e => { const b = e.target.closest("button"); if (b) setMk(b.dataset.m); };
+  setMk(mk);
   const rec = setupRecorder($("rec"));
   $("tg").onclick = e => { const b = e.target.closest("button"); if (!b) return; side = b.dataset.s;
     $("tg").classList.toggle("sell", side === "sell"); $("tg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); };
@@ -633,10 +668,10 @@ function sheetNewSignal(){
       const up = await sb.storage.from("voices").upload(voice_path, blob, { contentType: type });
       if (up.error) { busy(b, false, "انتشار سیگنال"); return toast("آپلود صدا ناموفق بود: " + up.error.message, true); }
     }
-    const { error } = await sb.from("signals").insert({ type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
+    const { error } = await sb.from("signals").insert({ market: mk, type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
       tp1: num($("tp1").value), tp2: num($("tp2").value), sl: num($("sl").value), note: $("note").value.trim() || null, voice_path });
     if (error) { if (voice_path) sb.storage.from("voices").remove([voice_path]); busy(b, false, "انتشار سیگنال"); return toast("خطا: " + error.message, true); }
-    closeSheet(); toast("سیگنال منتشر شد ✓"); loadSignals();
+    closeSheet(); toast(`تحلیل ${MARKETS[mk].name} منتشر شد ✓`); loadSignals();
   };
 }
 
@@ -750,7 +785,7 @@ function sheetSignal(s){
   if (!s) return;
   const b = s.type === "buy";
   openSheet(`<div class="head"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
+      <div><h2 class="num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint msym">${(MARKETS[s.market]||MARKETS.xag).sym}</div><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
     ${noteHTML(s, "box")}
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
     <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
