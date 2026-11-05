@@ -619,7 +619,7 @@ function drawList(){
       : `<div class="empty"><div class="big">👥</div>${members.length ? "نتیجه‌ای پیدا نشد." : "هنوز عضوی اضافه نکرده‌اید."}</div>`}</div>`;
   }
 }
-async function loadSignals(){ const { data } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(100); signals = data || []; drawList(); drawStats(); }
+async function loadSignals(){ const { data } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(100); signals = data || []; drawList(); drawStats(); backfillTranslations(); }
 async function loadMembers(){ const { data } = await sb.from("profiles").select("*").eq("role","member").order("expires_at",{ascending:true}); members = data || []; drawList(); drawStats(); }
 
 function paneClick(e){
@@ -680,10 +680,11 @@ function sheetNewSignal(){
       const up = await sb.storage.from("voices").upload(voice_path, blob, { contentType: type });
       if (up.error) { busy(b, false, "انتشار سیگنال"); return toast("آپلود صدا ناموفق بود: " + up.error.message, true); }
     }
-    const { error } = await sb.from("signals").insert({ market: mk, type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
-      tp1: num($("tp1").value), tp2: num($("tp2").value), sl: num($("sl").value), note: $("note").value.trim() || null, voice_path });
+    const { data: ins, error } = await sb.from("signals").insert({ market: mk, type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
+      tp1: num($("tp1").value), tp2: num($("tp2").value), sl: num($("sl").value), note: $("note").value.trim() || null, voice_path }).select("id,note").single();
     if (error) { if (voice_path) sb.storage.from("voices").remove([voice_path]); busy(b, false, "انتشار سیگنال"); return toast("خطا: " + error.message, true); }
     closeSheet(); toast(`تحلیل ${MARKETS[mk].name} منتشر شد ✓`); loadSignals();
+    if (ins?.note) preTranslate(ins);
   };
 }
 
@@ -754,9 +755,31 @@ function resultHTML(s){
   return `<div class="res ${cls}"><span class="ri">${ic}</span><div><b>${STATUS[s.status]}</b><small>${s.result_at ? "ثبت نتیجه: " + fmtFull(s.result_at) : ""}</small></div></div>`;
 }
 
+
+/* مترجم: اول Google مستقیم از مرورگر، بعد MyMemory، بعد سرور */
+async function gTranslate(text, tl){
+  const parts = []; let cur = "";
+  for (const line of String(text).split(/(\n)/)) { if ((cur + line).length > 1500 && cur) { parts.push(cur); cur = ""; } cur += line; }
+  if (cur) parts.push(cur);
+  const one = async p => {
+    try {
+      const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&tl=" + tl + "&q=" + encodeURIComponent(p));
+      if (r.ok) { const j = await r.json(); const t = (j[0] || []).map(x => x[0]).join(""); if (t) return t; }
+    } catch {}
+    try {
+      const src = /[؀-ۿ]/.test(p) ? (tl === "fa" ? "ps" : "fa") : "en";
+      const r = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(p) + "&langpair=" + src + "|" + (tl === "ps" ? "ps-AF" : tl));
+      if (r.ok) { const j = await r.json(); const t = j?.responseData?.translatedText; if (t && !/MYMEMORY WARNING|INVALID/i.test(t)) return t; }
+    } catch {}
+    throw new Error("tr_failed");
+  };
+  const out = []; for (const p of parts) out.push(await one(p));
+  return out.join("");
+}
 /* ترجمه‌ی متن تحلیل */
 const TL = [["fa","فارسی"],["ps","پښتو"],["en","English"]];
-const trCache = {};
+let trCache = {}; try { trCache = JSON.parse(localStorage.getItem("trc") || "{}"); } catch {}
+const saveTr = () => { try { const k = Object.keys(trCache); if (k.length > 200) k.slice(0, k.length - 200).forEach(x => delete trCache[x]); localStorage.setItem("trc", JSON.stringify(trCache)); } catch {} };
 const getTL = () => { try { const v = localStorage.getItem("tl"); return v && v !== "orig" ? v : "fa"; } catch { return "fa"; } };
 function noteHTML(s, cls = "note"){
   if (!s.note) return "";
@@ -777,12 +800,14 @@ function setNoteLang(box, lang, remember){
   if (lang === "fa") return show(el.dataset.orig, "auto", "");
   const key = id + ":" + lang;
   if (trCache[key]) return show(trCache[key], lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
+  const rec = (typeof all !== "undefined" ? all : signals).find(x => String(x.id) === id);
+  const stored = rec?.translations?.[lang];
+  if (stored) { trCache[key] = stored; return show(stored, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار"); }
   el.classList.add("load"); box.dataset.want = lang;
-  sb.functions.invoke("translate", { body: { id: Number(id), lang } }).then(({ data, error }) => {
-    if (box.dataset.want !== lang) return;
-    if (error || !data?.text) { el.classList.remove("load"); src.textContent = "ترجمه ممکن نشد؛ دوباره بزنید"; return; }
-    trCache[key] = data.text; show(data.text, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
-  });
+  const done = t => { if (box.dataset.want !== lang) return; trCache[key] = t; saveTr(); show(t, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار"); };
+  const fail = () => { if (box.dataset.want !== lang) return; el.classList.remove("load"); src.textContent = "ترجمه ممکن نشد؛ دوباره بزنید"; };
+  gTranslate(el.dataset.orig, lang).then(done).catch(() =>
+    sb.functions.invoke("translate", { body: { id: Number(id), lang } }).then(({ data }) => data?.text ? done(data.text) : fail()).catch(fail));
 }
 function applyNoteLang(root = document){
   const l = getTL();
@@ -792,6 +817,23 @@ document.addEventListener("click", e => {
   const b = e.target.closest(".trbar button"); if (!b) return;
   e.stopPropagation(); setNoteLang(b.closest(".tr"), b.dataset.tl, true);
 }, true);
+
+/* ترجمه‌ی خودکار هنگام انتشار تا اعضا فوراً ببینند */
+async function preTranslate(s){
+  const tr = { ...(s.translations || {}) };
+  let changed = false;
+  for (const l of ["ps", "en"]) {
+    if (tr[l]) continue;
+    try { tr[l] = await gTranslate(s.note, l); changed = true; } catch {}
+  }
+  if (changed) await sb.from("signals").update({ translations: tr }).eq("id", s.id);
+  return changed;
+}
+let backfilled = false;
+async function backfillTranslations(){
+  if (backfilled) return; backfilled = true;
+  for (const s of signals.filter(x => x.note && (!x.translations?.ps || !x.translations?.en)).slice(0, 15)) await preTranslate(s);
+}
 /* مدیریت سیگنال */
 function sheetSignal(s){
   if (!s) return;

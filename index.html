@@ -473,6 +473,13 @@
   .mk button.on{transform:none} .mk button.on img{transform:none}
   .mk .mkg{display:none}
   .mk button:not(.on){opacity:.72}
+
+  /* پس‌زمینه‌ی تمام‌صفحه، بلر و متحرک (بدون مذاب روی کارت‌ها) */
+  .mbg i{inset:-10%;filter:blur(10px) saturate(1.2)}
+  .mbg i[data-m="usd"]{filter:blur(9px) saturate(1.1)}
+  :root[data-market="xau"] .mbg b{background:linear-gradient(180deg,rgba(8,6,3,.25),rgba(8,6,3,.55))}
+  :root[data-market="xag"] .mbg b{background:linear-gradient(180deg,rgba(245,247,250,.18),rgba(236,239,243,.5))}
+  :root[data-market="usd"] .mbg b{background:linear-gradient(180deg,rgba(236,243,240,.3),rgba(228,238,234,.6))}
 </style>
 </head>
 <body>
@@ -633,9 +640,31 @@ function resultHTML(s){
   return `<div class="res ${cls}"><span class="ri">${ic}</span><div><b>${STATUS[s.status]}</b><small>${s.result_at ? "ثبت نتیجه: " + fmtFull(s.result_at) : ""}</small></div></div>`;
 }
 
+
+/* مترجم: اول Google مستقیم از مرورگر، بعد MyMemory، بعد سرور */
+async function gTranslate(text, tl){
+  const parts = []; let cur = "";
+  for (const line of String(text).split(/(\n)/)) { if ((cur + line).length > 1500 && cur) { parts.push(cur); cur = ""; } cur += line; }
+  if (cur) parts.push(cur);
+  const one = async p => {
+    try {
+      const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&tl=" + tl + "&q=" + encodeURIComponent(p));
+      if (r.ok) { const j = await r.json(); const t = (j[0] || []).map(x => x[0]).join(""); if (t) return t; }
+    } catch {}
+    try {
+      const src = /[؀-ۿ]/.test(p) ? (tl === "fa" ? "ps" : "fa") : "en";
+      const r = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(p) + "&langpair=" + src + "|" + (tl === "ps" ? "ps-AF" : tl));
+      if (r.ok) { const j = await r.json(); const t = j?.responseData?.translatedText; if (t && !/MYMEMORY WARNING|INVALID/i.test(t)) return t; }
+    } catch {}
+    throw new Error("tr_failed");
+  };
+  const out = []; for (const p of parts) out.push(await one(p));
+  return out.join("");
+}
 /* ترجمه‌ی متن تحلیل */
 const TL = [["fa","فارسی"],["ps","پښتو"],["en","English"]];
-const trCache = {};
+let trCache = {}; try { trCache = JSON.parse(localStorage.getItem("trc") || "{}"); } catch {}
+const saveTr = () => { try { const k = Object.keys(trCache); if (k.length > 200) k.slice(0, k.length - 200).forEach(x => delete trCache[x]); localStorage.setItem("trc", JSON.stringify(trCache)); } catch {} };
 const getTL = () => { try { const v = localStorage.getItem("tl"); return v && v !== "orig" ? v : "fa"; } catch { return "fa"; } };
 function noteHTML(s, cls = "note"){
   if (!s.note) return "";
@@ -656,12 +685,14 @@ function setNoteLang(box, lang, remember){
   if (lang === "fa") return show(el.dataset.orig, "auto", "");
   const key = id + ":" + lang;
   if (trCache[key]) return show(trCache[key], lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
+  const rec = (typeof all !== "undefined" ? all : signals).find(x => String(x.id) === id);
+  const stored = rec?.translations?.[lang];
+  if (stored) { trCache[key] = stored; return show(stored, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار"); }
   el.classList.add("load"); box.dataset.want = lang;
-  sb.functions.invoke("translate", { body: { id: Number(id), lang } }).then(({ data, error }) => {
-    if (box.dataset.want !== lang) return;
-    if (error || !data?.text) { el.classList.remove("load"); src.textContent = "ترجمه ممکن نشد؛ دوباره بزنید"; return; }
-    trCache[key] = data.text; show(data.text, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
-  });
+  const done = t => { if (box.dataset.want !== lang) return; trCache[key] = t; saveTr(); show(t, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار"); };
+  const fail = () => { if (box.dataset.want !== lang) return; el.classList.remove("load"); src.textContent = "ترجمه ممکن نشد؛ دوباره بزنید"; };
+  gTranslate(el.dataset.orig, lang).then(done).catch(() =>
+    sb.functions.invoke("translate", { body: { id: Number(id), lang } }).then(({ data }) => data?.text ? done(data.text) : fail()).catch(fail));
 }
 function applyNoteLang(root = document){
   const l = getTL();
@@ -695,7 +726,7 @@ const lv = s => `<div class="lvls">
 function hero(s){
   const b = s.type === "buy";
   const m = s.market || "xag", drip = m === "xau" || m === "xag";
-  return `<div class="hero glass sw ${b?"buy":"sell"} ${drip?"hasdrip":""} rise ${s.id===freshId?"fresh":""}" style="--i:1">${drip?`<span class="drip ${m}"></span>`:""}<span class="shine"></span>
+  return `<div class="hero glass sw ${b?"buy":"sell"} rise ${s.id===freshId?"fresh":""}" style="--i:1"><span class="shine"></span>
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?"خرید":"فروش"}</div>
       <span class="st ${esc(s.status)}">${STATUS[s.status]||""}</span></div>
     <div style="margin-top:10px">${symTag(m)}</div>
@@ -779,7 +810,7 @@ async function loadFeed(){
   if (error) { failCount++; liveUI("off"); if (failCount > 3) renderMsg("⚠️", "دسترسی ممکن نیست", esc(CONTACT)); return; }
   failCount = 0; lastAt = Date.now();
   const list = data || [];
-  const nsig = list.map(x => x.id + ":" + (x.market || "") + ":" + x.status + ":" + (x.result_at || "") + ":" + (x.note || "").length + ":" + (x.voice_path || "")).join("|");
+  const nsig = list.map(x => x.id + ":" + (x.market || "") + ":" + Object.keys(x.translations || {}).join("") + ":" + x.status + ":" + (x.result_at || "") + ":" + (x.note || "").length + ":" + (x.voice_path || "")).join("|");
   if (sig !== null && list[0] && list[0].id !== topId && !all.some(x => x.id === list[0].id)) {
     const n = list[0], b = n.type === "buy", nm = n.market || "xag";
     freshId = n.id;
