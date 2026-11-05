@@ -428,6 +428,51 @@
   :root[data-market="xag"] .entry b{background:linear-gradient(180deg,#5d6570,#1e2329 55%,#6d7580);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
   :root[data-market="xau"] .ib,:root[data-market="xau"] .lgo,:root[data-market="xau"] .lv,:root[data-market="xau"] .note,:root[data-market="xau"] .vp,:root[data-market="xau"] .st,:root[data-market="xau"] .mk button{border-color:rgba(255,220,140,.14)}
   :root[data-market="xau"] .lgo img{filter:invert(1) hue-rotate(180deg)}
+
+  /* ===== طراحی خلوت‌تر ===== */
+  .chip::after,.st::after,.res::after{display:none}
+  .sub>.shine,.list>.shine,.livebar>.shine{display:none}
+  .lv{animation:none}
+  .hero{animation:rise .9s cubic-bezier(.16,1,.3,1) forwards, drift 10s ease-in-out 1s infinite}
+  @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .hero .drip{height:78px;opacity:.75}
+  .hero .drip.xau{opacity:.8}
+  .hero.hasdrip{padding-top:58px}
+  .hero{padding:18px 18px 16px;margin-bottom:26px}
+  .lvls{gap:0;margin-top:14px;padding:4px 0;border-radius:18px;background:var(--tile);box-shadow:var(--sh-in);border:0}
+  .lv{background:none;box-shadow:none;border:0;border-radius:0;text-align:center;padding:10px 6px}
+  .lv+.lv{border-right:1px solid rgba(120,130,160,.18)}
+  .lv b{font-size:18px;text-shadow:none}
+  .note,.vp{box-shadow:none;background:rgba(120,130,160,.07);border:1px solid rgba(120,130,160,.12)}
+  .res{box-shadow:none}
+  .entry b{font-size:34px}
+  .when{text-align:center;opacity:.8}
+  .hero>div[style*="margin-top:10px"]{display:none}
+  h3{margin:6px 6px 10px;font-size:12.5px}
+  .list{padding:4px;box-shadow:0 12px 30px -16px rgba(30,50,40,.25)}
+  .row{padding:11px 10px}
+  .av{width:38px;height:38px;box-shadow:none}
+
+  /* نوار وضعیت یکپارچه */
+  .status-line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 4px 14px;font-size:12px;color:var(--muted)}
+  .status-line .lv2{display:flex;align-items:center;gap:7px;cursor:pointer}
+  .status-line .lv2 b{color:var(--buy);font-weight:800}
+  .status-line .ldot{width:8px;height:8px}
+  .status-line.busy .ldot{background:var(--brand)}
+  .status-line.off .ldot{background:var(--sell);animation:none} .status-line.off .lv2 b{color:var(--sell)}
+  .status-line .subtxt b{color:var(--text)}
+  .status-line.warn .subtxt{color:var(--amber)}
+
+  /* زبانه‌های بازار جمع‌وجور */
+  .mk{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:5px;margin:0 0 18px;border-radius:20px;background:var(--gl);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--sh);border:1px solid rgba(255,255,255,.5)}
+  .mk .mkpill{position:absolute;top:5px;bottom:5px;right:5px;width:calc((100% - 10px)/3);border-radius:15px;background:var(--tile);box-shadow:var(--raise);transition:transform .7s cubic-bezier(.34,1.4,.5,1)}
+  .mk button{background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none;-webkit-backdrop-filter:none;flex-direction:row;justify-content:center;gap:8px;padding:9px 4px;border-radius:15px;z-index:1}
+  .mk button img{width:28px;height:28px;border-radius:9px;box-shadow:0 4px 8px -4px rgba(0,0,0,.4)}
+  .mk button span.t2{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+  .mk b{font-size:13px} .mk small{font-size:9.5px}
+  .mk button.on{transform:none} .mk button.on img{transform:none}
+  .mk .mkg{display:none}
+  .mk button:not(.on){opacity:.72}
 </style>
 </head>
 <body>
@@ -679,8 +724,8 @@ function drawFeed(){
   const M = MARKETS[market];
   if (!list.length) { el.innerHTML = `<div class="empty glass rise"><div class="big"><img src="${M.th}" alt="" style="width:64px;height:64px;border-radius:18px;object-fit:cover;box-shadow:var(--raise)"></div><h2>${inM.length?"سیگنالی در این بخش نیست":"هنوز تحلیلی برای " + M.name + " منتشر نشده"}</h2><div>به‌محض انتشار، همین‌جا نمایش داده می‌شود.</div></div>`; return; }
   const [first, ...rest] = list;
-  el.innerHTML = `<h3 class="rise">آخرین تحلیل ${M.name} · <span class="ltr" style="font-family:Montserrat,Arial,sans-serif">${M.sym}</span></h3>${hero(first)}`
-    + (rest.length ? `<h3 class="rise" style="--i:2">سیگنال‌های قبلی</h3><div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rest.map(item).join("")}</div>` : "");
+  el.innerHTML = `<h3 class="rise">آخرین تحلیل</h3>${hero(first)}`
+    + (rest.length ? `<h3 class="rise" style="--i:2">تحلیل‌های قبلی</h3><div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rest.map(item).join("")}</div>` : "");
   applyNoteLang(el);
 }
 /* به‌روزرسانی زنده */
@@ -721,9 +766,9 @@ function liveUI(state){
 function tickLabel(){
   const el = $("lbt"); if (!el) return;
   const lb = $("lb");
-  if (lb.classList.contains("busy")) return el.textContent = "در حال به‌روزرسانی…";
-  if (lb.classList.contains("off")) return el.textContent = "اتصال برقرار نیست؛ دوباره تلاش می‌شود";
-  el.textContent = "به‌روزرسانی خودکار فعال است";
+  if (lb.classList.contains("busy")) return el.textContent = "· در حال به‌روزرسانی";
+  if (lb.classList.contains("off")) return el.textContent = "· تلاش دوباره…";
+  el.textContent = "";
 }
 async function loadFeed(){
   if (loading) return; loading = true; liveUI("busy");
@@ -760,22 +805,19 @@ function startPolling(){
 }
 
 function renderFeed(me){
-  let strip = "";
+  const strip = { txt: "", warn: false };
   if (me.role !== "admin") {
     const days = Math.ceil((new Date(me.expires_at) - Date.now()) / DAY);
-    strip = `<div class="sub glass sw rise ${days<=5?"warn":""}" style="--sd:.6s"><span class="shine"></span><span class="live"><i></i>اشتراک فعال</span>
-      <span>تا <b>${fmtDate(me.expires_at)}</b> · <b class="num">${fa(days)}</b> روز</span></div>`;
+    strip.txt = `اشتراک: <b class="num">${fa(days)}</b> روز`; strip.warn = days <= 5;
   }
-  $app.innerHTML = topbar() + strip + `
-    <div class="mk rise" style="--i:1">${Object.entries(MARKETS).map(([k, v]) => `<button data-m="${k}" class="${k===market?"on":""}"><span class="dot"></span><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small><span class="mkg"></span></button>`).join("")}</div>
-    <div class="seg glass rise" style="--i:1"><span class="pill" id="pill"></span>
-      <button data-f="all" class="on">همه</button><button data-f="buy">خرید</button><button data-f="sell">فروش</button></div>
-    <div class="livebar glass sw" id="lb" style="--poll:${POLL/1000}s;--sd:1.8s"><span class="shine"></span><span class="ldot"></span><b>زنده</b><span class="lbt" id="lbt">در حال دریافت…</span>
-      <svg class="ring" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="fg" cx="12" cy="12" r="10"/></svg></div>
+  $app.innerHTML = topbar() + `
+    <div class="mk rise" style="--i:1"><span class="mkpill" id="mkp"></span>${Object.entries(MARKETS).map(([k, v]) => `<button data-m="${k}" class="${k===market?"on":""}"><span class="dot"></span><img src="${v.th}" alt=""><span class="t2"><b>${v.name}</b><small>${v.sym}</small></span></button>`).join("")}</div>
+    <div class="status-line ${strip.warn?"warn":""}" id="lb"><span class="lv2"><span class="ldot"></span><b>زنده</b><span class="lbt" id="lbt">در حال دریافت…</span></span><span class="subtxt">${strip.txt}</span>
+      <svg class="ring" viewBox="0 0 24 24" style="display:none"><circle class="bg" cx="12" cy="12" r="10"/><circle class="fg" cx="12" cy="12" r="10"/></svg></div>
     <div id="feed"><div class="sk"></div><div class="sk" style="height:180px"></div></div>
     <div class="disc">این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت هر معامله با خود شماست.</div>`;
   bindTop();
-  document.querySelectorAll(".seg button").forEach((b, i) => b.onclick = () => {
+  document.querySelectorAll(".seg button").forEach((b, i) => b.onclick = () => { /* removed */
     filter = b.dataset.f;
     document.querySelectorAll(".seg button").forEach(x => x.classList.toggle("on", x === b));
     $("pill").style.transform = `translateX(${-i * 100}%)`;
@@ -785,8 +827,11 @@ function renderFeed(me){
     if (b.dataset.m === market) return;
     market = b.dataset.m; try { localStorage.setItem("mk", market); } catch {}
     document.querySelectorAll(".mk button").forEach(x => x.classList.toggle("on", x === b)); b.classList.remove("new");
+    movePill();
     applyMarket(); drawFeed();
   });
+  const movePill = () => { const i = Object.keys(MARKETS).indexOf(market); $("mkp").style.transform = `translateX(${-i * 100}%)`; };
+  movePill();
   applyMarket();
   $("feed").onclick = e => { if (e.target.closest(".vp,.trbar")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
   stopLive();

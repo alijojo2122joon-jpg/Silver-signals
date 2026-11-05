@@ -370,6 +370,18 @@
   .mf button{flex:none;border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--muted);background:var(--tile);box-shadow:var(--raise);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .35s}
   .mf button img{width:18px;height:18px;border-radius:6px;object-fit:cover}
   .mf button.on{color:#fff;background:linear-gradient(180deg,#22c466,#00963f 50%,#006b2c);box-shadow:0 8px 16px -6px rgba(0,120,50,.5),inset 0 2px 0 rgba(255,255,255,.4)}
+
+  /* ===== طراحی خلوت‌تر ===== */
+  .chip::after,.st::after,.res::after{display:none}
+  .stat>.shine,.list>.shine{display:none}
+  .stat:nth-child(1),.stat:nth-child(2),.stat:nth-child(3){animation:rise .9s cubic-bezier(.16,1,.3,1) forwards}
+  .stat:nth-child(2){animation-delay:.08s} .stat:nth-child(3){animation-delay:.16s}
+  .lv{animation:none}
+  .av{width:40px;height:40px;box-shadow:none}
+  .list{box-shadow:0 12px 30px -16px rgba(30,50,40,.25)}
+  .mf button{box-shadow:none;border-color:rgba(120,130,160,.18);background:rgba(255,255,255,.55)}
+  .note,.box,.vp{box-shadow:none}
+  .res{box-shadow:none}
 </style>
 </head>
 <body>
