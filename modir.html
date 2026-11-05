@@ -345,8 +345,8 @@
 
   /* ===== ترجمه ===== */
   .note.tr{padding:10px 12px 12px;white-space:normal}
-  .trbar{position:relative;display:grid;grid-template-columns:repeat(4,1fr);padding:4px;margin-bottom:10px;border-radius:14px;background:rgba(120,130,160,.10);box-shadow:var(--sh-in)}
-  .trbar .tp{position:absolute;top:4px;bottom:4px;right:4px;width:calc((100% - 8px)/4);border-radius:11px;background:var(--tile);box-shadow:var(--raise);transition:transform .6s cubic-bezier(.34,1.45,.5,1)}
+  .trbar{position:relative;display:grid;grid-template-columns:repeat(3,1fr);padding:4px;margin-bottom:10px;border-radius:14px;background:rgba(120,130,160,.10);box-shadow:var(--sh-in)}
+  .trbar .tp{position:absolute;top:4px;bottom:4px;right:4px;width:calc((100% - 8px)/3);border-radius:11px;background:var(--tile);box-shadow:var(--raise);transition:transform .6s cubic-bezier(.34,1.45,.5,1)}
   .trbar button{position:relative;z-index:1;border:0;background:none;font-family:inherit;font-size:12px;font-weight:800;color:var(--muted);padding:6px 0;cursor:pointer;transition:color .3s}
   .trbar button.on{color:var(--text)}
   .trbar button[data-tl="en"]{font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:.3px}
@@ -708,9 +708,9 @@ function resultHTML(s){
 }
 
 /* ترجمه‌ی متن تحلیل */
-const TL = [["orig","اصل"],["fa","فارسی"],["ps","پښتو"],["en","English"]];
+const TL = [["fa","فارسی"],["ps","پښتو"],["en","English"]];
 const trCache = {};
-const getTL = () => { try { return localStorage.getItem("tl") || "orig"; } catch { return "orig"; } };
+const getTL = () => { try { const v = localStorage.getItem("tl"); return v && v !== "orig" ? v : "fa"; } catch { return "fa"; } };
 function noteHTML(s, cls = "note"){
   if (!s.note) return "";
   return `<div class="${cls} tr" data-nid="${s.id}"><div class="trbar"><span class="tp"></span>${TL.map(([k, v]) => `<button type="button" data-tl="${k}">${v}</button>`).join("")}</div>
@@ -727,7 +727,7 @@ function setNoteLang(box, lang, remember){
   const show = (txt, dir, note) => { el.classList.add("fade");
     setTimeout(() => { el.classList.remove("load"); el.textContent = esc(txt).replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
       el.setAttribute("dir", dir); src.textContent = note; requestAnimationFrame(() => el.classList.remove("fade")); }, 200); };
-  if (lang === "orig") return show(el.dataset.orig, "auto", "");
+  if (lang === "fa") return show(el.dataset.orig, "auto", "");
   const key = id + ":" + lang;
   if (trCache[key]) return show(trCache[key], lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
   el.classList.add("load"); box.dataset.want = lang;
