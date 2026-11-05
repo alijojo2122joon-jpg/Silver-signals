@@ -147,6 +147,19 @@
   @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
   .foot{text-align:center;color:var(--soft);font-size:11px;letter-spacing:2px;margin-top:30px}
   .disc{text-align:center;color:var(--soft);font-size:11px;margin:24px 10px 0}
+
+  /* voice player */
+  .vp{display:flex;align-items:center;gap:12px;margin-top:14px;padding:10px 12px;border-radius:18px;background:var(--glass2);border:1px solid var(--stroke);box-shadow:var(--sh-in)}
+  .vplay{position:relative;overflow:hidden;flex:none;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;color:#fff;background:linear-gradient(135deg,#4a7bff,#1b3fd1);box-shadow:0 8px 18px rgba(53,102,255,.35);display:grid;place-items:center;transition:transform .2s cubic-bezier(.3,.7,.4,1.4)}
+  .vplay:active{transform:scale(.9)}
+  .vplay svg{width:18px;height:18px}
+  .vwave{flex:1;height:34px;display:flex;align-items:center;gap:3px;direction:ltr;cursor:pointer;position:relative}
+  .vwave i{flex:1;border-radius:3px;background:rgba(120,130,160,.35);transition:background .2s}
+  .vwave i.on{background:var(--blue,#3566ff)}
+  .vp.playing .vwave i.on{animation:vb 1s ease-in-out infinite alternate}
+  @keyframes vb{to{opacity:.6}}
+  .vt{font-size:12px;color:var(--muted);min-width:38px;text-align:left;font-variant-numeric:tabular-nums}
+  .vlab{font-size:11px;font-weight:800;color:var(--muted);margin:14px 4px -8px}
 </style>
 </head>
 <body>
@@ -198,6 +211,47 @@ document.addEventListener("pointerdown", e => {
   if (getComputedStyle(el).position === "static") el.style.position = "relative";
   el.appendChild(d); setTimeout(() => d.remove(), 650);
 });
+
+
+/* پخش‌کننده‌ی صدا */
+const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5"/></svg>';
+const urlCache = {};
+const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0").replace(/\d/g, d => fa(d)); };
+function voiceHTML(path, src = ""){
+  let h = 0; for (const c of path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const bars = Array.from({length: 30}, (_, i) => { h = (h * 1103515245 + 12345) >>> 0; const v = 25 + (h % 75); return `<i style="height:${v}%"></i>`; }).join("");
+  return `<div class="vp" data-path="${esc(path)}" ${src ? `data-src="${esc(src)}"` : ""}><button type="button" class="vplay" aria-label="پخش">${PLAY}</button><div class="vwave">${bars}</div><span class="vt">🎙</span></div>`;
+}
+let curAudio = null, curVp = null;
+function paintVp(vp, a){
+  const d = isFinite(a.duration) ? a.duration : 0;
+  const bars = vp.querySelectorAll(".vwave i"), k = d ? a.currentTime / d : 0, n = Math.round(k * bars.length);
+  bars.forEach((b, i) => b.classList.toggle("on", i < n));
+  vp.querySelector(".vt").textContent = d ? mmss(a.paused ? d : d - a.currentTime) : mmss(a.currentTime);
+}
+document.addEventListener("click", async e => {
+  const btn = e.target.closest(".vplay"), wave = e.target.closest(".vwave");
+  const vp = (btn || wave)?.closest(".vp"); if (!vp) return;
+  e.stopPropagation();
+  if (curVp !== vp) {
+    if (curAudio) { curAudio.pause(); curVp?.classList.remove("playing"); const ob = curVp?.querySelector(".vplay"); if (ob) ob.innerHTML = PLAY; }
+    let src = vp.dataset.src;
+    if (!src) {
+      const p = vp.dataset.path;
+      if (!urlCache[p]) { const { data, error } = await sb.storage.from("voices").createSignedUrl(p, 3600); if (error) return; urlCache[p] = data.signedUrl; }
+      src = urlCache[p];
+    }
+    curAudio = new Audio(src); curVp = vp;
+    curAudio.ontimeupdate = () => paintVp(vp, curAudio);
+    curAudio.onloadedmetadata = () => paintVp(vp, curAudio);
+    curAudio.onended = () => { vp.classList.remove("playing"); vp.querySelector(".vplay").innerHTML = PLAY; curAudio.currentTime = 0; paintVp(vp, curAudio); };
+  }
+  const a = curAudio;
+  if (wave && isFinite(a.duration) && a.duration) { const r = wave.getBoundingClientRect(); a.currentTime = a.duration * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); if (!btn && a.paused) return paintVp(vp, a); }
+  if (a.paused) { try { await a.play(); } catch { return; } vp.classList.add("playing"); vp.querySelector(".vplay").innerHTML = PAUSE; }
+  else { a.pause(); vp.classList.remove("playing"); vp.querySelector(".vplay").innerHTML = PLAY; }
+}, true);
 
 let channel = null;
 const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } };
@@ -261,6 +315,7 @@ function hero(s){
     <div class="entry">${b?"قیمت خرید":"قیمت فروش"}<b class="num">${range(s)}</b></div>
     ${lv(s)}
     ${s.note?`<div class="note">${esc(s.note)}</div>`:""}
+    ${s.voice_path?voiceHTML(s.voice_path):""}
     <div class="when">${ago(s.created_at)}</div></div>`;
 }
 function item(s, i){
@@ -268,9 +323,9 @@ function item(s, i){
   const chip = s.status==="active" ? (b?"buy":"sell") : (s.status==="sl"?"sell":s.status.startsWith("tp")?"buy":"mute");
   return `<div class="it rise" style="--i:${i+2}">
     <div class="row"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><div class="t num">${b?"خرید":"فروش"} ${range(s)}</div><div class="s">${s.tp1!=null?`هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}</div></div>
+      <div><div class="t num">${b?"خرید":"فروش"} ${range(s)}</div><div class="s">${s.tp1!=null?`هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""}</div></div>
       <div class="e"><span class="chip ${chip}">${STATUS[s.status]||""}</span><br>${ago(s.created_at)}</div></div>
-    <div class="more"><div>${lv(s)}${s.note?`<div class="note">${esc(s.note)}</div>`:""}</div></div></div>`;
+    <div class="more"><div>${lv(s)}${s.note?`<div class="note">${esc(s.note)}</div>`:""}${s.voice_path?`<div style="margin:0 12px 12px">${voiceHTML(s.voice_path)}</div>`:""}</div></div></div>`;
 }
 
 let all = [], filter = "all";
@@ -307,7 +362,7 @@ function renderFeed(me){
     $("pill").style.transform = `translateX(${-i * 100}%)`;
     drawFeed();
   });
-  $("feed").onclick = e => { const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
+  $("feed").onclick = e => { if (e.target.closest(".vp")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
   loadFeed();
   stopLive();
   channel = sb.channel("feed").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadFeed).subscribe();
