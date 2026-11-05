@@ -323,6 +323,8 @@
   .cfoot.recording textarea,.cfoot.recording .ctool{display:none}
   .cfoot.recording .recbar{display:flex}
   .upl{opacity:.6}
+  .nolink{display:block;margin:18px auto 0;border:0;background:none;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);text-shadow:var(--ts)}
+  .nolink b{color:var(--text)}
 </style>
 </head>
 <body>
@@ -331,6 +333,15 @@
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
+
+/* ===== به‌روزرسانی خودکار نسخه ===== */
+const BUILD = "1793878717";
+async function checkVersion(){
+  try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
+    const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
+}
+checkVersion(); setInterval(checkVersion, 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkVersion(); });
 
 /* ====== تنظیمات ====== */
 const SUPABASE_URL = "https://segfazxjglbawdhopnra.supabase.co";
@@ -362,7 +373,7 @@ const L = {
     live:"زنده", updating:"در حال به‌روزرسانی…", offline:"آفلاین", subDays:"اشتراک: {n} روز",
     offTitle:"شما آفلاین هستید", offText:"برای دیدن تحلیل‌های تازه به اینترنت وصل شوید. آخرین تحلیل‌هایی که دیده بودید در زیر هست و با وصل شدن اینترنت، صفحه خودش به‌روز می‌شود.",
     expired:"اشتراک شما تمام شده است", endDate:"تاریخ پایان", contact:"برای تمدید اشتراک با مدیر تماس بگیرید.",
-    disabled:"حساب شما غیرفعال است", noAcc:"حساب فعال نیست", firstOnline:"برای بار اول باید به اینترنت وصل باشید.",
+    disabled:"حساب شما غیرفعال است", noAcc:"حساب فعال نیست", firstOnline:"برای بار اول باید به اینترنت وصل باشید.", removed:"حساب شما حذف شده است", chatHint:"اگر فکر می‌کنید اشتباهی شده یا می‌خواهید حساب‌تان برگردد، همین‌جا به استاد پیام بدهید.", msgBtn:"پیام به استاد", sendFail2:"ارسال نشد؛ دوباره تلاش کنید", noAccQ:"حساب ندارید یا حساب شما حذف شده؟", cTitle:"پیام به استاد", cSub:"نام و شماره‌ی تماس خود را بنویسید تا استاد با شما تماس بگیرد.", cName:"نام شما", cContact:"شماره‌ی تماس یا ایمیل", cMsg:"پیام شما", cSend:"ارسال پیام", cOk:"پیام شما برای استاد ارسال شد. به‌زودی با شما تماس گرفته می‌شود.", cErr:"ارسال نشد؛ اینترنت را بررسی کنید و دوباره تلاش کنید.", close:"بستن",
     disc:"این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت هر معامله با خود شماست.",
     newA:"تحلیل جدید", tapView:"برای دیدن بزنید", upd:"به‌روزرسانی تحلیل",
     autoTr:"ترجمه‌ی خودکار", trFail:"ترجمه ممکن نشد؛ دوباره بزنید", cantPlay:"قابل پخش نیست", lang:"زبان",
@@ -379,7 +390,7 @@ const L = {
     live:"ژوندی", updating:"تازه کېږي…", offline:"آفلاین", subDays:"ګډون: {n} ورځې",
     offTitle:"تاسو آفلاین یاست", offText:"د نویو تحلیلونو د لیدو لپاره انټرنېټ ته وصل شئ. هغه وروستي تحلیلونه چې مو لیدلي وو لاندې دي، او د انټرنېټ په راتګ سره پاڼه پخپله تازه کېږي.",
     expired:"ستاسو ګډون پای ته رسېدلی", endDate:"د پای نېټه", contact:"د ګډون د نوي کولو لپاره له مدیر سره اړیکه ونیسئ.",
-    disabled:"ستاسو حساب غیرفعال دی", noAcc:"حساب فعال نه دی", firstOnline:"د لومړي ځل لپاره باید انټرنېټ ته وصل اوسئ.",
+    disabled:"ستاسو حساب غیرفعال دی", noAcc:"حساب فعال نه دی", firstOnline:"د لومړي ځل لپاره باید انټرنېټ ته وصل اوسئ.", removed:"ستاسو حساب حذف شوی", chatHint:"که فکر کوئ تېروتنه شوې یا غواړئ حساب مو بېرته فعال شي، همدلته استاد ته پیغام ولیکئ.", msgBtn:"استاد ته پیغام", sendFail2:"ونه لېږل شو؛ بیا هڅه وکړئ", noAccQ:"حساب نه لرئ یا مو حساب حذف شوی؟", cTitle:"استاد ته پیغام", cSub:"خپل نوم او د اړیکې شمېره ولیکئ چې استاد درسره اړیکه ونیسي.", cName:"ستاسو نوم", cContact:"د اړیکې شمېره یا برېښنالیک", cMsg:"ستاسو پیغام", cSend:"پیغام ولېږئ", cOk:"ستاسو پیغام استاد ته ولېږل شو. ژر به درسره اړیکه ونیول شي.", cErr:"ونه لېږل شو؛ انټرنېټ وګورئ او بیا هڅه وکړئ.", close:"بندول",
     disc:"دا تحلیلونه کارپوهنیز نظر دی او د ګټې تضمین نه دی؛ د هرې معاملې مسؤلیت ستاسو دی.",
     newA:"نوی تحلیل", tapView:"د لیدو لپاره کېکاږئ", upd:"د تحلیل تازه حالت",
     autoTr:"اتوماتیک ژباړه", trFail:"ژباړه ونشوه؛ بیا کېکاږئ", cantPlay:"نه غږېږي", lang:"ژبه",
@@ -396,7 +407,7 @@ const L = {
     live:"Live", updating:"Updating…", offline:"Offline", subDays:"Subscription: {n} days",
     offTitle:"You're offline", offText:"Connect to the internet to see new analyses. The last analyses you saw are shown below, and the page will update by itself when you're back online.",
     expired:"Your subscription has ended", endDate:"End date", contact:"Please contact the admin to renew your subscription.",
-    disabled:"Your account is disabled", noAcc:"Account is not active", firstOnline:"You need an internet connection the first time.",
+    disabled:"Your account is disabled", noAcc:"Account is not active", firstOnline:"You need an internet connection the first time.", removed:"Your account has been removed", chatHint:"If you think this is a mistake or want your account back, message Ostad right here.", msgBtn:"Message Ostad", sendFail2:"Not sent, please try again", noAccQ:"No account, or was your account removed?", cTitle:"Message Ostad", cSub:"Leave your name and phone number so Ostad can contact you.", cName:"Your name", cContact:"Phone number or email", cMsg:"Your message", cSend:"Send message", cOk:"Your message was sent to Ostad. You will be contacted soon.", cErr:"Not sent. Check your internet and try again.", close:"Close",
     disc:"These analyses are expert opinions, not a guarantee of profit. You are responsible for every trade.",
     newA:"New analysis", tapView:"tap to view", upd:"Analysis update",
     autoTr:"Auto-translated", trFail:"Translation failed, tap again", cantPlay:"Can't play", lang:"Language",
@@ -578,11 +589,13 @@ function renderLogin(){
       <button type="button" class="eye" id="eye">${I.eye}</button></label>
     <button class="cta rise" style="--i:6" id="go">${T.login}</button>
     <div class="err" id="er">${esc(loginNote)}</div>
+    <button type="button" class="nolink rise" style="--i:7" id="noacc">${T.noAccQ} <b>${T.cTitle} 💬</b></button>
     <div class="foot rise" style="--i:7">${T.foot}</div>
   </form>`;
   loginNote = "";
   $("f").querySelector(".langs").onclick = e => { const b = e.target.closest("[data-lang]"); if (!b) return; setLang(b.dataset.lang); };
   $("eye").onclick = () => { const p = $("pw"); p.type = p.type === "password" ? "text" : "password"; };
+  $("noacc").onclick = openContact;
   $("f").onsubmit = async e => {
     e.preventDefault();
     const go = $("go"), er = $("er"); er.textContent = ""; go.disabled = true; go.innerHTML = '<span class="spin"></span>';
@@ -595,10 +608,16 @@ function renderLogin(){
   };
 }
 
-function renderMsg(icon, title, text){
+function renderMsg(icon, title, text, chat = false){
   view = "msg"; stopLive(); removeChat();
-  $app.innerHTML = topbar() + `<div class="msg glass glow rise" style="margin-top:30px"><div class="big">${icon}</div><h2>${title}</h2><div>${text}</div></div>`;
+  $app.innerHTML = topbar() + `<div class="msg glass glow rise" style="margin-top:30px"><div class="big">${icon}</div><h2>${title}</h2><div>${text}</div>
+    ${chat ? `<p style="margin:14px 0 4px;font-size:13px">${T.chatHint}</p><button class="cta" id="mchat" style="margin-top:12px">💬 ${T.msgBtn}</button>` : ""}</div>`;
   bindTop();
+  if (chat && me) {
+    setupChat();
+    $("mchat").onclick = () => openChat();
+    clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden && !chatOpen) loadChat(); }, 8000);
+  }
 }
 
 /* ===== کارت‌ها ===== */
@@ -756,7 +775,7 @@ async function toWav(blob, sr = 16000){
   for (let i = 0; i < d.length; i++) { const x = Math.max(-1, Math.min(1, d[i])); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
   return new Blob([v], { type: "audio/wav" });
 }
-function makeRecorder(onTick){
+function makeRecorder(onTick, maxSec = 60){
   let mr = null, chunks = [], stream = null, t0 = 0, timer = null, resolveStop = null;
   return {
     active: () => !!mr,
@@ -766,7 +785,7 @@ function makeRecorder(onTick){
       mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); chunks = [];
       mr.ondataavailable = e => e.data.size && chunks.push(e.data);
       mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); const b = new Blob(chunks, { type: mr.mimeType || "audio/webm" }); mr = null; resolveStop && resolveStop(b); };
-      mr.start(); t0 = Date.now(); timer = setInterval(() => { const s = (Date.now() - t0) / 1000; onTick && onTick(s); if (s > 180) this.stop(); }, 250);
+      mr.start(); t0 = Date.now(); timer = setInterval(() => { const s = (Date.now() - t0) / 1000; onTick && onTick(s); if (s >= maxSec && mr) this.stop().then(b => this.onAuto && this.onAuto(b)); }, 250);
     },
     stop(){ return new Promise(r => { if (!mr) return r(null); resolveStop = r; mr.stop(); }); },
     cancel(){ if (!mr) return; resolveStop = null; mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); mr = null; }; mr.stop(); },
@@ -791,7 +810,7 @@ document.addEventListener("click", e => {
 });
 
 /* ===== گفتگو با استاد ===== */
-let msgs = [], msgsLoaded = false, chatOpen = false;
+let msgs = [], msgsLoaded = false, chatOpen = false, chatSig = "";
 function removeChat(){ ["fab","chat","cveil","fablab"].forEach(id => $(id)?.remove()); chatOpen = false; }
 function setupChat(){
   if ($("fab")) return;
@@ -856,16 +875,17 @@ function refreshChatTexts(){
   $("rcancel").onclick = () => { rec.cancel(); $("cform").classList.remove("recording"); $("rtime").textContent = "0:00"; };
   drawChat();
 }
-const rec = makeRecorder(s => { const el = $("rtime"); if (el) el.textContent = mmss(s); });
+const rec = makeRecorder(s => { const el = $("rtime"); if (el) el.textContent = mmss(Math.min(s, 60)) + " / 1:00"; }, 60);
+rec.onAuto = async raw => { $("cform")?.classList.remove("recording"); if (!raw || raw.size < 800) return; let w = raw; try { w = await toWav(raw); } catch {} sendMedia("voice", w, w.type === "audio/wav" ? "wav" : "webm"); };
 async function sendMedia(kind, blob, ext){
   const path = `${me.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const temp = { id: "t" + Date.now(), member_id: me.id, sender: "member", kind, file_path: null, body: null, created_at: new Date().toISOString(), seen_at: null, _up: true };
   msgs.push(temp); drawChat();
   const up = await sb.storage.from("chat").upload(path, blob, { contentType: blob.type || (kind === "image" ? "image/jpeg" : "audio/wav") });
-  if (up.error) { msgs = msgs.filter(m => m !== temp); drawChat(); return banner("⚠️", T.sendFail, ""); }
+  if (up.error) { msgs = msgs.filter(m => m !== temp); drawChat(); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   chatUrl[path] = URL.createObjectURL(blob);
   const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", kind, file_path: path });
-  if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", T.sendFail, ""); }
+  if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   loadChat();
 }
 function openChat(){ chatOpen = true; $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
@@ -891,7 +911,7 @@ async function loadTeacher(){
 }
 teacher = store.get("teacher", teacher);
 async function loadChat(){
-  if (!me || me.role === "admin" || view !== "feed") return;
+  if (!me || me.role === "admin" || (view !== "feed" && view !== "msg")) return;
   if (!msgsLoaded) loadTeacher();
   const { data, error } = await sb.from("messages").select("*").eq("member_id", me.id).order("created_at", {ascending:true});
   if (error) return;
@@ -901,8 +921,9 @@ async function loadChat(){
   const keep = new Set((data || []).map(m => m.file_path).filter(Boolean));
   const gone = msgs.filter(m => m.file_path && !keep.has(m.file_path) && !String(m.id).startsWith("t")).map(m => m.file_path);
   if (!first && gone.length) sb.storage.from("chat").remove(gone);
+  const sg = (data || []).map(m => m.id + ":" + (m.seen_at ? 1 : 0)).join("|");
   msgs = data || []; store.set("cache_msgs", msgs);
-  drawChat();
+  if (sg !== chatSig) { chatSig = sg; drawChat(); }
   if (chatOpen) markSeen();
   else if (!first && fresh.length) { const f = fresh[fresh.length - 1]; banner("💬", T.newMsg, f.kind === "image" ? "🖼 " + T.photo : f.kind === "voice" ? "🎙 " + T.voice : esc(f.body).slice(0, 80), openChat); }
 }
@@ -924,8 +945,36 @@ async function sendMsg(e){
   const temp = { id: "t" + Date.now(), member_id: me.id, sender: "member", body, created_at: new Date().toISOString(), seen_at: null };
   msgs.push(temp); while (msgs.length > 10) msgs.shift(); inp.value = ""; inp.style.height = "46px"; drawChat();
   const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", kind: "text", body });
-  if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); inp.value = body; banner("⚠️", T.sendFail, ""); return; }
+  if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); inp.value = body; banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); return; }
   loadChat();
+}
+
+
+/* ===== پیام بدون حساب (برای حساب‌های حذف‌شده) ===== */
+function openContact(){
+  removeChat();
+  const veil = document.createElement("div"); veil.id = "cveil"; veil.className = "cveil";
+  const box = document.createElement("div"); box.id = "chat"; box.className = "chat";
+  box.innerHTML = `<div class="chead"><span class="pp">💬</span><div><b>${T.cTitle}</b><small>${T.cSub}</small></div><button class="ib x" id="cx">${I.x}</button></div>
+    <form id="cfm" style="padding:14px 16px;overflow:auto;flex:1">
+      <label class="field glass" style="margin-bottom:10px">${I.user}<input id="kn" required maxlength="80" placeholder="${T.cName}" style="direction:auto"></label>
+      <label class="field glass" style="margin-bottom:10px">☎<input id="kc" required maxlength="120" placeholder="${T.cContact}" inputmode="tel"></label>
+      <textarea id="kb" required maxlength="1500" placeholder="${T.cMsg}" style="width:100%;min-height:130px;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--field);color:var(--text);font-family:inherit;font-size:15px;outline:none;resize:vertical"></textarea>
+      <div class="err" id="kerr"></div>
+      <button class="cta" id="ksend">${T.cSend}</button>
+    </form>`;
+  document.body.append(veil, box);
+  const close = () => { veil.classList.remove("show"); box.classList.remove("show"); setTimeout(() => { veil.remove(); box.remove(); }, 600); };
+  veil.onclick = close; $("cx").onclick = close;
+  requestAnimationFrame(() => { veil.classList.add("show"); box.classList.add("show"); });
+  $("cfm").onsubmit = async e => {
+    e.preventDefault();
+    const b = $("ksend"); b.disabled = true; b.innerHTML = '<span class="spin"></span>';
+    const { error } = await sb.from("contact_requests").insert({ name: $("kn").value.trim(), contact: toEn($("kc").value.trim()), body: $("kb").value.trim() });
+    if (error) { b.disabled = false; b.textContent = T.cSend; $("kerr").textContent = T.cErr; return; }
+    $("cfm").innerHTML = `<div class="cempty" style="padding:40px 10px"><div style="font-size:44px">✅</div>${T.cOk}</div><button type="button" class="cta" id="kclose">${T.close}</button>`;
+    $("kclose").onclick = close;
+  };
 }
 
 /* ===== مسیر ===== */
@@ -942,9 +991,10 @@ async function route(session){
   me = data;
   if (!me) return renderMsg("🔒", T.noAcc, T.contact);
   if (me.role !== "admin") {
-    if (me.disabled) return renderMsg("⛔", T.disabled, T.contact);
+    if (me.deleted_at) return renderMsg("🗂", T.removed, "", true);
+    if (me.disabled) return renderMsg("⛔", T.disabled, "", true);
     if (!me.expires_at || new Date(me.expires_at) < Date.now())
-      return renderMsg("⏳", T.expired, `${me.expires_at ? T.endDate + ": " + fmtDate(me.expires_at) + "<br>" : ""}${T.contact}`);
+      return renderMsg("⏳", T.expired, `${me.expires_at ? T.endDate + ": " + fmtDate(me.expires_at) + "<br>" : ""}${T.contact}`, true);
   }
   if (!all.length) all = store.get("cache_sig", []);
   if (!msgs.length) msgs = store.get("cache_msgs", []);
