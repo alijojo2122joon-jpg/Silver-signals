@@ -342,6 +342,20 @@
   .chip::after,.st::after{background:linear-gradient(100deg,transparent 25%,rgba(255,255,255,.6) 50%,transparent 75%);animation:chipsw 3.8s cubic-bezier(.45,.05,.55,.95) infinite}
   .ldot{animation:pulse 2.2s cubic-bezier(.16,1,.3,1) infinite}
   @media (prefers-reduced-motion:reduce){.hero,.stat,.lv,.blob{animation:none!important}}
+
+  /* ===== ترجمه ===== */
+  .note.tr{padding:10px 12px 12px;white-space:normal}
+  .trbar{position:relative;display:grid;grid-template-columns:repeat(4,1fr);padding:4px;margin-bottom:10px;border-radius:14px;background:rgba(120,130,160,.10);box-shadow:var(--sh-in)}
+  .trbar .tp{position:absolute;top:4px;bottom:4px;right:4px;width:calc((100% - 8px)/4);border-radius:11px;background:var(--tile);box-shadow:var(--raise);transition:transform .6s cubic-bezier(.34,1.45,.5,1)}
+  .trbar button{position:relative;z-index:1;border:0;background:none;font-family:inherit;font-size:12px;font-weight:800;color:var(--muted);padding:6px 0;cursor:pointer;transition:color .3s}
+  .trbar button.on{color:var(--text)}
+  .trbar button[data-tl="en"]{font-family:"Montserrat","Segoe UI",Arial,sans-serif;letter-spacing:.3px}
+  .ntext{white-space:pre-wrap;font-size:14.5px;line-height:1.9;transition:opacity .35s ease,transform .45s cubic-bezier(.16,1,.3,1),filter .35s}
+  .ntext.fade{opacity:0;transform:translateY(6px);filter:blur(3px)}
+  .ntext[dir="ltr"]{text-align:left;font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:14px}
+  .ntext.load{color:transparent!important;border-radius:10px;background:linear-gradient(100deg,rgba(120,130,160,.10) 30%,rgba(120,130,160,.25) 50%,rgba(120,130,160,.10) 70%);background-size:300% 100%;animation:shim 1.2s infinite}
+  @keyframes shim{to{background-position:-150% 0}}
+  .trsrc{display:block;margin-top:8px;font-size:11px;color:var(--soft)}
 </style>
 </head>
 <body>
@@ -692,13 +706,52 @@ function resultHTML(s){
   const ic = cls === "win" ? "✓" : cls === "lose" ? "✗" : "■";
   return `<div class="res ${cls}"><span class="ri">${ic}</span><div><b>${STATUS[s.status]}</b><small>${s.result_at ? "ثبت نتیجه: " + fmtFull(s.result_at) : ""}</small></div></div>`;
 }
+
+/* ترجمه‌ی متن تحلیل */
+const TL = [["orig","اصل"],["fa","فارسی"],["ps","پښتو"],["en","English"]];
+const trCache = {};
+const getTL = () => { try { return localStorage.getItem("tl") || "orig"; } catch { return "orig"; } };
+function noteHTML(s, cls = "note"){
+  if (!s.note) return "";
+  return `<div class="${cls} tr" data-nid="${s.id}"><div class="trbar"><span class="tp"></span>${TL.map(([k, v]) => `<button type="button" data-tl="${k}">${v}</button>`).join("")}</div>
+    <div class="ntext">${esc(s.note)}</div><span class="trsrc"></span></div>`;
+}
+function setNoteLang(box, lang, remember){
+  const idx = TL.findIndex(x => x[0] === lang); if (idx < 0) return;
+  box.querySelectorAll(".trbar button").forEach((b, i) => b.classList.toggle("on", i === idx));
+  box.querySelector(".tp").style.transform = `translateX(${-idx * 100}%)`;
+  if (remember) { try { localStorage.setItem("tl", lang); } catch {} }
+  const id = box.dataset.nid, el = box.querySelector(".ntext"), src = box.querySelector(".trsrc");
+  const orig = (typeof all !== "undefined" ? all : signals).find(x => String(x.id) === id)?.note || el.dataset.orig || el.textContent;
+  if (!el.dataset.orig) el.dataset.orig = orig;
+  const show = (txt, dir, note) => { el.classList.add("fade");
+    setTimeout(() => { el.classList.remove("load"); el.textContent = esc(txt).replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+      el.setAttribute("dir", dir); src.textContent = note; requestAnimationFrame(() => el.classList.remove("fade")); }, 200); };
+  if (lang === "orig") return show(el.dataset.orig, "auto", "");
+  const key = id + ":" + lang;
+  if (trCache[key]) return show(trCache[key], lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
+  el.classList.add("load"); box.dataset.want = lang;
+  sb.functions.invoke("translate", { body: { id: Number(id), lang } }).then(({ data, error }) => {
+    if (box.dataset.want !== lang) return;
+    if (error || !data?.text) { el.classList.remove("load"); src.textContent = "ترجمه ممکن نشد؛ دوباره بزنید"; return; }
+    trCache[key] = data.text; show(data.text, lang === "en" ? "ltr" : "rtl", "ترجمه‌ی خودکار");
+  });
+}
+function applyNoteLang(root = document){
+  const l = getTL();
+  root.querySelectorAll(".note.tr,.box.tr").forEach(b => { if (!b.dataset.init) { b.dataset.init = 1; setNoteLang(b, l, false); } });
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".trbar button"); if (!b) return;
+  e.stopPropagation(); setNoteLang(b.closest(".tr"), b.dataset.tl, true);
+}, true);
 /* مدیریت سیگنال */
 function sheetSignal(s){
   if (!s) return;
   const b = s.type === "buy";
   openSheet(`<div class="head"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
       <div><h2 class="num">${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
-    ${s.note ? `<div class="box" style="white-space:pre-wrap">${esc(s.note)}</div>` : ""}
+    ${noteHTML(s, "box")}
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
     <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
     ${resultHTML(s)}
@@ -711,6 +764,7 @@ function sheetSignal(s){
     </div>
     ${s.status !== "active" ? `<button class="ghost" data-st="active">برگرداندن به «در جریان»</button>` : ""}
     <button class="ghost red" id="del">حذف این سیگنال</button>`);
+  applyNoteLang($("sheet"));
   $("sheet").onclick = async e => {
     const btn = e.target.closest("[data-st]");
     if (btn) {
