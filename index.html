@@ -4,169 +4,217 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>سیگنال نقره</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1116; --card:#171b22; --line:#262c36; --text:#e8ebf0; --muted:#8b94a3;
-    --silver:#c9d1dc; --accent:#b8c4d4; --buy:#22c55e; --sell:#ef4444;
+    --bg:#0b0d11; --panel:#14171d; --panel2:#1a1e26; --line:#252a33; --text:#eef1f5; --muted:#8a93a3;
+    --silver1:#f4f6f9; --silver2:#9aa4b3; --buy:#1fbf75; --buy-bg:rgba(31,191,117,.12);
+    --sell:#f0525a; --sell-bg:rgba(240,82,90,.12); --gold:#e8b44c;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7}
-  .wrap{max-width:860px;margin:0 auto;padding:16px}
-  header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:#11151b;position:sticky;top:0;z-index:5}
-  .logo{font-weight:800;font-size:18px;background:linear-gradient(90deg,#fff,#9aa6b6);-webkit-background-clip:text;color:transparent}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
-  h2{margin:0 0 10px;font-size:18px}
-  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
-  input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1318;color:var(--text);font-family:inherit;font-size:15px}
-  textarea{min-height:70px}
-  button{font-family:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;background:var(--accent);color:#0e1116}
-  button:disabled{opacity:.6}
-  button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
-  button.red{background:var(--sell);color:#fff}
-  button.small{padding:6px 10px;font-size:12px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .tabs{display:flex;gap:8px;margin-top:12px}
-  .tabs button{flex:1}
-  .tabs button.off{background:transparent;color:var(--muted);border:1px solid var(--line)}
-  .err{color:var(--sell);font-size:13px;min-height:20px;margin-top:6px}
-  .ok{color:var(--buy);font-size:13px;min-height:20px;margin-top:6px}
-  .muted{color:var(--muted);font-size:13px}
-  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
-  .b-buy{background:rgba(34,197,94,.15);color:var(--buy)}
-  .b-sell{background:rgba(239,68,68,.15);color:var(--sell)}
-  .b-st{background:#232a35;color:var(--silver)}
-  .sig-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
-  .box{background:#0f1318;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-  .box small{display:block;color:var(--muted);font-size:12px}
-  .box b{font-size:17px;direction:ltr;display:inline-block}
-  .tp b{color:var(--buy)} .sl b{color:var(--sell)}
-  .note{margin-top:10px;white-space:pre-wrap;font-size:14px}
-  .mem{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding:10px 0}
-  .mem:first-child{border-top:0}
-  .actions{display:flex;gap:6px;flex-wrap:wrap}
-  .center{max-width:400px;margin:8vh auto}
-  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
-  @media (max-width:520px){ .row{grid-template-columns:1fr} }
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:0 16px 32px}
+  .num{font-variant-numeric:tabular-nums}
+  .ltr{direction:ltr;unicode-bidi:isolate}
+
+  /* top bar */
+  .top{position:sticky;top:0;z-index:5;background:rgba(11,13,17,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top .in{max-width:640px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+  .coin{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#b9c2cf 45%,#6d7685);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+  .who{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+  .btn{font-family:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;background:var(--silver1);color:#0b0d11}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);padding:6px 12px;font-size:13px;font-weight:500}
+  .btn:disabled{opacity:.6}
+
+  /* subscription strip */
+  .sub{margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .sub b{color:var(--text);font-weight:700}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--buy);margin-left:6px;box-shadow:0 0 0 4px var(--buy-bg)}
+  .sub.warn .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(232,180,76,.15)}
+
+  h3{font-size:14px;color:var(--muted);font-weight:500;margin:22px 4px 10px}
+
+  /* hero signal */
+  .hero{border-radius:18px;padding:18px;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
+  .hero.buy{--c:var(--buy);--cb:var(--buy-bg)} .hero.sell{--c:var(--sell);--cb:var(--sell-bg)}
+  .hero-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .side{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:20px;color:var(--c)}
+  .side i{font-style:normal;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--cb);font-size:18px}
+  .time{color:var(--muted);font-size:12px}
+  .entry{margin:14px 0 4px;color:var(--muted);font-size:13px}
+  .entry .big{display:block;color:var(--text);font-size:34px;font-weight:800;line-height:1.3}
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .lv{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:10px}
+  .lv small{display:block;color:var(--muted);font-size:11px}
+  .lv b{font-size:18px}
+  .lv.tp b{color:var(--buy)} .lv.sl b{color:var(--sell)}
+  .note{margin-top:14px;padding:12px;border-radius:12px;background:rgba(0,0,0,.2);font-size:14px;white-space:pre-wrap;color:#d6dbe3}
+  .status{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#232833;color:var(--silver2)}
+  .status.active{background:var(--cb);color:var(--c)}
+  .status.tp1,.status.tp2{background:var(--buy-bg);color:var(--buy)}
+  .status.sl{background:var(--sell-bg);color:var(--sell)}
+
+  /* history */
+  .list{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+  .row:first-child{border-top:0}
+  .tag{font-weight:800;font-size:12px;padding:4px 10px;border-radius:8px}
+  .tag.buy{color:var(--buy);background:var(--buy-bg)} .tag.sell{color:var(--sell);background:var(--sell-bg)}
+  .row .mid{font-size:13px;color:var(--muted)}
+  .row .mid b{color:var(--text);font-size:15px}
+  .row .r{text-align:left;font-size:11px;color:var(--muted)}
+
+  .empty,.msg{text-align:center;padding:36px 18px;border-radius:16px;background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+  .msg h2{color:var(--text);font-size:18px;margin:0 0 6px}
+
+  /* login */
+  .login{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+  .login .card{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px 22px}
+  .login .coin{width:56px;height:56px;margin:0 auto 12px}
+  .login h1{text-align:center;font-size:22px;margin:0}
+  .login p{text-align:center;color:var(--muted);font-size:13px;margin:4px 0 20px}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+  input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:var(--text);font-family:inherit;font-size:16px}
+  input:focus{outline:none;border-color:var(--silver2)}
+  .err{color:var(--sell);font-size:13px;min-height:22px;margin-top:8px}
+  .full{width:100%;margin-top:6px;padding:13px}
+
+  footer{margin-top:28px;text-align:center;color:#5f6775;font-size:12px}
+  @media (max-width:400px){ .entry .big{font-size:28px} .lv b{font-size:16px} }
 </style>
 </head>
 <body>
-<div id="app"><p style="text-align:center;padding:40px;color:#8b94a3">در حال بارگذاری…</p></div>
+<div id="app"><p style="text-align:center;padding:60px;color:#8a93a3">در حال بارگذاری…</p></div>
 
 <script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ====== تنظیمات ====== */
 const SUPABASE_URL = "https://segfazxjglbawdhopnra.supabase.co";
 const SUPABASE_KEY = "sb_publishable_VfSrjufay_d3__oseWrv2Q_UaCXJn5F";
-const SITE_NAME = "سیگنال نقره";
-const CONTACT   = "برای تمدید اشتراک با مدیر تماس بگیرید: 07XXXXXXXX";
+const CONTACT = "برای تمدید اشتراک با مدیر تماس بگیرید.";
 /* ===================== */
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF",{year:"numeric",month:"long",day:"numeric"}) : "-";
-const fmtTime = d => d ? new Date(d).toLocaleString("fa-AF",{month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
-const num = v => (v === "" || v == null) ? null : Number(v);
+const fa = n => Number(n).toLocaleString("fa-AF", {maximumFractionDigits: 4});
+const fmtDate = d => new Date(d).toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"});
 const DAY = 86400000;
 const STATUS = { active:"فعال", tp1:"تارگت ۱ خورد", tp2:"تارگت ۲ خورد", sl:"استاپ خورد", closed:"بسته شد" };
+function ago(d){
+  const m = Math.round((Date.now() - new Date(d)) / 60000);
+  if (m < 1) return "همین حالا";
+  if (m < 60) return fa(m) + " دقیقه پیش";
+  if (m < 1440) return fa(Math.round(m/60)) + " ساعت پیش";
+  return new Date(d).toLocaleString("fa-AF", {month:"long", day:"numeric", hour:"2-digit", minute:"2-digit"});
+}
+const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from)
+  ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 
 let channel = null;
 const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } };
 
-function header(name){
-  return `<header><div class="logo">${esc(SITE_NAME)}</div>
-    <div class="actions"><span class="muted">${esc(name||"")}</span>
-    <button class="ghost small" id="logout">خروج</button></div></header>`;
+function topbar(name){
+  return `<div class="top"><div class="in">
+    <div class="brand"><span class="coin"></span>سیگنال نقره</div>
+    <div class="who"><span>${esc(name)}</span><button class="btn ghost" id="out">خروج</button></div>
+  </div></div>`;
 }
-const bindLogout = () => document.getElementById("logout").onclick = () => sb.auth.signOut();
+const bindOut = () => document.getElementById("out").onclick = () => sb.auth.signOut();
 
-/* ---------- ورود ---------- */
+/* ورود */
 function renderLogin(){
-  $app.innerHTML = `<div class="wrap"><div class="card center">
-    <div class="logo" style="font-size:24px;text-align:center">${esc(SITE_NAME)}</div>
-    <p class="muted" style="text-align:center">ورود اعضا</p>
-    <form id="f">
-      <label>ایمیل</label><input id="em" type="email" required dir="ltr" autocomplete="username">
-      <label>رمز</label><input id="pw" type="password" required dir="ltr" autocomplete="current-password">
-      <div class="err" id="er"></div>
-      <button style="width:100%">ورود</button>
-    </form></div></div>`;
+  $app.innerHTML = `<div class="login"><form class="card" id="f">
+    <div class="coin"></div>
+    <h1>سیگنال نقره</h1>
+    <p>تحلیل خرید و فروش نقره برای اعضا</p>
+    <label for="em">ایمیل</label><input id="em" type="email" required dir="ltr" autocomplete="username">
+    <label for="pw">رمز</label><input id="pw" type="password" required dir="ltr" autocomplete="current-password">
+    <div class="err" id="er"></div>
+    <button class="btn full" id="go">ورود</button>
+  </form></div>`;
   document.getElementById("f").onsubmit = async e => {
     e.preventDefault();
-    const er = document.getElementById("er"); er.textContent = "";
+    const er = document.getElementById("er"), go = document.getElementById("go");
+    er.textContent = ""; go.disabled = true; go.textContent = "در حال ورود…";
     const { error } = await sb.auth.signInWithPassword({ email: em.value.trim(), password: pw.value });
-    if (error) er.textContent = "ایمیل یا رمز اشتباه است.";
+    if (error) { er.textContent = "ایمیل یا رمز اشتباه است."; go.disabled = false; go.textContent = "ورود"; }
   };
 }
 
-function renderMessage(name, msg){
-  $app.innerHTML = header(name) + `<div class="wrap"><div class="card"><p>${msg}</p></div></div>`;
-  bindLogout();
+function renderMsg(name, title, text){
+  $app.innerHTML = topbar(name) + `<div class="wrap" style="padding-top:24px">
+    <div class="msg"><h2>${title}</h2><div>${text}</div></div></div>`;
+  bindOut();
 }
 
-/* ---------- کارت سیگنال ---------- */
-function signalCard(s, admin=false){
-  const buy = s.type === "buy";
-  const entry = s.entry_to != null && s.entry_to !== s.entry_from ? `${s.entry_from} – ${s.entry_to}` : `${s.entry_from}`;
-  return `<div class="card">
-    <div class="sig-head">
-      <div><span class="badge ${buy?"b-buy":"b-sell"}">${buy?"خرید":"فروش"}</span>
-        <span class="badge b-st">${STATUS[s.status]||esc(s.status)}</span></div>
-      <span class="muted">${fmtTime(s.created_at)}</span>
+/* سیگنال‌ها */
+function hero(s){
+  const side = s.type === "buy" ? "buy" : "sell";
+  return `<div class="hero ${side}">
+    <div class="hero-head">
+      <span class="side"><i>${side==="buy"?"↑":"↓"}</i>${side==="buy"?"خرید":"فروش"}</span>
+      <span class="status ${esc(s.status)}">${STATUS[s.status] || esc(s.status)}</span>
     </div>
-    <div class="grid">
-      <div class="box"><small>${buy?"قیمت خرید":"قیمت فروش"}</small><b>${esc(entry)}</b></div>
-      ${s.tp1!=null?`<div class="box tp"><small>تارگت ۱ (تیک پروفیت)</small><b>${esc(s.tp1)}</b></div>`:""}
-      ${s.tp2!=null?`<div class="box tp"><small>تارگت ۲</small><b>${esc(s.tp2)}</b></div>`:""}
-      ${s.sl!=null?`<div class="box sl"><small>حد ضرر (استاپ لاس)</small><b>${esc(s.sl)}</b></div>`:""}
+    <div class="entry">${side==="buy"?"قیمت خرید":"قیمت فروش"}<span class="big num">${range(s)}</span></div>
+    <div class="levels">
+      <div class="lv tp"><small>تارگت ۱</small><b class="num">${s.tp1!=null?fa(s.tp1):"—"}</b></div>
+      <div class="lv tp"><small>تارگت ۲</small><b class="num">${s.tp2!=null?fa(s.tp2):"—"}</b></div>
+      <div class="lv sl"><small>حد ضرر</small><b class="num">${s.sl!=null?fa(s.sl):"—"}</b></div>
     </div>
-    ${s.note?`<div class="note">${esc(s.note)}</div>`:""}
-    ${admin?`<div class="actions" style="margin-top:10px">
-      <select data-status="${s.id}" style="width:auto">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${k===s.status?"selected":""}>${v}</option>`).join("")}</select>
-      <button class="red small" data-del="${s.id}">حذف</button></div>`:""}
+    ${s.note ? `<div class="note">${esc(s.note)}</div>` : ""}
+    <div class="time" style="margin-top:12px">${ago(s.created_at)}</div>
   </div>`;
 }
-
-async function loadSignals(el, admin){
-  const { data, error } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(admin?100:50);
-  if (error) { el.innerHTML = `<div class="card">${esc(CONTACT)}</div>`; return; }
-  el.innerHTML = data.length ? data.map(s => signalCard(s, admin)).join("")
-    : `<div class="card muted">فعلاً تحلیلی ثبت نشده است.</div>`;
+function row(s){
+  const side = s.type === "buy" ? "buy" : "sell";
+  return `<div class="row">
+    <span class="tag ${side}">${side==="buy"?"خرید":"فروش"}</span>
+    <div class="mid"><b class="num">${range(s)}</b>
+      ${s.tp1!=null?` · هدف <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ضرر <span class="num">${fa(s.sl)}</span>`:""}</div>
+    <div class="r">${STATUS[s.status]||""}<br>${ago(s.created_at)}</div>
+  </div>`;
 }
-function liveSignals(el, admin){
+async function loadFeed(el){
+  const { data, error } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(30);
+  if (error) { el.innerHTML = `<div class="msg">${esc(CONTACT)}</div>`; return; }
+  if (!data.length) { el.innerHTML = `<div class="empty">هنوز سیگنالی منتشر نشده است.<br>به‌محض انتشار، همین‌جا نمایش داده می‌شود.</div>`; return; }
+  const [first, ...rest] = data;
+  el.innerHTML = `<h3>آخرین سیگنال</h3>${hero(first)}`
+    + (rest.length ? `<h3>سیگنال‌های قبلی</h3><div class="list">${rest.map(row).join("")}</div>` : "");
+}
+
+function renderFeed(me){
+  let strip = "";
+  if (me.role !== "admin") {
+    const days = Math.ceil((new Date(me.expires_at) - Date.now()) / DAY);
+    strip = `<div class="sub ${days<=5?"warn":""}"><span><span class="dot"></span>اشتراک فعال</span>
+      <span>تا <b>${fmtDate(me.expires_at)}</b> · ${fa(days)} روز مانده</span></div>`;
+  }
+  $app.innerHTML = topbar(me.name) + `<div class="wrap">${strip}<div id="feed"><p class="empty">در حال بارگذاری…</p></div>
+    <footer>این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت هر معامله با خود شماست.</footer></div>`;
+  bindOut();
+  const el = document.getElementById("feed");
+  loadFeed(el);
   stopLive();
-  loadSignals(el, admin);
-  channel = sb.channel("signals-live")
-    .on("postgres_changes", { event:"*", schema:"public", table:"signals" }, () => loadSignals(el, admin))
-    .subscribe();
+  channel = sb.channel("feed").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, () => loadFeed(el)).subscribe();
 }
 
-/* ---------- صفحهٔ عضو ---------- */
-function renderMember(me){
-  const daysLeft = me.expires_at ? Math.ceil((new Date(me.expires_at) - Date.now()) / DAY) : 0;
-  $app.innerHTML = header(me.name) + `<div class="wrap">
-    ${me.role === "admin" ? "" : `<div class="card"><b>اشتراک شما فعال است</b>
-      <div class="muted">تا ${fmtDate(me.expires_at)} — ${daysLeft} روز باقی مانده</div></div>`}
-    <div id="list"><p class="muted">در حال بارگذاری…</p></div>
-    <footer>این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت معامله با خود شماست.</footer></div>`;
-  bindLogout();
-  liveSignals(document.getElementById("list"), false);
-}
-
-/* ---------- مسیر اصلی ---------- */
 async function route(session){
   stopLive();
   if (!session) return renderLogin();
   const { data: me, error } = await sb.from("profiles").select("*").eq("id", session.user.id).maybeSingle();
-  if (error) return renderMessage("", "خطا در اتصال: " + esc(error.message));
-  if (!me) return renderMessage("", "این حساب فعال نیست. " + esc(CONTACT));
-  if (me.role !== "admin" && (me.disabled || !me.expires_at || new Date(me.expires_at) < Date.now()))
-    renderMessage(me.name, me.disabled ? "حساب شما غیرفعال شده است. " + esc(CONTACT)
-      : `اشتراک شما در تاریخ ${fmtDate(me.expires_at)} تمام شده است.<br>${esc(CONTACT)}`);
-  else renderMember(me);
+  if (error) return renderMsg("", "خطا در اتصال", "لطفاً صفحه را دوباره باز کنید.");
+  if (!me) return renderMsg("", "حساب فعال نیست", esc(CONTACT));
+  if (me.role === "admin") return renderFeed(me);
+  if (me.disabled) return renderMsg(me.name, "حساب شما غیرفعال است", esc(CONTACT));
+  if (!me.expires_at || new Date(me.expires_at) < Date.now())
+    return renderMsg(me.name, "اشتراک شما تمام شده است", `تاریخ پایان: ${me.expires_at ? fmtDate(me.expires_at) : "—"}<br>${esc(CONTACT)}`);
+  renderFeed(me);
 }
 
 let lastUid;

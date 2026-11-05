@@ -3,86 +3,118 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>پنل مدیر</title>
-<meta name="robots" content="noindex">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex,nofollow">
+<title>پنل مدیریت</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1116; --card:#171b22; --line:#262c36; --text:#e8ebf0; --muted:#8b94a3;
-    --silver:#c9d1dc; --accent:#b8c4d4; --buy:#22c55e; --sell:#ef4444;
+    --bg:#0c0b09; --panel:#16140f; --panel2:#1d1a14; --line:#2c2820; --text:#f3efe7; --muted:#9b9384;
+    --accent:#e8b44c; --accent-bg:rgba(232,180,76,.12);
+    --buy:#1fbf75; --buy-bg:rgba(31,191,117,.12); --sell:#f0525a; --sell-bg:rgba(240,82,90,.12);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7}
-  .wrap{max-width:860px;margin:0 auto;padding:16px}
-  header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:#11151b;position:sticky;top:0;z-index:5}
-  .logo{font-weight:800;font-size:18px;background:linear-gradient(90deg,#fff,#9aa6b6);-webkit-background-clip:text;color:transparent}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
-  h2{margin:0 0 10px;font-size:18px}
-  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 4px}
-  input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1318;color:var(--text);font-family:inherit;font-size:15px}
-  textarea{min-height:70px}
-  button{font-family:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;background:var(--accent);color:#0e1116}
-  button:disabled{opacity:.6}
-  button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
-  button.red{background:var(--sell);color:#fff}
-  button.small{padding:6px 10px;font-size:12px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .tabs{display:flex;gap:8px;margin-top:12px}
-  .tabs button{flex:1}
-  .tabs button.off{background:transparent;color:var(--muted);border:1px solid var(--line)}
-  .err{color:var(--sell);font-size:13px;min-height:20px;margin-top:6px}
-  .ok{color:var(--buy);font-size:13px;min-height:20px;margin-top:6px}
-  .muted{color:var(--muted);font-size:13px}
-  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
-  .b-buy{background:rgba(34,197,94,.15);color:var(--buy)}
-  .b-sell{background:rgba(239,68,68,.15);color:var(--sell)}
-  .b-st{background:#232a35;color:var(--silver)}
-  .sig-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
-  .box{background:#0f1318;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-  .box small{display:block;color:var(--muted);font-size:12px}
-  .box b{font-size:17px;direction:ltr;display:inline-block}
-  .tp b{color:var(--buy)} .sl b{color:var(--sell)}
-  .note{margin-top:10px;white-space:pre-wrap;font-size:14px}
-  .mem{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding:10px 0}
-  .mem:first-child{border-top:0}
-  .actions{display:flex;gap:6px;flex-wrap:wrap}
-  .center{max-width:400px;margin:8vh auto}
-  footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
-  @media (max-width:520px){ .row{grid-template-columns:1fr} }
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 16px 40px}
+  .num{font-variant-numeric:tabular-nums}
+  .ltr{direction:ltr;unicode-bidi:isolate}
+
+  .top{position:sticky;top:0;z-index:5;background:rgba(12,11,9,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top .in{max-width:920px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+  .badge{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-bg);border:1px solid rgba(232,180,76,.3);padding:2px 10px;border-radius:999px}
+  .key{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--accent);color:#1b1407;font-weight:800}
+
+  .btn{font-family:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;background:var(--accent);color:#1b1407}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);font-weight:500}
+  .btn.sm{padding:6px 11px;font-size:12px}
+  .btn.danger{background:transparent;color:var(--sell);border:1px solid rgba(240,82,90,.4);font-weight:500}
+  .btn:disabled{opacity:.55;cursor:default}
+
+  .tabs{display:flex;gap:6px;margin:18px 0 14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px}
+  .tabs button{flex:1;font-family:inherit;font-size:14px;font-weight:700;border:0;border-radius:10px;padding:10px;cursor:pointer;background:transparent;color:var(--muted)}
+  .tabs button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .stat small{color:var(--muted);font-size:12px}
+  .stat b{display:block;font-size:24px;font-weight:800}
+
+  .grid2{display:grid;grid-template-columns:360px 1fr;gap:14px;align-items:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .card h2{font-size:15px;margin:0 0 4px}
+  .card .sub{color:var(--muted);font-size:12px;margin:0 0 8px}
+
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+  input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0f0e0b;color:var(--text);font-family:inherit;font-size:15px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  textarea{min-height:64px;resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+  .seg button{font-family:inherit;font-weight:800;font-size:15px;padding:10px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:#0f0e0b;color:var(--muted)}
+  .seg button.buy.on{background:var(--buy-bg);color:var(--buy);border-color:var(--buy)}
+  .seg button.sell.on{background:var(--sell-bg);color:var(--sell);border-color:var(--sell)}
+  .full{width:100%;margin-top:14px;padding:12px}
+  .flash{font-size:13px;min-height:20px;margin-top:8px}
+  .flash.ok{color:var(--buy)} .flash.bad{color:var(--sell)}
+
+  .item{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}
+  .item:first-child{border-top:0;padding-top:4px}
+  .tag{font-weight:800;font-size:12px;padding:3px 10px;border-radius:8px}
+  .tag.buy{color:var(--buy);background:var(--buy-bg)} .tag.sell{color:var(--sell);background:var(--sell-bg)}
+  .meta{color:var(--muted);font-size:12px}
+  .line1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .line1 b{font-size:15px}
+  .acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .acts select{width:auto;padding:6px 8px;font-size:12px}
+  .pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .pill.on{color:var(--buy);background:var(--buy-bg)} .pill.off{color:var(--sell);background:var(--sell-bg)} .pill.warn{color:var(--accent);background:var(--accent-bg)}
+  .search{margin-bottom:6px}
+  .empty{color:var(--muted);text-align:center;padding:24px 8px;font-size:14px}
+
+  .share{margin-top:12px;padding:12px;border-radius:12px;border:1px dashed rgba(232,180,76,.45);background:var(--accent-bg);font-size:13px;white-space:pre-wrap}
+  .share .btn{margin-top:8px}
+
+  .login{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+  .login .card{width:100%;max-width:380px;padding:28px 22px;border-radius:20px}
+  .login .key{width:52px;height:52px;margin:0 auto 12px;font-size:22px;border-radius:14px}
+  .login h1{text-align:center;font-size:21px;margin:0}
+  .login p{text-align:center;color:var(--muted);font-size:13px;margin:4px 0 18px}
+
+  @media (max-width:760px){ .grid2{grid-template-columns:1fr} }
+  @media (max-width:420px){ .stat b{font-size:20px} .two{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
-<div id="app"><p style="text-align:center;padding:40px;color:#8b94a3">در حال بارگذاری…</p></div>
+<div id="app"><p style="text-align:center;padding:60px;color:#9b9384">در حال بارگذاری…</p></div>
 
 <script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ====== تنظیمات ====== */
 const SUPABASE_URL = "https://segfazxjglbawdhopnra.supabase.co";
 const SUPABASE_KEY = "sb_publishable_VfSrjufay_d3__oseWrv2Q_UaCXJn5F";
-const SITE_NAME = "سیگنال نقره";
-const CONTACT   = "برای تمدید اشتراک با مدیر تماس بگیرید: 07XXXXXXXX";
+const MEMBER_URL   = "https://alijojo2122joon-jpg.github.io/Silver-signals/";
 /* ===================== */
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
+const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF",{year:"numeric",month:"long",day:"numeric"}) : "-";
-const fmtTime = d => d ? new Date(d).toLocaleString("fa-AF",{month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
+const fa = n => Number(n).toLocaleString("fa-AF", {maximumFractionDigits: 4});
+const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF", {year:"numeric", month:"long", day:"numeric"}) : "—";
+const fmtTime = d => new Date(d).toLocaleString("fa-AF", {month:"long", day:"numeric", hour:"2-digit", minute:"2-digit"});
 const num = v => (v === "" || v == null) ? null : Number(v);
 const DAY = 86400000;
 const STATUS = { active:"فعال", tp1:"تارگت ۱ خورد", tp2:"تارگت ۲ خورد", sl:"استاپ خورد", closed:"بسته شد" };
-
-let channel = null;
-const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } };
-
-function header(name){
-  return `<header><div class="logo">${esc(SITE_NAME)}</div>
-    <div class="actions"><span class="muted">${esc(name||"")}</span>
-    <button class="ghost small" id="logout">خروج</button></div></header>`;
-}
-const bindLogout = () => document.getElementById("logout").onclick = () => sb.auth.signOut();
+const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from)
+  ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
+const memberState = m => {
+  if (m.disabled) return ["off", "غیرفعال"];
+  if (!m.expires_at || new Date(m.expires_at) < Date.now()) return ["off", "تمام‌شده"];
+  const d = Math.ceil((new Date(m.expires_at) - Date.now()) / DAY);
+  return d <= 5 ? ["warn", `${fa(d)} روز مانده`] : ["on", `${fa(d)} روز مانده`];
+};
 
 async function callFn(body){
   const { data, error } = await sb.functions.invoke("manage-members", { body });
@@ -94,220 +126,219 @@ async function callFn(body){
   return data;
 }
 
-/* ---------- ورود ---------- */
-function renderLogin(){
-  $app.innerHTML = `<div class="wrap"><div class="card center">
-    <div class="logo" style="font-size:24px;text-align:center">${esc(SITE_NAME)}</div>
-    <p class="muted" style="text-align:center">ورود مدیر</p>
-    <form id="f">
-      <label>ایمیل</label><input id="em" type="email" required dir="ltr" autocomplete="username">
-      <label>رمز</label><input id="pw" type="password" required dir="ltr" autocomplete="current-password">
-      <div class="err" id="er"></div>
-      <button style="width:100%">ورود</button>
-    </form></div></div>`;
-  document.getElementById("f").onsubmit = async e => {
+/* ورود مدیر */
+function renderLogin(note = ""){
+  $app.innerHTML = `<div class="login"><form class="card" id="f">
+    <div class="key">⚙</div>
+    <h1>پنل مدیریت</h1>
+    <p>سیگنال نقره — فقط برای مدیر</p>
+    <label for="em">ایمیل مدیر</label><input id="em" type="email" required dir="ltr" autocomplete="username">
+    <label for="pw">رمز</label><input id="pw" type="password" required dir="ltr" autocomplete="current-password">
+    <div class="flash bad" id="er">${esc(note)}</div>
+    <button class="btn full" id="go">ورود به پنل</button>
+  </form></div>`;
+  $("f").onsubmit = async e => {
     e.preventDefault();
-    const er = document.getElementById("er"); er.textContent = "";
+    const er = $("er"), go = $("go");
+    er.textContent = ""; go.disabled = true; go.textContent = "در حال ورود…";
     const { error } = await sb.auth.signInWithPassword({ email: em.value.trim(), password: pw.value });
-    if (error) er.textContent = "ایمیل یا رمز اشتباه است.";
+    if (error) { er.textContent = "ایمیل یا رمز اشتباه است."; go.disabled = false; go.textContent = "ورود به پنل"; }
   };
 }
 
-function renderMessage(name, msg){
-  $app.innerHTML = header(name) + `<div class="wrap"><div class="card"><p>${msg}</p></div></div>`;
-  bindLogout();
-}
+/* پوسته‌ی پنل */
+let tab = "signals", signals = [], members = [], channel = null;
 
-/* ---------- کارت سیگنال ---------- */
-function signalCard(s, admin=false){
-  const buy = s.type === "buy";
-  const entry = s.entry_to != null && s.entry_to !== s.entry_from ? `${s.entry_from} – ${s.entry_to}` : `${s.entry_from}`;
-  return `<div class="card">
-    <div class="sig-head">
-      <div><span class="badge ${buy?"b-buy":"b-sell"}">${buy?"خرید":"فروش"}</span>
-        <span class="badge b-st">${STATUS[s.status]||esc(s.status)}</span></div>
-      <span class="muted">${fmtTime(s.created_at)}</span>
-    </div>
-    <div class="grid">
-      <div class="box"><small>${buy?"قیمت خرید":"قیمت فروش"}</small><b>${esc(entry)}</b></div>
-      ${s.tp1!=null?`<div class="box tp"><small>تارگت ۱ (تیک پروفیت)</small><b>${esc(s.tp1)}</b></div>`:""}
-      ${s.tp2!=null?`<div class="box tp"><small>تارگت ۲</small><b>${esc(s.tp2)}</b></div>`:""}
-      ${s.sl!=null?`<div class="box sl"><small>حد ضرر (استاپ لاس)</small><b>${esc(s.sl)}</b></div>`:""}
-    </div>
-    ${s.note?`<div class="note">${esc(s.note)}</div>`:""}
-    ${admin?`<div class="actions" style="margin-top:10px">
-      <select data-status="${s.id}" style="width:auto">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${k===s.status?"selected":""}>${v}</option>`).join("")}</select>
-      <button class="red small" data-del="${s.id}">حذف</button></div>`:""}
-  </div>`;
-}
-
-async function loadSignals(el, admin){
-  const { data, error } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(admin?100:50);
-  if (error) { el.innerHTML = `<div class="card">${esc(CONTACT)}</div>`; return; }
-  el.innerHTML = data.length ? data.map(s => signalCard(s, admin)).join("")
-    : `<div class="card muted">فعلاً تحلیلی ثبت نشده است.</div>`;
-}
-function liveSignals(el, admin){
-  stopLive();
-  loadSignals(el, admin);
-  channel = sb.channel("signals-live")
-    .on("postgres_changes", { event:"*", schema:"public", table:"signals" }, () => loadSignals(el, admin))
-    .subscribe();
-}
-
-/* ---------- صفحهٔ عضو ---------- */
-function renderMember(me){
-  const daysLeft = Math.ceil((new Date(me.expires_at) - Date.now()) / DAY);
-  $app.innerHTML = header(me.name) + `<div class="wrap">
-    <div class="card"><b>اشتراک شما فعال است</b>
-      <div class="muted">تا ${fmtDate(me.expires_at)} — ${daysLeft} روز باقی مانده</div></div>
-    <div id="list"><p class="muted">در حال بارگذاری…</p></div>
-    <footer>این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت معامله با خود شماست.</footer></div>`;
-  bindLogout();
-  liveSignals(document.getElementById("list"), false);
-}
-
-/* ---------- پنل مدیر ---------- */
-function renderAdmin(me){
-  $app.innerHTML = header(me.name + " (مدیر)") + `<div class="wrap">
-    <div class="tabs"><button id="t1">تحلیل‌ها</button><button id="t2" class="off">اعضا</button></div>
-    <div id="pane"></div></div>`;
-  bindLogout();
-  const t1 = document.getElementById("t1"), t2 = document.getElementById("t2");
-  t1.onclick = () => { t1.className=""; t2.className="off"; adminSignals(); };
-  t2.onclick = () => { t2.className=""; t1.className="off"; adminMembers(); };
-  adminSignals();
-}
-
-function adminSignals(){
-  const pane = document.getElementById("pane");
-  pane.innerHTML = `<div class="card"><h2>ثبت تحلیل جدید</h2>
-    <form id="sf">
-      <label>نوع</label><select id="type"><option value="buy">خرید</option><option value="sell">فروش</option></select>
-      <div class="row">
-        <div><label>قیمت ورود از</label><input id="ef" type="number" step="any" required dir="ltr" placeholder="51"></div>
-        <div><label>قیمت ورود تا (اختیاری)</label><input id="et" type="number" step="any" dir="ltr" placeholder="52"></div>
+function renderPanel(me){
+  $app.innerHTML = `<div class="top"><div class="in">
+      <div class="brand"><span class="key">⚙</span>سیگنال نقره <span class="badge">پنل مدیریت</span></div>
+      <button class="btn ghost sm" id="out">خروج</button>
+    </div></div>
+    <div class="wrap">
+      <div class="tabs"><button data-t="signals">سیگنال‌ها</button><button data-t="members">اعضا</button></div>
+      <div class="stats">
+        <div class="stat"><small>اعضای فعال</small><b class="num" id="s1">—</b></div>
+        <div class="stat"><small>تمام‌شده</small><b class="num" id="s2">—</b></div>
+        <div class="stat"><small>سیگنال‌های باز</small><b class="num" id="s3">—</b></div>
       </div>
-      <div class="row">
-        <div><label>تارگت ۱ / تیک پروفیت</label><input id="tp1" type="number" step="any" dir="ltr" placeholder="54"></div>
+      <div id="pane"></div>
+    </div>`;
+  $("out").onclick = () => sb.auth.signOut();
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { tab = b.dataset.t; drawTab(); });
+  drawTab();
+  refreshAll();
+  if (channel) sb.removeChannel(channel);
+  channel = sb.channel("admin").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadSignals).subscribe();
+}
+
+function drawStats(){
+  const active = members.filter(m => memberState(m)[0] !== "off").length;
+  $("s1").textContent = fa(active);
+  $("s2").textContent = fa(members.length - active);
+  $("s3").textContent = fa(signals.filter(s => s.status === "active").length);
+}
+async function refreshAll(){ await Promise.all([loadSignals(), loadMembers()]); }
+
+function drawTab(){
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
+  tab === "signals" ? drawSignalsTab() : drawMembersTab();
+}
+
+/* ---------- سیگنال‌ها ---------- */
+let side = "buy";
+function drawSignalsTab(){
+  $("pane").innerHTML = `<div class="grid2">
+    <form class="card" id="sf">
+      <h2>سیگنال جدید</h2><p class="sub">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
+      <label>نوع</label>
+      <div class="seg"><button type="button" class="buy" data-s="buy">خرید ↑</button><button type="button" class="sell" data-s="sell">فروش ↓</button></div>
+      <div class="two">
+        <div><label>قیمت ورود از</label><input id="ef" type="number" step="any" required dir="ltr" placeholder="51"></div>
+        <div><label>تا (اختیاری)</label><input id="et" type="number" step="any" dir="ltr" placeholder="52"></div>
+      </div>
+      <div class="two">
+        <div><label>تارگت ۱</label><input id="tp1" type="number" step="any" dir="ltr" placeholder="54"></div>
         <div><label>تارگت ۲ (اختیاری)</label><input id="tp2" type="number" step="any" dir="ltr"></div>
       </div>
-      <label>حد ضرر / استاپ لاس</label><input id="sl" type="number" step="any" dir="ltr" placeholder="49">
-      <label>توضیح (اختیاری)</label><textarea id="note"></textarea>
-      <div class="ok" id="msg"></div>
-      <button style="width:100%">انتشار برای همهٔ اعضا</button>
-    </form></div><div id="list"></div>`;
-  const list = document.getElementById("list");
-  document.getElementById("sf").onsubmit = async e => {
+      <label>حد ضرر (استاپ لاس)</label><input id="sl" type="number" step="any" dir="ltr" placeholder="49">
+      <label>توضیح (اختیاری)</label><textarea id="note" placeholder="مثلاً: بعد از تثبیت بالای ۵۱ وارد شوید"></textarea>
+      <button class="btn full" id="pub">انتشار سیگنال</button>
+      <div class="flash" id="sfm"></div>
+    </form>
+    <div class="card"><h2>سیگنال‌های منتشرشده</h2><p class="sub">وضعیت هر سیگنال را به‌روز کنید تا اعضا ببینند.</p><div id="slist"></div></div>
+  </div>`;
+  const setSide = v => { side = v; document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.s === v)); };
+  document.querySelectorAll(".seg button").forEach(b => b.onclick = () => setSide(b.dataset.s));
+  setSide(side);
+
+  $("sf").onsubmit = async e => {
     e.preventDefault();
-    const g = id => document.getElementById(id).value;
-    const msg = document.getElementById("msg");
+    const pub = $("pub"), m = $("sfm"); pub.disabled = true;
     const { error } = await sb.from("signals").insert({
-      type:g("type"), entry_from:num(g("ef")), entry_to:num(g("et")), tp1:num(g("tp1")), tp2:num(g("tp2")),
-      sl:num(g("sl")), note:g("note").trim() || null
+      type: side, entry_from: num(ef.value), entry_to: num(et.value), tp1: num(tp1.value),
+      tp2: num(tp2.value), sl: num(sl.value), note: note.value.trim() || null
     });
-    if (error) { msg.className="err"; msg.textContent = "خطا: " + error.message; return; }
-    e.target.reset(); msg.className="ok"; msg.textContent = "منتشر شد ✓";
-    loadSignals(list, true);
+    pub.disabled = false;
+    if (error) { m.className = "flash bad"; m.textContent = "خطا: " + error.message; return; }
+    e.target.reset(); setSide(side);
+    m.className = "flash ok"; m.textContent = "منتشر شد ✓";
+    loadSignals();
   };
+  const list = $("slist");
   list.onchange = async e => {
-    const id = e.target.dataset.status;
-    if (id) { await sb.from("signals").update({ status:e.target.value }).eq("id", id); loadSignals(list, true); }
+    const id = e.target.dataset.st; if (!id) return;
+    await sb.from("signals").update({ status: e.target.value }).eq("id", id); loadSignals();
   };
   list.onclick = async e => {
     const id = e.target.dataset.del;
-    if (id && confirm("این تحلیل حذف شود؟")) { await sb.from("signals").delete().eq("id", id); loadSignals(list, true); }
+    if (id && confirm("این سیگنال حذف شود؟")) { await sb.from("signals").delete().eq("id", id); loadSignals(); }
   };
-  liveSignals(list, true);
+  drawSignalList();
+}
+function drawSignalList(){
+  const el = $("slist"); if (!el) return;
+  el.innerHTML = signals.length ? signals.map(s => `<div class="item">
+      <div><div class="line1"><span class="tag ${s.type}">${s.type==="buy"?"خرید":"فروش"}</span><b class="num">${range(s)}</b></div>
+        <div class="meta">${s.tp1!=null?`تارگت <span class="num">${fa(s.tp1)}</span>`:""}${s.tp2!=null?` / <span class="num">${fa(s.tp2)}</span>`:""}${s.sl!=null?` · حد ضرر <span class="num">${fa(s.sl)}</span>`:""} · ${fmtTime(s.created_at)}</div></div>
+      <div class="acts"><select data-st="${s.id}">${Object.entries(STATUS).map(([k,v]) => `<option value="${k}" ${k===s.status?"selected":""}>${v}</option>`).join("")}</select>
+        <button class="btn danger sm" data-del="${s.id}">حذف</button></div>
+    </div>`).join("") : `<div class="empty">هنوز سیگنالی منتشر نکرده‌اید.</div>`;
+}
+async function loadSignals(){
+  const { data } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(100);
+  signals = data || []; drawSignalList(); drawStats();
 }
 
-function adminMembers(){
-  stopLive();
-  const pane = document.getElementById("pane");
-  pane.innerHTML = `<div class="card"><h2>عضو جدید (صراف)</h2>
-    <form id="mf">
-      <label>نام</label><input id="mn" required>
-      <div class="row">
-        <div><label>ایمیل</label><input id="me" type="email" required dir="ltr"></div>
-        <div><label>رمز (حداقل ۶ حرف)</label><input id="mp" type="text" required minlength="6" dir="ltr"></div>
-      </div>
-      <label>مدت اشتراک (ماه)</label><input id="mm" type="number" min="1" value="1" required dir="ltr">
-      <div class="err" id="merr"></div>
-      <button id="mbtn" style="width:100%">ساختن حساب</button>
-    </form></div>
-    <div class="card"><h2>لیست اعضا</h2><div id="mlist"><p class="muted">در حال بارگذاری…</p></div></div>`;
+/* ---------- اعضا ---------- */
+function drawMembersTab(){
+  $("pane").innerHTML = `<div class="grid2">
+    <form class="card" id="mf">
+      <h2>افزودن عضو</h2><p class="sub">برای هر صراف یک حساب جدا بسازید و اطلاعات ورود را برایش بفرستید.</p>
+      <label>نام صراف</label><input id="mn" required>
+      <label>ایمیل</label><input id="me" type="email" required dir="ltr">
+      <label>رمز (حداقل ۶ حرف)</label><input id="mp" required minlength="6" dir="ltr" autocomplete="off">
+      <label>مدت اشتراک</label>
+      <select id="mm"><option value="1">۱ ماه</option><option value="2">۲ ماه</option><option value="3">۳ ماه</option><option value="6">۶ ماه</option><option value="12">۱۲ ماه</option></select>
+      <button class="btn full" id="mbtn">ساختن حساب</button>
+      <div class="flash" id="mfm"></div>
+      <div id="shareBox"></div>
+    </form>
+    <div class="card"><h2>لیست اعضا</h2><p class="sub">فقط شما این لیست را می‌بینید.</p>
+      <input class="search" id="q" placeholder="جستجوی نام یا ایمیل…"><div id="mlist"></div></div>
+  </div>`;
 
-  const mlist = document.getElementById("mlist");
-  let members = {};
-
-  async function loadMembers(){
-    const { data, error } = await sb.from("profiles").select("*").eq("role","member").order("expires_at",{ascending:true});
-    if (error) { mlist.innerHTML = `<p class="err">${esc(error.message)}</p>`; return; }
-    members = {}; data.forEach(m => members[m.id] = m);
-    mlist.innerHTML = data.length ? data.map(m => {
-      const active = !m.disabled && m.expires_at && new Date(m.expires_at) > Date.now();
-      return `<div class="mem"><div><b>${esc(m.name)}</b> <span class="badge ${active?"b-buy":"b-sell"}">${m.disabled?"غیرفعال":active?"فعال":"تمام‌شده"}</span>
-        <div class="muted" dir="ltr" style="text-align:right">${esc(m.email)}</div>
-        <div class="muted">اعتبار تا: ${fmtDate(m.expires_at)}</div></div>
-        <div class="actions">
-          <button class="small" data-act="extend" data-id="${m.id}">+۱ ماه</button>
-          <button class="ghost small" data-act="toggle" data-id="${m.id}">${m.disabled?"فعال کن":"غیرفعال کن"}</button>
-          <button class="ghost small" data-act="pw" data-id="${m.id}">رمز جدید</button>
-          <button class="red small" data-act="del" data-id="${m.id}">حذف</button>
-        </div></div>`;
-    }).join("") : `<p class="muted">هنوز عضوی ثبت نشده است.</p>`;
-  }
-
-  document.getElementById("mf").onsubmit = async e => {
+  $("mf").onsubmit = async e => {
     e.preventDefault();
-    const err = document.getElementById("merr"), btn = document.getElementById("mbtn");
-    err.className="err"; err.textContent = "در حال ساختن…"; btn.disabled = true;
-    const name = mn.value.trim(), email = me.value.trim(), password = mp.value, months = Number(mm.value)||1;
+    const btn = $("mbtn"), m = $("mfm");
+    const name = mn.value.trim(), email = me.value.trim(), password = mp.value, months = Number(mm.value);
+    btn.disabled = true; m.className = "flash"; m.textContent = "در حال ساختن…"; $("shareBox").innerHTML = "";
     try {
-      await callFn({ action:"create", name, email, password, months });
-      e.target.reset(); mm.value = 1;
-      err.className="ok"; err.textContent = `حساب ساخته شد ✓ ایمیل: ${email} — رمز: ${password}`;
+      await callFn({ action: "create", name, email, password, months });
+      e.target.reset();
+      m.className = "flash ok"; m.textContent = `حساب «${name}» ساخته شد ✓`;
+      const text = `سلام ${name}، اشتراک سیگنال نقره‌ی شما فعال شد.\nلینک: ${MEMBER_URL}\nایمیل: ${email}\nرمز: ${password}`;
+      $("shareBox").innerHTML = `<div class="share"><b>پیام برای ارسال به صراف:</b>\n${esc(text)}<br><button type="button" class="btn sm" id="cp">کپی پیام</button></div>`;
+      $("cp").onclick = async () => { try { await navigator.clipboard.writeText(text); $("cp").textContent = "کپی شد ✓"; } catch { $("cp").textContent = "متن را دستی کپی کنید"; } };
       loadMembers();
     } catch (x) {
-      err.textContent = x.message === "email_exists" ? "این ایمیل قبلاً ثبت شده است."
+      m.className = "flash bad";
+      m.textContent = x.message === "email_exists" ? "این ایمیل قبلاً ثبت شده است."
         : x.message === "invalid_input" ? "ایمیل درست و رمز حداقل ۶ حرفی وارد کنید." : "خطا: " + x.message;
     } finally { btn.disabled = false; }
   };
-
-  mlist.onclick = async e => {
+  $("q").oninput = drawMemberList;
+  $("mlist").onclick = async e => {
     const b = e.target.closest("button"); if (!b) return;
-    const id = b.dataset.id, m = members[id];
+    const m = members.find(x => x.id === b.dataset.id); if (!m) return;
     b.disabled = true;
     try {
-      if (b.dataset.act === "extend") {
+      if (b.dataset.a === "ext") {
         const base = Math.max(Date.now(), m.expires_at ? new Date(m.expires_at).getTime() : 0);
-        await sb.from("profiles").update({ expires_at: new Date(base + 30*DAY).toISOString() }).eq("id", id);
-      } else if (b.dataset.act === "toggle") {
-        await sb.from("profiles").update({ disabled: !m.disabled }).eq("id", id);
-      } else if (b.dataset.act === "pw") {
+        await sb.from("profiles").update({ expires_at: new Date(base + 30*DAY).toISOString() }).eq("id", m.id);
+      } else if (b.dataset.a === "tog") {
+        await sb.from("profiles").update({ disabled: !m.disabled }).eq("id", m.id);
+      } else if (b.dataset.a === "pw") {
         const pw = prompt(`رمز جدید برای «${m.name}» (حداقل ۶ حرف):`);
-        if (pw) { await callFn({ action:"password", id, password: pw }); alert("رمز عوض شد ✓"); }
-      } else if (b.dataset.act === "del" && confirm(`حساب «${m.name}» کامل حذف شود؟`)) {
-        await callFn({ action:"delete", id });
+        if (pw) { await callFn({ action: "password", id: m.id, password: pw }); alert("رمز عوض شد ✓"); }
+      } else if (b.dataset.a === "del") {
+        if (confirm(`حساب «${m.name}» برای همیشه حذف شود؟`)) await callFn({ action: "delete", id: m.id });
       }
     } catch (x) { alert("خطا: " + x.message); }
     loadMembers();
   };
-
-  loadMembers();
+  drawMemberList();
+}
+function drawMemberList(){
+  const el = $("mlist"); if (!el) return;
+  const q = ($("q")?.value || "").trim().toLowerCase();
+  const rows = members.filter(m => !q || (m.name + " " + m.email).toLowerCase().includes(q));
+  el.innerHTML = rows.length ? rows.map(m => {
+    const [cls, label] = memberState(m);
+    return `<div class="item">
+      <div><div class="line1"><b>${esc(m.name)}</b><span class="pill ${cls}">${label}</span></div>
+        <div class="meta"><span class="ltr">${esc(m.email)}</span> · تا ${fmtDate(m.expires_at)}</div></div>
+      <div class="acts">
+        <button class="btn sm" data-a="ext" data-id="${m.id}">+۱ ماه</button>
+        <button class="btn ghost sm" data-a="tog" data-id="${m.id}">${m.disabled?"فعال کن":"غیرفعال"}</button>
+        <button class="btn ghost sm" data-a="pw" data-id="${m.id}">رمز جدید</button>
+        <button class="btn danger sm" data-a="del" data-id="${m.id}">حذف</button>
+      </div></div>`;
+  }).join("") : `<div class="empty">${members.length ? "نتیجه‌ای پیدا نشد." : "هنوز عضوی اضافه نکرده‌اید."}</div>`;
+}
+async function loadMembers(){
+  const { data } = await sb.from("profiles").select("*").eq("role","member").order("expires_at",{ascending:true});
+  members = data || []; drawMemberList(); drawStats();
 }
 
-/* ---------- مسیر اصلی ---------- */
+/* مسیر */
+let pendingNote = "";
 async function route(session){
-  stopLive();
-  if (!session) return renderLogin();
-  const { data: me, error } = await sb.from("profiles").select("*").eq("id", session.user.id).maybeSingle();
-  if (error) return renderMessage("", "خطا در اتصال: " + esc(error.message));
-  if (!me) return renderMessage("", "این حساب فعال نیست. " + esc(CONTACT));
-  if (me.role === "admin") renderAdmin(me);
-  else { await sb.auth.signOut(); }
+  if (channel) { sb.removeChannel(channel); channel = null; }
+  if (!session) { const n = pendingNote; pendingNote = ""; return renderLogin(n); }
+  const { data: me } = await sb.from("profiles").select("role,name").eq("id", session.user.id).maybeSingle();
+  if (me?.role !== "admin") { pendingNote = "این صفحه فقط برای مدیر است."; await sb.auth.signOut(); return; }
+  renderPanel(me);
 }
-
 let lastUid;
 sb.auth.onAuthStateChange((event, session) => {
   const uid = session?.user?.id ?? null;
