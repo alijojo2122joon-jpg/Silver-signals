@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'af.marketanalysts.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId "af.marketanalysts.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+    flavorDimensions "role"
+    productFlavors {
+        member {
+            dimension "role"
+            buildConfigField "String", "START_URL", '"https://alijojo2122joon-jpg.github.io/Silver-signals/"'
+            resValue "string", "app_name", "Market Analysts"
+        }
+        admin {
+            dimension "role"
+            applicationIdSuffix ".admin"
+            buildConfigField "String", "START_URL", '"https://alijojo2122joon-jpg.github.io/Silver-signals/modir.html"'
+            resValue "string", "app_name", "MA مدیر"
+        }
+    }
+    buildFeatures { buildConfig true }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}

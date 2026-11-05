@@ -5,9 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eef2f0">
 <title>Market Analysts</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Market Analysts">
+
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   /* ===== رنگ‌ها: روشن ===== */
   :root{
@@ -1008,6 +1014,7 @@ sb.auth.onAuthStateChange((event, session) => {
   lastUid = uid;
   setTimeout(() => route(session), 0);
 });
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 </body>
 </html>
