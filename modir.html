@@ -99,7 +99,7 @@
   .sheet .hint{color:var(--muted);font-size:12px;margin:0 0 10px}
   label.l{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 4px 6px}
   .in{width:100%;height:52px;padding:0 16px;border-radius:16px;border:1px solid var(--stroke);background:var(--field);box-shadow:var(--sh-in);color:var(--text);font-family:inherit;font-size:16px;outline:none;transition:box-shadow .25s,border-color .25s}
-  textarea.in{height:76px;padding:12px 16px;resize:none}
+  textarea.in{height:auto;min-height:120px;padding:12px 16px;resize:vertical;line-height:1.8}
   .in:focus{border-color:rgba(53,102,255,.5);box-shadow:0 0 0 4px rgba(53,102,255,.12)}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .tog{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:5px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in)}
@@ -347,7 +347,7 @@ function sheetNewSignal(){
       <div class="two"><div><label class="l">تارگت ۱</label><input class="in num" id="tp1" type="number" step="any" inputmode="decimal" placeholder="۵۴"></div>
         <div><label class="l">تارگت ۲ (اختیاری)</label><input class="in num" id="tp2" type="number" step="any" inputmode="decimal"></div></div>
       <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="number" step="any" inputmode="decimal" placeholder="۴۹">
-      <label class="l">توضیح (اختیاری)</label><textarea class="in" id="note" placeholder="مثلاً: بعد از تثبیت بالای ۵۱ وارد شوید"></textarea>
+      <label class="l">توضیحات تحلیل</label><textarea class="in" id="note" rows="4" placeholder="توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای ۵۱ وارد شوید و نصف سرمایه را در تارگت ۱ بفروشید."></textarea>
       <button class="cta press" id="pub">انتشار سیگنال</button>
     </form>`);
   let side = "buy";
