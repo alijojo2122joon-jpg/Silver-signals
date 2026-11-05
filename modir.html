@@ -409,6 +409,33 @@
   .sheet input,.sheet textarea{-webkit-appearance:none;appearance:none}
   body.lock{overflow:hidden}
   .sheet *{touch-action:manipulation}
+  /* ===== رسانه در گفتگو ===== */
+  .cimg{min-width:140px;min-height:100px;display:grid;place-items:center;border-radius:14px;overflow:hidden;margin:-2px -6px 2px;cursor:zoom-in}
+  .cimg img{display:block;max-width:230px;max-height:280px;width:100%;object-fit:cover;border-radius:14px}
+  .cload{width:22px;height:22px;border-radius:50%;border:2.5px solid rgba(127,127,127,.3);border-top-color:currentColor;animation:rot .8s linear infinite}
+  .bub .vp{margin:0 -4px 2px;min-width:220px;background:rgba(255,255,255,.35);border:0}
+  .iview{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);display:grid;place-items:center;opacity:0;transition:opacity .35s;cursor:zoom-out}
+  .iview.show{opacity:1}
+  .iview img{max-width:96vw;max-height:90vh;border-radius:12px;transform:scale(.92);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+  .iview.show img{transform:none}
+  .ctool{width:42px;height:46px;flex:none;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--muted);border-radius:14px}
+  .ctool svg{width:22px;height:22px}
+  .ctool input{display:none}
+  .recbar{flex:1;display:none;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:16px;background:rgba(229,72,77,.1);color:#e5484d;font-weight:800;font-size:14px}
+  .recbar i{width:10px;height:10px;border-radius:50%;background:#e5484d;animation:recp 1s ease-in-out infinite}
+  @keyframes recp{50%{opacity:.25}}
+  .recbar .rx{margin-inline-start:auto;border:0;background:none;color:inherit;font-family:inherit;font-weight:800;cursor:pointer}
+  .cfoot.recording textarea,.cfoot.recording .ctool{display:none}
+  .cfoot.recording .recbar{display:flex}
+  .upl{opacity:.6}
+
+  .bub.adm .vp{background:rgba(255,255,255,.2)}
+  .crow .ctool{width:40px;height:50px}
+  .crow.recording textarea,.crow.recording .ctool{display:none}
+  .crow.recording .recbar{display:flex;height:50px}
+  .pfp{width:110px;height:110px;margin:6px auto 10px;border-radius:50%;display:grid;place-items:center;overflow:hidden;font-size:40px;font-weight:900;color:#fff;background:linear-gradient(180deg,#22c466,#006b2c);box-shadow:var(--raise);position:relative;cursor:pointer}
+  .pfp img{width:100%;height:100%;object-fit:cover}
+  .pfp .cam{position:absolute;inset:auto 0 0 0;height:30px;background:rgba(0,0,0,.45);display:grid;place-items:center;font-size:13px;font-weight:700}
 </style>
 </head>
 <body>
@@ -482,10 +509,10 @@ const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 
 const PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5"/></svg>';
 const urlCache = {};
 const mmss = t => { t = Math.max(0, Math.round(t || 0)); return fa(Math.floor(t / 60)) + ":" + String(t % 60).padStart(2, "0"); };
-function voiceHTML(path, src = ""){
+function voiceHTML(path, src = "", bucket = "voices"){
   let h = 0; for (const c of path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const bars = Array.from({length: 30}, (_, i) => { h = (h * 1103515245 + 12345) >>> 0; const v = 25 + (h % 75); return `<i style="height:${v}%"></i>`; }).join("");
-  return `<div class="vp" data-path="${esc(path)}" ${src ? `data-src="${esc(src)}"` : ""}><button type="button" class="vplay" aria-label="پخش">${PLAY}</button><div class="vwave">${bars}</div><span class="vt">🎙</span></div>`;
+  return `<div class="vp" data-path="${esc(path)}" data-bucket="${bucket}" ${src ? `data-src="${esc(src)}"` : ""}><button type="button" class="vplay" aria-label="پخش">${PLAY}</button><div class="vwave">${bars}</div><span class="vt">🎙</span></div>`;
 }
 let curAudio = null, curVp = null;
 function paintVp(vp, a){
@@ -505,7 +532,7 @@ document.addEventListener("click", async e => {
       const p = vp.dataset.path;
       if (!urlCache[p]) {
         vp.querySelector(".vt").textContent = "…";
-        const { data, error } = await sb.storage.from("voices").download(p);
+        const { data, error } = await sb.storage.from(vp.dataset.bucket || "voices").download(p);
         if (error || !data) { vp.querySelector(".vt").textContent = "خطا"; return; }
         urlCache[p] = URL.createObjectURL(data);
       }
@@ -577,7 +604,7 @@ let tab = new URLSearchParams(location.search).get("tab") === "msgs" ? "msgs" : 
 function renderPanel(){
   $app.innerHTML = `<div class="top rise">
       <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div><span class="role">مدیر</span></div>
-      <div class="icons"><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
+      <div class="icons"><button class="ib press" id="prof" aria-label="پروفایل">👤</button><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
     <div class="stats">
       <div class="stat glass sw g rise" style="--i:1"><span class="shine"></span><small>اعضای فعال</small><b class="num" id="s1">0</b></div>
@@ -588,6 +615,7 @@ function renderPanel(){
     <div class="nav glass"><span class="pill" id="np"></span>
       <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button></div>`;
   $("out").onclick = () => sb.auth.signOut();
+  $("prof").onclick = sheetProfile;
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
   $("pane").onclick = paneClick;
@@ -633,7 +661,7 @@ function drawList(){
     const conv = members.map(m => { const ms = allMsgs.filter(x => x.member_id === m.id); return { m, last: ms[ms.length - 1], unread: ms.filter(x => x.sender === "member" && !x.seen_at).length }; })
       .filter(c => c.last).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
     el.innerHTML = `<div class="list glass rise" style="--i:1">${conv.length ? conv.map(c => `<div class="it" data-chat="${c.m.id}">${avatar(c.m)}
-        <div><div class="t">${esc(c.m.name)}</div><div class="s">${c.last.sender === "admin" ? "شما: " : ""}${esc(c.last.body).slice(0, 60)}</div></div>
+        <div><div class="t">${esc(c.m.name)}</div><div class="s">${c.last.sender === "admin" ? "شما: " : ""}${c.last.kind === "image" ? "🖼 عکس" : c.last.kind === "voice" ? "🎙 پیام صوتی" : esc(c.last.body).slice(0, 60)}</div></div>
         ${c.unread ? `<span class="ub">${c.unread}</span>` : `<span class="s">${fmtFull(c.last.created_at).split(" · ")[1] || ""}</span>`}</div>`).join("")
       : `<div class="empty"><div class="big">💬</div>هنوز پیامی از اعضا نرسیده است.</div>`}</div>`;
     return;
@@ -877,6 +905,98 @@ async function backfillTranslations(){
   for (const s of signals.filter(x => x.note && (!x.translations?.ps || !x.translations?.en)).slice(0, 15)) await preTranslate(s);
 }
 
+/* ===== رسانه‌ی گفتگو (عکس و صدا) ===== */
+const chatUrl = {};
+async function chatFileUrl(path){
+  if (chatUrl[path]) return chatUrl[path];
+  const { data, error } = await sb.storage.from("chat").download(path);
+  if (error || !data) throw error || new Error("download");
+  return chatUrl[path] = URL.createObjectURL(data);
+}
+async function compressImage(file, max = 1600){
+  let bmp = null; try { bmp = await createImageBitmap(file); } catch {}
+  if (!bmp) return file;
+  const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return await new Promise(r => c.toBlob(b => r(b || file), "image/jpeg", .82));
+}
+function makeRecorder(onTick){
+  let mr = null, chunks = [], stream = null, t0 = 0, timer = null, resolveStop = null;
+  return {
+    active: () => !!mr,
+    async start(){
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = ["audio/webm;codecs=opus", "audio/mp4", "audio/webm", "audio/ogg"].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported?.(m)) || "";
+      mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); chunks = [];
+      mr.ondataavailable = e => e.data.size && chunks.push(e.data);
+      mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); const b = new Blob(chunks, { type: mr.mimeType || "audio/webm" }); mr = null; resolveStop && resolveStop(b); };
+      mr.start(); t0 = Date.now(); timer = setInterval(() => { const s = (Date.now() - t0) / 1000; onTick && onTick(s); if (s > 180) this.stop(); }, 250);
+    },
+    stop(){ return new Promise(r => { if (!mr) return r(null); resolveStop = r; mr.stop(); }); },
+    cancel(){ if (!mr) return; resolveStop = null; mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); mr = null; }; mr.stop(); },
+  };
+}
+function mediaHTML(m){
+  if (m.kind === "image" && m.file_path) return `<div class="cimg" data-cpath="${esc(m.file_path)}"><span class="cload"></span></div>`;
+  if (m.kind === "voice" && m.file_path) return voiceHTML(m.file_path, "", "chat");
+  return "";
+}
+function hydrateImages(root){
+  root.querySelectorAll(".cimg[data-cpath]:not([data-done])").forEach(async el => {
+    el.dataset.done = 1;
+    try { const u = await chatFileUrl(el.dataset.cpath); el.innerHTML = `<img src="${u}" alt="">`; } catch { el.innerHTML = "🖼"; }
+  });
+}
+document.addEventListener("click", e => {
+  const img = e.target.closest(".cimg img"); if (!img) return;
+  const v = document.createElement("div"); v.className = "iview"; v.innerHTML = `<img src="${img.src}" alt="">`;
+  v.onclick = () => { v.classList.remove("show"); setTimeout(() => v.remove(), 350); };
+  document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
+});
+
+
+/* ===== پروفایل استاد ===== */
+let teacherSet = { name: "استاد محمد ظریف محمدی", photo: null };
+async function loadTeacherSet(){ const { data } = await sb.from("settings").select("value").eq("key", "teacher").maybeSingle(); if (data?.value) teacherSet = { ...teacherSet, ...data.value }; }
+async function squareJpeg(file, size = 400){
+  const bmp = await createImageBitmap(file); const s = Math.min(bmp.width, bmp.height);
+  const c = document.createElement("canvas"); c.width = c.height = size;
+  c.getContext("2d").drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
+  return await new Promise(r => c.toBlob(r, "image/jpeg", .86));
+}
+async function sheetProfile(){
+  await loadTeacherSet();
+  let newPhoto = null;
+  const pf = () => teacherSet.photo ? `<img src="${esc(teacherSet.photo)}" alt="">` : esc([...String(teacherSet.name).replace("استاد", "").trim()][0] || "م");
+  openSheet(`<h2>پروفایل استاد</h2><p class="hint">این نام و عکس در بخش پیام برای همه‌ی اعضا نمایش داده می‌شود.</p>
+    <label class="pfp" id="pfp">${pf()}<span class="cam">تغییر عکس</span><input type="file" accept="image/*" id="pfile" style="display:none"></label>
+    <label class="l">نام نمایشی</label><input class="in" id="pname" value="${esc(teacherSet.name)}" maxlength="80">
+    <button class="cta press" id="psave">ذخیره</button>
+    ${teacherSet.photo ? `<button class="ghost red" id="pdel">حذف عکس</button>` : ""}`);
+  const onPick = async e => { const f = e.target.files[0]; if (!f) return;
+    try { newPhoto = await squareJpeg(f); $("pfp").innerHTML = `<img src="${URL.createObjectURL(newPhoto)}" alt=""><span class="cam">تغییر عکس</span><input type="file" accept="image/*" id="pfile" style="display:none">`; $("pfile").onchange = onPick; }
+    catch { toast("این عکس قابل خواندن نیست", true); } };
+  $("pfile").onchange = onPick;
+  if ($("pdel")) $("pdel").onclick = async () => { teacherSet.photo = null; await saveTeacher(); closeSheet(); };
+  $("psave").onclick = async () => {
+    const name = $("pname").value.trim(); if (!name) return toast("نام را بنویسید", true);
+    busy($("psave"), true);
+    if (newPhoto) {
+      const path = `teacher-${Date.now()}.jpg`;
+      const up = await sb.storage.from("avatars").upload(path, newPhoto, { contentType: "image/jpeg", upsert: true });
+      if (up.error) { busy($("psave"), false, "ذخیره"); return toast("آپلود عکس ناموفق بود: " + up.error.message, true); }
+      teacherSet.photo = sb.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+    }
+    teacherSet.name = name;
+    if (await saveTeacher()) { closeSheet(); toast("پروفایل ذخیره شد ✓"); } else busy($("psave"), false, "ذخیره");
+  };
+}
+async function saveTeacher(){
+  const { error } = await sb.from("settings").upsert({ key: "teacher", value: teacherSet, updated_at: new Date().toISOString() });
+  if (error) { toast("ذخیره نشد: " + error.message, true); return false; } return true;
+}
+
 /* ===== پیام‌های اعضا ===== */
 let allMsgs = [], msgCh = null, openChatId = null, knownMsg = null;
 function drawNavBadge(){ const n = allMsgs.filter(x => x.sender === "member" && !x.seen_at).length, b = $("nb"); if (b) { b.textContent = n; b.classList.toggle("show", n > 0); } }
@@ -899,7 +1019,8 @@ async function markSeenAdmin(id){
 function drawChatSheet(){
   const b = $("cbody"); if (!b) return;
   const ms = allMsgs.filter(x => x.member_id === openChatId);
-  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"}">${esc(x.body)}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
+  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"} ${x._up ? "upl" : ""}">${x._up ? '<span class="cload"></span> در حال ارسال…' : mediaHTML(x)}${x.body ? esc(x.body) : ""}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
+  hydrateImages(b);
   const last = ms[ms.length - 1];
   if (last && last.sender === "admin") b.insertAdjacentHTML("beforeend", `<div class="cst ${last.seen_at ? "seen" : "wait"}">${last.seen_at ? "✓✓ دیده شد" : "⏳ هنوز دیده نشده"}</div>`);
   b.scrollTop = b.scrollHeight;
@@ -909,13 +1030,33 @@ function sheetChat(id){
   openChatId = id;
   openSheet(`<div class="head">${avatar(m)}<div><h2>${esc(m.name)}</h2><div class="hint">فقط 10 پیام آخر نگه داشته می‌شود</div></div></div>
     <div class="cbody" id="cbody"></div>
-    <form class="crow" id="cf"><textarea id="cin" placeholder="پاسخ خود را بنویسید…" maxlength="2000"></textarea><button>${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 3l-6.5 18-3-7.5z"/></svg>'}</button></form>`);
+    <form class="crow" id="cf"><label class="ctool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><input type="file" accept="image/*" id="cimgf"></label><button type="button" class="ctool" id="cmic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <textarea id="cin" placeholder="پاسخ خود را بنویسید…" maxlength="2000"></textarea>
+      <div class="recbar"><i></i><span>در حال ضبط</span><span id="rtime">0:00</span><button type="button" class="rx" id="rcancel">لغو</button></div><button>${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 3l-6.5 18-3-7.5z"/></svg>'}</button></form>`);
   drawChatSheet(); markSeenAdmin(id);
+  const rec = makeRecorder(t => { const el = $("rtime"); if (el) el.textContent = mmss(t); });
+  const sendMedia = async (kind, blob, ext) => {
+    const path = `${id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const temp = { id: "t" + Date.now(), member_id: id, sender: "admin", kind, created_at: new Date().toISOString(), seen_at: null, _up: true };
+    allMsgs.push(temp); drawChatSheet();
+    const up = await sb.storage.from("chat").upload(path, blob, { contentType: blob.type || (kind === "image" ? "image/jpeg" : "audio/wav") });
+    if (up.error) { allMsgs = allMsgs.filter(x => x !== temp); drawChatSheet(); return toast("ارسال نشد: " + up.error.message, true); }
+    chatUrl[path] = URL.createObjectURL(blob);
+    const { error } = await sb.from("messages").insert({ member_id: id, sender: "admin", kind, file_path: path });
+    if (error) { allMsgs = allMsgs.filter(x => x !== temp); sb.storage.from("chat").remove([path]); toast("ارسال نشد: " + error.message, true); }
+    loadMsgs();
+  };
+  $("cimgf").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (f) sendMedia("image", await compressImage(f), "jpg"); };
+  $("cmic").onclick = async () => { try { await rec.start(); } catch { return toast("اجازه‌ی میکروفون داده نشد", true); } $("cf").classList.add("recording"); };
+  $("rcancel").onclick = () => { rec.cancel(); $("cf").classList.remove("recording"); $("rtime").textContent = "0:00"; };
   $("cf").onsubmit = async e => {
-    e.preventDefault(); const body = $("cin").value.trim(); if (!body) return;
+    e.preventDefault();
+    if (rec.active()) { $("cf").classList.remove("recording"); const raw = await rec.stop(); $("rtime").textContent = "0:00";
+      if (!raw || raw.size < 800) return; let w = raw; try { w = await toWav(raw); } catch {} return sendMedia("voice", w, w.type === "audio/wav" ? "wav" : "webm"); }
+    const body = $("cin").value.trim(); if (!body) return;
     $("cin").value = "";
     allMsgs.push({ id: "t" + Date.now(), member_id: id, sender: "admin", body, created_at: new Date().toISOString(), seen_at: null }); drawChatSheet();
-    const { error } = await sb.from("messages").insert({ member_id: id, sender: "admin", body });
+    const { error } = await sb.from("messages").insert({ member_id: id, sender: "admin", kind: "text", body });
     if (error) { toast("ارسال نشد: " + error.message, true); $("cin").value = body; }
     loadMsgs();
   };

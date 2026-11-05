@@ -304,6 +304,25 @@
   .ib .hb{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--sell);color:#fff;font-size:11px;font-weight:800;display:none;place-items:center;font-family:Montserrat,Arial,sans-serif}
   .ib .hb.show{display:grid}
   .top .ib{overflow:visible}
+  /* ===== رسانه در گفتگو ===== */
+  .cimg{min-width:140px;min-height:100px;display:grid;place-items:center;border-radius:14px;overflow:hidden;margin:-2px -6px 2px;cursor:zoom-in}
+  .cimg img{display:block;max-width:230px;max-height:280px;width:100%;object-fit:cover;border-radius:14px}
+  .cload{width:22px;height:22px;border-radius:50%;border:2.5px solid rgba(127,127,127,.3);border-top-color:currentColor;animation:rot .8s linear infinite}
+  .bub .vp{margin:0 -4px 2px;min-width:220px;background:rgba(255,255,255,.35);border:0}
+  .iview{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);display:grid;place-items:center;opacity:0;transition:opacity .35s;cursor:zoom-out}
+  .iview.show{opacity:1}
+  .iview img{max-width:96vw;max-height:90vh;border-radius:12px;transform:scale(.92);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+  .iview.show img{transform:none}
+  .ctool{width:42px;height:46px;flex:none;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--muted);border-radius:14px}
+  .ctool svg{width:22px;height:22px}
+  .ctool input{display:none}
+  .recbar{flex:1;display:none;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:16px;background:rgba(229,72,77,.1);color:#e5484d;font-weight:800;font-size:14px}
+  .recbar i{width:10px;height:10px;border-radius:50%;background:#e5484d;animation:recp 1s ease-in-out infinite}
+  @keyframes recp{50%{opacity:.25}}
+  .recbar .rx{margin-inline-start:auto;border:0;background:none;color:inherit;font-family:inherit;font-weight:800;cursor:pointer}
+  .cfoot.recording textarea,.cfoot.recording .ctool{display:none}
+  .cfoot.recording .recbar{display:flex}
+  .upl{opacity:.6}
 </style>
 </head>
 <body>
@@ -316,7 +335,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ====== تنظیمات ====== */
 const SUPABASE_URL = "https://segfazxjglbawdhopnra.supabase.co";
 const SUPABASE_KEY = "sb_publishable_VfSrjufay_d3__oseWrv2Q_UaCXJn5F";
-const TEACHER_PHOTO = "img/ostad.jpg";
+let teacher = { name: null, photo: null };
 const AFN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_Afghanis_%282022_-_top%29.jpg/960px-1000_Afghanis_%282022_-_top%29.jpg";
 /* ===================== */
 
@@ -347,7 +366,7 @@ const L = {
     disc:"این تحلیل‌ها نظر کارشناسی است و تضمین سود نیست؛ مسئولیت هر معامله با خود شماست.",
     newA:"تحلیل جدید", tapView:"برای دیدن بزنید", upd:"به‌روزرسانی تحلیل",
     autoTr:"ترجمه‌ی خودکار", trFail:"ترجمه ممکن نشد؛ دوباره بزنید", cantPlay:"قابل پخش نیست", lang:"زبان",
-    chatTo:"ارسال پیام به استاد محمد ظریف محمدی", teacher:"استاد محمد ظریف محمدی", typeMsg:"پیام خود را بنویسید…",
+    chatTo:"ارسال پیام به {n}", teacher:"استاد محمد ظریف محمدی", photo:"عکس", voice:"پیام صوتی", recording:"در حال ضبط", cancel:"لغو", micDenied:"اجازه‌ی میکروفون داده نشد", uploading:"در حال ارسال…", typeMsg:"پیام خود را بنویسید…",
     waiting:"پیام شما در انتظار دیده شدن است", seen:"پیام شما دیده شد", chatEmpty:"سؤال یا پیام خود را برای استاد بنویسید.", sendFail:"ارسال نشد؛ اینترنت را بررسی کنید", newMsg:"پیام جدید از استاد", msgTeacher:"پیام به استاد 👋", inbox:"پیام‌های اعضا" },
   ps: { dir:"rtl", loc:"ps-AF-u-nu-latn", name:"پښتو",
     welcome:"ښه راغلاست", loginSub:"د تحلیلونو د لیدو لپاره ننوځئ", email:"برېښنالیک", password:"پټنوم", login:"ننوتل",
@@ -364,7 +383,7 @@ const L = {
     disc:"دا تحلیلونه کارپوهنیز نظر دی او د ګټې تضمین نه دی؛ د هرې معاملې مسؤلیت ستاسو دی.",
     newA:"نوی تحلیل", tapView:"د لیدو لپاره کېکاږئ", upd:"د تحلیل تازه حالت",
     autoTr:"اتوماتیک ژباړه", trFail:"ژباړه ونشوه؛ بیا کېکاږئ", cantPlay:"نه غږېږي", lang:"ژبه",
-    chatTo:"استاد محمد ظریف محمدي ته پیغام", teacher:"استاد محمد ظریف محمدي", typeMsg:"خپل پیغام ولیکئ…",
+    chatTo:"{n} ته پیغام", teacher:"استاد محمد ظریف محمدي", photo:"انځور", voice:"غږیز پیغام", recording:"ثبتېږي", cancel:"لغوه", micDenied:"مایکروفون ته اجازه ورنکړل شوه", uploading:"لېږل کېږي…", typeMsg:"خپل پیغام ولیکئ…",
     waiting:"ستاسو پیغام د لیدو په تمه دی", seen:"ستاسو پیغام ولیدل شو", chatEmpty:"خپله پوښتنه یا پیغام استاد ته ولیکئ.", sendFail:"ونه لېږل شو؛ انټرنېټ وګورئ", newMsg:"د استاد نوی پیغام", msgTeacher:"استاد ته پیغام 👋", inbox:"د غړو پیغامونه" },
   en: { dir:"ltr", loc:"en-GB", name:"English",
     welcome:"Welcome", loginSub:"Sign in to see the analyses", email:"Email", password:"Password", login:"Sign in",
@@ -381,7 +400,7 @@ const L = {
     disc:"These analyses are expert opinions, not a guarantee of profit. You are responsible for every trade.",
     newA:"New analysis", tapView:"tap to view", upd:"Analysis update",
     autoTr:"Auto-translated", trFail:"Translation failed, tap again", cantPlay:"Can't play", lang:"Language",
-    chatTo:"Message Ostad Mohammad Zarif Mohammadi", teacher:"Ostad Mohammad Zarif Mohammadi", typeMsg:"Write your message…",
+    chatTo:"Message {n}", teacher:"Ostad Mohammad Zarif Mohammadi", photo:"Photo", voice:"Voice message", recording:"Recording", cancel:"Cancel", micDenied:"Microphone permission denied", uploading:"Sending…", typeMsg:"Write your message…",
     waiting:"Your message is waiting to be seen", seen:"Your message was seen", chatEmpty:"Write your question or message to Ostad.", sendFail:"Not sent, check your internet", newMsg:"New message from Ostad", msgTeacher:"Message Ostad 👋", inbox:"Members' messages" },
 };
 let lang = store.get("lang", null);
@@ -443,10 +462,10 @@ const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 
 const PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5"/></svg>';
 const urlCache = {};
 const mmss = t => { t = Math.max(0, Math.round(t || 0)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); };
-function voiceHTML(path){
+function voiceHTML(path, bucket = "voices"){
   let h = 0; for (const c of path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const bars = Array.from({length: 30}, () => { h = (h * 1103515245 + 12345) >>> 0; return `<i style="height:${25 + (h % 75)}%"></i>`; }).join("");
-  return `<div class="vp" data-path="${esc(path)}"><button type="button" class="vplay">${PLAY}</button><div class="vwave">${bars}</div><span class="vt">🎙</span></div>`;
+  return `<div class="vp" data-path="${esc(path)}" data-bucket="${bucket}"><button type="button" class="vplay">${PLAY}</button><div class="vwave">${bars}</div><span class="vt">🎙</span></div>`;
 }
 let curAudio = null, curVp = null;
 function paintVp(vp, a){
@@ -462,7 +481,7 @@ document.addEventListener("click", async e => {
     const p = vp.dataset.path;
     if (!urlCache[p]) {
       vp.querySelector(".vt").textContent = "…";
-      const { data, error } = await sb.storage.from("voices").download(p);
+      const { data, error } = await sb.storage.from(vp.dataset.bucket || "voices").download(p);
       if (error || !data) { vp.querySelector(".vt").textContent = T.cantPlay; return; }
       urlCache[p] = URL.createObjectURL(data);
     }
@@ -709,6 +728,68 @@ function rerender(){
   else boot();
 }
 
+/* ===== رسانه‌ی گفتگو (عکس و صدا) ===== */
+const chatUrl = {};
+async function chatFileUrl(path){
+  if (chatUrl[path]) return chatUrl[path];
+  const { data, error } = await sb.storage.from("chat").download(path);
+  if (error || !data) throw error || new Error("download");
+  return chatUrl[path] = URL.createObjectURL(data);
+}
+async function compressImage(file, max = 1600){
+  let bmp = null; try { bmp = await createImageBitmap(file); } catch {}
+  if (!bmp) return file;
+  const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return await new Promise(r => c.toBlob(b => r(b || file), "image/jpeg", .82));
+}
+async function toWav(blob, sr = 16000){
+  const AC = window.AudioContext || window.webkitAudioContext; const ctx = new AC(); let buf;
+  try { buf = await ctx.decodeAudioData(await blob.arrayBuffer()); } finally { ctx.close && ctx.close(); }
+  const len = Math.ceil(buf.duration * sr), off = new OfflineAudioContext(1, len, sr), src = off.createBufferSource();
+  src.buffer = buf; src.connect(off.destination); src.start();
+  const d = (await off.startRendering()).getChannelData(0), v = new DataView(new ArrayBuffer(44 + d.length * 2));
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, "RIFF"); v.setUint32(4, 36 + d.length * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, d.length * 2, true);
+  for (let i = 0; i < d.length; i++) { const x = Math.max(-1, Math.min(1, d[i])); v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
+  return new Blob([v], { type: "audio/wav" });
+}
+function makeRecorder(onTick){
+  let mr = null, chunks = [], stream = null, t0 = 0, timer = null, resolveStop = null;
+  return {
+    active: () => !!mr,
+    async start(){
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = ["audio/webm;codecs=opus", "audio/mp4", "audio/webm", "audio/ogg"].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported?.(m)) || "";
+      mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); chunks = [];
+      mr.ondataavailable = e => e.data.size && chunks.push(e.data);
+      mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); const b = new Blob(chunks, { type: mr.mimeType || "audio/webm" }); mr = null; resolveStop && resolveStop(b); };
+      mr.start(); t0 = Date.now(); timer = setInterval(() => { const s = (Date.now() - t0) / 1000; onTick && onTick(s); if (s > 180) this.stop(); }, 250);
+    },
+    stop(){ return new Promise(r => { if (!mr) return r(null); resolveStop = r; mr.stop(); }); },
+    cancel(){ if (!mr) return; resolveStop = null; mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearInterval(timer); mr = null; }; mr.stop(); },
+  };
+}
+function mediaHTML(m){
+  if (m.kind === "image" && m.file_path) return `<div class="cimg" data-cpath="${esc(m.file_path)}"><span class="cload"></span></div>`;
+  if (m.kind === "voice" && m.file_path) return voiceHTML(m.file_path, "chat");
+  return "";
+}
+function hydrateImages(root){
+  root.querySelectorAll(".cimg[data-cpath]:not([data-done])").forEach(async el => {
+    el.dataset.done = 1;
+    try { const u = await chatFileUrl(el.dataset.cpath); el.innerHTML = `<img src="${u}" alt="">`; } catch { el.innerHTML = "🖼"; }
+  });
+}
+document.addEventListener("click", e => {
+  const img = e.target.closest(".cimg img"); if (!img) return;
+  const v = document.createElement("div"); v.className = "iview"; v.innerHTML = `<img src="${img.src}" alt="">`;
+  v.onclick = () => { v.classList.remove("show"); setTimeout(() => v.remove(), 350); };
+  document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
+});
+
 /* ===== گفتگو با استاد ===== */
 let msgs = [], msgsLoaded = false, chatOpen = false;
 function removeChat(){ ["fab","chat","cveil","fablab"].forEach(id => $(id)?.remove()); chatOpen = false; }
@@ -751,16 +832,41 @@ function refreshChatTexts(){
   const c = $("chat"); if (!c) return;
   $("fab")?.setAttribute("aria-label", T.chatTo);
   const draft = $("cin")?.value || "";
-  c.innerHTML = `<div class="chead"><img class="pp" src="${TEACHER_PHOTO}" alt="" onerror="this.outerHTML='<span class=&quot;pp&quot;>م</span>'">
-      <div><b>${T.teacher}</b><small>${T.chatTo}</small></div><button class="ib x" id="cx">${I.x}</button></div>
+  const tn = teacher.name || T.teacher;
+  c.innerHTML = `<div class="chead">${teacher.photo ? `<img class="pp" src="${esc(teacher.photo)}" alt="">` : `<span class="pp">${esc([...tn].find(ch => /\S/.test(ch) && !"استاد ".includes(ch)) || "م")}</span>`}
+      <div><b>${esc(tn)}</b><small>${tt(T.chatTo, {n: esc(tn)})}</small></div><button class="ib x" id="cx">${I.x}</button></div>
     <div class="cbody" id="cbody"></div>
-    <form class="cfoot" id="cform"><textarea id="cin" rows="1" placeholder="${T.typeMsg}" maxlength="2000"></textarea><button class="send" id="csend">${I.send}</button></form>`;
+    <form class="cfoot" id="cform">
+      <label class="ctool" aria-label="${T.photo}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><input type="file" accept="image/*" id="cimgf"></label>
+      <button type="button" class="ctool" id="cmic" aria-label="${T.voice}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <textarea id="cin" rows="1" placeholder="${T.typeMsg}" maxlength="2000"></textarea>
+      <div class="recbar"><i></i><span>${T.recording}</span><span class="num" id="rtime">0:00</span><button type="button" class="rx" id="rcancel">${T.cancel}</button></div>
+      <button class="send" id="csend">${I.send}</button></form>`;
   $("cin").value = draft;
   $("cx").onclick = closeChat;
   $("cin").oninput = e => { e.target.style.height = "46px"; e.target.style.height = Math.min(120, e.target.scrollHeight) + "px"; };
   $("cin").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && innerWidth > 700) { e.preventDefault(); $("cform").requestSubmit(); } };
   $("cform").onsubmit = sendMsg;
+  $("cimgf").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    const blob = await compressImage(f); sendMedia("image", blob, "jpg"); };
+  $("cmic").onclick = async () => {
+    try { await rec.start(); } catch { return banner("⚠️", T.micDenied, ""); }
+    $("cform").classList.add("recording");
+  };
+  $("rcancel").onclick = () => { rec.cancel(); $("cform").classList.remove("recording"); $("rtime").textContent = "0:00"; };
   drawChat();
+}
+const rec = makeRecorder(s => { const el = $("rtime"); if (el) el.textContent = mmss(s); });
+async function sendMedia(kind, blob, ext){
+  const path = `${me.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const temp = { id: "t" + Date.now(), member_id: me.id, sender: "member", kind, file_path: null, body: null, created_at: new Date().toISOString(), seen_at: null, _up: true };
+  msgs.push(temp); drawChat();
+  const up = await sb.storage.from("chat").upload(path, blob, { contentType: blob.type || (kind === "image" ? "image/jpeg" : "audio/wav") });
+  if (up.error) { msgs = msgs.filter(m => m !== temp); drawChat(); return banner("⚠️", T.sendFail, ""); }
+  chatUrl[path] = URL.createObjectURL(blob);
+  const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", kind, file_path: path });
+  if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", T.sendFail, ""); }
+  loadChat();
 }
 function openChat(){ chatOpen = true; $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
 function closeChat(){ chatOpen = false; $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); drawChat(); }
@@ -771,22 +877,34 @@ function drawChat(){
   const hb = $("hbadge"); if (hb) { hb.textContent = unread; hb.classList.toggle("show", unread > 0 && !chatOpen); }
   if (!b) return;
   if (!msgs.length) { b.innerHTML = `<div class="cempty">${T.chatEmpty}</div>`; return; }
-  b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"}">${esc(m.body)}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");
+  b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"} ${m._up?"upl":""}">${m._up ? `<span class="cload"></span> ${T.uploading}` : mediaHTML(m)}${m.body ? esc(m.body) : ""}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");
+  hydrateImages(b);
   const last = msgs[msgs.length - 1];
   if (last.sender === "member") b.insertAdjacentHTML("beforeend", `<div class="cstate ${last.seen_at?"seen":"wait"}">${last.seen_at ? "✓✓ " + T.seen : "⏳ " + T.waiting}</div>`);
   b.scrollTop = b.scrollHeight;
 }
+async function loadTeacher(){
+  const { data } = await sb.from("settings").select("value").eq("key", "teacher").maybeSingle();
+  const v = data?.value || {}; const changed = v.name !== teacher.name || v.photo !== teacher.photo;
+  teacher = { name: v.name || null, photo: v.photo || null }; store.set("teacher", teacher);
+  if (changed && $("chat") && !chatOpen) refreshChatTexts();
+}
+teacher = store.get("teacher", teacher);
 async function loadChat(){
   if (!me || me.role === "admin" || view !== "feed") return;
+  if (!msgsLoaded) loadTeacher();
   const { data, error } = await sb.from("messages").select("*").eq("member_id", me.id).order("created_at", {ascending:true});
   if (error) return;
   const known = new Set(msgs.map(m => m.id));
   const fresh = (data || []).filter(m => m.sender === "admin" && !m.seen_at && !known.has(m.id));
   const first = !msgsLoaded; msgsLoaded = true;
+  const keep = new Set((data || []).map(m => m.file_path).filter(Boolean));
+  const gone = msgs.filter(m => m.file_path && !keep.has(m.file_path) && !String(m.id).startsWith("t")).map(m => m.file_path);
+  if (!first && gone.length) sb.storage.from("chat").remove(gone);
   msgs = data || []; store.set("cache_msgs", msgs);
   drawChat();
   if (chatOpen) markSeen();
-  else if (!first && fresh.length) banner("💬", T.newMsg, esc(fresh[fresh.length - 1].body).slice(0, 80), openChat);
+  else if (!first && fresh.length) { const f = fresh[fresh.length - 1]; banner("💬", T.newMsg, f.kind === "image" ? "🖼 " + T.photo : f.kind === "voice" ? "🎙 " + T.voice : esc(f.body).slice(0, 80), openChat); }
 }
 async function markSeen(){
   if (!msgs.some(m => m.sender === "admin" && !m.seen_at)) return;
@@ -795,10 +913,17 @@ async function markSeen(){
 }
 async function sendMsg(e){
   e.preventDefault();
+  if (rec.active()) {
+    $("cform").classList.remove("recording");
+    const raw = await rec.stop(); $("rtime").textContent = "0:00";
+    if (!raw || raw.size < 800) return;
+    let wav = raw; try { wav = await toWav(raw); } catch {}
+    return sendMedia("voice", wav, wav.type === "audio/wav" ? "wav" : "webm");
+  }
   const inp = $("cin"), body = inp.value.trim(); if (!body) return;
   const temp = { id: "t" + Date.now(), member_id: me.id, sender: "member", body, created_at: new Date().toISOString(), seen_at: null };
   msgs.push(temp); while (msgs.length > 10) msgs.shift(); inp.value = ""; inp.style.height = "46px"; drawChat();
-  const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", body });
+  const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", kind: "text", body });
   if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); inp.value = body; banner("⚠️", T.sendFail, ""); return; }
   loadChat();
 }
