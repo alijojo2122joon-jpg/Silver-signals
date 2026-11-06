@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebResourceError;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -26,6 +29,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         web = new WebView(this);
+        web.setBackgroundColor(0xFFEEF2F0);
+        web.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        web.setVisibility(View.INVISIBLE);
         setContentView(web);
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -40,6 +46,19 @@ public class MainActivity extends Activity {
         web.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         web.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (web.getVisibility() != View.VISIBLE) { web.setAlpha(0f); web.setVisibility(View.VISIBLE); web.animate().alpha(1f).setDuration(220).start(); }
+                getWindow().setBackgroundDrawable(null);
+                if (url != null && url.startsWith("file:")) view.evaluateJavascript("window.START='" + BuildConfig.START_URL + "'", null);
+            }
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
+                if (req.isForMainFrame()) {
+                    view.loadUrl("file:///android_asset/offline.html");
+                    waitForNetwork();
+                }
+            }
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
                 Uri u = req.getUrl();
@@ -80,8 +99,22 @@ public class MainActivity extends Activity {
             }
         });
 
+        s.setAllowFileAccess(true);
         if (state != null) web.restoreState(state);
         else web.loadUrl(BuildConfig.START_URL);
+    }
+
+    private boolean waiting = false;
+    private void waitForNetwork() {
+        if (waiting) return; waiting = true;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (cm == null) return;
+        cm.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+            @Override public void onAvailable(Network n) {
+                runOnUiThread(() -> { waiting = false; web.loadUrl(BuildConfig.START_URL); });
+                try { cm.unregisterNetworkCallback(this); } catch (Exception ignored) {}
+            }
+        });
     }
 
     @Override

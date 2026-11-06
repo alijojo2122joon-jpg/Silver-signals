@@ -331,12 +331,24 @@
   .upl{opacity:.6}
   .nolink{display:block;margin:18px auto 0;border:0;background:none;cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted);text-shadow:var(--ts)}
   .nolink b{color:var(--text)}
+
+  /* ===== حالت اپ اندروید: سبک و روان ===== */
+  html.app .glass,html.app .mk button,html.app .sline,html.app .pop{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  html.app .glass,html.app .mk button,html.app .sline{background:var(--tile)!important}
+  html.app .mbg i{filter:blur(8px)!important;animation:none!important;transform:scale(1.08)}
+  html.app .hero{animation:rise .6s cubic-bezier(.16,1,.3,1) forwards!important}
+  html.app .hero .shine,html.app .blob,html.app .shine{display:none!important}
+  html.app .glow:not(.hero):not(.on)::before{display:none}
+  html.app .sw>.shine{display:none}
+  html.app *{-webkit-tap-highlight-color:transparent}
+  html.app body{overscroll-behavior:none}
 </style>
 </head>
 <body>
 <div class="mbg"><i data-m="xau"></i><i data-m="xag"></i><i data-m="usd"></i><b></b></div>
 <div class="app" id="app"></div>
 
+<script>if (/MarketAnalystsApp/.test(navigator.userAgent)) document.documentElement.classList.add("app");</script>
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
@@ -565,7 +577,6 @@ function topbar(){
   return `<div class="top rise">
     <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div></div>
     <div class="icons">
-      ${view === "feed" ? `<button class="ib" id="hc" aria-label="chat">${I.chat}<span class="hb" id="hbadge"></span></button>` : ""}
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
