@@ -390,8 +390,17 @@
   .res{box-shadow:none}
 
   /* ===== پیام‌ها ===== */
-  .nav{width:min(360px,calc(100% - 32px))!important;grid-template-columns:repeat(3,1fr)!important}
-  .nav .pill{width:calc((100% - 12px)/3)!important}
+  .nav{width:min(420px,calc(100% - 24px))!important;grid-template-columns:repeat(4,1fr)!important}
+  .nav .pill{width:calc((100% - 12px)/4)!important}
+  .nav button{font-size:12.5px!important;gap:4px!important}
+  .tfc{display:flex;flex-wrap:wrap;gap:6px}
+  .tfc button{border:1px solid var(--stroke);background:var(--field);border-radius:12px;padding:8px 11px;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--muted);cursor:pointer}
+  .tfc button.on{background:linear-gradient(180deg,#22c466,#00963f);color:#fff;border-color:transparent}
+  .ctile{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+  .ctile .av{font-size:20px}
+  .impsel{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:13px;font-weight:700}
+  .impsel .tfc button{padding:6px 9px}
+  .rrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end}
   .nav .nb{position:absolute;top:4px;left:12px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#e5484d;color:#fff;font-size:11px;font-weight:800;display:none;place-items:center;font-family:Montserrat,Arial,sans-serif}
   .nav .nb.show{display:grid}
   .ub{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#e5484d;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;font-family:Montserrat,Arial,sans-serif}
@@ -467,7 +476,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1793878717";
+const BUILD = "1793955307";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -492,7 +501,7 @@ const fmtFull = d => { const x = new Date(d);
 const ago = fmtFull;
 const num = v => { if (v == null) return null; v = String(v).trim().replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String(d.charCodeAt(0) & 15)).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); if (v === "" || isNaN(Number(v))) return null; return Number(v); };
 const DAY = 86400000;
-const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
+const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", tp3:"تیک پروفیت 3 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 const mState = m => {
   if (m.deleted_at) return ["off", "حذف‌شده"];
@@ -641,7 +650,7 @@ function renderPanel(){
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button></div>`;
+      <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button><button data-t="content">🗂 محتوا</button></div>`;
   $("out").onclick = () => sb.auth.signOut();
   $("prof").onclick = sheetProfile;
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
@@ -674,8 +683,9 @@ function drawStats(){
 
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
-  $("np").style.transform = `translateX(${-["signals","members","msgs"].indexOf(tab) * 100}%)`;
+  $("np").style.transform = `translateX(${-["signals","members","msgs","content"].indexOf(tab) * 100}%)`;
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
+  if (tab === "content") return drawContent();
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div>
@@ -686,6 +696,7 @@ function drawPane(){
 function drawList(){
   const el = $("list"); if (!el) return;
   drawNavBadge();
+  if (tab === "content") return;
   if (tab === "msgs") {
     const conv = members.map(m => { const ms = allMsgs.filter(x => x.member_id === m.id); return { m, last: ms[ms.length - 1], unread: ms.filter(x => x.sender === "member" && !x.seen_at).length }; })
       .filter(c => c.last).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
@@ -744,6 +755,150 @@ const MARKETS = {
   usd: { name: "دالر", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
 };
 let mfilter = "all";
+const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسانی 4 ساعته", d1:"روزانه", w1:"هفتگی" };
+/* ===== محتوا: نرخ‌ها، آکادمی، اخبار، آموزش، ویدیو، نظرسنجی ===== */
+const PLACES = { kabul:"کابل (سرای شهزاده)", herat:"هرات", mazar:"مزار شریف", jalalabad:"جلال‌آباد" };
+const KINDS = { news:"📰 خبر", event:"🗓 رویداد تقویم", article:"🎓 آموزش", video:"🎬 ویدیو" };
+let cPosts = [], cRates = [], cPolls = [];
+async function loadContent(){
+  const [a, b, c] = await Promise.all([
+    sb.from("posts").select("*").order("created_at", { ascending: false }).limit(50),
+    sb.from("rates").select("*").order("created_at", { ascending: false }).limit(40),
+    sb.from("polls").select("*").order("created_at", { ascending: false }).limit(10)]);
+  cPosts = a.data || []; cRates = b.data || []; cPolls = c.data || [];
+  if (tab === "content") drawContentList();
+}
+function drawContent(){
+  const tiles = [["rates","💱","نرخ‌های امروز","دالر سرای شهزاده، هرات، مزار، جلال‌آباد و مثقال"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
+    ["news","📰","خبر اقتصادی","با تأثیر بر طلا/نقره/دالر"],["event","🗓","رویداد تقویم اقتصادی","زمان، اهمیت، قبلی و پیش‌بینی"],
+    ["article","🎓","آموزش کوتاه","مثلاً: حد ضرر چیست؟"],["video","🎬","ویدیوی تحلیل روزانه","ویدیوی 1 تا 2 دقیقه‌ای"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
+  $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت محتوا</h3></div>
+    <div class="list glass rise" style="--i:1">${tiles.map(([k, ic, t, s]) => `<div class="it ctile" data-ct="${k}"><span class="av" style="background:var(--field)">${ic}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="s">${I.plus}</span></div>`).join("")}</div>
+    <div id="clist"></div>`;
+  $("pane").querySelectorAll("[data-ct]").forEach(el => el.onclick = () => { const k = el.dataset.ct;
+    k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
+  drawContentList(); loadContent();
+}
+function drawContentList(){
+  const el = $("clist"); if (!el) return;
+  const lastR = p => cRates.find(r => r.place === p);
+  const rateTxt = r => r ? [r.buy != null ? "خرید " + fa(r.buy) : "", r.sell != null ? "فروش " + fa(r.sell) : "", r.gold_mithqal != null ? "مثقال طلا " + fa(r.gold_mithqal) : ""].filter(Boolean).join(" · ") + " — " + fmtFull(r.created_at) : "ثبت نشده";
+  const ap = cPolls.find(p => p.active);
+  el.innerHTML = `<div class="sec" style="margin-top:18px"><h3>آخرین نرخ‌ها</h3></div>
+    <div class="list glass">${Object.entries(PLACES).map(([k, v]) => `<div class="it" style="grid-template-columns:1fr;cursor:default"><div><div class="t">${v}</div><div class="s num">${rateTxt(lastR(k))}</div></div></div>`).join("")}</div>
+    ${ap ? `<div class="sec" style="margin-top:18px"><h3>نظرسنجی فعال</h3></div><div class="list glass"><div class="it" style="cursor:default"><span class="av" style="background:var(--field)">📊</span><div><div class="t">${esc(ap.question)}</div><div class="s">${(ap.options || []).map(esc).join(" / ")}</div></div><button class="ghost" style="width:auto;height:36px;margin:0;padding:0 12px" data-endpoll="${ap.id}">پایان</button></div></div>` : ""}
+    <div class="sec" style="margin-top:18px"><h3>منتشرشده‌ها</h3></div>
+    <div class="list glass">${cPosts.length ? cPosts.filter(p => KINDS[p.kind]).map(p => `<div class="it" style="cursor:default"><span class="av" style="background:var(--field)">${KINDS[p.kind].split(" ")[0]}</span>
+      <div><div class="t">${esc(p.title)}</div><div class="s">${KINDS[p.kind].split(" ")[1]} · ${fmtFull(p.created_at)}</div></div><button class="ghost red" style="width:auto;height:36px;margin:0;padding:0 12px" data-delpost="${p.id}">حذف</button></div>`).join("")
+      : `<div class="empty"><div class="big">🗂</div>هنوز چیزی منتشر نشده.</div>`}</div>`;
+  el.onclick = async e => {
+    const d = e.target.closest("[data-delpost]");
+    if (d && confirm("حذف شود؟")) { const p = cPosts.find(x => String(x.id) === d.dataset.delpost);
+      await sb.from("posts").delete().eq("id", d.dataset.delpost); if (p?.file_path) sb.storage.from("media").remove([p.file_path]); toast("حذف شد"); loadContent(); }
+    const ep = e.target.closest("[data-endpoll]");
+    if (ep) { await sb.from("polls").update({ active: false }).eq("id", ep.dataset.endpoll); toast("نظرسنجی بسته شد"); loadContent(); }
+  };
+}
+const nIn = (id, ph = "", v = "") => `<input class="in num" id="${id}" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="${ph}" value="${v ?? ""}">`;
+function sheetRates(){
+  const last = p => cRates.find(r => r.place === p) || {};
+  openSheet(`<h2>نرخ‌های امروز</h2><p class="hint">فقط خانه‌هایی که پر کنید ثبت می‌شوند. اعضا فوراً می‌بینند.</p>
+    ${Object.entries(PLACES).map(([k, v]) => `<label class="l">دالر به افغانی — ${v}</label><div class="two"><div>${nIn("b_" + k, "خرید " + (last(k).buy ?? ""))}</div><div>${nIn("s_" + k, "فروش " + (last(k).sell ?? ""))}</div></div>`).join("")}
+    <label class="l">مثقال طلای 24 عیار کابل (افغانی) — اختیاری</label>${nIn("gm", "اگر خالی بماند از قیمت جهانی حساب می‌شود")}
+    <label class="l">مثقال نقره (افغانی) — اختیاری</label>${nIn("smq", "اگر خالی بماند از قیمت جهانی حساب می‌شود")}
+    <button class="cta press" id="rsave">ثبت نرخ‌ها</button>`);
+  $("rsave").onclick = async () => {
+    const rows = Object.keys(PLACES).map(k => ({ place: k, buy: num($("b_" + k).value), sell: num($("s_" + k).value) }));
+    const gm = num($("gm").value), sm = num($("smq").value);
+    const k = rows[0]; if (gm != null) k.gold_mithqal = gm; if (sm != null) k.silver_mithqal = sm;
+    const ins = rows.filter(r => r.buy != null || r.sell != null || r.gold_mithqal != null || r.silver_mithqal != null);
+    if (!ins.length) return toast("هیچ نرخی وارد نشده", true);
+    busy($("rsave"), true);
+    const { error } = await sb.from("rates").insert(ins);
+    if (error) { busy($("rsave"), false, "ثبت نرخ‌ها"); return toast("خطا: " + error.message, true); }
+    closeSheet(); toast("نرخ‌ها ثبت شد ✓"); loadContent();
+  };
+}
+async function sheetAcademy(){
+  const { data } = await sb.from("settings").select("value").eq("key", "academy").maybeSingle();
+  const A = data?.value || {};
+  const f = (id, lab, ph = "", area = false) => `<label class="l">${lab}</label>${area ? `<textarea class="in" id="a_${id}" rows="3" placeholder="${ph}">${esc(A[id] || "")}</textarea>` : `<input class="in" id="a_${id}" placeholder="${ph}" value="${esc(A[id] || "")}">`}`;
+  openSheet(`<h2>آکادمی و استاد</h2><p class="hint">نام و عکس استاد از دکمه‌ی 👤 بالا تنظیم می‌شود.</p>
+    ${f("specialty", "تخصص اصلی", "مثلاً: متخصص پرایس اکشن در بازار طلا")}
+    ${f("years", "سابقه", "مثلاً: 12 سال در بازار طلا و ارز")}
+    ${f("certs", "گواهینامه‌ها", "مثلاً: CMT")}
+    ${f("bio", "معرفی کوتاه استاد", "", true)}
+    ${f("name", "نام آکادمی", "Market Analysts")}
+    ${f("founded", "تاریخ تأسیس", "مثلاً: 1398")}
+    ${f("licenses", "مجوزها", "مثلاً: اتحادیه صرافان، وزارت صنعت و تجارت")}
+    ${f("services", "خدمات ویژه", "مثلاً: دوره جامع تحلیل طلا و نقره", true)}
+    <label class="l">شماره واتس‌اپ (با کد کشور)</label><input class="in num" id="a_whatsapp" dir="ltr" placeholder="+93 7xx xxx xxx" value="${esc(A.whatsapp || "")}">
+    <label class="l">آیدی تلگرام</label><input class="in" id="a_telegram" dir="ltr" placeholder="@username" value="${esc(A.telegram || "")}">
+    <button class="cta press" id="asave">ذخیره</button>`);
+  $("asave").onclick = async () => {
+    const v = {}; ["specialty","years","certs","bio","name","founded","licenses","services","whatsapp","telegram"].forEach(k => { const x = $("a_" + k).value.trim(); if (x) v[k] = x; });
+    busy($("asave"), true);
+    const { error } = await sb.from("settings").upsert({ key: "academy", value: v, updated_at: new Date().toISOString() });
+    if (error) { busy($("asave"), false, "ذخیره"); return toast("خطا: " + error.message, true); }
+    closeSheet(); toast("ذخیره شد ✓");
+  };
+}
+function sheetPost(kind){
+  const impRow = (k, n) => `<span>${n}</span><div class="tfc" data-imp="${k}">${[["up","▲ صعودی"],["down","▼ نزولی"],["neutral","• خنثی"]].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join("")}</div>`;
+  const isEv = kind === "event", isVid = kind === "video", isArt = kind === "article";
+  openSheet(`<h2>${KINDS[kind]}</h2>
+    <label class="l">عنوان</label><input class="in" id="pt" maxlength="200" placeholder="${isEv ? "مثلاً: آمار تورم آمریکا (CPI)" : isArt ? "مثلاً: حد ضرر چیست؟" : isVid ? "مثلاً: تحلیل صبح طلا" : "مثلاً: تصمیم فدرال رزرو درباره نرخ بهره"}">
+    ${isEv ? `<label class="l">زمان رویداد (به وقت کابل)</label><input class="in" id="pe" type="datetime-local">
+      <label class="l">اهمیت</label><div class="tfc" id="pimp">${[["high","🔴 مهم"],["medium","🟠 متوسط"],["low","⚪ کم"]].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join("")}</div>
+      <div class="rrow"><div><label class="l">قبلی</label><input class="in num" id="pp" dir="ltr"></div><div><label class="l">پیش‌بینی</label><input class="in num" id="pf" dir="ltr"></div><div><label class="l">واقعی</label><input class="in num" id="pa" dir="ltr"></div></div>` : ""}
+    ${isVid ? `<label class="l">فایل ویدیو (حداکثر 50 مگابایت)</label><input class="in" id="pv" type="file" accept="video/*" style="padding-top:13px">` : ""}
+    <label class="l">${isArt ? "متن آموزش" : "توضیح / تحلیل خبر"}${isVid ? " (اختیاری)" : ""}</label><textarea class="in" id="pb" rows="${isArt ? 8 : 4}"></textarea>
+    ${!isArt && !isVid ? `<label class="l">تأثیر</label><div class="impsel">${impRow("xau","طلا")}${impRow("xag","نقره")}${impRow("usd","دالر")}</div>` : ""}
+    <div class="hint" id="pprog"></div>
+    <button class="cta press" id="psave">انتشار</button>`);
+  const impact = {}; let importance = isEv ? "medium" : null;
+  $("sheet").querySelectorAll("[data-imp]").forEach(g => g.onclick = e => { const b = e.target.closest("button"); if (!b) return; const k = g.dataset.imp;
+    impact[k] = impact[k] === b.dataset.v ? undefined : b.dataset.v; g.querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.v === impact[k])); });
+  if (isEv) { const paint = () => $("pimp").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.v === importance)); paint();
+    $("pimp").onclick = e => { const b = e.target.closest("button"); if (b) { importance = b.dataset.v; paint(); } }; }
+  $("psave").onclick = async () => {
+    const title = $("pt").value.trim(); if (!title) return $("pt").focus();
+    const row = { kind, title, body: $("pb").value.trim() || null };
+    const imp = Object.fromEntries(Object.entries(impact).filter(([, v]) => v)); if (Object.keys(imp).length) row.impact = imp;
+    if (isEv) { row.importance = importance; if ($("pe").value) row.event_at = new Date($("pe").value).toISOString();
+      ["pp:previous","pf:forecast","pa:actual"].forEach(x => { const [id, k] = x.split(":"); const v = toEnA($(id).value.trim()); if (v) row[k] = v; }); }
+    const b = $("psave"); busy(b, true);
+    if (isVid) { const file = $("pv").files[0]; if (!file) { busy(b, false, "انتشار"); return toast("ویدیو را انتخاب کنید", true); }
+      if (file.size > 50 * 1024 * 1024) { busy(b, false, "انتشار"); return toast("ویدیو بیشتر از 50 مگابایت است", true); }
+      $("pprog").textContent = "در حال آپلود ویدیو…";
+      const ext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "") || "mp4";
+      row.file_path = `videos/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+      const up = await sb.storage.from("media").upload(row.file_path, file, { contentType: file.type || "video/mp4" });
+      if (up.error) { busy(b, false, "انتشار"); $("pprog").textContent = ""; return toast("آپلود ناموفق: " + up.error.message, true); } }
+    const { error } = await sb.from("posts").insert(row);
+    if (error) { if (row.file_path) sb.storage.from("media").remove([row.file_path]); busy(b, false, "انتشار"); return toast("خطا: " + error.message, true); }
+    closeSheet(); toast("منتشر شد ✓"); loadContent();
+  };
+}
+const toEnA = s => String(s).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+function sheetPoll(){
+  openSheet(`<h2>نظرسنجی نبض بازار</h2><p class="hint">با انتشار، نظرسنجی قبلی بسته می‌شود. هر عضو فقط یک رأی دارد.</p>
+    <label class="l">سوال</label><input class="in" id="qq" value="فردا دالر بالا می‌رود یا پایین؟">
+    <label class="l">گزینه‌ها (هر خط یک گزینه)</label><textarea class="in" id="qo" rows="4">بالا می‌رود ▲
+پایین می‌آید ▼
+ثابت می‌ماند •</textarea>
+    <button class="cta press" id="qsave">انتشار نظرسنجی</button>`);
+  $("qsave").onclick = async () => {
+    const question = $("qq").value.trim(), options = $("qo").value.split("\n").map(s => s.trim()).filter(Boolean).slice(0, 6);
+    if (!question || options.length < 2) return toast("سوال و حداقل 2 گزینه لازم است", true);
+    busy($("qsave"), true);
+    await sb.from("polls").update({ active: false }).eq("active", true);
+    const { error } = await sb.from("polls").insert({ question, options, active: true });
+    if (error) { busy($("qsave"), false, "انتشار نظرسنجی"); return toast("خطا: " + error.message, true); }
+    closeSheet(); toast("نظرسنجی منتشر شد ✓"); loadContent();
+  };
+}
+
 /* سیگنال جدید */
 function sheetNewSignal(){
   openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
@@ -751,12 +906,15 @@ function sheetNewSignal(){
       <label class="l" style="margin-top:4px">بازار</label>
       <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}"><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
       <div class="tog" id="tg"><span class="k"></span><button type="button" class="on" data-s="buy">خرید ↑</button><button type="button" data-s="sell">فروش ↓</button></div>
+      <label class="l">تایم‌فریم</label><div class="tfc" id="tfc">${Object.entries(TF).map(([k, v]) => `<button type="button" data-tf="${k}">${v}</button>`).join("")}</div>
       <div class="two"><div><label class="l">قیمت ورود از <span class="unit"></span></label><input class="in num" id="ef" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" required placeholder="51"></div>
         <div><label class="l">تا (اختیاری)</label><input class="in num" id="et" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="52"></div></div>
       <div class="two"><div><label class="l">تارگت 1</label><input class="in num" id="tp1" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="54"></div>
         <div><label class="l">تارگت 2 (اختیاری)</label><input class="in num" id="tp2" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr"></div></div>
-      <label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="49">
-      <label class="l">توضیحات تحلیل</label><textarea class="in" id="note" rows="4" placeholder="توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای 51 وارد شوید و نصف سرمایه را در تارگت 1 بفروشید."></textarea>
+      <div class="two"><div><label class="l">تارگت 3 (اختیاری)</label><input class="in num" id="tp3" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr"></div>
+        <div><label class="l">حد ضرر (استاپ لاس)</label><input class="in num" id="sl" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" placeholder="49"></div></div>
+      <div class="box" id="rrb" style="display:none"></div>
+      <label class="l">دلیل و توضیح تحلیل</label><textarea class="in" id="note" rows="4" placeholder="مثلاً: برخورد نقره به سطح حمایتی + واگرایی RSI. توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای 51 وارد شوید و نصف سرمایه را در تارگت 1 بفروشید."></textarea>
       <label class="l">پیام صوتی (اختیاری)</label><div class="rec" id="rec"></div>
       <button class="cta press" id="pub">انتشار سیگنال</button>
     </form>`);
@@ -771,6 +929,15 @@ function sheetNewSignal(){
   $("mks").onclick = e => { const b = e.target.closest("button"); if (b) setMk(b.dataset.m); };
   setMk(mk);
   const rec = setupRecorder($("rec"));
+  let tf = (() => { try { return localStorage.getItem("atf") || "h4"; } catch { return "h4"; } })();
+  const setTf = v => { tf = v; try { localStorage.setItem("atf", v); } catch {} $("tfc").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.tf === v)); };
+  $("tfc").onclick = e => { const b = e.target.closest("[data-tf]"); if (b) setTf(tf === b.dataset.tf ? null : b.dataset.tf); };
+  setTf(tf);
+  const showRR = () => { const ef = num($("ef").value), et = num($("et").value), sl = num($("sl").value), tp = num($("tp3").value) ?? num($("tp2").value) ?? num($("tp1").value);
+    const e = et != null ? (ef + et) / 2 : ef, r = Math.abs(e - sl);
+    if (ef == null || sl == null || tp == null || !r) { $("rrb").style.display = "none"; return; }
+    $("rrb").style.display = ""; $("rrb").innerHTML = `ریسک به ریوارد (خودکار): <b class="num ltr">1:${(Math.abs(tp - e) / r).toFixed(1)}</b>`; };
+  ["ef","et","tp1","tp2","tp3","sl"].forEach(id => $(id).addEventListener("input", showRR));
   $("tg").onclick = e => { const b = e.target.closest("button"); if (!b) return; side = b.dataset.s;
     $("tg").classList.toggle("sell", side === "sell"); $("tg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); };
   $("sf").onsubmit = async e => {
@@ -788,7 +955,7 @@ function sheetNewSignal(){
       if (up.error) { busy(b, false, "انتشار سیگنال"); return toast("آپلود صدا ناموفق بود: " + up.error.message, true); }
     }
     const { data: ins, error } = await sb.from("signals").insert({ market: mk, type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
-      tp1: num($("tp1").value), tp2: num($("tp2").value), sl: num($("sl").value), note: $("note").value.trim() || null, voice_path }).select("id,note").single();
+      tp1: num($("tp1").value), tp2: num($("tp2").value), tp3: num($("tp3").value), timeframe: tf || null, sl: num($("sl").value), note: $("note").value.trim() || null, voice_path }).select("id,note").single();
     if (error) { if (voice_path) sb.storage.from("voices").remove([voice_path]); busy(b, false, "انتشار سیگنال"); return toast("خطا: " + error.message, true); }
     closeSheet(); toast(`تحلیل ${MARKETS[mk].name} منتشر شد ✓`); loadSignals();
     if (ins?.note) preTranslate(ins);
@@ -1126,7 +1293,7 @@ function sheetSignal(s){
   if (!s) return;
   const b = s.type === "buy";
   openSheet(`<div class="head"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><h2 class="num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint msym">${(MARKETS[s.market]||MARKETS.xag).sym}</div><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
+      <div><h2 class="num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</h2><div class="hint msym">${(MARKETS[s.market]||MARKETS.xag).sym}</div><div class="hint">${[s.tp1!=null?`هدف ${fa(s.tp1)}`:"", s.tp2!=null?`هدف 2: ${fa(s.tp2)}`:"", s.tp3!=null?`هدف 3: ${fa(s.tp3)}`:"", s.timeframe?TF[s.timeframe]:"", s.sl!=null?`ضرر ${fa(s.sl)}`:""].filter(Boolean).join(" · ")}</div></div></div>
     ${noteHTML(s, "box")}
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
     <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
@@ -1135,6 +1302,7 @@ function sheetSignal(s){
     <div class="resgrid">
       <button class="rb g ${s.status==="tp1"?"cur":""}" data-st="tp1"><span>✓</span>تیک پروفیت 1<small>${s.tp1!=null?"در "+fa(s.tp1):""}</small></button>
       <button class="rb g ${s.status==="tp2"?"cur":""}" data-st="tp2"><span>✓✓</span>تیک پروفیت 2<small>${s.tp2!=null?"در "+fa(s.tp2):""}</small></button>
+      ${s.tp3!=null?`<button class="rb g ${s.status==="tp3"?"cur":""}" data-st="tp3"><span>✓✓✓</span>تیک پروفیت 3<small>در ${fa(s.tp3)}</small></button>`:""}
       <button class="rb r ${s.status==="sl"?"cur":""}" data-st="sl"><span>✗</span>استاپ لاس<small>${s.sl!=null?"در "+fa(s.sl):""}</small></button>
       <button class="rb n ${s.status==="closed"?"cur":""}" data-st="closed"><span>■</span>بسته شد<small>بدون نتیجه</small></button>
     </div>

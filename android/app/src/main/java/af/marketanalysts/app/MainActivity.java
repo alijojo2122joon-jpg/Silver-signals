@@ -25,6 +25,34 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCb;
     private PermissionRequest pendingPerm;
 
+    private class Bridge {
+        @android.webkit.JavascriptInterface
+        public void shareImage(String b64, String text) {
+            runOnUiThread(() -> {
+                Intent send = new Intent(Intent.ACTION_SEND);
+                send.putExtra(Intent.EXTRA_TEXT, text);
+                send.setType("text/plain");
+                try {
+                    if (android.os.Build.VERSION.SDK_INT >= 29) {
+                        byte[] bytes = android.util.Base64.decode(b64, android.util.Base64.DEFAULT);
+                        android.content.ContentValues cv = new android.content.ContentValues();
+                        cv.put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, "market-analysts-" + System.currentTimeMillis() + ".png");
+                        cv.put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/png");
+                        cv.put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, "Pictures/MarketAnalysts");
+                        Uri uri = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+                        if (uri != null) {
+                            try (java.io.OutputStream os = getContentResolver().openOutputStream(uri)) { os.write(bytes); }
+                            send.setType("image/png");
+                            send.putExtra(Intent.EXTRA_STREAM, uri);
+                            send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        }
+                    }
+                } catch (Exception ignored) {}
+                try { startActivity(Intent.createChooser(send, null)); } catch (Exception ignored) {}
+            });
+        }
+    }
+
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -44,6 +72,7 @@ public class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, true);
         web.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        web.addJavascriptInterface(new Bridge(), "AndroidBridge");
 
         web.setWebViewClient(new WebViewClient() {
             @Override
@@ -76,7 +105,9 @@ public class MainActivity extends Activity {
                 fileCb = cb;
                 try {
                     Intent i = params.createIntent();
-                    i.setType("image/*");
+                    String[] at = params.getAcceptTypes();
+                    String acc = at != null && at.length > 0 && at[0] != null ? at[0] : "";
+                    i.setType(acc.contains("video") ? "video/*" : "image/*");
                     startActivityForResult(Intent.createChooser(i, null), FILE_REQ);
                 } catch (Exception e) { fileCb = null; return false; }
                 return true;
