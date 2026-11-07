@@ -830,6 +830,9 @@
   .banner{transition:transform .6s cubic-bezier(.2,.8,.2,1)!important}
   .fab{transition:transform .35s cubic-bezier(.2,.8,.2,1),left .5s cubic-bezier(.2,.8,.2,1)!important}
   .chat,.cbody{will-change:transform}
+
+  .sndt{display:flex;align-items:center;gap:6px;width:100%;margin-top:8px;border:0;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--field);box-shadow:var(--sh-in);cursor:pointer}
+  .sndt b{margin-inline-start:auto;color:var(--buy)}
 </style>
 </head>
 <body>
@@ -841,7 +844,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794044409";
+const BUILD = "1794044658";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -878,6 +881,7 @@ document.addEventListener("click", e => {
     const a = el._a = el.animate([{ height: from + "px" }, { height: (open ? openH : closedH) + "px" }], { duration: 480, easing: "cubic-bezier(.2,.8,.2,1)" });
     a.onfinish = () => { el._a = null; el.style.overflow = ""; el.open = open; };
   };
+  sfx(d.open ? "transition_down" : "transition_up", .45);
   if (d.open && !d._closing) { d._closing = true; anim(d, false); setTimeout(() => d._closing = false, 490); return; }
   d.parentElement.querySelectorAll(":scope > details[open]").forEach(o => { if (o !== d) { o._closing = true; anim(o, false); setTimeout(() => o._closing = false, 490); } });
   anim(d, true);
@@ -1105,7 +1109,7 @@ function topbar(){
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
-      <div class="pop glass" id="pop">${langsHTML()}</div>
+      <div class="pop glass" id="pop">${langsHTML()}<button type="button" class="sndt" id="sndt">${sndOn ? "🔊" : "🔇"} ${T.sound}: <b>${sndOn ? T.on : T.off}</b></button></div>
     </div></div>`;
 }
 function bindTop(){
@@ -1113,7 +1117,9 @@ function bindTop(){
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
-  $("pop").onclick = e => { const b = e.target.closest("[data-lang]"); if (b) setLang(b.dataset.lang); };
+  $("pop").onclick = e => { if (e.target.closest("#sndt")) { sndOn = !sndOn; store.set("snd", sndOn); if (sndOn) sfx("toggle_on", .6);
+      $("sndt").innerHTML = `${sndOn ? "🔊" : "🔇"} ${T.sound}: <b>${sndOn ? T.on : T.off}</b>`; return; }
+    const b = e.target.closest("[data-lang]"); if (b) setLang(b.dataset.lang); };
 }
 document.addEventListener("click", e => { const p = $("pop"); if (p && !e.target.closest("#pop,#lg")) p.classList.remove("show"); });
 
@@ -1144,7 +1150,7 @@ function renderLogin(){
     const { error } = await sb.auth.signInWithPassword({ email: $("em").value.trim(), password: $("pw").value });
     if (error) {
       go.disabled = false; go.textContent = T.login;
-      er.textContent = (!navigator.onLine || /fetch|network/i.test(error.message || "")) ? T.noNet : T.badLogin;
+      sfx("caution", .6); er.textContent = (!navigator.onLine || /fetch|network/i.test(error.message || "")) ? T.noNet : T.badLogin;
       const f = $("f"); f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
     }
   };
@@ -1231,6 +1237,9 @@ const L3 = {
     modeW:"⚖️ By weight", modeM:"💵 By money", amount:"Amount", money:"Money", curr:"Currency", kg:"Kilo", afnC:"AFN", usdC:"USD", goldOz:"Gold oz ($)", silverOz:"Silver oz ($)",
     valUsd:"Value in USD", valAfn:"Value in AFN", eqIn:"Equivalent in {m}", canBuy:"You can buy", ratio:"Gold/silver ratio", quick:"Quick table (24K gold & pure silver)", liveNote:"Prices fill in live from the world market and can be edited.", pure:"pure" },
 };
+L3.fa.sound = "صدای برنامه"; L3.fa.on = "روشن"; L3.fa.off = "خاموش";
+L3.ps.sound = "د برنامې غږ"; L3.ps.on = "روښانه"; L3.ps.off = "بند";
+L3.en.sound = "App sounds"; L3.en.on = "On"; L3.en.off = "Off";
 for (const k in L3) { Object.assign(L[k], L3[k]); }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
 
@@ -1634,7 +1643,7 @@ function drawPage(){
     $("perc").onclick = e => { const b = e.target.closest("[data-per]"); if (!b) return; per = b.dataset.per; store.set("per", per); $("perc").querySelectorAll("[data-per]").forEach(x => x.classList.toggle("on", x === b)); drawFeed(); };
     $("sortS").onchange = e => { sortBy = e.target.value; store.set("sort", sortBy); drawFeed(); };
     $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (!it) return; const was = it.classList.contains("open");
-      $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); };
+      $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); sfx(was ? "transition_down" : "transition_up", .45); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
   } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
@@ -1699,6 +1708,41 @@ function statusLine(state){
 /* ===== به‌روزرسانی زنده + آفلاین ===== */
 let actx = null;
 document.addEventListener("pointerdown", () => { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch {} }, {passive:true});
+
+/* ===== افکت‌های صوتی حرفه‌ای (SND01 «sine» از snd.dev — رایگان برای استفاده در اپ) ===== */
+const SFX_BASE = "https://cdn.jsdelivr.net/npm/snd-lib@1.1.2/assets/sounds/sprite/01/audioSprite.";
+const SFX_MAP = { button:[0,.32], caution:[2,.45], celebration:[4,1.4], disabled:[6,.3], notification:[8,.75], select:[16,.32], swipe:[18,.4],
+  swipe_01:[20,.4], swipe_02:[22,.4], tap_01:[30,.18], tap_02:[32,.18], tap_03:[34,.18], toggle_off:[40,.32], toggle_on:[42,.32],
+  transition_down:[44,.38], transition_up:[46,.38], type_01:[48,.12] };
+let sndOn = store.get("snd", true), sfxBuf = null, sfxLoad = null, sfxLast = {};
+function sfxCtx(){ try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); } catch {} return actx; }
+function sfxInit(){
+  if (sfxBuf || sfxLoad) return sfxLoad; const c = sfxCtx(); if (!c) return;
+  const ext = new Audio().canPlayType("audio/mp4; codecs=mp4a.40.2") ? "m4a" : "ogg";
+  sfxLoad = fetch(SFX_BASE + ext).then(r => r.arrayBuffer()).then(b => new Promise((res, rej) => c.decodeAudioData(b, res, rej)))
+    .then(buf => { sfxBuf = buf; }).catch(() => { sfxLoad = null; });
+  return sfxLoad;
+}
+function sfx(name, vol = .55){
+  if (!sndOn) return; const m = SFX_MAP[name]; if (!m) return;
+  const now = performance.now(); if (now - (sfxLast[name] || 0) < 60) return; sfxLast[name] = now;
+  if (!sfxBuf) { sfxInit(); return; }
+  const c = sfxCtx(); if (!c) return; if (c.state === "suspended") c.resume();
+  try { const s = c.createBufferSource(); s.buffer = sfxBuf; const g = c.createGain(); g.gain.value = vol; s.connect(g).connect(c.destination); s.start(0, m[0], m[1]); } catch {}
+}
+document.addEventListener("pointerdown", () => { sfxCtx(); sfxInit(); }, { passive: true, once: true });
+document.addEventListener("click", e => {
+  const t = e.target; if (!t.closest) return;
+  if (t.closest("#sndt")) return;
+  if (t.closest("[data-pg]")) return sfx("select", .5);
+  if (t.closest(".mk button")) return sfx("swipe", .55);
+  if (t.closest("#th")) return sfx(getTheme() === "dark" ? "toggle_on" : "toggle_off", .5);
+  if (t.closest(".stars button")) return sfx("tap_03", .7);
+  if (t.closest("[data-vote]")) return sfx("select", .55);
+  if (t.closest("[data-per],.qchips button,.seg2 button,.tfc button,[data-lang],[data-tl],#sortS")) return sfx("tap_02", .7);
+  if (t.closest(".cta,.btn2,.sharebtn,#csend,.send")) return sfx("button", .5);
+  if (t.closest(".ib,.x2,.vplay,.ctool")) return sfx("tap_01", .7);
+}, true);
 function ding(){ try { if (!actx) return; const t = actx.currentTime;
   [[880,0],[1320,.16]].forEach(([f, d]) => { const o = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o.frequency.value = f;
     g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.001, t + d + .45);
@@ -1711,7 +1755,7 @@ function banner(icon, title, sub, onTap){
   requestAnimationFrame(() => b.classList.add("show"));
   clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("show"), 6000);
   try { navigator.vibrate && navigator.vibrate([220, 90, 220]); } catch {}
-  ding();
+  if (sndOn && (sfxBuf || !sfxCtx())) sfx(icon === "⏰" ? "caution" : "notification", .75); else if (sndOn) ding();
   if (document.hidden) { let on = false; clearInterval(titleT); titleT = setInterval(() => { document.title = (on = !on) ? "🔔 " + title : "Market Analysts"; }, 1000); }
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { clearInterval(titleT); document.title = "Market Analysts"; if (view === "feed") { loadFeed(); loadChat(); } } });
@@ -1736,6 +1780,7 @@ async function loadFeed(){
       `${n.tp1 != null ? T.tp1 + " " + fa(n.tp1) : ""}${n.sl != null ? " · " + T.sl + " " + fa(n.sl) : ""} — ${T.tapView}`, () => { if (nm !== market) selectMarket(nm); scrollTo({top: 0, behavior: "smooth"}); });
   } else if (sig !== null && nsig !== sig) {
     const ch = list.find(x => { const o = all.find(y => y.id === x.id); return o && o.status !== x.status; });
+    if (ch) setTimeout(() => sfx(/^tp/.test(ch.status) ? "celebration" : ch.status === "sl" ? "caution" : "select", .7), 900);
     if (ch) banner("📣", `${T.upd}: ${T.st[ch.status]}`, `${T.m[ch.market || "xag"]} · ${ch.type === "buy" ? T.buy : T.sell} ${range(ch)}`);
   }
   if (nsig !== sig || wasOff) { all = list; sig = nsig; store.set("cache_sig", list); drawFeed(); setTimeout(() => { freshId = null; }, 4000); }
@@ -1911,8 +1956,8 @@ async function sendMedia(kind, blob, ext){
   if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   loadChat();
 }
-function openChat(){ if (chatOpen) return; chatOpen = true; overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
-function closeChatNow(){ if (!chatOpen) return; chatOpen = false; unlockBody(); try { rec?.cancel?.(); $("cform")?.classList.remove("recording"); } catch {} $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); document.activeElement?.blur?.(); drawChat(); }
+function openChat(){ if (chatOpen) return; chatOpen = true; sfx("transition_up", .5); overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
+function closeChatNow(){ if (!chatOpen) return; chatOpen = false; sfx("transition_down", .45); unlockBody(); try { rec?.cancel?.(); $("cform")?.classList.remove("recording"); } catch {} $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); document.activeElement?.blur?.(); drawChat(); }
 function closeChat(){ if (overlays.length && overlays[overlays.length - 1] === closeChatNow) history.back(); else closeChatNow(); }
 function drawChat(){
   const b = $("cbody");
