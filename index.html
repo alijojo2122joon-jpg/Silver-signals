@@ -617,13 +617,12 @@
   .mk button.on,.bnav button.on,.chips button.on,.langs button.on,.seg2 button.on,.sharebtn,.btn2,.cta{position:relative;overflow:hidden}
   .fab::after{left:0!important;width:100%!important;border-radius:50%;transform:none!important;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%)!important;background-size:300% 100%!important;animation:sweepbg 6s cubic-bezier(.45,0,.2,1) 3s infinite!important}
   @keyframes sweepbg{0%,60%{background-position:150% 0}85%,100%{background-position:-50% 0}}
-  html,body{overflow-x:hidden}
   .mk button.on,.bnav button.on,.fab{animation:breathe 4.5s ease-in-out infinite}
   @keyframes breathe{0%,100%{box-shadow:0 14px 26px -12px rgba(17,22,44,.5),0 10px 26px -10px var(--glowc)}50%{box-shadow:0 18px 30px -12px rgba(17,22,44,.5),0 16px 44px -6px var(--glowc)}}
   .mk button.on::after,.bnav button.on::after,.cta::after,.fab::after,.chips button.on::after,.sharebtn::after,.btn2::after{content:"";position:absolute;top:0;bottom:0;width:45%;left:-60%;pointer-events:none;
     background:linear-gradient(100deg,transparent,rgba(255,255,255,.22),transparent);transform:skewX(-18deg);animation:sweep 6s cubic-bezier(.45,0,.2,1) infinite}
   .bnav button.on::after{animation-delay:1.5s}.fab::after{animation-delay:3s}.cta::after{animation-delay:.8s}
-  @keyframes sweep{0%,60%{left:-60%}85%,100%{left:130%}}
+  @keyframes sweep{0%,60%{transform:translateX(0) skewX(-18deg)}85%,100%{transform:translateX(420%) skewX(-18deg)}}
   :root[data-theme="dark"] .mk button.on::after,:root[data-theme="dark"] .bnav button.on::after,:root[data-theme="dark"] .cta::after,:root[data-theme="dark"] .fab::after{background:linear-gradient(100deg,transparent,rgba(255,180,90,.35),transparent)}
 
   /* آیکن بازار و تب انتخاب‌شده آرام بالا و پایین می‌روند */
@@ -719,6 +718,38 @@
   .cal .cev>div:last-child::before{content:"";position:absolute;inset-inline-start:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--dc,#9aa1b0);box-shadow:0 0 0 3px var(--gl),0 0 10px var(--dc,transparent)}
   .cal .cev.imp-high{--dc:#ff5a36}.cal .cev.imp-medium{--dc:#ffa63d}.cal .cev.imp-low{--dc:#8b7bff}
   .cal .cev{border-top:0!important;padding:6px 0!important}
+
+  /* ================= روانی: فقط حرکت‌های سبک (transform/opacity) ================= */
+  html{overflow-x:clip} body{overflow-x:clip!important}
+  /* کارت‌ها دیگر دائم شناور نیستند تا لمس و تایپ دقیق باشد */
+  .hero,.stats,.acard,.tool,.pcard,.list,.empty{animation:rise 1.1s cubic-bezier(.22,1,.36,1) both!important;animation-delay:calc(var(--i,0) * 90ms)!important}
+  #pcards .pcard{animation:none!important}
+  .hero.fresh{animation:rise 1.1s cubic-bezier(.22,1,.36,1) both,fresh 1.4s ease-out 2!important}
+  /* هنگام اسکرول، کارت‌ها کوچک نمی‌شوند */
+  .it:active,.pcard:active,.tool>summary:active,.poll .opt:active,.contact2 a:active{transform:none!important}
+  /* نور پس‌زمینه بدون فیلتر سنگین */
+  .mbg::before,.mbg::after{filter:none!important;will-change:transform}
+  /* نور گردان فقط دور تحلیل اصلی و بازار انتخاب‌شده */
+  .glow:not(.hero)::before{display:none!important}
+  /* حلقه‌های رنگی ثابت (چرخش دائمی حذف شد) */
+  .av::after,.tool>summary .ti::after,.arrow::after,.nd i{animation:none!important}
+  .ring::before{filter:none!important;will-change:transform}
+  /* نور تنفسی با opacity به‌جای سایه‌ی متحرک */
+  .mk button.on,.bnav button.on,.fab{animation:none!important}
+  .mk button.on::after,.bnav button.on::after,.cta::after,.chips button.on::after,.sharebtn::after,.btn2::after{left:-60%!important;will-change:transform}
+  #pg{animation:pgfade .8s cubic-bezier(.22,1,.36,1)!important}
+  @keyframes pgfade{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+  .rv{transform:translateY(18px)!important;transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)!important}
+  .rv.in{transform:none!important}
+  /* کارت‌ها جدا رندر می‌شوند تا اسکرول سبک باشد */
+  .hero,.stats,.acard,.tool,.pcard,.list .it{contain:layout paint}
+  .tool,.acard{contain:layout}
+  /* موقع تایپ، نوار پایین و دکمه‌ی گفتگو کنار می‌روند */
+  body.kb .bnav,body.kb .fab,body.kb #fablab{opacity:0;pointer-events:none;transform:translate(-50%,140%)}
+  body.kb .fab,body.kb #fablab{transform:scale(.6)}
+  .bnav{transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .4s}
+  input,textarea,select{touch-action:manipulation}
+  button,a,.it,.chips button{touch-action:manipulation}
 </style>
 </head>
 <body>
@@ -730,7 +761,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794043161";
+const BUILD = "1794043398";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -747,6 +778,10 @@ const AFN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
+/* کیبورد باز است → نوار پایین مخفی */
+document.addEventListener("focusin", e => { if (e.target.matches("input:not([type=checkbox]):not([type=radio]),textarea,select") && !e.target.closest(".chat")) document.body.classList.add("kb"); });
+document.addEventListener("focusout", () => setTimeout(() => { if (!document.activeElement?.matches?.("input,textarea,select")) document.body.classList.remove("kb"); }, 120));
+
 /* ظاهر شدن نرم موقع اسکرول */
 const revealIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" }) : null;
 const REVEAL = ".it,.cev,.nitem,.jrow,.cities>div,.rrows>div,.qtab tr,.kv>div,.lv";
@@ -1227,8 +1262,12 @@ function tvWidget(){
   box.firstChild.appendChild(s);
 }
 let shown = {};
+let pSig = "";
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
+  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
+  if (sigP === pSig && el.firstChild) { const u = el.querySelector(".upd"); if (u && prices?.at) u.textContent = `${T.lastUpd}: ${timeOnly(prices.at)}:${String(new Date(prices.at).getSeconds()).padStart(2, "0")}`; return; }
+  pSig = sigP;
   const p = prices || {}, afn = usdAfn(), k = latestRate("kabul");
   const gMq = latestField("gold_mithqal"), sMq = latestField("silver_mithqal");
   const xau = p.xau?.price, xag = p.xag?.price;
@@ -1489,7 +1528,7 @@ function drawPage(){
     $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
-  } else if (page === "prc") { shown = {}; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
+  } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
   else if (page === "tool") { drawTools(); loadPrices(); }
   else if (page === "acad") { el.innerHTML = `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
 }
