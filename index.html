@@ -939,6 +939,39 @@
 
   .autob{margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.8}
   .chip.wait{background:rgba(232,155,40,.13);color:var(--amber)}
+
+  /* ===== مرجع تصویری: نوار پیشرفت با برچسب درصد، عدد مایع، سوییچ سه‌بعدی ===== */
+  .sprog{margin:12px 0 4px;padding:12px 14px 14px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in)}
+  .sph{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;font-weight:800;color:var(--text)}
+  .sph small{font-size:11px;color:var(--muted);font-weight:700}
+  .sptrack{position:relative;height:12px;margin-top:30px;border-radius:999px;background:color-mix(in srgb,var(--text) 7%,transparent);box-shadow:inset 1px 2px 3px rgba(0,0,0,.12)}
+  .sptrack i{position:absolute;inset-block:0;inset-inline-start:0;width:var(--w);min-width:12px;border-radius:999px;transition:width 1.4s cubic-bezier(.22,1,.36,1);
+    background:linear-gradient(90deg,#7ee8b5,#12a46b);box-shadow:0 4px 10px -3px rgba(18,164,107,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+  [dir="rtl"] .sptrack i{background:linear-gradient(270deg,#7ee8b5,#12a46b)}
+  .sprog.dn .sptrack i{background:linear-gradient(90deg,#ffb4a2,#e5484d);box-shadow:0 4px 10px -3px rgba(229,72,77,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+  [dir="rtl"] .sprog.dn .sptrack i{background:linear-gradient(270deg,#ffb4a2,#e5484d)}
+  .sptrack i::after{content:"";position:absolute;inset-inline-end:-3px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25),inset 0 -2px 3px rgba(0,0,0,.08)}
+  .sptrack em{position:absolute;inset-inline-end:-18px;bottom:20px;min-width:44px;padding:4px 8px;border-radius:10px;text-align:center;font-style:normal;font:800 12px/1 Montserrat,Arial,sans-serif;color:#fff;
+    background:linear-gradient(180deg,var(--navy2),var(--navy));box-shadow:0 6px 14px -6px rgba(17,22,44,.6)}
+  :root[data-theme="dark"] .sptrack em{color:var(--onNavy)}
+  .sptrack em::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-bottom:0;border-top-color:var(--navy)}
+
+  .ring.big .rc b.liq{position:relative;-webkit-text-fill-color:transparent;color:transparent;font-size:27px;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8'%3E%3Cpath d='M0 4 Q10 0 20 4 T40 4 V8 H0Z' fill='%23ffb23f'/%3E%3C/svg%3E") repeat-x 0 calc(100% - var(--lv) + 3px)/22px 7px,
+      linear-gradient(0deg,#ff5a36 0,#ffb23f var(--lv),color-mix(in srgb,var(--text) 14%,transparent) var(--lv))!important;
+    -webkit-background-clip:text!important;background-clip:text!important;-webkit-text-stroke:.6px color-mix(in srgb,#ff7a3d 45%,transparent);
+    animation:liqx 2.6s cubic-bezier(.22,1,.36,1) both}
+  @keyframes liqx{from{background-position:-44px 100%,0 0}}
+  .ring.big .rc b.liq em{-webkit-text-fill-color:inherit}
+
+  .sndt .sw3{margin-inline-start:auto;position:relative;width:50px;height:28px;border-radius:999px;flex:none;background:var(--field);
+    box-shadow:inset 3px 3px 6px rgba(140,150,175,.55),inset -3px -3px 6px rgba(255,255,255,.9);transition:background .5s}
+  :root[data-theme="dark"] .sndt .sw3{box-shadow:inset 3px 3px 6px rgba(0,0,0,.65),inset -2px -2px 5px rgba(255,255,255,.05)}
+  .sndt .sw3.on{background:linear-gradient(180deg,#3d8bff,#1f6bf0);box-shadow:inset 2px 3px 6px rgba(0,30,90,.45)}
+  .sndt .sw3 i{position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#e9ecf2 70%,#cfd4de);
+    box-shadow:0 3px 6px rgba(0,0,0,.25),inset 0 -1px 2px rgba(0,0,0,.08);transition:transform .55s cubic-bezier(.3,1.35,.5,1)}
+  .sndt .sw3.on i{transform:translateX(22px)}
+  [dir="rtl"] .sndt .sw3.on i{transform:translateX(-22px)}
 </style>
 </head>
 <body>
@@ -950,7 +983,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794050028";
+const BUILD = "202611071739";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1263,7 +1296,7 @@ function topbar(){
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
-      <div class="pop glass" id="pop">${langsHTML()}<button type="button" class="sndt" id="sndt">${sndOn ? "🔊" : "🔇"} ${T.sound}: <b>${sndOn ? T.on : T.off}</b></button></div>
+      <div class="pop glass" id="pop">${langsHTML()}<button type="button" class="sndt" id="sndt" role="switch" aria-checked="${sndOn}">${sndOn ? "🔊" : "🔇"} ${T.sound}<span class="sw3 ${sndOn ? "on" : ""}"><i></i></span></button></div>
     </div></div>`;
 }
 function bindTop(){
@@ -1273,7 +1306,7 @@ function bindTop(){
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
   $("pop").onclick = e => { if (e.target.closest("#sndt")) { sndOn = !sndOn; store.set("snd", sndOn); if (sndOn) sfx("toggle_on", .35);
-      $("sndt").innerHTML = `${sndOn ? "🔊" : "🔇"} ${T.sound}: <b>${sndOn ? T.on : T.off}</b>`; return; }
+      { const b = $("sndt"); b.firstChild.textContent = `${sndOn ? "🔊" : "🔇"} ${T.sound}`; b.setAttribute("aria-checked", sndOn); b.querySelector(".sw3").classList.toggle("on", sndOn); } return; }
     const b = e.target.closest("[data-lang]"); if (b) setLang(b.dataset.lang); };
 }
 document.addEventListener("click", e => { const p = $("pop"); if (p && !e.target.closest("#pop,#lg")) p.classList.remove("show"); });
@@ -1420,9 +1453,9 @@ L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAg
 L3.fa.sound = "صدای برنامه"; L3.fa.on = "روشن"; L3.fa.off = "خاموش";
 L3.ps.sound = "د برنامې غږ"; L3.ps.on = "روښانه"; L3.ps.off = "بند";
 L3.en.sound = "App sounds"; L3.en.on = "On"; L3.en.off = "Off";
-Object.assign(L3.fa, { waitEntry:"در انتظار ورود", autoBadge:"نتیجه با قیمت زنده و خودکار ثبت می‌شود", entered:"ورود", resPrice:"قیمت نتیجه", validTill:"اعتبار تا" });
-Object.assign(L3.ps, { waitEntry:"د ننوتلو په تمه", autoBadge:"پایله د ژوندۍ بیې له مخې په اتومات ډول ثبتېږي", entered:"ننوتل", resPrice:"د پایلې بیه", validTill:"اعتبار تر" });
-Object.assign(L3.en, { waitEntry:"Waiting for entry", autoBadge:"Result recorded automatically from live price", entered:"Entry", resPrice:"Result price", validTill:"Valid until" });
+Object.assign(L3.fa, { toTarget:"پیشرفت تا تارگت", toStop:"نزدیکی به حد ضرر", nowPx:"قیمت فعلی", waitEntry:"در انتظار ورود", autoBadge:"نتیجه با قیمت زنده و خودکار ثبت می‌شود", entered:"ورود", resPrice:"قیمت نتیجه", validTill:"اعتبار تا" });
+Object.assign(L3.ps, { toTarget:"تر هدف پورې پرمختګ", toStop:"د زیان حد ته نږدې", nowPx:"اوسنۍ بیه", waitEntry:"د ننوتلو په تمه", autoBadge:"پایله د ژوندۍ بیې له مخې په اتومات ډول ثبتېږي", entered:"ننوتل", resPrice:"د پایلې بیه", validTill:"اعتبار تر" });
+Object.assign(L3.en, { toTarget:"Progress to target", toStop:"Near stop loss", nowPx:"Now", waitEntry:"Waiting for entry", autoBadge:"Result recorded automatically from live price", entered:"Entry", resPrice:"Result price", validTill:"Valid until" });
 for (const k in L3) { Object.assign(L[k], L3[k]); L[k].st.expired = k === "fa" ? "فعال نشد (منقضی)" : k === "ps" ? "فعال نه شو (پای ته ورسېد)" : "Not triggered (expired)"; }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
 
@@ -1497,7 +1530,7 @@ function statsHTML(st){
   return `<div class="stats hub glass rise" style="--bd:8s">
     <div class="hubc"><div class="ring big"><svg viewBox="0 0 128 128"><defs><linearGradient id="rgw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc24b"/><stop offset="1" stop-color="#ff5a36"/></linearGradient></defs>
       <circle class="bg" cx="64" cy="64" r="${R}"/><circle class="fg" cx="64" cy="64" r="${R}" stroke="url(#rgw)" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
-      <div class="rc"><b>${st.rate}<em>%</em></b><small>${T.winRate}</small></div></div></div>
+      <div class="rc"><b class="liq" style="--lv:${Math.max(4, Math.min(96, st.rate))}%">${st.rate}<em>%</em></b><small>${T.winRate}</small></div></div></div>
     <div class="spokes">${node("t", "#7b8cff", st.n, T.total, 0)}${node("w", "var(--buy)", st.w, T.wins, 1)}${node("l", "var(--sell)", st.l, T.losses, 2)}</div>
     <div class="pnl"><span>${T.pnl}: <b class="${st.pts >= 0 ? "pos" : "neg"}"><bdi class="ltr">${st.pts >= 0 ? "+" : ""}${nf(st.pts)}</bdi> ${T.points} <bdi class="ltr">(${st.pct >= 0 ? "+" : ""}${st.pct.toFixed(2)}%)</bdi></b></span><button class="sharebtn" id="shareSt">📤 ${T.share}</button></div></div>`;
 }
@@ -2018,6 +2051,20 @@ const lv = s => `<div class="lvls ${s.tp3!=null?"n4":""}">
   <div class="lv tp"><small>${T.tp3}</small><b class="num">${fa(s.tp3)}</b></div>`:""}
   <div class="lv sl"><small>${T.sl}</small><b class="num">${s.sl!=null?fa(s.sl):"—"}</b></div></div>`;
 const stLabel = s => s.status === "active" && s.auto && s.phase === "waiting" ? T.waitEntry : (T.st[s.status] || "");
+function progHTML(s){
+  if (!s.auto || s.status !== "active" && !/^tp[12]$/.test(s.status || "") || s.phase !== "open") return "";
+  const e = Number(s.entry_price), px = Number(s.last_price); if (!isFinite(e) || !isFinite(px) || s.last_price == null || s.entry_price == null) return "";
+  const hit = s.status === "tp2" ? 2 : s.status === "tp1" ? 1 : 0, tp = [s.tp1, s.tp2, s.tp3].slice(hit).find(v => v != null);
+  if (tp == null) return "";
+  const dir = s.type === "buy" ? 1 : -1, moved = (px - e) * dir;
+  let pct, cls, lab;
+  if (moved >= 0 || s.sl == null) { pct = Math.max(0, Math.min(100, moved / ((Number(tp) - e) * dir) * 100)); cls = "up"; lab = `${T.toTarget} ${hit + 1}`; }
+  else { pct = Math.max(0, Math.min(100, -moved / ((e - Number(s.sl)) * dir) * 100)); cls = "dn"; lab = T.toStop; }
+  if (!isFinite(pct)) return "";
+  const p = Math.round(pct);
+  return `<div class="sprog ${cls}" data-sp="${s.id}"><div class="sph"><span>${lab}</span><small>${T.nowPx}: <bdi class="ltr">${fa(px)}</bdi></small></div>
+    <div class="sptrack"><i style="--w:${p}%"><em><bdi class="ltr">${p}%</bdi></em></i></div></div>`;
+}
 function resultHTML(s){
   const auto = s.auto ? `<div class="autob">🤖 ${T.autoBadge}${s.entry_price != null ? ` · ${T.entered}: <bdi class="ltr">${fa(s.entry_price)}</bdi>` : ""}${s.result_price != null && s.status !== "active" ? ` · ${T.resPrice}: <bdi class="ltr">${fa(s.result_price)}</bdi>` : ""}${s.status === "active" && s.expires_at ? ` · ${T.validTill}: ${fmtFull(s.expires_at)}` : ""}</div>` : "";
   if (!s.status || s.status === "active") return auto;
@@ -2031,7 +2078,7 @@ function hero(s){
   return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span>
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
-    ${tagsHTML(s)}${lv(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
+    ${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
     <div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div>`;
 }
 function item(s, i){
@@ -2041,7 +2088,7 @@ function item(s, i){
       <div><div class="t">${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
         <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div></div>
       <div class="e"><span class="chip ${chipCls(s)}">${stLabel(s)}</span><br>${fmtDate(s.created_at)}</div></div>
-    <div class="more"><div>${tagsHTML(s)}${lv(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div></div>`;
+    <div class="more"><div>${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div></div>`;
 }
 function drawFeed(){
   const el = $("feed"); if (!el) return;
@@ -2152,9 +2199,19 @@ async function loadFeed(){
     if (ch) banner("📣", `${T.upd}: ${T.st[ch.status]}`, `${T.m[ch.market || "xag"]} · ${ch.type === "buy" ? T.buy : T.sell} ${range(ch)}`);
   }
   if (nsig !== sig || wasOff) { all = list; sig = nsig; store.set("cache_sig", list); drawFeed(); setTimeout(() => { freshId = null; }, 4000); }
+  else { all = list; patchProg(list); }
   statusLine("idle");
 }
 
+function patchProg(list){
+  list.forEach(x => document.querySelectorAll(`[data-sp="${x.id}"]`).forEach(el => {
+    const h = progHTML(x); if (!h) return el.remove();
+    const t = document.createElement("div"); t.innerHTML = h; const n = t.firstElementChild;
+    if (n.className !== el.className) return el.replaceWith(n);
+    el.querySelector(".sph").innerHTML = n.querySelector(".sph").innerHTML;
+    const i = el.querySelector(".sptrack i"); i.style.setProperty("--w", n.querySelector(".sptrack i").style.getPropertyValue("--w")); i.querySelector("em").innerHTML = n.querySelector("em").innerHTML;
+  }));
+}
 function selectMarket(m){
   if (!MK[m]) return; market = m; store.set("mk2", m); applyTheme();
   document.querySelectorAll(".mk button").forEach(x => { x.classList.toggle("on", x.dataset.m === m); if (x.dataset.m === m) x.classList.remove("new"); });

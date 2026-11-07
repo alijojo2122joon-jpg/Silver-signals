@@ -567,6 +567,35 @@
   .autoeng .egrid div{padding:8px 10px;border-radius:14px;background:var(--tile);box-shadow:var(--raise);display:flex;flex-direction:column}
   .autoeng .egrid span{font-size:11px;color:var(--muted)}
   .autoeng .egrid b{font-size:13.5px}
+
+  /* ===== مرجع تصویری: دکمه‌ی کشیدنی + سوییچ سه‌بعدی ===== */
+  .slide{position:relative;height:64px;margin-top:22px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:pan-y;outline:0}
+  .slide:focus-visible{box-shadow:var(--sh-in),0 0 0 3px color-mix(in srgb,var(--buy) 40%,transparent)}
+  .slide .sfill{position:absolute;top:0;bottom:0;inset-inline-start:0;width:70px;border-radius:999px;background:linear-gradient(180deg,#34d399,#0ea371);opacity:calc(.25 + var(--p,0) * .75)}
+  .slide .slab{position:absolute;inset:0;display:grid;place-items:center;padding-inline-start:56px;font-weight:800;font-size:14.5px;color:var(--muted);opacity:calc(1 - var(--p,0) * 1.4);
+    background:linear-gradient(90deg,var(--muted) 40%,var(--text) 50%,var(--muted) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:slsh 3.2s linear infinite}
+  @keyframes slsh{to{background-position:-250% 0}}
+  .slide .sknob{position:absolute;top:6px;inset-inline-start:6px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;cursor:grab;touch-action:none;color:#fff;
+    background:radial-gradient(circle at 35% 28%,#5cf0b4,#10b277 55%,#08865a);box-shadow:0 10px 18px -6px rgba(8,134,90,.6),inset 0 2px 1px rgba(255,255,255,.55),inset 0 -3px 6px rgba(0,0,0,.18);z-index:2}
+  .slide .sknob svg{width:24px;height:24px}
+  [dir="ltr"] .slide .sknob svg{transform:scaleX(-1)}
+  .slide.drag .sknob{cursor:grabbing;transform-origin:center}
+  .slide.anim .sknob,.slide.anim .sfill{transition:transform .55s cubic-bezier(.22,1.25,.4,1),width .55s cubic-bezier(.22,1.25,.4,1)}
+  .slide.done .slab{opacity:0}
+  .slide.busy .sknob svg{display:none}
+  .slide.busy .sknob::after{content:"";width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* سوییچ خرید/فروش سه‌بعدی: شیار فرورفته + دستگیره‌ی براق */
+  .tog{padding:6px!important;background:var(--field)!important;box-shadow:inset 5px 5px 11px rgba(140,150,175,.5),inset -5px -5px 11px rgba(255,255,255,.95)!important}
+  :root[data-theme="dark"] .tog{box-shadow:inset 5px 5px 11px rgba(0,0,0,.65),inset -4px -4px 10px rgba(255,255,255,.04)!important}
+  .tog .k{top:6px!important;bottom:6px!important;right:6px!important;width:calc(50% - 6px)!important;
+    background:radial-gradient(120% 140% at 30% 15%,#6ef3bd,#14b87a 50%,#0a8b5c)!important;
+    box-shadow:0 10px 18px -6px rgba(10,139,92,.65),0 3px 5px rgba(0,0,0,.12),inset 0 2px 1px rgba(255,255,255,.6),inset 0 -4px 8px rgba(0,0,0,.18)!important}
+  .tog.sell .k{background:radial-gradient(120% 140% at 30% 15%,#ff9a9d,#ee4b51 50%,#b92c32)!important;box-shadow:0 10px 18px -6px rgba(185,44,50,.6),0 3px 5px rgba(0,0,0,.12),inset 0 2px 1px rgba(255,255,255,.55),inset 0 -4px 8px rgba(0,0,0,.18)!important}
+  .tog .k::after{content:"";position:absolute;top:3px;left:14%;right:14%;height:38%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
+  .tog button{position:relative;z-index:1;font-weight:800}
+  .tog button.on{color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
@@ -581,7 +610,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794050028";
+const BUILD = "202611071739";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1097,6 +1126,23 @@ function sheetPoll(){
   };
 }
 
+
+/* دکمه‌ی کشیدنی برای تأیید (مثل «بکشید تا باز شود») */
+function slideAct(el, onFire){
+  const kn = el.querySelector(".sknob"), fill = el.querySelector(".sfill"), rtl = getComputedStyle(el).direction === "rtl";
+  let x0 = 0, max = 0, cur = 0, drag = false, fired = false;
+  const set = (v, anim) => { cur = v; el.classList.toggle("anim", !!anim); const tx = rtl ? -v : v;
+    kn.style.transform = `translateX(${tx}px)`; fill.style.width = `${v + kn.offsetWidth + 6}px`; el.style.setProperty("--p", max ? v / max : 0); };
+  const reset = () => { fired = false; el.classList.remove("busy", "done"); set(0, true); };
+  const fire = () => { if (fired) return; fired = true; set(max, true); el.classList.add("done", "busy"); try { sfx("toggle_on", .45); } catch {}
+    onFire(ok => { if (!ok) reset(); }); };
+  kn.addEventListener("pointerdown", e => { if (fired) return; drag = true; x0 = e.clientX; max = el.clientWidth - kn.offsetWidth - 12; kn.setPointerCapture(e.pointerId); el.classList.add("drag"); });
+  kn.addEventListener("pointermove", e => { if (!drag) return; const d = (e.clientX - x0) * (rtl ? -1 : 1); set(Math.max(0, Math.min(max, d))); });
+  const up = () => { if (!drag) return; drag = false; el.classList.remove("drag"); cur > max * .82 ? fire() : set(0, true); };
+  kn.addEventListener("pointerup", up); kn.addEventListener("pointercancel", up);
+  el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); max = el.clientWidth - kn.offsetWidth - 12; fire(); } });
+  el.addEventListener("click", e => { if (e.target.closest(".sknob") || fired || cur > 0) return; kn.animate([{ transform: "translateX(0)" }, { transform: `translateX(${rtl ? -26 : 26}px)` }, { transform: "translateX(0)" }], { duration: 650, easing: "cubic-bezier(.3,1.4,.5,1)" }); });
+}
 /* سیگنال جدید */
 function sheetNewSignal(){
   openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار فوراً برای اعضا نمایش داده می‌شود. 🤖 ورود، تارگت‌ها و حد ضرر با قیمت زنده خودکار بررسی و ثبت می‌شوند؛ بعد از انتشار اعداد قابل تغییر نیستند.</p>
@@ -1114,7 +1160,8 @@ function sheetNewSignal(){
       <div class="box" id="rrb" style="display:none"></div>
       <label class="l">دلیل و توضیح تحلیل</label><textarea class="in" id="note" rows="4" placeholder="مثلاً: برخورد نقره به سطح حمایتی + واگرایی RSI. توضیح خود را برای صراف‌ها بنویسید… مثلاً: بعد از تثبیت بالای 51 وارد شوید و نصف سرمایه را در تارگت 1 بفروشید."></textarea>
       <label class="l">پیام صوتی (اختیاری)</label><div class="rec" id="rec"></div>
-      <button class="cta press" id="pub">انتشار سیگنال</button>
+      <button class="cta press" id="pub" style="display:none!important" tabindex="-1" aria-hidden="true">انتشار سیگنال</button>
+      <div class="slide" id="pubs" role="button" tabindex="0" aria-label="انتشار سیگنال"><span class="sfill"></span><span class="slab">بکشید تا منتشر شود</span><span class="sknob"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
     </form>`);
   let side = "buy";
   let mk = (() => { try { return localStorage.getItem("amk") || (mfilter !== "all" ? mfilter : "xau"); } catch { return "xau"; } })();
@@ -1138,6 +1185,9 @@ function sheetNewSignal(){
   ["ef","et","tp1","tp2","tp3","sl"].forEach(id => $(id).addEventListener("input", showRR));
   $("tg").onclick = e => { const b = e.target.closest("button"); if (!b) return; side = b.dataset.s;
     $("tg").classList.toggle("sell", side === "sell"); $("tg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); };
+  slideAct($("pubs"), done => { const pb = $("pub"); $("sf").requestSubmit(pb);
+    setTimeout(() => { if (!pb.disabled) return done(false);
+      const mo = new MutationObserver(() => { if (!pb.disabled) { mo.disconnect(); done(false); } }); mo.observe(pb, { attributes: true }); }, 60); });
   $("sf").onsubmit = async e => {
     e.preventDefault(); const b = $("pub");
     if (rec.recording()) return toast("اول ضبط را تمام کنید", true);
