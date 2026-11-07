@@ -899,7 +899,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794046993";
+const BUILD = "1794047482";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1353,6 +1353,8 @@ L3.en.myProfile = "My profile"; L3.en.changePhoto = "Choose photo"; L3.en.savePh
 L3.fa.afNews = "اخبار اقتصادی افغانستان"; L3.fa.hrAgo = "{n} ساعت پیش";
 L3.ps.afNews = "د افغانستان اقتصادي خبرونه"; L3.ps.hrAgo = "{n} ساعته مخکې";
 L3.en.afNews = "Afghanistan economy news"; L3.en.hrAgo = "{n}h ago";
+L3.fa.tgSrc = "کانال تلگرام DollarKabul"; L3.ps.tgSrc = "د DollarKabul ټلګرام چینل"; L3.en.tgSrc = "Telegram @DollarKabul";
+L3.fa.pkrT = "دالر به کلدار"; L3.ps.pkrT = "ډالر په کلدار"; L3.en.pkrT = "USD to PKR";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
 L3.ps.mktRate = "د بازار نرخ (رسمي)"; L3.ps.secAgo = "{n} ثانیې مخکې"; L3.ps.minAgo = "{n} دقیقې مخکې"; L3.ps.backLive = "ژوندۍ بیه"; L3.ps.liveSrc = "له نړیوال بازار ژوندی";
 L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAgo = "{n} min ago"; L3.en.backLive = "Live prices"; L3.en.liveSrc = "Live from world market";
@@ -1482,12 +1484,13 @@ async function loadPrices(force){
   if (page === "prc") drawPrices();
   if (page === "tool") fillCalcLive();
 }
-const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null));
+const okRate = v => v == null || (Number(v) > 30 && Number(v) < 200);
+const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null) && okRate(r.buy) && okRate(r.sell));
 const latestField = f => rates.find(r => r.place === "kabul" && r[f] != null)?.[f];
 let local = store.get("cache_local", null), localAt = 0;
 const adminRate = () => { const k = latestRate("kabul"); return k && Date.now() - new Date(k.created_at) < 36 * 3600000 ? k : null; };
 const usdAfn = () => { const k = adminRate(); if (k) return Number(k.sell ?? k.buy); if (local?.fx?.usd?.sell) return local.fx.usd.sell; return prices?.afn?.rate ? Math.round(prices.afn.rate * 100) / 100 : null; };
-const usdBuySell = () => { const k = adminRate(); if (k) return { buy: k.buy, sell: k.sell, src: T.sarai + " · " + timeOnly(k.created_at) }; if (local?.fx?.usd) return { ...local.fx.usd, src: T.sarai + " · " + T.afaaq }; const m = usdAfn(); return { buy: m, sell: m, src: T.mktRate }; };
+const usdBuySell = () => { const k = adminRate(); if (k) return { buy: k.buy, sell: k.sell, src: (k.src === "tg" ? T.sarai + " · " + T.tgSrc : T.sarai) + " · " + agoTxt(k.created_at) }; if (local?.fx?.usd) return { ...local.fx.usd, src: T.sarai + " · " + T.afaaq }; const m = usdAfn(); return { buy: m, sell: m, src: T.mktRate }; };
 const afnSrc = () => adminRate() ? T.sarai : local?.fx?.usd ? T.sarai + " (" + T.afaaq + ")" : T.mktRate;
 /* نرخ واقعی بازار کابل: قیمت روزانه‌ی هر گرم (آفاق) × تغییر لحظه‌ای انس جهانی از زمان انتشار */
 const kabulMove = () => { const w = local?.gold?.worldOz, x = prices?.xau?.price; return w && x ? x / w : 1; };
@@ -1542,7 +1545,8 @@ function drawPrices(){
       <div><b>${adminRate() || local?.fx?.usd ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b></div></div>
       ${sparkSVG(afnSpark, "#2f8a5b")}
       <div class="prow"><div><small>${T.buyR}</small><b>${usdBuySell().buy != null ? nf(usdBuySell().buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${usdBuySell().sell != null ? nf(usdBuySell().sell) : "—"}</b></div></div>
-      <div class="upd" style="margin:6px 0 0">${usdBuySell().src}</div>
+      <div class="upd" style="margin:6px 0 0"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${usdBuySell().src}</div>
+      ${adminRate()?.pkr ? `<div class="cities"><div><span>${T.pkrT}</span><span></span><span><b>${nf(adminRate().pkr)}</b></span></div></div>` : ""}
       <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
     <div class="pcard glass glow" style="--bd:10s"><div class="ph"><span class="pp2" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--field);font-size:20px">💵</span><div><b>${T.dxy}</b><small>DXY</small></div><div class="pv"><b class="${fl("dxy", p.dxy?.price)}">${nf(p.dxy?.price)}</b>${chgHTML(p.dxy?.price, p.dxy?.prev)}</div></div>
       ${sparkSVG(p.dxy?.spark, "#6c7684")}<div class="upd" style="margin:6px 0 0">${T.dxySub}</div></div>`;

@@ -564,7 +564,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794046993";
+const BUILD = "1794047482";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -937,6 +937,8 @@ function sheetRates(){
     const gm = num($("gm").value), sm = num($("smq").value);
     const k = rows[0]; if (gm != null) k.gold_mithqal = gm; if (sm != null) k.silver_mithqal = sm;
     const ins = rows.filter(r => r.buy != null || r.sell != null || r.gold_mithqal != null || r.silver_mithqal != null);
+    const bad = ins.find(r => [r.buy, r.sell].some(v => v != null && (v < 30 || v > 200)) || (r.buy != null && r.sell != null && r.sell < r.buy));
+    if (bad) return toast(`نرخ ${PLACES[bad.place]} درست نیست (باید حدود 60 تا 80 باشد و فروش از خرید کمتر نباشد)`, true);
     if (!ins.length) return toast("هیچ نرخی وارد نشده", true);
     busy($("rsave"), true);
     const { error } = await sb.from("rates").insert(ins);
