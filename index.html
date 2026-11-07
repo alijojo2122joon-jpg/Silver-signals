@@ -936,6 +936,9 @@
   html.embed .top,html.embed .bnav,html.embed #fab,html.embed #fablab,html.embed .stbar,html.embed .mbg{display:none!important}
   html.embed .app{padding-top:12px!important;padding-bottom:20px!important}
   html.embed,html.embed body{background:transparent!important}
+
+  .autob{margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.8}
+  .chip.wait{background:rgba(232,155,40,.13);color:var(--amber)}
 </style>
 </head>
 <body>
@@ -947,7 +950,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794049495";
+const BUILD = "1794050028";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1417,7 +1420,10 @@ L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAg
 L3.fa.sound = "صدای برنامه"; L3.fa.on = "روشن"; L3.fa.off = "خاموش";
 L3.ps.sound = "د برنامې غږ"; L3.ps.on = "روښانه"; L3.ps.off = "بند";
 L3.en.sound = "App sounds"; L3.en.on = "On"; L3.en.off = "Off";
-for (const k in L3) { Object.assign(L[k], L3[k]); }
+Object.assign(L3.fa, { waitEntry:"در انتظار ورود", autoBadge:"نتیجه با قیمت زنده و خودکار ثبت می‌شود", entered:"ورود", resPrice:"قیمت نتیجه", validTill:"اعتبار تا" });
+Object.assign(L3.ps, { waitEntry:"د ننوتلو په تمه", autoBadge:"پایله د ژوندۍ بیې له مخې په اتومات ډول ثبتېږي", entered:"ننوتل", resPrice:"د پایلې بیه", validTill:"اعتبار تر" });
+Object.assign(L3.en, { waitEntry:"Waiting for entry", autoBadge:"Result recorded automatically from live price", entered:"Entry", resPrice:"Result price", validTill:"Valid until" });
+for (const k in L3) { Object.assign(L[k], L3[k]); L[k].st.expired = k === "fa" ? "فعال نشد (منقضی)" : k === "ps" ? "فعال نه شو (پای ته ورسېد)" : "Not triggered (expired)"; }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
 
 const DICT = [
@@ -2011,17 +2017,19 @@ const lv = s => `<div class="lvls ${s.tp3!=null?"n4":""}">
   <div class="lv tp"><small>${T.tp2}</small><b class="num">${s.tp2!=null?fa(s.tp2):"—"}</b></div>${s.tp3!=null?`
   <div class="lv tp"><small>${T.tp3}</small><b class="num">${fa(s.tp3)}</b></div>`:""}
   <div class="lv sl"><small>${T.sl}</small><b class="num">${s.sl!=null?fa(s.sl):"—"}</b></div></div>`;
+const stLabel = s => s.status === "active" && s.auto && s.phase === "waiting" ? T.waitEntry : (T.st[s.status] || "");
 function resultHTML(s){
-  if (!s.status || s.status === "active") return "";
+  const auto = s.auto ? `<div class="autob">🤖 ${T.autoBadge}${s.entry_price != null ? ` · ${T.entered}: <bdi class="ltr">${fa(s.entry_price)}</bdi>` : ""}${s.result_price != null && s.status !== "active" ? ` · ${T.resPrice}: <bdi class="ltr">${fa(s.result_price)}</bdi>` : ""}${s.status === "active" && s.expires_at ? ` · ${T.validTill}: ${fmtFull(s.expires_at)}` : ""}</div>` : "";
+  if (!s.status || s.status === "active") return auto;
   const cls = s.status.startsWith("tp") ? "win" : s.status === "sl" ? "lose" : "neutral";
-  return `<div class="res ${cls}"><span class="ri">${cls==="win"?"✓":cls==="lose"?"✗":"■"}</span><div><b>${T.st[s.status]}</b><small>${s.result_at ? T.resultAt + ": " + fmtFull(s.result_at) : ""}</small></div></div>`;
+  return `<div class="res ${cls}"><span class="ri">${cls==="win"?"✓":cls==="lose"?"✗":"■"}</span><div><b>${T.st[s.status]}</b><small>${s.result_at ? T.resultAt + ": " + fmtFull(s.result_at) : ""}</small></div></div>` + auto;
 }
-const chipCls = s => s.status === "active" ? "active" : s.status === "sl" ? "lose" : (s.status || "").startsWith("tp") ? "win" : "";
+const chipCls = s => s.status === "active" ? (s.auto && s.phase === "waiting" ? "wait" : "active") : s.status === "sl" ? "lose" : (s.status || "").startsWith("tp") ? "win" : "";
 const tagsHTML = s => { const rr = rrOf(s); return (s.timeframe || rr) ? `<div class="tags">${s.timeframe?`<span class="tag2">⏱ ${T.tf[s.timeframe]||s.timeframe}</span>`:""}${rr?`<span class="tag2 rr">${T.rr} <b class="ltr">1:${rr.toFixed(1)}</b></span>`:""}</div>` : ""; };
 function hero(s){
   const b = s.type === "buy", m = MK[s.market] || MK.xag;
   return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span>
-    <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${T.st[s.status]||""}</span></div>
+    <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
     ${tagsHTML(s)}${lv(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
     <div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div>`;
@@ -2032,7 +2040,7 @@ function item(s, i){
     <div class="row"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
       <div><div class="t">${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
         <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div></div>
-      <div class="e"><span class="chip ${chipCls(s)}">${T.st[s.status]||""}</span><br>${fmtDate(s.created_at)}</div></div>
+      <div class="e"><span class="chip ${chipCls(s)}">${stLabel(s)}</span><br>${fmtDate(s.created_at)}</div></div>
     <div class="more"><div>${tagsHTML(s)}${lv(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div></div>`;
 }
 function drawFeed(){
@@ -2120,7 +2128,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) { cl
 window.addEventListener("online", () => { if (view === "feed") { loadFeed(); loadChat(); } else if (view === "msg") boot(); });
 window.addEventListener("offline", () => { if (view === "feed") { offline = true; statusLine("off"); drawFeed(); } });
 
-const sigOf = list => list.map(x => [x.id, x.market, x.status, x.result_at, (x.note || "").length, x.voice_path, Object.keys(x.translations || {}).join("")].join(":")).join("|");
+const sigOf = list => list.map(x => [x.id, x.market, x.status, x.phase, x.result_at, (x.note || "").length, x.voice_path, Object.keys(x.translations || {}).join("")].join(":")).join("|");
 async function loadFeed(){
   if (loading || view !== "feed") return; loading = true; statusLine("busy");
   const t0 = Date.now();
@@ -2138,6 +2146,8 @@ async function loadFeed(){
       `${n.tp1 != null ? T.tp1 + " " + fa(n.tp1) : ""}${n.sl != null ? " · " + T.sl + " " + fa(n.sl) : ""} — ${T.tapView}`, () => { if (nm !== market) selectMarket(nm); scrollTo({top: 0, behavior: "smooth"}); });
   } else if (sig !== null && nsig !== sig) {
     const ch = list.find(x => { const o = all.find(y => y.id === x.id); return o && o.status !== x.status; });
+    const en = !ch && list.find(x => { const o = all.find(y => y.id === x.id); return o && o.phase === "waiting" && x.phase === "open"; });
+    if (en) banner("🎯", `${T.m[en.market || "xag"]} · ${en.type === "buy" ? T.buy : T.sell} ${range(en)}`, `${T.entered}: ${fa(en.entry_price)} — ${T.st.active}`);
     if (ch) setTimeout(() => sfx(/^tp/.test(ch.status) ? "celebration" : ch.status === "sl" ? "caution" : "select", .5), 900);
     if (ch) banner("📣", `${T.upd}: ${T.st[ch.status]}`, `${T.m[ch.market || "xag"]} · ${ch.type === "buy" ? T.buy : T.sell} ${range(ch)}`);
   }

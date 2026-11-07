@@ -562,6 +562,11 @@
   .nav button svg{width:18px!important;height:18px!important}
   .nav .nb{position:absolute!important;top:2px!important;left:calc(50% - 24px)!important;right:auto!important}
   .prframe{display:block;width:100%;height:calc(100vh - 290px);min-height:520px;border:0;border-radius:30px;background:var(--bg)}
+
+  .autoeng .egrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .autoeng .egrid div{padding:8px 10px;border-radius:14px;background:var(--tile);box-shadow:var(--raise);display:flex;flex-direction:column}
+  .autoeng .egrid span{font-size:11px;color:var(--muted)}
+  .autoeng .egrid b{font-size:13.5px}
 </style>
 </head>
 <body>
@@ -576,7 +581,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794049495";
+const BUILD = "1794050028";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -633,7 +638,7 @@ const fmtFull = d => { const x = new Date(d);
 const ago = fmtFull;
 const num = v => { if (v == null) return null; v = String(v).trim().replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String(d.charCodeAt(0) & 15)).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); if (v === "" || isNaN(Number(v))) return null; return Number(v); };
 const DAY = 86400000;
-const STATUS = { active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", tp3:"تیک پروفیت 3 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
+const STATUS = { expired:"فعال نشد (منقضی)", active:"در جریان", tp1:"تیک پروفیت 1 خورد", tp2:"تیک پروفیت 2 خورد", tp3:"تیک پروفیت 3 خورد", sl:"استاپ لاس خورد", closed:"بسته شد" };
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} تا ${fa(s.entry_to)}` : fa(s.entry_from);
 const mState = m => {
   if (m.deleted_at) return ["off", "حذف‌شده"];
@@ -856,10 +861,10 @@ function drawList(){
     el.innerHTML = `<div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
     <div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${shown.length ? shown.map(s => {
       const b = s.type === "buy";
-      const c = s.status === "sl" ? "off" : s.status === "closed" ? "mute" : "on";
+      const c = s.status === "sl" ? "off" : s.status === "closed" || s.status === "expired" ? "mute" : s.auto && s.phase === "waiting" ? "warn" : "on";
       return `<div class="it" data-sig="${s.id}"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
         <div><div class="t num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</div><div class="s"><span class="msym">${(MARKETS[s.market]||MARKETS.xag).sym}</span>${s.tp1!=null?` · هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""} · ${ago(s.created_at)}</div></div>
-        <span class="chip ${c}">${STATUS[s.status]}</span></div>`; }).join("")
+        <span class="chip ${c}">${s.auto && s.phase === "waiting" ? "⏳ در انتظار ورود" : STATUS[s.status]}${s.auto ? " 🤖" : ""}</span></div>`; }).join("")
       : `<div class="empty"><div class="big">📈</div>هنوز سیگنالی منتشر نکرده‌اید.<br>دکمه‌ی «سیگنال جدید» را بزنید.</div>`}</div>`;
   } else {
     const k = q.trim().toLowerCase();
@@ -1094,7 +1099,7 @@ function sheetPoll(){
 
 /* سیگنال جدید */
 function sheetNewSignal(){
-  openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار، فوراً برای همه‌ی اعضای فعال نمایش داده می‌شود.</p>
+  openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار فوراً برای اعضا نمایش داده می‌شود. 🤖 ورود، تارگت‌ها و حد ضرر با قیمت زنده خودکار بررسی و ثبت می‌شوند؛ بعد از انتشار اعداد قابل تغییر نیستند.</p>
     <form id="sf">
       <label class="l" style="margin-top:4px">بازار</label>
       <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}"><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
@@ -1492,28 +1497,25 @@ function sheetSignal(s){
     ${s.voice_path ? voiceHTML(s.voice_path) : ""}
     <div class="box">ثبت سیگنال: <b>${fmtFull(s.created_at)}</b></div>
     ${resultHTML(s)}
-    <label class="l">${s.status === "active" ? "نتیجه‌ی معامله را ثبت کنید" : "تغییر نتیجه"}</label>
-    <div class="resgrid">
-      <button class="rb g ${s.status==="tp1"?"cur":""}" data-st="tp1"><span>✓</span>تیک پروفیت 1<small>${s.tp1!=null?"در "+fa(s.tp1):""}</small></button>
-      <button class="rb g ${s.status==="tp2"?"cur":""}" data-st="tp2"><span>✓✓</span>تیک پروفیت 2<small>${s.tp2!=null?"در "+fa(s.tp2):""}</small></button>
-      ${s.tp3!=null?`<button class="rb g ${s.status==="tp3"?"cur":""}" data-st="tp3"><span>✓✓✓</span>تیک پروفیت 3<small>در ${fa(s.tp3)}</small></button>`:""}
-      <button class="rb r ${s.status==="sl"?"cur":""}" data-st="sl"><span>✗</span>استاپ لاس<small>${s.sl!=null?"در "+fa(s.sl):""}</small></button>
-      <button class="rb n ${s.status==="closed"?"cur":""}" data-st="closed"><span>■</span>بسته شد<small>بدون نتیجه</small></button>
-    </div>
-    ${s.status !== "active" ? `<button class="ghost" data-st="active">برگرداندن به «در جریان»</button>` : ""}
-    <button class="ghost red" id="del">حذف این سیگنال</button>`);
+    <div class="box autoeng"><b>🤖 نتیجه را سیستم خودکار ثبت می‌کند</b>
+      <div class="hint" style="margin-top:4px">قیمت زنده هر ۲۰ ثانیه بررسی می‌شود. وقتی قیمت به ناحیه‌ی ورود برسد سیگنال «فعال» می‌شود؛ رسیدن به تارگت یا حد ضرر خودکار ثبت می‌شود و هیچ‌کس، حتی مدیر، نمی‌تواند آن را تغییر دهد.</div>
+      <div class="egrid">
+        <div><span>وضعیت</span><b>${!s.auto ? "ثبت دستی قدیمی" : s.phase === "waiting" ? "⏳ در انتظار ورود" : s.phase === "open" ? "🟢 فعال" : "✅ تمام شده"}</b></div>
+        <div><span>نتیجه</span><b>${STATUS[s.status] || s.status}</b></div>
+        ${s.publish_price != null ? `<div><span>قیمت هنگام انتشار</span><b class="num">${fa(s.publish_price)}</b></div>` : ""}
+        ${s.entry_price != null ? `<div><span>قیمت ورود</span><b class="num">${fa(s.entry_price)}</b></div>` : ""}
+        ${s.last_price != null ? `<div><span>آخرین قیمت</span><b class="num">${fa(s.last_price)}</b></div>` : ""}
+        ${s.best_price != null ? `<div><span>بهترین قیمت</span><b class="num">${fa(s.best_price)}</b></div>` : ""}
+        ${s.result_price != null ? `<div><span>قیمت نتیجه</span><b class="num">${fa(s.result_price)}</b></div>` : ""}
+        ${s.expires_at ? `<div><span>اعتبار تا</span><b>${fmtFull(s.expires_at)}</b></div>` : ""}
+      </div></div>
+    ${(!s.auto || (s.phase === "waiting" && Date.now() - new Date(s.created_at) < 15 * 60000)) ? `<button class="ghost red" id="del">حذف این سیگنال</button><p class="hint" style="text-align:center">حذف فقط تا ۱۵ دقیقه بعد از انتشار و قبل از فعال شدن ممکن است.</p>` : `<p class="hint" style="text-align:center">🔒 این سیگنال قفل است و قابل حذف یا تغییر نیست.</p>`}`);
   applyNoteLang($("sheet"));
   $("sheet").onclick = async e => {
-    const btn = e.target.closest("[data-st]");
-    if (btn) {
-      const st = btn.dataset.st; if (st === s.status) return;
-      if (st !== "active" && !confirm(`نتیجه «${STATUS[st]}» با تاریخ و ساعت الان ثبت شود؟`)) return;
-      const { error } = await sb.from("signals").update({ status: st }).eq("id", s.id);
-      if (!error) sfx(/^tp/.test(st) ? "celebration" : st === "sl" ? "caution" : "select", .5);
-      if (error) return toast("خطا: " + error.message, true);
-      closeSheet(); toast(st === "active" ? "به حالت «در جریان» برگشت" : "نتیجه ثبت شد ✓"); return loadSignals(); }
     if (e.target.closest("#del") && confirm("این سیگنال حذف شود؟")) {
-      await sb.from("signals").delete().eq("id", s.id); if (s.voice_path) await sb.storage.from("voices").remove([s.voice_path]);
+      const { data, error } = await sb.from("signals").delete().eq("id", s.id).select("id");
+      if (error || !data?.length) return toast("این سیگنال دیگر قابل حذف نیست (فعال شده یا بیشتر از ۱۵ دقیقه گذشته).", true);
+      if (s.voice_path) await sb.storage.from("voices").remove([s.voice_path]);
       closeSheet(); toast("حذف شد"); loadSignals(); }
   };
 }
