@@ -833,6 +833,23 @@
 
   .sndt{display:flex;align-items:center;gap:6px;width:100%;margin-top:8px;border:0;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--field);box-shadow:var(--sh-in);cursor:pointer}
   .sndt b{margin-inline-start:auto;color:var(--buy)}
+
+  /* ===== انتخاب بازار: انتخاب‌شده با نام، بقیه فقط آیکن ===== */
+  html .mk button.on,html.app .mk button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important}
+  html .mk button:not(.on),html.app .mk button:not(.on){background:var(--gl)!important;color:var(--text)!important}
+  .mk{gap:10px}
+  .mk button{flex:1 1 0;justify-content:center}
+  .mk button:not(.on){flex:0 0 64px!important;height:64px;padding:0!important;border-radius:50%!important;gap:0}
+  .mk button.on{flex:1 1 auto!important;height:64px;padding:8px 18px 8px 10px!important;justify-content:flex-start;gap:12px}
+  .mk .tx{max-width:220px;opacity:1;overflow:hidden;transition:max-width .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease .12s}
+  .mk button:not(.on) .tx{max-width:0;opacity:0;transition:max-width .4s cubic-bezier(.2,.8,.2,1),opacity .15s}
+  .mk button:not(.on) img{width:38px!important;height:38px!important;border-radius:50%!important}
+  .mk button.on img{width:46px!important;height:46px!important;border-radius:50%!important}
+  .mk button:not(.on) .dual{width:42px!important;height:38px!important}
+  .mk button.on b{color:var(--onNavy)!important;font-size:17px}
+  .mk button.on small{display:block!important;color:color-mix(in srgb,var(--onNavy) 72%,transparent)!important}
+  .mk button{transition:flex-basis .5s cubic-bezier(.2,.8,.2,1),flex-grow .5s cubic-bezier(.2,.8,.2,1),padding .5s cubic-bezier(.2,.8,.2,1),border-radius .5s,box-shadow .4s!important}
+  .mk button .dot{top:4px;inset-inline-start:4px}
 </style>
 </head>
 <body>
@@ -844,7 +861,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794044658";
+const BUILD = "1794044941";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
