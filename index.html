@@ -882,6 +882,12 @@
   .pdays{margin:12px auto 4px;display:inline-block;padding:7px 16px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);font-size:13px}
   .pbody .cta{margin-top:16px}
   .ghost2{margin-top:12px;width:100%;height:48px;border:0;border-radius:999px;background:var(--tile);box-shadow:var(--raise);font-family:inherit;font-weight:800;color:var(--sell);cursor:pointer}
+
+  .nlink{display:block;padding:11px 0;border-top:1px solid var(--line);color:var(--text);text-decoration:none}
+  .nlink:first-child{border-top:0;padding-top:2px}
+  .nlink b{display:block;font-size:14.5px;line-height:1.7}
+  .nlink p{margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .nlink small{display:block;margin-top:3px;font-size:11px;color:var(--soft)}
 </style>
 </head>
 <body>
@@ -893,7 +899,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794046675";
+const BUILD = "1794046993";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1284,7 +1290,7 @@ const L2 = {
     jT:"دفترچه‌ی معاملات", jS:"ثبت معاملات و سود و ضرر ماهانه", date:"تاریخ", side:"نوع", qty:"مقدار", openP:"نرخ خرید/ورود", closeP:"نرخ فروش/خروج", note2:"یادداشت", save:"ثبت", monthPnl:"سود/ضرر این ماه", noTrades:"هنوز معامله‌ای ثبت نکرده‌اید.", open:"باز",
     dictT:"دیکشنری اصطلاحات", dictS:"معادل دری اصطلاحات بازار", search:"جستجو…",
     about:"درباره‌ی آکادمی", teacherT:"استاد", founded:"تأسیس", licenses:"مجوزها", services:"خدمات", years:"سابقه", specialty:"تخصص", certs:"گواهینامه‌ها",
-    whatsapp:"واتس‌اپ", telegram:"تلگرام", pollT:"نبض بازار", voted:"رأی شما ثبت شد", newsT:"اخبار و تقویم اقتصادی", articlesT:"آموزش‌ها", videosT:"ویدیوهای تحلیل روزانه",
+    whatsapp:"واتس‌اپ", telegram:"تلگرام", pollT:"نبض بازار", voted:"رأی شما ثبت شد", newsT:"خبرها و تحلیل‌های استاد", articlesT:"آموزش‌ها", videosT:"ویدیوهای تحلیل روزانه",
     impact:"تأثیر", upI:"صعودی", dnI:"نزولی", neuI:"خنثی", prevV:"قبلی", fcV:"پیش‌بینی", actV:"واقعی", imp:{high:"مهم", medium:"متوسط", low:"کم"}, noContent:"هنوز چیزی منتشر نشده.",
     disc2:"تمام تحلیل‌ها و سیگنال‌های طلا، نقره و دالر جنبه‌ی آموزشی دارند و مسئولیت تصمیم‌گیری نهایی و ریسک معاملات بر عهده‌ی خود معامله‌گر است.", shareTxt:"{p}٪ موفقیت در {m} {per}" },
   ps: { nav:{sig:"سیګنالونه", prc:"بیې", tool:"وسایل", acad:"اکاډمي"}, tp3:"هدف 3",
@@ -1302,7 +1308,7 @@ const L2 = {
     jT:"د معاملو کتابچه", jS:"د معاملو ثبت او میاشتنۍ ګټه/تاوان", date:"نېټه", side:"ډول", qty:"اندازه", openP:"د پېرود/ننوتلو نرخ", closeP:"د پلور/وتلو نرخ", note2:"یادښت", save:"ثبت", monthPnl:"د دې میاشتې ګټه/تاوان", noTrades:"لا مو معامله نه ده ثبت کړې.", open:"خلاص",
     dictT:"د اصطلاحاتو قاموس", dictS:"د بازار د اصطلاحاتو معنا", search:"لټون…",
     about:"د اکاډمۍ په اړه", teacherT:"استاد", founded:"تأسیس", licenses:"جوازونه", services:"خدمتونه", years:"تجربه", specialty:"تخصص", certs:"سندونه",
-    whatsapp:"واټساپ", telegram:"ټلګرام", pollT:"د بازار نبض", voted:"ستاسو رایه ثبت شوه", newsT:"خبرونه او اقتصادي جنتري", articlesT:"زده‌کړې", videosT:"د ورځني تحلیل ویډیوګانې",
+    whatsapp:"واټساپ", telegram:"ټلګرام", pollT:"د بازار نبض", voted:"ستاسو رایه ثبت شوه", newsT:"د استاد خبرونه او تحلیلونه", articlesT:"زده‌کړې", videosT:"د ورځني تحلیل ویډیوګانې",
     impact:"اغېز", upI:"لوړېدونکی", dnI:"ټیټېدونکی", neuI:"بې‌طرفه", prevV:"مخکنی", fcV:"وړاندوینه", actV:"واقعي", imp:{high:"مهم", medium:"منځنی", low:"کم"}, noContent:"لا څه نه دي خپاره شوي.",
     disc2:"د سرو زرو، سپینو زرو او ډالرو ټول تحلیلونه او سیګنالونه زده‌کړیز اړخ لري او د وروستۍ پرېکړې او خطر مسؤلیت پخپله د معامله‌ګر دی.", shareTxt:"په {m} کې {p}٪ بریا ({per})" },
   en: { nav:{sig:"Signals", prc:"Prices", tool:"Tools", acad:"Academy"}, tp3:"Target 3",
@@ -1320,7 +1326,7 @@ const L2 = {
     jT:"Trade journal", jS:"Log trades and monthly P/L", date:"Date", side:"Side", qty:"Qty", openP:"Open price", closeP:"Close price", note2:"Note", save:"Save", monthPnl:"This month's P/L", noTrades:"No trades logged yet.", open:"Open",
     dictT:"Glossary", dictS:"Market terms explained", search:"Search…",
     about:"About the academy", teacherT:"Instructor", founded:"Founded", licenses:"Licenses", services:"Services", years:"Experience", specialty:"Specialty", certs:"Certificates",
-    whatsapp:"WhatsApp", telegram:"Telegram", pollT:"Market pulse", voted:"Your vote was recorded", newsT:"News & economic calendar", articlesT:"Lessons", videosT:"Daily analysis videos",
+    whatsapp:"WhatsApp", telegram:"Telegram", pollT:"Market pulse", voted:"Your vote was recorded", newsT:"Instructor news & analysis", articlesT:"Lessons", videosT:"Daily analysis videos",
     impact:"Impact", upI:"Bullish", dnI:"Bearish", neuI:"Neutral", prevV:"Previous", fcV:"Forecast", actV:"Actual", imp:{high:"High", medium:"Medium", low:"Low"}, noContent:"Nothing published yet.",
     disc2:"All gold, silver and dollar analyses and signals are educational. The final decision and trading risk are the trader's own responsibility.", shareTxt:"{p}% win rate in {m} ({per})" },
 };
@@ -1344,6 +1350,9 @@ L3.en.kabulNote = "Source: Afaaq daily report ({d}); adjusted live by the world 
 L3.fa.myProfile = "پروفایل من"; L3.fa.changePhoto = "انتخاب عکس"; L3.fa.savePhoto = "ذخیره‌ی عکس"; L3.fa.removePhoto = "حذف عکس"; L3.fa.badPhoto = "این عکس قابل خواندن نیست.";
 L3.ps.myProfile = "زما پروفایل"; L3.ps.changePhoto = "انځور وټاکئ"; L3.ps.savePhoto = "انځور خوندي کړئ"; L3.ps.removePhoto = "انځور لرې کړئ"; L3.ps.badPhoto = "دا انځور نه لوستل کېږي.";
 L3.en.myProfile = "My profile"; L3.en.changePhoto = "Choose photo"; L3.en.savePhoto = "Save photo"; L3.en.removePhoto = "Remove photo"; L3.en.badPhoto = "This image can't be read.";
+L3.fa.afNews = "اخبار اقتصادی افغانستان"; L3.fa.hrAgo = "{n} ساعت پیش";
+L3.ps.afNews = "د افغانستان اقتصادي خبرونه"; L3.ps.hrAgo = "{n} ساعته مخکې";
+L3.en.afNews = "Afghanistan economy news"; L3.en.hrAgo = "{n}h ago";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
 L3.ps.mktRate = "د بازار نرخ (رسمي)"; L3.ps.secAgo = "{n} ثانیې مخکې"; L3.ps.minAgo = "{n} دقیقې مخکې"; L3.ps.backLive = "ژوندۍ بیه"; L3.ps.liveSrc = "له نړیوال بازار ژوندی";
 L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAgo = "{n} min ago"; L3.en.backLive = "Live prices"; L3.en.liveSrc = "Live from world market";
@@ -1465,7 +1474,8 @@ async function loadPrices(force){
   if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 5000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
-  if (Date.now() - localAt > 300000 || force) { localAt = Date.now(); try { const r = await fetch(SUPABASE_URL + "/functions/v1/local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
+  if (Date.now() - newsAt > 120000) loadNews();
+  if (Date.now() - localAt > 120000 || force) { localAt = Date.now(); try { const r = await fetch(SUPABASE_URL + "/functions/v1/local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
   if (data) { rates = data; store.set("cache_rates", rates); }
   checkAlerts();
@@ -1483,11 +1493,12 @@ const afnSrc = () => adminRate() ? T.sarai : local?.fx?.usd ? T.sarai + " (" + T
 const kabulMove = () => { const w = local?.gold?.worldOz, x = prices?.xau?.price; return w && x ? x / w : 1; };
 const kabulGram = k => { const g = local?.gold?.kabul?.[k]; if (g == null) return null; const f = kabulMove(); return typeof g === "object" ? { buy: g.buy * f, sell: g.sell * f } : { buy: g * f, sell: g * f }; };
 const kabulPure = () => { const g = kabulGram("k18"); return g ? g.sell / .75 : null; };
-const agoTxt = iso => { if (!iso) return "—"; const s = Math.max(0, Math.round((Date.now() - new Date(iso)) / 1000)); return s < 60 ? tt(T.secAgo, { n: s }) : s < 3600 ? tt(T.minAgo, { n: Math.round(s / 60) }) : timeOnly(iso); };
+const agoTxt = iso => { if (!iso) return "—"; const s = Math.max(0, Math.round((Date.now() - new Date(iso)) / 1000)); return s < 60 ? tt(T.secAgo, { n: s }) : s < 3600 ? tt(T.minAgo, { n: Math.round(s / 60) }) : s < 86400 ? tt(T.hrAgo, { n: Math.round(s / 3600) }) : fmtDate(iso); };
 /* شمارنده‌ی «چند ثانیه پیش» و به‌روزرسانی هر ۵ ثانیه در صفحه‌ی قیمت و ابزار */
 setInterval(() => {
   document.querySelectorAll("[data-ago]").forEach(el => { el.textContent = agoTxt(prices?.at); });
   if (!document.hidden && view === "feed" && (page === "prc" || page === "tool")) loadPrices();
+  if (!document.hidden && view === "feed" && page === "acad") { if (Date.now() - newsAt > 60000) loadNews(); if (Date.now() - calAt > 5 * 60000) loadCalendar(); }
 }, 1000);
 function tvWidget(){
   const box = $("tvbox"); if (!box) return;
@@ -1675,9 +1686,26 @@ function drawTools(){
 }
 
 /* ----- آکادمی ----- */
+let news = store.get("cache_news", null), newsAt = 0;
+async function loadNews(){
+  newsAt = Date.now();
+  try { const r = await fetch(SUPABASE_URL + "/functions/v1/news"); if (r.ok) { const n = await r.json();
+    const was = news?.items?.find(i => i.kind === "news")?.link, now = n?.items?.find(i => i.kind === "news");
+    news = n; store.set("cache_news", n);
+    if (was && now && now.link !== was && view === "feed") banner("📰", esc(now.title), T.tapView, () => setPage("acad"));
+    if (n?.items?.some(i => i.kind !== "news" && (!local?.at || new Date(i.at) > new Date(local.at)))) { localAt = 0; }
+  } } catch {}
+  drawNews();
+}
+function drawNews(){
+  const box = $("newsbox"); if (!box) return;
+  const it = (news?.items || []).filter(i => i.kind === "news").slice(0, 8);
+  box.innerHTML = it.length ? it.map(i => `<a class="nlink" href="${esc(i.link)}" target="_blank" rel="noopener"><b>${esc(i.title)}</b>${i.desc ? `<p>${esc(i.desc.slice(0, 160))}…</p>` : ""}<small>${agoTxt(i.at)} · ${T.afaaq}</small></a>`).join("")
+    : `<div class="upd">${T.noContent}</div>`;
+}
 let cal = store.get("cache_cal", null), calAt = 0;
 async function loadCalendar(){
-  if (Date.now() - calAt < 10 * 60000 && cal) return drawCal();
+  if (Date.now() - calAt < 5 * 60000 && cal) return drawCal();
   calAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/calendar"); if (r.ok) { cal = await r.json(); store.set("cache_cal", cal); } } catch {}
   drawCal();
@@ -1742,7 +1770,9 @@ function drawAcademy(){
       ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}
     <div class="sec2"><h3>🗓 ${T.calT}</h3></div>
     <div class="acard glass rise cal" id="calbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
-    <div class="sec2"><h3>📰 ${T.newsT}</h3></div>
+    <div class="sec2"><h3>📰 ${T.afNews} <span class="ldot" style="display:inline-block;margin-inline-start:6px"></span></h3></div>
+    <div class="acard glass rise news" id="newsbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
+    <div class="sec2"><h3>📌 ${T.newsT}</h3></div>
     <div class="acard glass rise news" style="--i:3">${news.length ? news.map(p => `<div class="nitem"><b>${esc(p.title)}</b>
       ${p.kind === "event" ? `<div class="tags"><span class="tag2 lvl-${p.importance || "low"}">● ${T.imp[p.importance || "low"]}</span>${p.event_at ? `<span class="tag2">${fmtFull(p.event_at)}</span>` : ""}${p.previous ? `<span class="tag2">${T.prevV}: ${esc(p.previous)}</span>` : ""}${p.forecast ? `<span class="tag2">${T.fcV}: ${esc(p.forecast)}</span>` : ""}${p.actual ? `<span class="tag2">${T.actV}: ${esc(p.actual)}</span>` : ""}</div>` : `<div class="upd" style="text-align:start;margin:2px 0">${fmtFull(p.created_at)}</div>`}
       ${p.body ? `<p>${esc(p.body)}</p>` : ""}${impHTML(p.impact)}</div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
@@ -1750,7 +1780,7 @@ function drawAcademy(){
     <div class="acard glass rise vid" style="--i:4">${vids.length ? vids.map(p => `<div class="nitem news"><b>${esc(p.title)}</b>${p.body ? `<p style="color:var(--muted);font-size:13px">${esc(p.body)}</p>` : ""}<video controls preload="none" playsinline data-vpath="${esc(p.file_path || "")}"></video></div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
     <div class="sec2"><h3>🎓 ${T.articlesT}</h3></div>
     <div class="acard glass rise news" style="--i:5">${arts.length ? arts.map(p => `<details class="nitem"><summary style="cursor:pointer;list-style:none"><b>${esc(p.title)}</b></summary><p>${esc(p.body || "")}</p></details>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>`;
-  drawCal(); loadCalendar();
+  drawCal(); loadCalendar(); drawNews(); loadNews();
   el.querySelectorAll("video[data-vpath]").forEach(async v => { if (!v.dataset.vpath) return; const { data } = await sb.storage.from("media").createSignedUrl(v.dataset.vpath, 3600); if (data?.signedUrl) v.src = data.signedUrl; });
   el.querySelectorAll("[data-vote]").forEach(b => b.onclick = async () => {
     const i = Number(b.dataset.vote); myVote = i; pollRes[i] = Number(pollRes[i] || 0) + 1; drawAcademy();
@@ -1948,7 +1978,11 @@ function renderFeed(){
   drawPage();
   if (!channel) {
     channel = sb.channel("feed").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, () => loadFeed())
-      .on("postgres_changes", {event:"INSERT", schema:"public", table:"rates"}, () => loadPrices(true)).subscribe();
+      .on("postgres_changes", {event:"INSERT", schema:"public", table:"rates"}, () => loadPrices(true))
+      .on("postgres_changes", {event:"INSERT", schema:"public", table:"posts"}, ev => { const p = ev.new || {}; loadAcademy();
+        banner(p.kind === "video" ? "🎬" : p.kind === "article" ? "🎓" : p.kind === "event" ? "🗓" : "📰", esc(p.title || T.newsT), T.tapView, () => setPage("acad")); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"posts"}, ev => { if (ev.eventType !== "INSERT") loadAcademy(); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"polls"}, () => loadAcademy()).subscribe();
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); if (page === "prc") loadPrices(); else if (Date.now() - pricesAt > 120000 && alerts.some(a => !a.done)) loadPrices(); } }, 8000);
   }
   loadFeed(); loadPrices(); loadMyRatings();
