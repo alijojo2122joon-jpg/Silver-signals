@@ -663,6 +663,62 @@
   /* فونت هندسی و گرد (شبیه گرافیک) */
   body,button,input,select,textarea{font-family:"Estedad Variable",Vazirmatn,Tahoma,sans-serif!important}
   h1,h2,h3,.side,.mk b,.bnav button,.cta,.sec2 h3,.acard h2{font-weight:800}
+
+  /* ================= سبک اینفوگرافیک ================= */
+  /* کارت آمار: دایره‌ی مرکزی با حلقه‌ی گرادیانی + گره‌های وصل‌شده */
+  .stats.hub{grid-template-columns:auto 1fr;gap:6px 0;padding:18px 16px}
+  .hubc{position:relative;z-index:1}
+  .ring.big{width:132px;height:132px;padding:9px;background:var(--tile);box-shadow:var(--raise),0 14px 34px -14px #ff7a3d}
+  .ring.big svg{width:100%;height:100%}
+  .ring.big circle{stroke-width:10}
+  .ring.big .bg{stroke:var(--field);filter:drop-shadow(1px 1px 1px rgba(0,0,0,.08))}
+  .ring.big .fg{stroke:url(#rgw)!important;filter:drop-shadow(0 2px 4px rgba(255,100,50,.35))}
+  .ring.big .rc{position:absolute;inset:24px;border-radius:50%;background:var(--gl);box-shadow:var(--raise);display:grid;place-content:center;text-align:center;line-height:1.1}
+  .ring.big .rc b{white-space:nowrap;display:block;font-family:Montserrat,Arial,sans-serif;font-size:24px;font-weight:800;background:linear-gradient(180deg,#ffb23f,#ff5a36);-webkit-background-clip:text;background-clip:text;color:transparent;direction:ltr}
+  .ring.big .rc b em{font-style:normal;font-size:15px}
+  .ring.big .rc small{font-size:9.5px;color:var(--muted);font-weight:700}
+  .ring.big>b,.ring.big>small{display:none}
+  .spokes{position:relative;display:grid;gap:8px;padding-inline-start:18px}
+  .spokes::before{content:"";position:absolute;inset-inline-start:-40px;top:6px;bottom:6px;width:80px;border:2px solid var(--line);border-inline-start:0;border-inline-end-color:color-mix(in srgb,#ff7a3d 35%,var(--line));border-radius:0 50% 50% 0}
+  :root[dir="rtl"] .spokes::before{border-radius:50% 0 0 50%}
+  .sp{position:relative;display:flex;align-items:center;gap:10px;transform:translateX(calc(var(--k) * 0px))}
+  .sp:nth-child(2){margin-inline-start:14px}
+  .sp::before{content:"";position:absolute;inset-inline-start:-16px;top:50%;width:14px;height:2px;background:var(--line)}
+  .sp::after{content:"";position:absolute;inset-inline-start:-22px;top:calc(50% - 5px);width:10px;height:10px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 3px var(--bg),0 0 10px var(--ac)}
+  .sp:nth-child(2)::before{inset-inline-start:-30px;width:28px}.sp:nth-child(2)::after{inset-inline-start:-36px}
+  .nd{position:relative;width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise)}
+  .nd i{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 210deg,var(--ac) 0 42%,transparent 42%);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));animation:rot 14s linear infinite}
+  .sp:nth-child(2) .nd i{animation-duration:18s;animation-direction:reverse}
+  .nd b{font-family:Montserrat,Arial,sans-serif;font-size:17px;font-weight:800;color:var(--ac)}
+  .sp.t .nd b{color:var(--text)}
+  .sp small{font-size:12.5px;font-weight:800;color:var(--ac)}
+  .sp.t small{color:var(--muted)}
+  .stats.hub .pnl{margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+
+  /* آیکن‌های گرد با کمان رنگی (لیست تحلیل‌ها، ابزارها، کارت قیمت) */
+  .av,.tool>summary .ti,.arrow{position:relative;overflow:visible!important}
+  .av::after,.tool>summary .ti::after,.arrow::after{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;
+    background:conic-gradient(from 200deg,var(--ac,var(--glowc)) 0 40%,transparent 40%);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));animation:rot 16s linear infinite}
+  .av.buy,.hero.buy .arrow{--ac:var(--buy)} .av.sell,.hero.sell .arrow{--ac:var(--sell)}
+  .tool>summary .ti{border-radius:50%!important;background:var(--tile)!important;box-shadow:var(--raise)}
+  .tool:nth-of-type(1) .ti{--ac:#ff9b3d}.tool:nth-of-type(2) .ti{--ac:#ef5350}.tool:nth-of-type(3) .ti{--ac:#8b7bff}.tool:nth-of-type(4) .ti{--ac:#2fb5c9}.tool:nth-of-type(5) .ti{--ac:#7cc35a}
+  .tool>summary{color:inherit}
+  .tool[open]>summary .ti::after{background:conic-gradient(from 200deg,var(--ac) 0 70%,transparent 70%)}
+
+  /* لیست‌ها: هر سطر یک کپسول جدا با دایره‌ی کناری */
+  .list.glass{background:none!important;box-shadow:none!important;border:0!important;padding:0!important;display:grid;gap:12px}
+  .list.glass::before{display:none}
+  .list .it{background:var(--gl);box-shadow:var(--raise);border-radius:34px!important;padding:10px 12px!important}
+  .list .it .row{align-items:center}
+  .list .it .av{width:44px;height:44px}
+
+  /* تقویم: خط زمانی با نقطه‌های رنگی */
+  .cal .cev>div:last-child{position:relative;padding-inline-start:16px;border-inline-start:2px solid var(--line)}
+  .cal .cev>div:last-child::before{content:"";position:absolute;inset-inline-start:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--dc,#9aa1b0);box-shadow:0 0 0 3px var(--gl),0 0 10px var(--dc,transparent)}
+  .cal .cev.imp-high{--dc:#ff5a36}.cal .cev.imp-medium{--dc:#ffa63d}.cal .cev.imp-low{--dc:#8b7bff}
+  .cal .cev{border-top:0!important;padding:6px 0!important}
 </style>
 </head>
 <body>
@@ -674,7 +730,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794042841";
+const BUILD = "1794043161";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1102,9 +1158,13 @@ function statsOf(list){
   return { n: list.length, w, l, rate: dec ? Math.round(w / dec * 100) : 0, pts, pct };
 }
 function statsHTML(st){
-  const C = 2 * Math.PI * 38, off = C * (1 - st.rate / 100);
-  return `<div class="stats glass glow rise" style="--bd:8s"><div class="ring"><svg viewBox="0 0 86 86"><circle class="bg" cx="43" cy="43" r="38"/><circle class="fg" cx="43" cy="43" r="38" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg><b>${st.rate}%</b><small>${T.winRate}</small></div>
-    <div class="sgrid"><div><small>${T.total}</small><b>${st.n}</b></div><div class="w"><small>${T.wins}</small><b>${st.w}</b></div><div class="l"><small>${T.losses}</small><b>${st.l}</b></div></div>
+  const R = 54, C = 2 * Math.PI * R, off = C * (1 - st.rate / 100);
+  const node = (cls, ac, n, lab, k) => `<div class="sp ${cls}" style="--ac:${ac};--k:${k}"><span class="nd"><i></i><b>${n}</b></span><small>${lab}</small></div>`;
+  return `<div class="stats hub glass rise" style="--bd:8s">
+    <div class="hubc"><div class="ring big"><svg viewBox="0 0 128 128"><defs><linearGradient id="rgw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc24b"/><stop offset="1" stop-color="#ff5a36"/></linearGradient></defs>
+      <circle class="bg" cx="64" cy="64" r="${R}"/><circle class="fg" cx="64" cy="64" r="${R}" stroke="url(#rgw)" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
+      <div class="rc"><b>${st.rate}<em>%</em></b><small>${T.winRate}</small></div></div></div>
+    <div class="spokes">${node("t", "#7b8cff", st.n, T.total, 0)}${node("w", "var(--buy)", st.w, T.wins, 1)}${node("l", "var(--sell)", st.l, T.losses, 2)}</div>
     <div class="pnl"><span>${T.pnl}: <b class="${st.pts >= 0 ? "pos" : "neg"}"><bdi class="ltr">${st.pts >= 0 ? "+" : ""}${nf(st.pts)}</bdi> ${T.points} <bdi class="ltr">(${st.pct >= 0 ? "+" : ""}${st.pct.toFixed(2)}%)</bdi></b></span><button class="sharebtn" id="shareSt">📤 ${T.share}</button></div></div>`;
 }
 async function shareStats(st){
@@ -1347,7 +1407,7 @@ function drawCal(){
     if (k !== lastDay) { lastDay = k;
       html += `<div class="cday">${k === dkey(now) ? "📍 " + T.today + " · " : k === dkey(tm) ? T.tomorrow + " · " : ""}${fmtDate(e.at)}</div>`; }
     const past = d < new Date(now.getTime() - 3600000);
-    html += `<div class="cev ${past ? "past" : ""}"><div class="ct">${e.impact === "low" ? T.allDay : timeOnly(e.at)}</div><div><b>${esc(calTitle(e))}</b>
+    html += `<div class="cev imp-${e.impact} ${past ? "past" : ""}"><div class="ct">${e.impact === "low" ? T.allDay : timeOnly(e.at)}</div><div><b>${esc(calTitle(e))}</b>
       <div class="cm"><span class="tag2 lvl-${e.impact}">● ${T.imp[e.impact]}</span><span class="tag2">${lang === "en" ? e.country : e.country_fa || e.country}</span>
       ${e.forecast ? `<span class="tag2">${T.fcV}: <bdi class="ltr">${esc(e.forecast)}</bdi></span>` : ""}${e.previous ? `<span class="tag2">${T.prevV}: <bdi class="ltr">${esc(e.previous)}</bdi></span>` : ""}</div>
       <div class="imp" style="margin-top:4px"><span>${T.affects}: ${(e.assets || []).map(a => T.m[a]).join(" · ")}</span></div></div></div>`;
