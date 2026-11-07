@@ -133,6 +133,7 @@ public class MainActivity extends Activity {
         s.setAllowFileAccess(true);
         if (state != null) web.restoreState(state);
         else web.loadUrl(BuildConfig.START_URL);
+        checkUpdate();
     }
 
     private boolean waiting = false;
@@ -182,5 +183,91 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (web.canGoBack()) web.goBack(); else super.onBackPressed();
+    }
+
+    /* ===== به‌روزرسانی داخل برنامه ===== */
+    private static final String REL = "https://api.github.com/repos/alijojo2122joon-jpg/Silver-signals/releases/latest";
+    private long dlId = -1;
+    private void checkUpdate() {
+        new Thread(() -> {
+            try {
+                java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(REL).openConnection();
+                c.setConnectTimeout(8000); c.setReadTimeout(8000);
+                c.setRequestProperty("Accept", "application/vnd.github+json");
+                if (c.getResponseCode() != 200) return;
+                java.io.InputStream in = c.getInputStream();
+                java.io.ByteArrayOutputStream bo = new java.io.ByteArrayOutputStream();
+                byte[] buf = new byte[8192]; int n; while ((n = in.read(buf)) > 0) bo.write(buf, 0, n);
+                org.json.JSONObject j = new org.json.JSONObject(bo.toString("UTF-8"));
+                String tag = j.optString("tag_name", "");
+                if (!tag.startsWith("android-v")) return;
+                int latest = Integer.parseInt(tag.substring(9));
+                if (latest <= BuildConfig.VERSION_CODE) return;
+                org.json.JSONArray as = j.getJSONArray("assets");
+                String url = null;
+                for (int k = 0; k < as.length(); k++) {
+                    org.json.JSONObject a = as.getJSONObject(k);
+                    if (BuildConfig.APK_NAME.equals(a.optString("name"))) url = a.optString("browser_download_url");
+                }
+                if (url == null) return;
+                final String u = url;
+                runOnUiThread(() -> askUpdate(u));
+            } catch (Exception ignored) {}
+        }).start();
+    }
+    private void askUpdate(String url) {
+        if (isFinishing()) return;
+        new android.app.AlertDialog.Builder(this)
+            .setTitle("نسخه‌ی جدید برنامه")
+            .setMessage("نسخه‌ی تازه‌ی Market Analysts آماده است. همین حالا به‌روزرسانی شود؟")
+            .setPositiveButton("به‌روزرسانی", (d, w) -> download(url))
+            .setNegativeButton("بعداً", null)
+            .show();
+    }
+    private void download(String url) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 26 && !getPackageManager().canRequestPackageInstalls()) {
+                android.widget.Toast.makeText(this, "برای نصب به‌روزرسانی، اجازه‌ی «نصب برنامه‌های ناشناس» را برای Market Analysts روشن کنید و برگردید.", android.widget.Toast.LENGTH_LONG).show();
+                startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName())));
+                pendingUrl = url;
+                return;
+            }
+            android.app.DownloadManager dm = (android.app.DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            java.io.File f = new java.io.File(getExternalFilesDir(null), BuildConfig.APK_NAME);
+            if (f.exists()) f.delete();
+            android.app.DownloadManager.Request r = new android.app.DownloadManager.Request(Uri.parse(url))
+                .setTitle("Market Analysts")
+                .setDescription("در حال دانلود نسخه‌ی جدید…")
+                .setMimeType("application/vnd.android.package-archive")
+                .setNotificationVisibility(android.app.DownloadManager.Request.VISIBILITY_VISIBLE)
+                .setDestinationInExternalFilesDir(this, null, BuildConfig.APK_NAME);
+            dlId = dm.enqueue(r);
+            android.widget.Toast.makeText(this, "در حال دانلود نسخه‌ی جدید…", android.widget.Toast.LENGTH_SHORT).show();
+            android.content.IntentFilter fl = new android.content.IntentFilter(android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+            android.content.BroadcastReceiver rc = new android.content.BroadcastReceiver() {
+                @Override public void onReceive(android.content.Context ctx, Intent i) {
+                    if (i.getLongExtra(android.app.DownloadManager.EXTRA_DOWNLOAD_ID, -2) != dlId) return;
+                    try { unregisterReceiver(this); } catch (Exception ignored) {}
+                    Uri apk = dm.getUriForDownloadedFile(dlId);
+                    if (apk == null) { android.widget.Toast.makeText(MainActivity.this, "دانلود ناموفق بود", android.widget.Toast.LENGTH_LONG).show(); return; }
+                    Intent inst = new Intent(Intent.ACTION_VIEW);
+                    inst.setDataAndType(apk, "application/vnd.android.package-archive");
+                    inst.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try { startActivity(inst); } catch (Exception ignored) {}
+                }
+            };
+            if (android.os.Build.VERSION.SDK_INT >= 33) registerReceiver(rc, fl, android.content.Context.RECEIVER_EXPORTED);
+            else registerReceiver(rc, fl);
+        } catch (Exception e) {
+            try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception ignored) {}
+        }
+    }
+    private String pendingUrl = null;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pendingUrl != null && (android.os.Build.VERSION.SDK_INT < 26 || getPackageManager().canRequestPackageInstalls())) {
+            String u = pendingUrl; pendingUrl = null; download(u);
+        }
     }
 }

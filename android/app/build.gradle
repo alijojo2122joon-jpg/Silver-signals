@@ -6,8 +6,19 @@ android {
         applicationId "af.marketanalysts.app"
         minSdk 24
         targetSdk 34
-        versionCode 3
-        versionName "1.2"
+        versionCode (project.findProperty("vc") ?: "3").toInteger()
+        versionName "1." + (project.findProperty("vc") ?: "3")
+    }
+    signingConfigs {
+        fixed {
+            storeFile file(System.getenv("MA_KEYSTORE") ?: "none.jks")
+            storePassword System.getenv("MA_KEY_PASS") ?: ""
+            keyAlias "ma"
+            keyPassword System.getenv("MA_KEY_PASS") ?: ""
+        }
+    }
+    buildTypes {
+        debug { if (System.getenv("MA_KEYSTORE")) signingConfig signingConfigs.fixed }
     }
     flavorDimensions "role"
     productFlavors {
@@ -15,12 +26,14 @@ android {
             dimension "role"
             buildConfigField "String", "START_URL", '"https://alijojo2122joon-jpg.github.io/Silver-signals/"'
             resValue "string", "app_name", "Market Analysts"
+            buildConfigField "String", "APK_NAME", '"MarketAnalysts.apk"'
         }
         admin {
             dimension "role"
             applicationIdSuffix ".admin"
             buildConfigField "String", "START_URL", '"https://alijojo2122joon-jpg.github.io/Silver-signals/modir.html"'
             resValue "string", "app_name", "MA مدیر"
+            buildConfigField "String", "APK_NAME", '"MarketAnalysts-Admin.apk"'
         }
     }
     buildFeatures { buildConfig true }

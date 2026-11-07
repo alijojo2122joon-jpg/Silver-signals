@@ -15,8 +15,15 @@ jobs:
         with: { distribution: temurin, java-version: "17" }
       - uses: gradle/actions/setup-gradle@v3
         with: { gradle-version: "8.7" }
+      - name: Signing key
+        env: { MA_KEY_PASS: "${{ secrets.MA_KEY_PASS }}" }
+        run: |
+          test -n "$MA_KEY_PASS" || { echo "::error::MA_KEY_PASS secret missing (Settings > Secrets and variables > Actions)"; exit 1; }
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in android/ma.jks.enc -out "$RUNNER_TEMP/ma.jks" -pass env:MA_KEY_PASS
+          echo "MA_KEYSTORE=$RUNNER_TEMP/ma.jks" >> "$GITHUB_ENV"
       - name: Build APKs
-        run: gradle -p android assembleMemberDebug assembleAdminDebug --no-daemon
+        env: { MA_KEY_PASS: "${{ secrets.MA_KEY_PASS }}" }
+        run: gradle -p android assembleMemberDebug assembleAdminDebug --no-daemon -Pvc=${{ github.run_number }}
       - name: Collect
         run: |
           mkdir out
