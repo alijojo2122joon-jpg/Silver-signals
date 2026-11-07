@@ -770,6 +770,28 @@
   .chead{border-bottom:0!important}
   .vp{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important;border-radius:999px!important}
   .cstate.wait{color:#e08a2c}
+
+  /* ================= رنگ‌بندی خوانا (کنتراست استاندارد) ================= */
+  :root{--muted:#565d70;--soft:#6f7689;--buy:#0a8044;--sell:#cf3338;--amber:#a8620a;
+    --buy-bg:rgba(10,128,68,.11);--sell-bg:rgba(207,51,56,.10)}
+  :root[data-theme="dark"]{--muted:#a7aec0;--soft:#8c93a6;--buy:#3fdc8a;--sell:#ff7b80;--amber:#ffbf5e;
+    --buy-bg:rgba(63,220,138,.13);--sell-bg:rgba(255,123,128,.13)}
+  .stars button{color:var(--soft);opacity:.75}
+  .stars button.on{opacity:1}
+  .stars button.on{color:#e9a81d}
+  :root[data-theme="dark"] .stars button.on{color:#ffc544}
+  .contact2 .wa{background:linear-gradient(180deg,#1fa456,#0f7d3d)!important}
+  .contact2 .tg{background:linear-gradient(180deg,#2a8fd8,#156bb0)!important}
+  .contact2 a{text-shadow:0 1px 1px rgba(0,0,0,.25)}
+  .cstate.wait{color:var(--amber)!important}
+  .mk button.on small{color:rgba(255,255,255,.78)!important}
+  :root[data-theme="dark"] .mk button.on small{color:rgba(17,22,44,.7)!important}
+  .ring.big .rc small,.sgrid small,.prow small,.kv span,.sp.t small{color:var(--muted)}
+  .chip{font-weight:800}
+  .tag2{color:var(--text)}
+  .upd,.when,.disc,.foot,.it .e,.cal .src{color:var(--soft)!important}
+  .lvl-low{color:var(--soft)!important}
+  .wm small{color:var(--muted)!important}
 </style>
 </head>
 <body>
@@ -781,7 +803,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794043777";
+const BUILD = "1794044164";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
