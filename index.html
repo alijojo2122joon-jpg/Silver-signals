@@ -418,7 +418,7 @@
   .inp{width:100%;height:46px;margin-top:4px;padding:0 12px;border-radius:14px;border:1px solid var(--line);background:var(--field);color:var(--text);font-family:inherit;font-size:16px;outline:none}
   .inp:focus{border-color:var(--brand)}
   textarea.inp{height:80px;padding:10px 12px;resize:vertical}
-  .tvbox{border-radius:18px;overflow:hidden;margin:0 0 12px;min-height:46px;background:var(--field)}
+  .tvbox{border-radius:18px;overflow:hidden;margin:0 0 12px;min-height:76px;background:var(--field)}
   .tvbox .tradingview-widget-copyright{display:none}
   .pv b.fl-up{animation:flu 1.2s ease}.pv b.fl-dn{animation:fld 1.2s ease}
   @keyframes flu{0%{color:var(--buy);text-shadow:0 0 14px rgba(0,160,80,.5)}100%{}}
@@ -792,6 +792,44 @@
   .upd,.when,.disc,.foot,.it .e,.cal .src{color:var(--soft)!important}
   .lvl-low{color:var(--soft)!important}
   .wm small{color:var(--muted)!important}
+
+  /* ================= روانی ۲: سایه‌های سبک‌تر، بدون انیمیشن‌های دائمی سنگین ================= */
+  :root{--sh:8px 10px 22px -8px rgba(140,150,175,.55),-6px -6px 14px rgba(255,255,255,.9);
+        --raise:4px 5px 10px -2px rgba(140,150,175,.5),-3px -3px 8px rgba(255,255,255,.9);
+        --sh-in:inset 3px 3px 6px rgba(140,150,175,.4),inset -3px -3px 6px rgba(255,255,255,.9)}
+  :root[data-theme="dark"]{--sh:8px 10px 22px -8px rgba(0,0,0,.75),-5px -5px 12px rgba(255,255,255,.03);
+        --raise:4px 5px 10px -2px rgba(0,0,0,.65),-3px -3px 8px rgba(255,255,255,.03);
+        --sh-in:inset 3px 3px 6px rgba(0,0,0,.55),inset -2px -2px 5px rgba(255,255,255,.035)}
+  /* بدون نقاشی مجدد در هر فریم */
+  .mbg::before,.mbg::after{animation:none!important;will-change:auto!important}
+  .hero .shine,.glow::before{display:none!important}
+  .hero,.stats,.acard,.tool,.pcard,.list,.empty{will-change:auto}
+  .mk button.on::after,.chips button.on::after,.sharebtn::after,.btn2::after,.fab::after{display:none!important}
+  .cta::after,.bnav button.on::after{animation-duration:9s!important;will-change:transform}
+  .mk button.on img,.mk button.on .dual,.bnav button.on span{animation:none!important}
+  .bnav button.on span{transform:translateY(-2px) scale(1.12)}
+  .ring::before{animation:none!important;display:none}
+  .ldot{animation:blink 2.4s ease-in-out infinite!important;box-shadow:none!important}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero.fresh{animation:rise .7s cubic-bezier(.2,.8,.2,1) both!important}
+  /* ظاهر شدن: یک‌بار و سریع‌تر، با منحنی نرم */
+  .rise{animation-duration:.7s!important;animation-timing-function:cubic-bezier(.2,.8,.2,1)!important;animation-delay:calc(var(--i,0) * 60ms)!important;transform:translateY(14px)}
+  .hero,.stats,.acard,.tool,.pcard,.list,.empty{animation:rise .7s cubic-bezier(.2,.8,.2,1) both!important;animation-delay:calc(var(--i,0) * 60ms)!important}
+  html.ready #pg .rise,html.ready #pg .hero,html.ready #pg .stats,html.ready #pg .acard,html.ready #pg .tool,html.ready #pg .pcard,html.ready #pg .list,html.ready #pg .empty{animation:none!important;opacity:1!important;transform:none!important}
+  #pg{animation:pgfade .45s cubic-bezier(.2,.8,.2,1)!important;will-change:auto}
+  @keyframes pgfade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+  .rv,.rv.in{opacity:1!important;transform:none!important;transition:none!important}
+  /* انتقال‌های نرم با منحنی یکسان */
+  .bnav button,.chips button,.langs button,.seg2 button,.tfc button{transition:background-color .35s cubic-bezier(.2,.8,.2,1),color .35s,box-shadow .35s!important}
+  .mk button{transition:flex-grow .55s cubic-bezier(.2,.8,.2,1),padding .5s cubic-bezier(.2,.8,.2,1),background-color .4s,box-shadow .4s!important}
+  .mk button img,.mk .dual{transition:width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),border-radius .5s!important}
+  .more{transition:grid-template-rows .5s cubic-bezier(.2,.8,.2,1)!important}
+  .chat{transition:transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s!important}
+  .chat.show{transition:transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s!important}
+  .cveil{transition:opacity .4s ease!important}
+  .banner{transition:transform .6s cubic-bezier(.2,.8,.2,1)!important}
+  .fab{transition:transform .35s cubic-bezier(.2,.8,.2,1),left .5s cubic-bezier(.2,.8,.2,1)!important}
+  .chat,.cbody{will-change:transform}
 </style>
 </head>
 <body>
@@ -803,7 +841,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794044164";
+const BUILD = "1794044409";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -837,11 +875,11 @@ document.addEventListener("click", e => {
     const from = el.offsetHeight;
     el.open = false; const closedH = el.offsetHeight; el.open = true; const openH = el.offsetHeight;
     el.style.overflow = "hidden";
-    const a = el._a = el.animate([{ height: from + "px" }, { height: (open ? openH : closedH) + "px" }], { duration: 650, easing: "cubic-bezier(.22,1,.36,1)" });
+    const a = el._a = el.animate([{ height: from + "px" }, { height: (open ? openH : closedH) + "px" }], { duration: 480, easing: "cubic-bezier(.2,.8,.2,1)" });
     a.onfinish = () => { el._a = null; el.style.overflow = ""; el.open = open; };
   };
-  if (d.open && !d._closing) { d._closing = true; anim(d, false); setTimeout(() => d._closing = false, 660); return; }
-  d.parentElement.querySelectorAll(":scope > details[open]").forEach(o => { if (o !== d) { o._closing = true; anim(o, false); setTimeout(() => o._closing = false, 660); } });
+  if (d.open && !d._closing) { d._closing = true; anim(d, false); setTimeout(() => d._closing = false, 490); return; }
+  d.parentElement.querySelectorAll(":scope > details[open]").forEach(o => { if (o !== d) { o._closing = true; anim(o, false); setTimeout(() => o._closing = false, 490); } });
   anim(d, true);
   setTimeout(() => { const r = d.getBoundingClientRect(); if (r.top < 70 || r.top > innerHeight * .6) scrollTo({ top: scrollY + r.top - 80, behavior: "smooth" }); }, 380);
 });
@@ -852,7 +890,7 @@ document.addEventListener("focusout", () => setTimeout(() => { if (!document.act
 /* ظاهر شدن نرم موقع اسکرول */
 const revealIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" }) : null;
 const REVEAL = ".it,.cev,.nitem,.jrow,.cities>div,.rrows>div,.qtab tr,.kv>div,.lv";
-if (revealIO) new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.nodeType !== 1) continue;
+if (false) new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.nodeType !== 1) continue;
   const list = n.matches?.(REVEAL) ? [n] : [...n.querySelectorAll(REVEAL)];
   list.forEach((el, k) => { if (el.closest("#pcards") || el.classList.contains("rv")) return; el.classList.add("rv"); el.style.transitionDelay = Math.min(k, 8) * 70 + "ms"; revealIO.observe(el); }); } })
   .observe(document.getElementById("app"), { childList: true, subtree: true });
@@ -1321,11 +1359,11 @@ function tvWidget(){
   const box = $("tvbox"); if (!box) return;
   box.innerHTML = `<div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>`;
   const s = document.createElement("script");
-  s.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"; s.async = true;
+  s.src = "https://s3.tradingview.com/external-embedding/embed-widget-tickers.js"; s.async = true;
   s.textContent = JSON.stringify({ symbols: [
     { proName: "OANDA:XAUUSD", title: "Gold · XAU/USD" }, { proName: "OANDA:XAGUSD", title: "Silver · XAG/USD" },
-    { proName: "TVC:DXY", title: "DXY" }, { proName: "FX:EURUSD", title: "EUR/USD" }, { proName: "TVC:USOIL", title: "Oil" } ],
-    showSymbolLogo: true, isTransparent: true, displayMode: "adaptive", colorTheme: getTheme() === "dark" ? "dark" : "light", locale: "en" });
+    { proName: "TVC:DXY", title: "DXY" }, { proName: "FX:EURUSD", title: "EUR/USD" } ],
+    showSymbolLogo: true, isTransparent: true, colorTheme: getTheme() === "dark" ? "dark" : "light", locale: "en" });
   box.firstChild.appendChild(s);
 }
 let shown = {};
@@ -1579,7 +1617,7 @@ function setPage(p, fromBack){
   if (p !== "sig" && !tabHist) { tabHist = true; const f = () => { tabHist = false; if (view === "feed") setPage("sig", true); }; f._tab = true; overlayPush(f); }
   page = p; store.set("page", p);
   document.querySelectorAll("#bnav button").forEach(b => b.classList.toggle("on", b.dataset.pg === p));
-  drawPage(); scrollTo({ top: 0 });
+  requestAnimationFrame(() => requestAnimationFrame(() => { if (page !== p) return; drawPage(); scrollTo({ top: 0 }); }));
 }
 function drawPage(){
   const el = $("pg"); if (!el) return;
@@ -1711,7 +1749,7 @@ function selectMarket(m){
 }
 
 function renderFeed(){
-  view = "feed";
+  view = "feed"; setTimeout(() => document.documentElement.classList.add("ready"), 1200);
   $app.innerHTML = topbar() + `<div id="pg"></div>` + bnavHTML();
   bindTop();
   $("bnav").onclick = e => { const b = e.target.closest("[data-pg]"); if (b) setPage(b.dataset.pg); };

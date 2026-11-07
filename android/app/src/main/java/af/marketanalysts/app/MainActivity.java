@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         super.onCreate(state);
         web = new WebView(this);
         web.setBackgroundColor(0xFFEEF2F0);
-        web.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        if (android.os.Build.VERSION.SDK_INT >= 23) web.getSettings().setOffscreenPreRaster(true);
         web.setVisibility(View.INVISIBLE);
         setContentView(web);
         WebSettings s = web.getSettings();
