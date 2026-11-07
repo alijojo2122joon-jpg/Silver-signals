@@ -850,6 +850,12 @@
   .mk button.on small{display:block!important;color:color-mix(in srgb,var(--onNavy) 72%,transparent)!important}
   .mk button{transition:flex-basis .5s cubic-bezier(.2,.8,.2,1),flex-grow .5s cubic-bezier(.2,.8,.2,1),padding .5s cubic-bezier(.2,.8,.2,1),border-radius .5s,box-shadow .4s!important}
   .mk button .dot{top:4px;inset-inline-start:4px}
+
+  .livebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 2px 0;font-size:12px;color:var(--muted)}
+  .livebar b{color:var(--text);font-weight:800}
+  .livebar button{margin-inline-start:auto;border:0;border-radius:999px;padding:5px 12px;font-family:inherit;font-size:12px;font-weight:800;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy));box-shadow:0 6px 14px -8px var(--glowc)}
+  .inp.flash{animation:fieldflash 1.1s ease}
+  @keyframes fieldflash{0%{box-shadow:var(--sh-in),0 0 0 2px var(--glowc)}100%{box-shadow:var(--sh-in)}}
 </style>
 </head>
 <body>
@@ -861,7 +867,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794045712";
+const BUILD = "1794045950";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1254,6 +1260,9 @@ const L3 = {
     modeW:"⚖️ By weight", modeM:"💵 By money", amount:"Amount", money:"Money", curr:"Currency", kg:"Kilo", afnC:"AFN", usdC:"USD", goldOz:"Gold oz ($)", silverOz:"Silver oz ($)",
     valUsd:"Value in USD", valAfn:"Value in AFN", eqIn:"Equivalent in {m}", canBuy:"You can buy", ratio:"Gold/silver ratio", quick:"Quick table (24K gold & pure silver)", liveNote:"Prices fill in live from the world market and can be edited.", pure:"pure" },
 };
+L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
+L3.ps.mktRate = "د بازار نرخ (رسمي)"; L3.ps.secAgo = "{n} ثانیې مخکې"; L3.ps.minAgo = "{n} دقیقې مخکې"; L3.ps.backLive = "ژوندۍ بیه"; L3.ps.liveSrc = "له نړیوال بازار ژوندی";
+L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAgo = "{n} min ago"; L3.en.backLive = "Live prices"; L3.en.liveSrc = "Live from world market";
 L3.fa.sound = "صدای برنامه"; L3.fa.on = "روشن"; L3.fa.off = "خاموش";
 L3.ps.sound = "د برنامې غږ"; L3.ps.on = "روښانه"; L3.ps.off = "بند";
 L3.en.sound = "App sounds"; L3.en.on = "On"; L3.en.off = "Off";
@@ -1369,7 +1378,7 @@ document.addEventListener("click", async e => {
 
 /* ----- قیمت‌ها ----- */
 async function loadPrices(force){
-  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 7000 : 55000)) return;
+  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 5000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
@@ -1380,7 +1389,14 @@ async function loadPrices(force){
 }
 const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null));
 const latestField = f => rates.find(r => r.place === "kabul" && r[f] != null)?.[f];
-const usdAfn = () => { const k = latestRate("kabul"); return k ? Number(k.sell ?? k.buy) : null; };
+const usdAfn = () => { const k = latestRate("kabul"); return k ? Number(k.sell ?? k.buy) : (prices?.afn?.rate ? Math.round(prices.afn.rate * 100) / 100 : null); };
+const afnSrc = () => latestRate("kabul") ? T.sarai : T.mktRate;
+const agoTxt = iso => { if (!iso) return "—"; const s = Math.max(0, Math.round((Date.now() - new Date(iso)) / 1000)); return s < 60 ? tt(T.secAgo, { n: s }) : s < 3600 ? tt(T.minAgo, { n: Math.round(s / 60) }) : timeOnly(iso); };
+/* شمارنده‌ی «چند ثانیه پیش» و به‌روزرسانی هر ۵ ثانیه در صفحه‌ی قیمت و ابزار */
+setInterval(() => {
+  document.querySelectorAll("[data-ago]").forEach(el => { el.textContent = agoTxt(prices?.at); });
+  if (!document.hidden && view === "feed" && (page === "prc" || page === "tool")) loadPrices();
+}, 1000);
 function tvWidget(){
   const box = $("tvbox"); if (!box) return;
   box.innerHTML = `<div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>`;
@@ -1396,8 +1412,8 @@ let shown = {};
 let pSig = "";
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
-  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
-  if (sigP === pSig && el.firstChild) { const u = el.querySelector(".upd"); if (u && prices?.at) u.textContent = `${T.lastUpd}: ${timeOnly(prices.at)}:${String(new Date(prices.at).getSeconds()).padStart(2, "0")}`; return; }
+  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
+  if (sigP === pSig && el.firstChild) return;
   pSig = sigP;
   const p = prices || {}, afn = usdAfn(), k = latestRate("kabul");
   const gMq = latestField("gold_mithqal"), sMq = latestField("silver_mithqal");
@@ -1406,7 +1422,7 @@ function drawPrices(){
   const afnSpark = rates.filter(r => r.place === "kabul" && r.sell != null).slice(0, 30).reverse().map(r => Number(r.sell));
   const fl = (key, v) => { const o = shown[key]; shown[key] = v; return o == null || v == null || o === v ? "" : v > o ? "fl-up" : "fl-dn"; };
   const ago = p.at ? Math.max(0, Math.round((Date.now() - new Date(p.at)) / 1000)) : null;
-  el.innerHTML = `<div class="upd">${T.lastUpd}: ${p.at ? timeOnly(p.at) + ":" + String(new Date(p.at).getSeconds()).padStart(2, "0") : "—"}</div>
+  el.innerHTML = `<div class="upd"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${T.lastUpd}: <b data-ago>${agoTxt(p.at)}</b></div>
     <div class="pcard glass glow" style="--bd:7s"><div class="ph"><img src="${MK.xau.th}" alt=""><div><b>${T.m.xau}</b><small>XAU/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xau", xau)}">$${nf(xau)}</b>${chgHTML(xau, p.xau?.prev)}</div></div>
       ${sparkSVG(p.xau?.spark, "#d4a53b")}
       <div class="prow"><div><small>${T.kabulMq}</small><b>${nf(gMq ?? calcMq(xau), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram18}</small><b>${nf(xau && afn ? xau / OZ * .75 * afn : null, 0)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
@@ -1414,7 +1430,7 @@ function drawPrices(){
       ${sparkSVG(p.xag?.spark, "#8e98a6")}
       <div class="prow"><div><small>${T.silverMq}</small><b>${nf(sMq ?? calcMq(xag), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram}</small><b>${nf(xag && afn ? xag / OZ * afn : null, 1)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
     <div class="pcard glass glow" style="--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
-      <div><b>${T.sarai}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", k ? Number(k.sell ?? k.buy) : null)}">${k ? nf(k.sell ?? k.buy) : "—"}</b><span class="chg">${k ? timeOnly(k.created_at) : T.noRate}</span></div></div>
+      <div><b>${k ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b><span class="chg">${k ? timeOnly(k.created_at) : T.noRate}</span></div></div>
       ${sparkSVG(afnSpark, "#2f8a5b")}
       <div class="prow"><div><small>${T.buyR}</small><b>${k?.buy != null ? nf(k.buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${k?.sell != null ? nf(k.sell) : "—"}</b></div></div>
       <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
@@ -1471,7 +1487,7 @@ function drawTools(){
     <div class="qchips cw" id="qch"><button data-q="1:oz">1 ${T.ounce}</button><button data-q="10:oz">10 ${T.ounce}</button><button data-q="20:oz">20 ${T.ounce}</button><button data-q="1:mq">1 ${T.mithqal}</button><button data-q="100:g">100 ${T.gram}</button><button data-q="1:kg">1 ${T.kg}</button></div>
     <div class="fgrid" style="margin-top:8px"><label>${T.goldOz}<input class="inp" id="cgo" inputmode="decimal"></label><label>${T.silverOz}<input class="inp" id="cso" inputmode="decimal"></label>
       <label style="grid-column:1/-1">${T.usdAfn}<input class="inp" id="cr" inputmode="decimal"></label></div>
-    <div class="upd" style="text-align:start;margin:6px 2px 0">${T.liveNote}</div>
+    <div class="livebar"><span class="ldot"></span><span id="csrc"></span><button type="button" id="clive" hidden>🔄 ${T.backLive}</button></div>
     <div class="rrows" id="cres"></div>
     <div style="margin-top:12px;font-weight:800;font-size:13px">${T.quick}</div><table class="qtab" id="qtab"></table></div></details>
   <details class="tool glass rise" style="--i:1"><summary><span class="ti">🛡</span><div>${T.riskT}<small>${T.riskS}</small></div></summary><div class="tb">
@@ -1495,7 +1511,7 @@ function drawTools(){
     <input class="inp" id="dq" placeholder="${T.search}"><div class="dict" id="dlist" style="margin-top:8px"></div></div></details>`;
   const n = v => { v = toEn(String(v || "")).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); return v === "" ? NaN : Number(v); };
   let cmode = "w";
-  ["cgo","cso","cr"].forEach(id => $(id).addEventListener("input", () => { $(id).dataset.edited = "1"; }));
+  ["cgo","cso","cr"].forEach(id => $(id).addEventListener("input", () => { $(id).dataset.edited = "1"; $("clive").hidden = false; }));
   const calc = () => {
     const metal = $("cm").value, other = metal === "xau" ? "xag" : "xau";
     const go = n($("cgo").value), so = n($("cso").value), rate = n($("cr").value);
@@ -1522,8 +1538,11 @@ function drawTools(){
     $("qtab").innerHTML = `<tr><th></th><th>$</th><th>؋</th></tr>` + [["xau", go], ["xag", so]].flatMap(([m, p]) => [1, 10, 20].map(q =>
       `<tr><td>${q} ${T.ounce} ${T.m[m]}</td><td>${p ? nf(p * q, 2) : "—"}</td><td>${p && rate ? nf(p * q * rate, 0) : "—"}</td></tr>`)).join("");
   };
-  window.fillCalcLive = () => { if (!$("cgo")) return; const set = (id, v) => { if (v && !$(id).dataset.edited) $(id).value = String(Math.round(v * 100) / 100); };
-    set("cgo", prices?.xau?.price); set("cso", prices?.xag?.price); set("cr", usdAfn()); calc(); };
+  window.fillCalcLive = () => { if (!$("cgo")) return;
+    const set = (id, v) => { const el = $(id); if (v == null || el.dataset.edited || document.activeElement === el) return; const nv = String(Math.round(v * 100) / 100); if (el.value !== nv) { el.value = nv; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); } };
+    set("cgo", prices?.xau?.price); set("cso", prices?.xag?.price); set("cr", usdAfn());
+    $("csrc").innerHTML = `${T.liveSrc} · ${T.usdAfn}: ${afnSrc()} · <b data-ago>${agoTxt(prices?.at)}</b>`; calc(); };
+  $("clive").onclick = () => { ["cgo","cso","cr"].forEach(id => delete $(id).dataset.edited); $("clive").hidden = true; fillCalcLive(); };
   ["cm","ck","cw","cu","cmv","ccur","cgo","cso","cr"].forEach(id => { $(id).oninput = calc; $(id).onchange = calc; });
   $("cm").onchange = () => { $("ckl").style.display = $("cm").value === "xau" ? "" : "none"; calc(); };
   $("cmode").onclick = e => { const b = e.target.closest("[data-cm]"); if (!b) return; cmode = b.dataset.cm;
