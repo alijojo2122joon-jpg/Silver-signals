@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="MA مدیر">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/estedad@5.3.0/index.css">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -503,6 +504,10 @@
   .nav .pill{transition:transform .9s cubic-bezier(.22,1,.36,1)!important}
   .tog .k{transition:transform .8s cubic-bezier(.22,1,.36,1),background .5s!important}
   .it{transition:background .6s ease!important}
+
+  /* فونت هندسی و گرد (شبیه گرافیک) */
+  body,button,input,select,textarea{font-family:"Estedad Variable",Vazirmatn,Tahoma,sans-serif!important}
+  h1,h2,h3,.side,.mk b,.bnav button,.cta,.sec2 h3,.acard h2{font-weight:800}
 </style>
 </head>
 <body>
@@ -517,7 +522,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794042524";
+const BUILD = "1794042841";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}

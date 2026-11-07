@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Market Analysts">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/estedad@5.3.0/index.css">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -597,6 +598,71 @@
   .glow::before{animation-duration:calc(var(--bd,7s) * 1.6)!important}
   .ripple{animation-duration:1.2s!important}
   html.app .rise{animation-duration:1s!important}
+
+  /* ================= حرکت‌های زنده و نرم ================= */
+  /* نور گرم پس‌زمینه آرام نفس می‌کشد و جابه‌جا می‌شود */
+  .mbg{background:var(--bg)!important}
+  .mbg::before,.mbg::after{content:"";position:absolute;border-radius:50%;filter:blur(40px);will-change:transform,opacity}
+  .mbg::before{width:120vw;height:60vh;left:-10vw;top:-28vh;background:radial-gradient(closest-side,color-mix(in srgb,var(--glowc) 30%,transparent),transparent);animation:amb1 16s ease-in-out infinite alternate}
+  .mbg::after{width:80vw;height:50vh;right:-30vw;bottom:-18vh;background:radial-gradient(closest-side,color-mix(in srgb,var(--glowc) 18%,transparent),transparent);animation:amb2 20s ease-in-out infinite alternate}
+  @keyframes amb1{0%{transform:translate(-6%,0) scale(1);opacity:.75}50%{transform:translate(8%,6%) scale(1.12);opacity:1}100%{transform:translate(-2%,10%) scale(.95);opacity:.8}}
+  @keyframes amb2{0%{transform:translate(0,0) scale(1);opacity:.6}100%{transform:translate(-30%,-14%) scale(1.2);opacity:1}}
+
+  /* کارت‌ها آرام شناورند (هرکدام با فاصله‌ی زمانی) */
+  .hero,.stats,.acard,.tool,.pcard,.list,.empty{animation-name:rise,float2!important;animation-duration:1.25s,9s!important;animation-timing-function:cubic-bezier(.22,1,.36,1),ease-in-out!important;animation-iteration-count:1,infinite!important;animation-fill-mode:forwards,none!important;animation-delay:calc(var(--i,0) * 110ms),calc(1.3s + var(--i,0) * .7s)!important}
+  #pcards .pcard{animation:none!important}
+  @keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* کپسول‌های سرمه‌ای: نور گرم زیرشان نفس می‌کشد + برق نور روی آن‌ها رد می‌شود */
+  .mk button.on,.bnav button.on,.chips button.on,.langs button.on,.seg2 button.on,.sharebtn,.btn2,.cta{position:relative;overflow:hidden}
+  .fab::after{left:0!important;width:100%!important;border-radius:50%;transform:none!important;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%)!important;background-size:300% 100%!important;animation:sweepbg 6s cubic-bezier(.45,0,.2,1) 3s infinite!important}
+  @keyframes sweepbg{0%,60%{background-position:150% 0}85%,100%{background-position:-50% 0}}
+  html,body{overflow-x:hidden}
+  .mk button.on,.bnav button.on,.fab{animation:breathe 4.5s ease-in-out infinite}
+  @keyframes breathe{0%,100%{box-shadow:0 14px 26px -12px rgba(17,22,44,.5),0 10px 26px -10px var(--glowc)}50%{box-shadow:0 18px 30px -12px rgba(17,22,44,.5),0 16px 44px -6px var(--glowc)}}
+  .mk button.on::after,.bnav button.on::after,.cta::after,.fab::after,.chips button.on::after,.sharebtn::after,.btn2::after{content:"";position:absolute;top:0;bottom:0;width:45%;left:-60%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.22),transparent);transform:skewX(-18deg);animation:sweep 6s cubic-bezier(.45,0,.2,1) infinite}
+  .bnav button.on::after{animation-delay:1.5s}.fab::after{animation-delay:3s}.cta::after{animation-delay:.8s}
+  @keyframes sweep{0%,60%{left:-60%}85%,100%{left:130%}}
+  :root[data-theme="dark"] .mk button.on::after,:root[data-theme="dark"] .bnav button.on::after,:root[data-theme="dark"] .cta::after,:root[data-theme="dark"] .fab::after{background:linear-gradient(100deg,transparent,rgba(255,180,90,.35),transparent)}
+
+  /* آیکن بازار و تب انتخاب‌شده آرام بالا و پایین می‌روند */
+  .mk button.on img,.mk button.on .dual{animation:bob 3.6s ease-in-out infinite}
+  .bnav button.on span{animation:bob2 3.2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-3deg)}}
+  @keyframes bob2{0%,100%{transform:translateY(-2px) scale(1.12)}50%{transform:translateY(-5px) scale(1.16)}}
+
+  /* حلقه‌ی درصد: نور دور لبه می‌چرخد */
+  .ring::before{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 60%,color-mix(in srgb,var(--glowc) 70%,transparent) 85%,transparent 100%);filter:blur(4px);animation:rot 6s linear infinite;z-index:-1}
+  .ring{isolation:isolate}
+
+  /* نقطه‌ی «زنده» و ضربان ملایم */
+  .ldot{animation:pulse 2.4s infinite}
+
+  /* لمس: فشردن نرم */
+  .it,.mk button,.bnav button,.chips button,.ib,.cta,.tool>summary,.pcard,.acard .contact2 a,.poll .opt,.qchips button{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+  .it:active,.mk button:active,.bnav button:active,.chips button:active,.ib:active,.tool>summary:active,.pcard:active,.poll .opt:active,.qchips button:active,.contact2 a:active{transform:scale(.96)!important}
+
+  /* ظاهر شدن هنگام اسکرول */
+  .rv{opacity:0;transform:translateY(30px) scale(.97);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1)}
+  .rv.in{opacity:1;transform:none}
+
+  /* عددها با چشمک نرم عوض می‌شوند */
+  .pv b{display:inline-block;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+  .pv b.fl-up,.pv b.fl-dn{transform:scale(1.06)}
+
+  /* جابه‌جایی صفحه‌ها: از کنار با محو شدن */
+  #pg{animation:pgin 1s cubic-bezier(.22,1,.36,1)!important}
+  @keyframes pgin{0%{opacity:0;transform:translateX(-24px);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
+  :root[dir="ltr"] #pg{animation-name:pgin2!important}
+  @keyframes pgin2{0%{opacity:0;transform:translateX(24px);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
+
+  html.app .hero{animation-name:rise,float2!important;animation-duration:1.1s,9s!important;animation-iteration-count:1,infinite!important}
+  @media (prefers-reduced-motion:reduce){.mbg::before,.mbg::after,.ring::before{animation:none!important}.rv{opacity:1;transform:none}}
+
+  /* فونت هندسی و گرد (شبیه گرافیک) */
+  body,button,input,select,textarea{font-family:"Estedad Variable",Vazirmatn,Tahoma,sans-serif!important}
+  h1,h2,h3,.side,.mk b,.bnav button,.cta,.sec2 h3,.acard h2{font-weight:800}
 </style>
 </head>
 <body>
@@ -608,7 +674,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794042524";
+const BUILD = "1794042841";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -625,6 +691,14 @@ const AFN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
+/* ظاهر شدن نرم موقع اسکرول */
+const revealIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px" }) : null;
+const REVEAL = ".it,.cev,.nitem,.jrow,.cities>div,.rrows>div,.qtab tr,.kv>div,.lv";
+if (revealIO) new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.nodeType !== 1) continue;
+  const list = n.matches?.(REVEAL) ? [n] : [...n.querySelectorAll(REVEAL)];
+  list.forEach((el, k) => { if (el.closest("#pcards") || el.classList.contains("rv")) return; el.classList.add("rv"); el.style.transitionDelay = Math.min(k, 8) * 70 + "ms"; revealIO.observe(el); }); } })
+  .observe(document.getElementById("app"), { childList: true, subtree: true });
+
 const $ = id => document.getElementById(id);
 const store = { get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
                 set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
