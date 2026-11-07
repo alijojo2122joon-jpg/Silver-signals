@@ -608,6 +608,54 @@
   .psum span{flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
   .psum b{display:block;font:800 16px/1.2 Montserrat,Arial,sans-serif;color:var(--text);margin-top:2px}
   .psum .w b{color:var(--buy)} .psum .l b{color:var(--sell)} .psum .r b{color:#ff7a3d}
+
+  /* ===== مدیریت جدول ارزها ===== */
+  .fxadm{margin:0 0 14px;padding:14px;border-radius:26px}
+  .fxat{display:flex;align-items:center;gap:10px}
+  .fxat>span{font-size:24px}
+  .fxat b{display:block;font-size:14.5px;font-weight:900}
+  .fxat small{font-size:11.5px;color:var(--muted);font-weight:700}
+  .fxab{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .fxab button{flex:1 1 auto;border:0;border-radius:999px;padding:10px 12px;font:inherit;font-size:12.5px;font-weight:800;color:var(--text);background:var(--tile);box-shadow:var(--raise);cursor:pointer}
+  .fxab button:first-child{color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy))}
+  .fxnb{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--sell);color:#fff;font-size:11px;margin-inline-start:4px}
+  .fxal{display:grid;gap:10px;margin-top:8px}
+  .fxai{padding:12px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in)}
+  .fxah{display:flex;align-items:center;gap:10px}
+  .fxah .fl{font-size:22px}
+  .fxah b{display:block;font-size:14px;font-weight:800}
+  .fxah small{font-size:11px;color:var(--muted)}
+  .fxav{margin-inline-start:auto;display:flex;gap:10px;font-size:11px;color:var(--muted);text-align:center}
+  .fxav b{display:block;font:800 14px Montserrat,Arial,sans-serif;color:var(--text)}
+  .fxav .b b{color:var(--buy)} .fxav .s b{color:var(--sell)}
+  .fxatags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}
+  .fxabtn{display:flex;flex-wrap:wrap;gap:6px}
+  .fxabtn button,.fxhr button,.fxdone{border:0;border-radius:999px;padding:7px 11px;font:inherit;font-size:11.5px;font-weight:800;color:var(--text);background:var(--tile);box-shadow:var(--raise);cursor:pointer}
+  .fxabtn button:first-child{color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy))}
+  .fxchk{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;font-weight:700}
+  .fxchk{justify-content:space-between;padding:10px 12px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);line-height:1.7}
+  .sheet .fxchk input{order:2;flex:none;position:relative;width:50px;height:28px;margin:0;border-radius:999px;cursor:pointer;background:var(--bg);
+    box-shadow:inset 3px 3px 6px rgba(140,150,175,.55),inset -3px -3px 6px rgba(255,255,255,.9);transition:background .4s}
+  :root[data-theme="dark"] .sheet .fxchk input{box-shadow:inset 3px 3px 6px rgba(0,0,0,.65),inset -2px -2px 5px rgba(255,255,255,.05)}
+  .sheet .fxchk input::after{content:"";position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#e9ecf2 70%,#cfd4de);
+    box-shadow:0 3px 6px rgba(0,0,0,.25);transition:transform .45s cubic-bezier(.3,1.35,.5,1)}
+  .sheet .fxchk input:checked{background:linear-gradient(180deg,#3d8bff,#1f6bf0);box-shadow:inset 2px 3px 6px rgba(0,30,90,.45)}
+  .sheet .fxchk input:checked::after{transform:translateX(-22px)}
+  .fxdel{width:100%;margin-top:12px;border:0;border-radius:999px;padding:13px;font:inherit;font-weight:800;color:var(--sell);background:var(--sell-bg);cursor:pointer}
+  .fxhr{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .fxhr>div:first-child{flex:1;min-width:0}
+  .fxhr small{display:block;font-size:11px;color:var(--muted)}
+  .fxhr .v{display:flex;gap:8px;font:800 13px Montserrat,Arial,sans-serif}
+  .fxhr .v .b{color:var(--buy)} .fxhr .v .s{color:var(--sell)}
+  .fxhr.bad{opacity:.5} .fxhr.bad .v{text-decoration:line-through}
+  .fxmsg{padding:12px;margin-top:10px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in)}
+  .fxmh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .fxmh small{font-size:11px;color:var(--muted)}
+  .fxmt{margin-top:8px;white-space:pre-wrap;font-size:12.5px;line-height:1.8;max-height:160px;overflow:auto}
+  .fxmq{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11.5px;font-weight:700}
+  .fxmq span{padding:4px 9px;border-radius:999px;background:var(--buy-bg);color:var(--buy)}
+  .fxmq.bad{color:var(--sell)}
+  .fxdone{margin-top:8px}
 </style>
 </head>
 <body>
@@ -622,7 +670,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611072111";
+const BUILD = "202611072131";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -873,8 +921,9 @@ function drawPane(){
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
   if (tab === "content") return drawContent();
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><button class="add press" data-ct2="rates">${I.plus}ثبت نرخ</button></div>
+      <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div>
       <iframe class="prframe glass" src="index.html?embed=prc&theme=${document.documentElement.dataset.theme === "dark" ? "dark" : "light"}&t=${Date.now()}" title="prices"></iframe>`;
-    $("pane").querySelector("[data-ct2]").onclick = () => { loadContent().then(sheetRates); }; return; }
+    $("pane").querySelector("[data-ct2]").onclick = () => { loadContent().then(sheetRates); }; loadFxAdmin(); return; }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div>
@@ -1148,6 +1197,142 @@ function sheetPoll(){
   };
 }
 
+
+
+/* ===== مدیریت ارزها (جدول نرخ ارزها) ===== */
+let fxA = [], fxReview = 0;
+const fxAgo = d => { const m = Math.max(0, Math.round((Date.now() - new Date(d)) / 60000)); return m < 1 ? "همین حالا" : m < 60 ? m + " دقیقه پیش" : m < 1440 ? Math.round(m / 60) + " ساعت پیش" : Math.round(m / 1440) + " روز پیش"; };
+const fxN = (v, d = 2) => v == null ? "—" : Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const FX_SRC = [["tg:kabul_dalarr_Toman", "تلگرام (خودکار)"], ["manual", "فقط دستی"]];
+async function loadFxAdmin(){
+  const [{ data }, { count }] = await Promise.all([
+    sb.from("currency_board").select("*").order("sort"),
+    sb.from("tg_messages").select("msg_id", { count: "exact", head: true }).eq("status", "review")]);
+  fxA = data || []; fxReview = count || 0; drawFxAdminCard();
+}
+function drawFxAdminCard(){
+  const el = $("fxadm"); if (!el) return;
+  const live = fxA.filter(c => c.buy != null || c.sell != null || c.mid != null).length;
+  el.innerHTML = `<div class="fxat"><span>💱</span><div><b>مدیریت جدول ارزها</b><small>${fxA.length} ارز · ${live} دارای نرخ · ${fxA.filter(c => !c.auto).length} قفل دستی</small></div></div>
+    <div class="fxab"><button class="press" data-fxa="list">ارزها و نرخ‌ها</button><button class="press" data-fxa="msgs">پیام‌های تلگرام${fxReview ? ` <b class="fxnb">${fxReview}</b>` : ""}</button><button class="press" data-fxa="new">＋ ارز جدید</button></div>`;
+  el.onclick = e => { const b = e.target.closest("[data-fxa]"); if (!b) return; const a = b.dataset.fxa;
+    a === "list" ? sheetFxList() : a === "msgs" ? sheetFxMsgs() : sheetFxEdit(null); };
+}
+function sheetFxList(){
+  openSheet(`<h2>ارزها و نرخ‌ها</h2><p class="hint">نرخ‌ها هر ۳۰ ثانیه از کانال خوانده می‌شوند. «نرخ دستی» نرخ را فوراً عوض می‌کند و با برچسب «دستی» نشان داده می‌شود. اگر «خودکار» را خاموش کنید فقط نرخ‌های دستی نمایش داده می‌شوند.</p>
+    <div class="fxal">${fxA.map(c => { const d = c.digits ?? 2, mid = c.mid != null && c.buy == null && c.sell == null;
+      return `<div class="fxai" data-id="${c.id}"><div class="fxah"><span class="fl">${c.flag || "💱"}</span><div><b>${esc(c.name_fa)}</b><small class="ltr">${esc(c.sym)} · ${esc(c.code)}</small></div>
+        <div class="fxav">${mid ? `<span>مرجع <b class="ltr">${fxN(c.mid, d)}</b></span>` : `<span class="b">خرید <b class="ltr">${fxN(c.buy, d)}</b></span><span class="s">فروش <b class="ltr">${fxN(c.sell, d)}</b></span>`}</div></div>
+        <div class="fxatags"><span class="chip ${c.auto ? "on" : "warn"}">${c.auto ? "خودکار" : "قفل دستی"}</span>${c.kind === "manual" ? `<span class="chip warn">نرخ فعلی دستی</span>` : ""}${c.visible ? "" : `<span class="chip mute">پنهان</span>`}<span class="chip mute">${c.source === "manual" ? "منبع: دستی" : "منبع: تلگرام"}</span>${c.rate_at ? `<span class="chip mute">${fxAgo(c.rate_at)}</span>` : ""}</div>
+        <div class="fxabtn"><button data-x="rate">نرخ دستی</button><button data-x="auto">${c.auto ? "توقف خودکار" : "بازگشت به خودکار"}</button><button data-x="vis">${c.visible ? "پنهان کن" : "نمایش بده"}</button><button data-x="hist">تاریخچه</button><button data-x="edit">ویرایش</button></div></div>`; }).join("")}</div>`);
+  $("sheet").onclick = async e => {
+    const b = e.target.closest("[data-x]"); if (!b) return; const id = Number(b.closest("[data-id]").dataset.id), c = fxA.find(x => x.id === id); if (!c) return;
+    const x = b.dataset.x;
+    if (x === "rate") return sheetFxRate(c);
+    if (x === "hist") return sheetFxHist(c);
+    if (x === "edit") return sheetFxEdit(c);
+    b.disabled = true;
+    const patch = x === "auto" ? { auto: !c.auto } : { visible: !c.visible };
+    const { error } = await sb.from("currencies").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) { b.disabled = false; return toast("خطا: " + error.message, true); }
+    toast(x === "auto" ? (patch.auto ? "دریافت خودکار دوباره فعال شد" : "دریافت خودکار متوقف شد؛ فقط نرخ دستی نمایش داده می‌شود") : (patch.visible ? "ارز نمایش داده می‌شود" : "ارز پنهان شد"));
+    await loadFxAdmin(); sheetFxList(); refreshPriceFrame();
+  };
+}
+function refreshPriceFrame(){ document.querySelectorAll(".prframe").forEach(f => { try { f.contentWindow.location.reload(); } catch {} }); }
+function sheetFxRate(c){
+  const d = c.digits ?? 2, midOnly = c.mid != null && c.buy == null && c.sell == null;
+  openSheet(`<h2>${c.flag || ""} نرخ دستی · ${esc(c.name_fa)}</h2><p class="hint">${esc(c.note_fa || (c.sym + " به " + c.quote))}. هر کدام را که دارید وارد کنید؛ خانه‌ی خالی ثبت نمی‌شود. خرید = نرخی که صراف می‌خرد، فروش = نرخی که صراف می‌فروشد.</p>
+    <form id="fxrf">${midOnly ? `<label class="l">نرخ مرجع (یک عدد)</label><input class="in num" id="fxm" inputmode="decimal" dir="ltr" placeholder="${fxN(c.mid, d)}">`
+      : `<div class="two"><div><label class="l">قیمت خرید</label><input class="in num" id="fxb" inputmode="decimal" dir="ltr" placeholder="${fxN(c.buy, d)}"></div><div><label class="l">قیمت فروش</label><input class="in num" id="fxs" inputmode="decimal" dir="ltr" placeholder="${fxN(c.sell, d)}"></div></div>`}
+      <label class="l">یادداشت (اختیاری)</label><input class="in" id="fxnote" maxlength="120" placeholder="مثلاً: اصلاح نرخ اشتباه کانال">
+      <label class="fxchk"><input type="checkbox" id="fxlock" ${c.auto ? "" : "checked"}> دریافت خودکار این ارز متوقف شود (فقط نرخ دستی نمایش داده شود)</label>
+      <div class="box" id="fxwarn" style="display:none"></div>
+      <button class="cta press" id="fxsave">ثبت نرخ</button></form>`);
+  $("fxrf").onsubmit = async e => {
+    e.preventDefault(); const b = $("fxsave"), w = $("fxwarn");
+    const buy = $("fxb") ? num($("fxb").value) : null, sell = $("fxs") ? num($("fxs").value) : null, mid = $("fxm") ? num($("fxm").value) : null;
+    if (buy == null && sell == null && mid == null) return toast("حداقل یک نرخ وارد کنید", true);
+    const inR = v => v == null || ((c.min_v == null || v >= Number(c.min_v)) && (c.max_v == null || v <= Number(c.max_v)));
+    const probs = [];
+    if (!inR(buy) || !inR(sell) || !inR(mid)) probs.push(`عدد خارج از محدوده‌ی معمول این ارز است (${fxN(c.min_v, d)} تا ${fxN(c.max_v, d)}).`);
+    if (buy != null && sell != null && Math.abs(buy - sell) / Math.max(buy, sell) > .05) probs.push("فاصله‌ی خرید و فروش بیش از ۵٪ است؛ جای خرید و فروش را بررسی کنید.");
+    if (probs.length && w.dataset.ok !== "1") { w.style.display = "block"; w.innerHTML = "⚠️ " + probs.join("<br>") + "<br><b>اگر مطمئن هستید دوباره «ثبت نرخ» را بزنید.</b>"; w.dataset.ok = "1"; return; }
+    busy(b, true);
+    const { error } = await sb.from("currency_rates").insert({ currency_id: c.id, buy, sell, mid, kind: "manual", source: "manual", posted_at: new Date().toISOString(), note: $("fxnote").value.trim() || null, created_by: (await sb.auth.getUser()).data?.user?.id || null });
+    if (error) { busy(b, false, "ثبت نرخ"); return toast("خطا: " + error.message, true); }
+    const lock = $("fxlock").checked;
+    if (lock === c.auto) await sb.from("currencies").update({ auto: !lock, updated_at: new Date().toISOString() }).eq("id", c.id);
+    sfx("notification", .4); toast("نرخ دستی ثبت شد ✓"); await loadFxAdmin(); sheetFxList(); refreshPriceFrame();
+  };
+}
+async function sheetFxHist(c){
+  openSheet(`<h2>تاریخچه · ${esc(c.name_fa)}</h2><p class="hint">نرخ‌ها هیچ‌وقت پاک نمی‌شوند. نرخ اشتباه را «نامعتبر» کنید تا از جدول و نمودار حذف شود و نرخ قبلی دوباره نمایش داده شود.</p><div id="fxh"><span class="spin"></span></div>`);
+  const { data } = await sb.from("currency_rates").select("*").eq("currency_id", c.id).order("posted_at", { ascending: false }).limit(80);
+  const d = c.digits ?? 2, el = $("fxh"); if (!el) return;
+  el.innerHTML = (data || []).length ? data.map(r => `<div class="fxhr ${r.valid ? "" : "bad"}" data-rid="${r.id}"><div><small>${fmtFull(r.posted_at)}</small><small>${r.kind === "manual" ? "✍️ دستی" : "🤖 خودکار"} · ${esc(r.source)}${r.msg_id ? " #" + r.msg_id : ""}${r.note ? " · " + esc(r.note) : ""}</small></div>
+      <div class="v">${r.mid != null ? `<b class="ltr">${fxN(r.mid, d)}</b>` : `<b class="ltr b">${fxN(r.buy, d)}</b><b class="ltr s">${fxN(r.sell, d)}</b>`}</div>
+      <button data-v="${r.valid ? 0 : 1}">${r.valid ? "نامعتبر" : "معتبر کن"}</button></div>`).join("") : `<div class="hint">هنوز نرخی ثبت نشده.</div>`;
+  el.onclick = async e => { const b = e.target.closest("[data-v]"); if (!b) return; const id = b.closest("[data-rid]").dataset.rid; b.disabled = true;
+    const { error } = await sb.from("currency_rates").update({ valid: b.dataset.v === "1" }).eq("id", id);
+    if (error) { b.disabled = false; return toast("خطا: " + error.message, true); }
+    toast(b.dataset.v === "1" ? "نرخ دوباره معتبر شد" : "نرخ نامعتبر شد و از جدول حذف شد"); await loadFxAdmin(); sheetFxHist(fxA.find(x => x.id === c.id) || c); refreshPriceFrame(); };
+}
+function sheetFxEdit(c){
+  const v = c || { code: "", sym: "", name_fa: "", name_ps: "", name_en: "", flag: "", base: "", quote: "AFN", base_unit: 1, digits: 2, sort: 200, min_v: null, max_v: null, popular: false, visible: true, auto: false, source: "manual", note_fa: "" };
+  const f = (id, lab, val, attrs = "") => `<div><label class="l">${lab}</label><input class="in" id="${id}" value="${esc(val ?? "")}" ${attrs}></div>`;
+  openSheet(`<h2>${c ? "ویرایش ارز" : "ارز جدید"}</h2><p class="hint">ارزهایی که منبعشان «تلگرام» است فقط وقتی خودکار پر می‌شوند که کانال نرخ آن‌ها را بنویسد؛ در غیر این صورت نرخ را دستی وارد کنید.</p>
+    <form id="fxef"><div class="two">${f("e_name", "نام فارسی", v.name_fa, 'required maxlength="40"')}${f("e_sym", "نماد (مثلاً GBP)", v.sym, 'dir="ltr" required maxlength="12"')}</div>
+      <div class="two">${f("e_ps", "نام پشتو", v.name_ps)}${f("e_en", "نام انگلیسی", v.name_en, 'dir="ltr"')}</div>
+      <div class="two">${f("e_code", "کد یکتا", v.code, `dir="ltr" maxlength="16" ${c ? "readonly" : 'required placeholder="GBP"'}`)}${f("e_flag", "پرچم (ایموجی)", v.flag, 'maxlength="8"')}</div>
+      <div class="two">${f("e_base", "ارز قیمت‌گذاری‌شده", v.base, 'dir="ltr" required placeholder="GBP"')}${f("e_quote", "به ارز", v.quote, 'dir="ltr" required placeholder="AFN"')}</div>
+      <div class="two">${f("e_unit", "به ازای چند واحد", v.base_unit, 'inputmode="decimal" dir="ltr"')}${f("e_dig", "رقم اعشار", v.digits, 'inputmode="numeric" dir="ltr"')}</div>
+      <div class="two">${f("e_min", "حداقل نرخ معقول", v.min_v, 'inputmode="decimal" dir="ltr"')}${f("e_max", "حداکثر نرخ معقول", v.max_v, 'inputmode="decimal" dir="ltr"')}</div>
+      <div class="two">${f("e_sort", "ترتیب نمایش", v.sort, 'inputmode="numeric" dir="ltr"')}<div><label class="l">منبع نرخ</label><select class="in" id="e_src">${FX_SRC.map(([k, t]) => `<option value="${k}" ${k === v.source ? "selected" : ""}>${t}</option>`).join("")}</select></div></div>
+      ${f("e_note", "توضیح کوتاه (مثلاً: ۱ پوند به افغانی)", v.note_fa)}
+      <label class="fxchk"><input type="checkbox" id="e_pop" ${v.popular ? "checked" : ""}> پرمعامله (اول جدول)</label>
+      <label class="fxchk"><input type="checkbox" id="e_vis" ${v.visible ? "checked" : ""}> برای اعضا نمایش داده شود</label>
+      <label class="fxchk"><input type="checkbox" id="e_auto" ${v.auto ? "checked" : ""}> دریافت خودکار فعال باشد</label>
+      <button class="cta press" id="e_save">${c ? "ذخیره" : "اضافه کن"}</button>
+      ${c ? `<button type="button" class="fxdel" id="e_del">حذف این ارز</button>` : ""}</form>`);
+  $("fxef").onsubmit = async e => {
+    e.preventDefault(); const b = $("e_save"), g = id => $(id).value.trim();
+    const row = { name_fa: g("e_name"), sym: g("e_sym").toUpperCase(), name_ps: g("e_ps") || null, name_en: g("e_en") || null, flag: g("e_flag"), base: g("e_base").toUpperCase(), quote: g("e_quote").toUpperCase() || "AFN",
+      base_unit: num(g("e_unit")) || 1, digits: Math.max(0, Math.min(6, parseInt(g("e_dig")) || 2)), min_v: num(g("e_min")), max_v: num(g("e_max")), sort: parseInt(g("e_sort")) || 200,
+      source: $("e_src").value, note_fa: g("e_note") || null, popular: $("e_pop").checked, visible: $("e_vis").checked, auto: $("e_auto").checked, updated_at: new Date().toISOString() };
+    if (!row.name_fa || !row.sym || !row.base) return toast("نام، نماد و ارز قیمت‌گذاری‌شده لازم است", true);
+    if (row.min_v != null && row.max_v != null && row.min_v >= row.max_v) return toast("حداقل باید از حداکثر کمتر باشد", true);
+    busy(b, true);
+    const { error } = c ? await sb.from("currencies").update(row).eq("id", c.id)
+      : await sb.from("currencies").insert({ ...row, code: (g("e_code") || row.sym).toUpperCase().replace(/[^A-Z0-9_]/g, "") });
+    if (error) { busy(b, false, c ? "ذخیره" : "اضافه کن"); return toast(/duplicate/i.test(error.message) ? "این کد قبلاً وجود دارد" : "خطا: " + error.message, true); }
+    toast(c ? "ذخیره شد ✓" : "ارز اضافه شد ✓"); await loadFxAdmin(); sheetFxList(); refreshPriceFrame();
+  };
+  if (c) $("e_del").onclick = async ev => { const b = ev.currentTarget;
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "برای حذف کامل (همراه تاریخچه) دوباره بزنید"; return; }
+    b.disabled = true; const { error } = await sb.from("currencies").delete().eq("id", c.id);
+    if (error) { b.disabled = false; return toast("خطا: " + error.message, true); }
+    toast("ارز حذف شد"); await loadFxAdmin(); sheetFxList(); refreshPriceFrame(); };
+}
+async function sheetFxMsgs(filter = "all"){
+  openSheet(`<h2>پیام‌های تلگرام</h2><p class="hint">آخرین پیام‌های کانال kabul_dalarr_Toman و آنچه سیستم از آن‌ها خوانده است. «نیاز به بررسی» یعنی پیام شبیه نرخ بود ولی سیستم با اطمینان نخواند؛ در این صورت نرخ را دستی وارد کنید.</p>
+    <div class="mf"><button data-mf2="all" class="${filter === "all" ? "on" : ""}">همه</button><button data-mf2="review" class="${filter === "review" ? "on" : ""}">نیاز به بررسی</button><button data-mf2="ok" class="${filter === "ok" ? "on" : ""}">خوانده شد</button></div><div id="fxm"><span class="spin"></span></div>`);
+  let qy = sb.from("tg_messages").select("*").order("msg_id", { ascending: false }).limit(60); if (filter !== "all") qy = qy.eq("status", filter);
+  const { data } = await qy; const el = $("fxm"); if (!el) return;
+  const nm = Object.fromEntries(fxA.map(c => [c.code, c.name_fa]));
+  const ST = { ok: ["on", "خوانده شد"], review: ["warn", "نیاز به بررسی"], ignored: ["mute", "بدون نرخ جدول"], new: ["mute", "جدید"] };
+  el.innerHTML = (data || []).length ? data.map(m => { const st = ST[m.status] || ST.new, q = m.parsed?.quotes || [];
+    return `<div class="fxmsg" data-mid="${m.msg_id}"><div class="fxmh"><span class="chip ${st[0]}">${st[1]}</span><small>${m.posted_at ? fmtFull(m.posted_at) : ""} · #${m.msg_id}</small></div>
+      <div class="fxmt">${esc(m.text)}</div>
+      ${q.length ? `<div class="fxmq">${q.map(x => `<span>${esc(nm[x.code] || x.code)}: ${x.mid != null ? `<b class="ltr">${x.mid}</b>` : `خرید <b class="ltr">${x.buy ?? "—"}</b> / فروش <b class="ltr">${x.sell ?? "—"}</b>`}</span>`).join("")}</div>` : ""}
+      ${(m.parsed?.rejected || []).length ? `<div class="fxmq bad">رد شد: ${esc(m.parsed.rejected.join("، "))}</div>` : ""}
+      ${m.status === "review" ? `<button class="fxdone" data-done="1">بررسی شد</button>` : ""}</div>`; }).join("") : `<div class="hint">پیامی نیست.</div>`;
+  $("sheet").onclick = async e => {
+    const f = e.target.closest("[data-mf2]"); if (f) return sheetFxMsgs(f.dataset.mf2);
+    const d = e.target.closest("[data-done]"); if (!d) return; const id = d.closest("[data-mid]").dataset.mid; d.disabled = true;
+    await sb.from("tg_messages").update({ status: "ignored" }).eq("channel", "kabul_dalarr_Toman").eq("msg_id", id); await loadFxAdmin(); sheetFxMsgs(filter);
+  };
+}
 
 /* انتخاب فایل فارسی به‌جای «Choose File / No file chosen» */
 function fileUI(inp){
