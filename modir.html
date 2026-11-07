@@ -555,6 +555,13 @@
   .sprev:empty{display:none}
   .sprev img,.sprev video{max-width:100%;max-height:320px;display:block}
   .strep{display:block;font-size:11.5px;font-weight:800;opacity:.85;margin-bottom:2px}
+
+  .nav{width:min(460px,calc(100% - 16px))!important;grid-template-columns:repeat(5,1fr)!important}
+  .nav .pill{width:calc((100% - 12px)/5)!important}
+  .nav button{flex-direction:column!important;gap:1px!important;font-size:10.5px!important;height:52px!important}
+  .nav button svg{width:18px!important;height:18px!important}
+  .nav .nb{position:absolute!important;top:2px!important;left:calc(50% - 24px)!important;right:auto!important}
+  .prframe{display:block;width:100%;height:calc(100vh - 290px);min-height:520px;border:0;border-radius:30px;background:var(--bg)}
 </style>
 </head>
 <body>
@@ -569,7 +576,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794049202";
+const BUILD = "1794049495";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -780,7 +787,7 @@ function renderPanel(){
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button><button data-t="content">🗂 محتوا</button></div>`;
+      <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">💹<span>قیمت‌ها</span></button><button data-t="content">🗂<span>محتوا</span></button><button data-t="msgs">💬<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
   $("out").onclick = () => sb.auth.signOut();
   $("prof").onclick = sheetProfile; loadTeacherSet();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
@@ -813,9 +820,12 @@ function drawStats(){
 
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
-  $("np").style.transform = `translateX(${-["signals","members","msgs","content"].indexOf(tab) * 100}%)`;
+  $("np").style.transform = `translateX(${-["signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
   if (tab === "content") return drawContent();
+  if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><button class="add press" data-ct2="rates">${I.plus}ثبت نرخ</button></div>
+      <iframe class="prframe glass" src="index.html?embed=prc&t=${Date.now()}" title="prices"></iframe>`;
+    $("pane").querySelector("[data-ct2]").onclick = () => { loadContent().then(sheetRates); }; return; }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div>

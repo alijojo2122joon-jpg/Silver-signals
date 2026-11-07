@@ -932,6 +932,10 @@
   .strep{display:block;font-size:11.5px;font-weight:800;opacity:.8;margin-bottom:2px}
 
   .cago{display:block;font-size:10px;color:var(--soft);font-weight:600}
+
+  html.embed .top,html.embed .bnav,html.embed #fab,html.embed #fablab,html.embed .stbar,html.embed .mbg{display:none!important}
+  html.embed .app{padding-top:12px!important;padding-bottom:20px!important}
+  html.embed,html.embed body{background:transparent!important}
 </style>
 </head>
 <body>
@@ -943,7 +947,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794049202";
+const BUILD = "1794049495";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1435,7 +1439,9 @@ const DICT = [
 ];
 const GPM = 4.608, OZ = 31.1035;
 
-let page = store.get("page", "sig"); if (!["sig","prc","tool","acad"].includes(page)) page = "sig";
+const EMBED = new URLSearchParams(location.search).get("embed");
+if (EMBED) document.documentElement.classList.add("embed");
+let page = EMBED === "prc" ? "prc" : store.get("page", "sig"); if (!["sig","prc","tool","acad"].includes(page)) page = "sig";
 let per = store.get("per", "all"), sortBy = store.get("sort", "new");
 let prices = store.get("cache_prices", null), rates = store.get("cache_rates", []), pricesAt = 0;
 let myRatings = {}, academy = store.get("cache_academy", {}), posts = store.get("cache_posts", []), poll = null, pollRes = {}, myVote = null;
@@ -1851,10 +1857,11 @@ function drawAcademy(){
 function bnavHTML(){ return `<nav class="bnav" id="bnav">${[["sig","📈"],["prc","💹"],["tool","🧮"],["acad","🎓"]].map(([k, ic]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${T.nav[k]}</button>`).join("")}</nav>`; }
 let tabHist = false;
 function setPage(p, fromBack){
+  if (EMBED) return;
   if (page === p) { scrollTo({ top: 0, behavior: "smooth" }); return; }
   if (p === "sig" && tabHist && !fromBack && overlays[overlays.length - 1]?._tab) { history.back(); return; }
   if (p !== "sig" && !tabHist) { tabHist = true; const f = () => { tabHist = false; if (view === "feed") setPage("sig", true); }; f._tab = true; overlayPush(f); }
-  page = p; store.set("page", p);
+  page = p; if (!EMBED) store.set("page", p);
   document.querySelectorAll("#bnav button").forEach(b => b.classList.toggle("on", b.dataset.pg === p));
   requestAnimationFrame(() => requestAnimationFrame(() => { if (page !== p) return; drawPage(); scrollTo({ top: 0 }); }));
 }
