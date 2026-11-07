@@ -95,16 +95,18 @@ Deno.serve(async (req) => {
   const errs = res.map((r, i) => r.status === "rejected" ? ["afaaq", "ariana", "gnews"][i] + ": " + String(r.reason).slice(0, 80) : null).filter(Boolean);
   if (!items.length) return json(cache?.value ?? { at: null, items: [] });
 
-  // translate English titles once (reuse previous translations by link/title)
-  const prev = new Map<string, string>();
-  for (const i of (cache?.value?.items || []) as Item[]) if (i.tr && i.title_en) { prev.set(i.link, i.title); prev.set(i.title_en, i.title); }
-  let budget = 24;
-  await Promise.all(items.filter(i => i.title_en).map(async i => {
-    const p = prev.get(i.link) || prev.get(i.title_en!);
-    if (p) { i.title = p; i.tr = true; return; }
-    if (budget-- <= 0) { i.tr = false; return; }
-    try { i.title = await toFa(i.title_en!); i.tr = true; } catch { i.tr = false; }
-  }));
+  // English titles → Persian. Translation is done by the database (pg_net → public.news_tr, every 2 min),
+  // because Google blocks this server; new titles are queued here and appear on the next round.
+  const en = [...new Set(items.filter(i => i.title_en).map(i => i.title_en!))];
+  const trMap = new Map<string, string>();
+  if (en.length) {
+    const { data: trs } = await admin.from("news_tr").select("src,fa").gt("created_at", new Date(Date.now() - 40 * 864e5).toISOString()).limit(2000);
+    for (const t of trs || []) if (t.fa) trMap.set(t.src, t.fa);
+    const known = new Set((trs || []).map((t: any) => t.src));
+    const missing = en.filter(s => !known.has(s));
+    if (missing.length) await admin.from("news_tr").upsert(missing.map(src => ({ src })), { onConflict: "src", ignoreDuplicates: true });
+  }
+  for (const i of items) if (i.title_en) { const fa = trMap.get(i.title_en); if (fa) { i.title = fa; i.tr = true; } else i.tr = false; }
   items = items.filter(i => !i.title_en || i.tr); // never show untranslated English in the Persian list
 
   // dedupe (same story from several queries/sources) and sort newest first
