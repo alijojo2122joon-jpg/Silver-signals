@@ -513,6 +513,43 @@
 
   :root{--muted:#565d70;--soft:#6f7689;--buy:#0a8044;--sell:#cf3338;--amber:#a8620a}
   :root[data-theme="dark"]{--muted:#a7aec0;--soft:#8c93a6;--buy:#3fdc8a;--sell:#ff7b80;--amber:#ffbf5e}
+
+  /* ================= طراحی هماهنگ با صفحه‌ی اعضا ================= */
+  .hubstats{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:16px 10px 12px;border-radius:30px;margin:6px 0 18px}
+  .hubstats::before{content:"";position:absolute;left:18%;right:18%;top:48px;height:2px;background:linear-gradient(90deg,transparent,var(--line),transparent);z-index:0}
+  .snode{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .snode .nd{position:relative;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise),0 10px 24px -14px var(--ac)}
+  .snode .nd i{position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(from 210deg,var(--ac) 0 46%,transparent 46%);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))}
+  .snode b{font-family:Montserrat,Arial,sans-serif;font-size:23px;font-weight:800;color:var(--ac);text-shadow:none!important}
+  .snode small{font-size:12px;font-weight:800;color:var(--muted)}
+  /* سطرها: کپسول جدا با دایره‌ی کمانی */
+  .list.glass{background:none!important;box-shadow:none!important;border:0!important;padding:0!important;display:grid;gap:12px}
+  .list.glass>.shine{display:none}
+  .list .it{background:var(--gl);box-shadow:var(--raise);border-radius:34px!important;padding:10px 12px!important}
+  .list .it:active{transform:none!important}
+  .it .av{position:relative;width:44px!important;height:44px!important;box-shadow:var(--raise)!important;overflow:visible}
+  .it .av::after{content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;background:conic-gradient(from 200deg,var(--ac,var(--glowc)) 0 40%,transparent 40%);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px))}
+  .av.buy{--ac:var(--buy)} .av.sell{--ac:var(--sell)}
+  .it:hover .av,.it:active .av{transform:none!important}
+  .empty{border-radius:30px}
+  /* گفتگو */
+  .bub.adm{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -12px var(--glowc)}
+  .bub.mem{background:var(--gl)!important;border:0!important;box-shadow:var(--raise)}
+  .bub.adm .vp{background:rgba(255,255,255,.14)!important}
+  /* نتیجه‌ی سیگنال */
+  .rb.cur{outline:0!important;border:0!important;box-shadow:var(--sh-in),0 0 0 2px var(--glowc)!important}
+  /* حرکت‌ها: یک منحنی نرم و یکسان، بدون نقاشی دائمی */
+  .shine,.sw>.shine{display:none!important}
+  .rise{animation-duration:.7s!important;animation-timing-function:cubic-bezier(.2,.8,.2,1)!important;animation-delay:calc(var(--i,0) * 60ms)!important}
+  .sheet{transition:transform .55s cubic-bezier(.2,.8,.2,1)!important}
+  .veil{transition:opacity .4s ease!important}
+  .nav .pill{transition:transform .5s cubic-bezier(.2,.8,.2,1)!important}
+  .mf button,.tfc button,.tog button{transition:background-color .35s,color .35s,box-shadow .35s!important}
+  .tog .k{transition:transform .5s cubic-bezier(.2,.8,.2,1),background .4s!important}
+  .chip{box-shadow:var(--raise);font-weight:800}
+  input,textarea,select,button{touch-action:manipulation}
 </style>
 </head>
 <body>
@@ -527,7 +564,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794044941";
+const BUILD = "1794045712";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -544,6 +581,38 @@ const MEMBER_URL   = "https://alijojo2122joon-jpg.github.io/Silver-signals/";
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
 const $ = id => document.getElementById(id);
+/* ===== صداگذاری (کیت SND02 Piano، مثل صفحه‌ی اعضا) ===== */
+const SFX_BASE = "https://cdn.jsdelivr.net/npm/snd-lib@1.1.2/assets/sounds/sprite/02/audioSprite.";
+const SFX_MAP = { button:[0,.55], caution:[2,.5], celebration:[4,2.4], notification:[11,1.9], select:[22,.27], tap_01:[34,.2], tap_02:[36,.22], tap_04:[40,.2], toggle_off:[44,.55], toggle_on:[46,.52] };
+let sfxCtxA = null, sfxBuf = null, sfxLoad = null, sfxBus = null, sfxLast = {};
+const sndOn = () => { try { return JSON.parse(localStorage.getItem("snd") ?? "true"); } catch { return true; } };
+function sfxInit(){
+  if (sfxBuf || sfxLoad) return; try { sfxCtxA = sfxCtxA || new (window.AudioContext || window.webkitAudioContext)(); } catch { return; }
+  const c = sfxCtxA;
+  try { const lp = c.createBiquadFilter(); lp.type = "highshelf"; lp.frequency.value = 7000; lp.gain.value = -4;
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; lp.connect(comp).connect(c.destination); sfxBus = lp; } catch { sfxBus = c.destination; }
+  const ext = new Audio().canPlayType("audio/mp4; codecs=mp4a.40.2") ? "m4a" : "ogg";
+  sfxLoad = fetch(SFX_BASE + ext).then(r => r.arrayBuffer()).then(b => new Promise((res, rej) => c.decodeAudioData(b, res, rej))).then(b => { sfxBuf = b; }).catch(() => { sfxLoad = null; });
+}
+function sfx(name, vol = .5){
+  if (!sndOn()) return; const m = SFX_MAP[name]; if (!m) return;
+  const now = performance.now(); if (now - (sfxLast[name] || 0) < 90) return; sfxLast[name] = now;
+  if (!sfxBuf) return sfxInit(); const c = sfxCtxA; if (c.state === "suspended") c.resume();
+  try { const s = c.createBufferSource(); s.buffer = sfxBuf; const g = c.createGain(), t = c.currentTime, d = m[1];
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .004); g.gain.setValueAtTime(vol, t + d * .7); g.gain.exponentialRampToValueAtTime(.0008, t + d);
+    s.connect(g).connect(sfxBus); s.start(t, m[0], d + .02); } catch {}
+}
+document.addEventListener("pointerdown", () => { sfxInit(); if (sfxCtxA?.state === "suspended") sfxCtxA.resume(); }, { passive: true });
+document.addEventListener("click", e => {
+  const t = e.target; if (!t.closest) return;
+  if (t.closest(".nav button")) return sfx("tap_01", .32);
+  if (t.closest("#th")) return sfx("toggle_on", .35);
+  if (t.closest("[data-mf],.tfc button,.tog button,.mksel button")) return sfx("tap_02", .28);
+  const rb = t.closest(".rb[data-st]"); if (rb) return;
+  if (t.closest("[data-sig],[data-mem],[data-chat],[data-req],[data-ct],[data-act]")) return sfx("tap_04", .26);
+  if (t.closest(".cta,.add")) return sfx("button", .34);
+}, true);
+
 const esc = s => String(s ?? "").replace(/[\u06F0-\u06F9\u0660-\u0669]/g, d => String((d.charCodeAt(0) & 15))).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fa = n => Number(n).toLocaleString("en-US", {maximumFractionDigits: 4});
 const fmtDate = d => d ? new Date(d).toLocaleDateString("fa-AF-u-nu-latn", {year:"numeric", month:"long", day:"numeric"}) : "—";
@@ -697,10 +766,10 @@ function renderPanel(){
       <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div><span class="role">مدیر</span></div>
       <div class="icons"><button class="ib press" id="prof" aria-label="پروفایل">👤</button><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
-    <div class="stats">
-      <div class="stat glass sw g rise" style="--i:1"><span class="shine"></span><small>اعضای فعال</small><b class="num" id="s1">0</b></div>
-      <div class="stat glass sw r rise" style="--i:2;--sd:.4s"><span class="shine"></span><small>تمام‌شده</small><b class="num" id="s2">0</b></div>
-      <div class="stat glass sw b rise" style="--i:3;--sd:.8s"><span class="shine"></span><small>سیگنال باز</small><b class="num" id="s3">0</b></div>
+    <div class="hubstats glass rise" style="--i:1">
+      <div class="snode" style="--ac:var(--buy)"><span class="nd"><i></i><b class="num" id="s1">0</b></span><small>اعضای فعال</small></div>
+      <div class="snode" style="--ac:var(--sell)"><span class="nd"><i></i><b class="num" id="s2">0</b></span><small>تمام‌شده</small></div>
+      <div class="snode" style="--ac:#ff8a3d"><span class="nd"><i></i><b class="num" id="s3">0</b></span><small>سیگنال باز</small></div>
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
@@ -1011,7 +1080,7 @@ function sheetNewSignal(){
     const { data: ins, error } = await sb.from("signals").insert({ market: mk, type: side, entry_from: num($("ef").value), entry_to: num($("et").value),
       tp1: num($("tp1").value), tp2: num($("tp2").value), tp3: num($("tp3").value), timeframe: tf || null, sl: num($("sl").value), note: $("note").value.trim() || null, voice_path }).select("id,note").single();
     if (error) { if (voice_path) sb.storage.from("voices").remove([voice_path]); busy(b, false, "انتشار سیگنال"); return toast("خطا: " + error.message, true); }
-    closeSheet(); toast(`تحلیل ${MARKETS[mk].name} منتشر شد ✓`); loadSignals();
+    closeSheet(); sfx("notification", .5); toast(`تحلیل ${MARKETS[mk].name} منتشر شد ✓`); loadSignals();
     if (ins?.note) preTranslate(ins);
   };
 }
@@ -1257,7 +1326,8 @@ async function saveTeacher(){
 
 /* ===== پیام‌های اعضا ===== */
 let allMsgs = [], msgCh = null, openChatId = null, knownMsg = null, lastChatSig = "";
-function drawNavBadge(){ const n = allMsgs.filter(x => x.sender === "member" && !x.seen_at).length + contactReqs.filter(r => !r.seen_at && !r.done).length, b = $("nb"); if (b) { b.textContent = n; b.classList.toggle("show", n > 0); } }
+let lastBadge = -1;
+function drawNavBadge(){ const n = allMsgs.filter(x => x.sender === "member" && !x.seen_at).length + contactReqs.filter(r => !r.seen_at && !r.done).length, b = $("nb"); if (b) { b.textContent = n; b.classList.toggle("show", n > 0); } if (lastBadge >= 0 && n > lastBadge) sfx("notification", .55); lastBadge = n; }
 let contactReqs = [], knownReq = null;
 async function loadReqs(){
   const { data, error } = await sb.from("contact_requests").select("*").order("created_at", {ascending:false}).limit(50);
@@ -1369,6 +1439,7 @@ function sheetSignal(s){
       const st = btn.dataset.st; if (st === s.status) return;
       if (st !== "active" && !confirm(`نتیجه «${STATUS[st]}» با تاریخ و ساعت الان ثبت شود؟`)) return;
       const { error } = await sb.from("signals").update({ status: st }).eq("id", s.id);
+      if (!error) sfx(/^tp/.test(st) ? "celebration" : st === "sl" ? "caution" : "select", .5);
       if (error) return toast("خطا: " + error.message, true);
       closeSheet(); toast(st === "active" ? "به حالت «در جریان» برگشت" : "نتیجه ثبت شد ✓"); return loadSignals(); }
     if (e.target.closest("#del") && confirm("این سیگنال حذف شود؟")) {
