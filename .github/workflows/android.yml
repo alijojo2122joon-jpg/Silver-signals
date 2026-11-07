@@ -18,9 +18,17 @@ jobs:
       - name: Signing key
         env: { MA_KEY_PASS: "${{ secrets.MA_KEY_PASS }}" }
         run: |
-          test -n "$MA_KEY_PASS" || { echo "::error::MA_KEY_PASS secret missing (Settings > Secrets and variables > Actions)"; exit 1; }
-          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in android/ma.jks.enc -out "$RUNNER_TEMP/ma.jks" -pass env:MA_KEY_PASS
-          echo "MA_KEYSTORE=$RUNNER_TEMP/ma.jks" >> "$GITHUB_ENV"
+          test ${#MA_KEY_PASS} -ge 6 || { echo "::error::Add repository secret MA_KEY_PASS (min 6 chars): Settings > Secrets and variables > Actions"; exit 1; }
+          KS="$RUNNER_TEMP/ma.jks"
+          if [ -f android/ma.jks.enc ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in android/ma.jks.enc -out "$KS" -pass env:MA_KEY_PASS
+          else
+            keytool -genkeypair -keystore "$KS" -storepass "$MA_KEY_PASS" -keypass "$MA_KEY_PASS" -alias ma -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Market Analysts, C=AF"
+            openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in "$KS" -out android/ma.jks.enc -pass env:MA_KEY_PASS
+            git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add android/ma.jks.enc && git commit -m "Add encrypted signing key [skip ci]" && git push
+          fi
+          echo "MA_KEYSTORE=$KS" >> "$GITHUB_ENV"
       - name: Build APKs
         env: { MA_KEY_PASS: "${{ secrets.MA_KEY_PASS }}" }
         run: gradle -p android assembleMemberDebug assembleAdminDebug --no-daemon -Pvc=${{ github.run_number }}
