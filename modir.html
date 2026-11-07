@@ -462,6 +462,47 @@
   html.app .sw>.shine{display:none}
   html.app *{-webkit-tap-highlight-color:transparent}
   html.app body{overscroll-behavior:none}
+
+  /* ================= SOFT UI مدیر ================= */
+  :root{--bg:#e8ebf0;--bg2:#e8ebf0;--text:#141a2b;--muted:#6a7183;--soft:#9aa1b0;--field:#e8ebf0;--stroke:rgba(255,255,255,.75);
+    --navy:#11162c;--navy2:#232a4a;--onNavy:#fff;--glowc:#ffa04a;--glow:rgba(255,160,74,.45);
+    --gl:linear-gradient(145deg,#f4f6f9,#e4e7ed);--tile:linear-gradient(145deg,#f7f8fb,#e2e5eb);
+    --sh:14px 16px 32px -6px rgba(150,160,182,.55),-12px -12px 26px rgba(255,255,255,.95);
+    --raise:6px 7px 14px rgba(150,160,182,.5),-5px -5px 12px rgba(255,255,255,.95);
+    --sh-in:inset 4px 4px 9px rgba(150,160,182,.45),inset -4px -4px 9px rgba(255,255,255,.95)}
+  :root[data-theme="dark"]{--bg:#181b22;--bg2:#181b22;--text:#eef0f6;--muted:#9aa2b4;--field:#181b22;--stroke:rgba(255,255,255,.05);
+    --navy:#eef1f7;--navy2:#d9deea;--onNavy:#11162c;
+    --gl:linear-gradient(145deg,#1f232c,#15181e);--tile:linear-gradient(145deg,#222630,#171a21);
+    --sh:12px 14px 28px -6px rgba(0,0,0,.7),-8px -8px 20px rgba(255,255,255,.035);
+    --raise:5px 6px 12px rgba(0,0,0,.6),-4px -4px 10px rgba(255,255,255,.035);
+    --sh-in:inset 4px 4px 9px rgba(0,0,0,.6),inset -3px -3px 8px rgba(255,255,255,.04)}
+  html,body{background:var(--bg)!important}
+  body{background:radial-gradient(60% 34% at 50% 6%,rgba(255,160,74,.16),transparent 70%),var(--bg)!important}
+  .blob{display:none!important}
+  .glass{background:var(--gl)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:1px solid var(--stroke)!important;box-shadow:var(--sh)!important}
+  .sheet{background:var(--bg)!important;backdrop-filter:none!important}
+  .cta{color:var(--onNavy)!important;background:linear-gradient(180deg,var(--navy2),var(--navy))!important;border-radius:999px!important;box-shadow:0 14px 26px -12px rgba(17,22,44,.55),0 10px 30px -10px var(--glowc)!important}
+  .ib,.lgo{border-radius:50%!important;background:var(--tile)!important;box-shadow:var(--raise)!important;border:0!important}
+  .in,.search,.tog,.seg{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important}
+  .in{border-radius:18px!important}
+  .nav{background:var(--gl)!important;border-radius:999px!important;box-shadow:var(--sh)!important;border:0!important}
+  .nav .pill{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;border-radius:999px!important;box-shadow:0 10px 24px -8px var(--glowc)!important}
+  .nav button.on{color:var(--onNavy)!important}
+  .mf button,.tfc button{border:0!important;border-radius:999px!important;background:var(--tile)!important;box-shadow:var(--raise)!important;color:var(--text)!important}
+  .mf button.on,.tfc button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -10px var(--glowc)!important}
+  .add{border-radius:999px!important;background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -10px var(--glowc)!important;border:0!important}
+  .stat,.list,.box,.rb,.ghost,.mksel button{border-radius:24px!important}
+  .ghost,.rb,.mksel button{background:var(--tile)!important;box-shadow:var(--raise)!important;border:0!important}
+  .box{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important}
+  .tog,.tog .k{border-radius:999px!important}
+  .mksel button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 12px 26px -10px var(--glowc)!important}
+  .mksel button.on small{color:inherit!important;opacity:.7}
+  /* حرکت آرام‌تر */
+  .rise{animation-duration:1.2s!important;animation-delay:calc(var(--i,0) * 110ms)!important}
+  .sheet{transition:transform .9s cubic-bezier(.22,1,.36,1)!important}
+  .nav .pill{transition:transform .9s cubic-bezier(.22,1,.36,1)!important}
+  .tog .k{transition:transform .8s cubic-bezier(.22,1,.36,1),background .5s!important}
+  .it{transition:background .6s ease!important}
 </style>
 </head>
 <body>
@@ -476,7 +517,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794041453";
+const BUILD = "1794042524";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}

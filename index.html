@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#eef2f0">
+<meta name="theme-color" content="#e8ebf0">
 <title>Market Analysts</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -488,6 +488,115 @@
   .sec2{display:flex;align-items:center;justify-content:space-between;margin:18px 6px 10px}
   .sec2 h3{margin:0}
 
+
+  /* ================= SOFT UI (نئومورفیسم سفید با نور گرم) ================= */
+  :root{
+    --bg:#e8ebf0; --text:#141a2b; --muted:#6a7183; --soft:#9aa1b0;
+    --navy:#11162c; --navy2:#232a4a; --onNavy:#ffffff;
+    --glowc:color-mix(in srgb,var(--beam) 70%,#ff9d3c);
+    --gl:linear-gradient(145deg,#f4f6f9,#e4e7ed);
+    --tile:linear-gradient(145deg,#f7f8fb,#e2e5eb);
+    --line:rgba(30,40,70,.08); --stroke:rgba(255,255,255,.75); --field:#e8ebf0;
+    --sh:14px 16px 32px -6px rgba(150,160,182,.55),-12px -12px 26px rgba(255,255,255,.95),inset 1px 1px 0 rgba(255,255,255,.9);
+    --raise:6px 7px 14px rgba(150,160,182,.5),-5px -5px 12px rgba(255,255,255,.95);
+    --sh-in:inset 4px 4px 9px rgba(150,160,182,.45),inset -4px -4px 9px rgba(255,255,255,.95);
+  }
+  :root[data-theme="dark"]{
+    --bg:#181b22; --text:#eef0f6; --muted:#9aa2b4; --soft:#6d7486;
+    --navy:#eef1f7; --navy2:#d9deea; --onNavy:#11162c;
+    --gl:linear-gradient(145deg,#1f232c,#15181e);
+    --tile:linear-gradient(145deg,#222630,#171a21);
+    --line:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.05); --field:#181b22;
+    --sh:12px 14px 28px -6px rgba(0,0,0,.7),-8px -8px 20px rgba(255,255,255,.035),inset 1px 1px 0 rgba(255,255,255,.05);
+    --raise:5px 6px 12px rgba(0,0,0,.6),-4px -4px 10px rgba(255,255,255,.035);
+    --sh-in:inset 4px 4px 9px rgba(0,0,0,.6),inset -3px -3px 8px rgba(255,255,255,.04);
+  }
+  html,body{background:var(--bg)}
+  /* پس‌زمینه‌ی ساده با یک نور گرم ملایم به‌جای عکس */
+  .mbg i{display:none}
+  .mbg{background:radial-gradient(60% 38% at 50% 8%,color-mix(in srgb,var(--glowc) 22%,transparent),transparent 70%),radial-gradient(50% 30% at 85% 95%,color-mix(in srgb,var(--glowc) 12%,transparent),transparent 70%),var(--bg)}
+  .mbg b{display:none}
+  .glass{background:var(--gl)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:1px solid var(--stroke);box-shadow:var(--sh)}
+  .glow::before{opacity:.45;padding:1px}
+
+  /* دکمه‌ی اصلی: کپسول سرمه‌ای با نور گرم زیرش */
+  .cta{color:var(--onNavy)!important;background:linear-gradient(180deg,var(--navy2),var(--navy))!important;border-radius:999px!important;
+    box-shadow:0 14px 26px -12px rgba(17,22,44,.55),0 10px 30px -10px var(--glowc),inset 0 1px 0 rgba(255,255,255,.18)!important}
+  .cta:active{transform:translateY(2px) scale(.99)}
+  .ib,.lgo{border-radius:50%!important;background:var(--tile)!important;box-shadow:var(--raise)!important;border:0!important}
+  .ib:active{box-shadow:var(--sh-in)!important}
+
+  /* بازارها */
+  .mk button{background:var(--gl)!important;backdrop-filter:none!important;box-shadow:var(--raise)!important;border:0!important;border-radius:999px!important;opacity:1!important}
+  .mk button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;
+    box-shadow:0 14px 26px -12px rgba(17,22,44,.5),0 12px 34px -8px var(--glowc)!important}
+  .mk button.on small{color:color-mix(in srgb,var(--onNavy) 65%,transparent)!important}
+  .mk button.glow::before{display:none}
+
+  /* فیلدها و ورودی‌ها: فرورفته */
+  .field,.inp,.chips select,textarea{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important}
+  .field{border-radius:999px!important}
+  .langs{box-shadow:var(--sh-in);background:var(--field);border-radius:999px}
+  .langs button{border-radius:999px}
+  .langs button.on,.seg2 button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 8px 18px -8px var(--glowc)!important}
+  .seg2{box-shadow:var(--sh-in);border-radius:999px}
+  .seg2 button{border-radius:999px}
+
+  /* تراشه‌ها، نوار فیلتر */
+  .chips button,.qchips button,.tfc button{border:0!important;border-radius:999px!important;background:var(--tile)!important;box-shadow:var(--raise)!important;color:var(--text)!important}
+  .chips button.on,.tfc button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -10px var(--glowc),0 6px 14px -8px rgba(17,22,44,.5)!important}
+  .chips select{border-radius:999px!important}
+
+  /* ناوبری پایین: کپسول سفید برجسته */
+  .bnav{background:var(--gl)!important;border:0!important;border-radius:999px!important;box-shadow:var(--sh)!important}
+  .bnav button{border-radius:999px!important}
+  .bnav button.on{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 24px -8px var(--glowc)!important}
+
+  /* دکمه‌ی گفتگو */
+  .fab{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 16px 30px -10px rgba(17,22,44,.55),0 10px 36px -6px var(--glowc)!important}
+
+  /* کارت‌ها */
+  .hero,.stats,.pcard,.acard,.tool,.list,.msg,.empty,.offline,.sk{border-radius:30px!important}
+  .lv,.prow div,.kv div,.sgrid div,.res2,.rrows,.cities div{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important}
+  .lvls{gap:8px!important;background:none!important;box-shadow:none!important}
+  .lv{border-radius:18px!important}.lv+.lv{border:0!important}
+  .it.open{background:color-mix(in srgb,var(--field) 70%,transparent)}
+  .arrow,.av{box-shadow:var(--raise);border-radius:50%!important}
+  .chip{box-shadow:var(--raise)}
+  .tag2{box-shadow:var(--raise);border:0!important}
+  .sharebtn,.btn2{border-radius:999px!important;background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -10px var(--glowc)!important;border:0!important}
+
+  /* حلقه‌ی درصد موفقیت مثل دکمه‌ی ترموستات با لبه‌ی نورانی */
+  .ring{border-radius:50%;background:var(--tile);box-shadow:var(--raise),0 10px 26px -10px var(--glowc)}
+  .ring .bg{stroke:color-mix(in srgb,var(--line) 100%,transparent)}
+  .ring .fg{stroke:var(--glowc)!important}
+
+  /* پنجره‌ها */
+  .chat,.banner,.pop,.iview{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .chat{background:var(--bg)!important}
+  .banner,.pop{background:var(--gl)!important;box-shadow:var(--sh)!important}
+  .banner .bi{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)}
+
+  /* ================= حرکت‌های نرم‌تر و آرام‌تر ================= */
+  .rise{animation-duration:1.25s!important;animation-delay:calc(var(--i,0) * 110ms)!important;transform:translateY(26px)}
+  #pg{animation:rise 1s cubic-bezier(.22,1,.36,1)!important}
+  .hero{animation-duration:1.25s,14s!important}
+  .mk button{transition:flex-grow .95s cubic-bezier(.22,1,.36,1),padding .85s cubic-bezier(.22,1,.36,1),background .7s,box-shadow .7s!important}
+  .mk button img,.mk .dual{transition:all .9s cubic-bezier(.22,1,.36,1)!important}
+  .bnav button,.chips button,.langs button,.seg2 button,.tfc button{transition:background .6s ease,color .6s ease,box-shadow .6s ease!important}
+  .bnav button span{transition:transform .8s cubic-bezier(.22,1,.36,1)!important}
+  .it .more{transition:grid-template-rows .75s cubic-bezier(.22,1,.36,1)!important}
+  .it{transition:background .6s ease!important}
+  .chat{transition:transform 1s cubic-bezier(.22,1,.36,1),visibility 0s 1s!important}
+  .chat.show{transition:transform 1s cubic-bezier(.22,1,.36,1),visibility 0s!important}
+  .banner{transition:transform 1s cubic-bezier(.22,1,.36,1)!important}
+  .pop{transition:all .65s cubic-bezier(.22,1,.36,1)!important}
+  .fab{transition:transform .6s cubic-bezier(.22,1,.36,1),left .9s cubic-bezier(.22,1,.36,1)!important}
+  .tool>summary::after{transition:transform .6s ease!important}
+  .ring .fg{transition:stroke-dashoffset 2s cubic-bezier(.22,1,.36,1)!important}
+  .glow::before{animation-duration:calc(var(--bd,7s) * 1.6)!important}
+  .ripple{animation-duration:1.2s!important}
+  html.app .rise{animation-duration:1s!important}
 </style>
 </head>
 <body>
@@ -499,7 +608,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794041453";
+const BUILD = "1794042524";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -605,7 +714,7 @@ function applyTheme(){
   const r = document.documentElement;
   r.dataset.theme = getTheme(); r.dataset.market = market;
   document.querySelectorAll(".mbg i").forEach(i => i.classList.toggle("on", i.dataset.m === market));
-  document.querySelector('meta[name="theme-color"]').setAttribute("content", getTheme() === "dark" ? "#0b0f14" : "#eef2f0");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", getTheme() === "dark" ? "#181b22" : "#e8ebf0");
 }
 applyLang(); applyTheme();
 
