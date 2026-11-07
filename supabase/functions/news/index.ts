@@ -5,7 +5,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 //  - afaaq.af economic RSS (Dari)            → daily gold/fx reports + economy news
 //  - ariananews.af Dari RSS, economy keywords only
 //  - Google News (English) for Da Afghanistan Bank, Ministry of Finance, World Bank, world gold market
-//    → titles machine-translated to Persian once and cached by link.
+//    (fetched by the database via pg_net into public.news_feeds; translated via public.news_tr)
 // Cached 3 minutes in settings.news_cache. Also expires local-rates cache when a newer afaaq rate report appears.
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "GET, OPTIONS" };
 const json = (b: unknown) => new Response(JSON.stringify(b), { headers: { ...cors, "Content-Type": "application/json", "Cache-Control": "public, max-age=60" } });
@@ -51,7 +51,6 @@ const GQ: { org: string; src: string; kind: string; q: string; must?: RegExp; ma
   { org: "gold", src: "بازار جهانی طلا", kind: "news", q: '(gold price OR silver price OR "Federal Reserve" rates) (Reuters OR Kitco OR Bloomberg) when:1d', max: 5 },
 ];
 const gErr: string[] = [];
-// Google blocks this server's IP (503), so the database fetches these feeds every 3 min (pg_net → public.news_feeds).
 async function gnews(admin: any): Promise<Item[]> {
   const out: Item[] = []; gErr.length = 0;
   const { data: feeds } = await admin.from("news_feeds").select("org,xml,fetched_at");
@@ -67,18 +66,10 @@ async function gnews(admin: any): Promise<Item[]> {
       }).filter(r => r.title_en && r.link && (!g.must || g.must.test(r.title_en)));
       rows.sort((a, b) => b.at.localeCompare(a.at));
       for (const r of rows.slice(0, g.max)) out.push({ title: r.title_en, title_en: r.title_en, link: r.link, at: r.at, kind: g.kind, org: g.org, src: g.src + (r.publisher ? " · " + r.publisher : "") });
-      gErr.push(g.org + ":" + rows.length);
+      gErr.push(g.org + ":" + rows.length + (xml ? " (db)" : ""));
     } catch (e) { gErr.push(g.org + " ERR " + String(e).slice(0, 90)); }
   }));
   return out;
-}
-
-async function toFa(text: string): Promise<string> {
-  const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=fa&dt=t&q=" + encodeURIComponent(text);
-  const r = await fetch(url, { headers: UA, signal: AbortSignal.timeout(8000) });
-  if (!r.ok) throw new Error("tr " + r.status);
-  const j = await r.json();
-  return (j[0] || []).map((x: unknown[]) => x[0]).join("").trim();
 }
 
 const norm = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().slice(0, 60);
