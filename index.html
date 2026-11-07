@@ -935,7 +935,8 @@
 
   html.embed .top,html.embed .bnav,html.embed #fab,html.embed #fablab,html.embed .stbar,html.embed .mbg{display:none!important}
   html.embed .app{padding-top:12px!important;padding-bottom:20px!important}
-  html.embed,html.embed body{background:transparent!important}
+  html.embed,html.embed body{background:transparent!important;overflow:hidden!important}
+  html.embed .app{min-height:0!important}
 
   .autob{margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.8}
   .chip.wait{background:rgba(232,155,40,.13);color:var(--amber)}
@@ -972,6 +973,14 @@
     box-shadow:0 3px 6px rgba(0,0,0,.25),inset 0 -1px 2px rgba(0,0,0,.08);transition:transform .55s cubic-bezier(.3,1.35,.5,1)}
   .sndt .sw3.on i{transform:translateX(22px)}
   [dir="rtl"] .sndt .sw3.on i{transform:translateX(-22px)}
+
+  .nlink .nsrc{display:inline-flex;align-items:center;gap:4px;margin-bottom:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;color:var(--muted);background:var(--field);box-shadow:var(--sh-in);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nlink.org-dab .nsrc,.nlink.org-mof .nsrc{color:#0a8044}
+  .nlink.org-wb .nsrc{color:#1f6bf0}
+  .nlink.org-gold .nsrc{color:#b7791f}
+  :root[data-theme="dark"] .nlink.org-dab .nsrc,:root[data-theme="dark"] .nlink.org-mof .nsrc{color:#4ade80}
+  :root[data-theme="dark"] .nlink.org-wb .nsrc{color:#7aa7ff}
+  :root[data-theme="dark"] .nlink.org-gold .nsrc{color:#f5c56b}
 </style>
 </head>
 <body>
@@ -983,7 +992,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611071739";
+const BUILD = "202611072111";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -995,7 +1004,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) chec
 const SUPABASE_URL = "https://segfazxjglbawdhopnra.supabase.co";
 const SUPABASE_KEY = "sb_publishable_VfSrjufay_d3__oseWrv2Q_UaCXJn5F";
 let teacher = { name: null, photo: null };
-const AFN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_Afghanis_%282022_-_top%29.jpg/960px-1000_Afghanis_%282022_-_top%29.jpg";
+const AFN_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2348b07a'/%3E%3Cstop offset='1' stop-color='%23146b44'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='48' rx='6' fill='url(%23g)'/%3E%3Crect x='4' y='4' width='56' height='40' rx='4' fill='none' stroke='%23d8f3e3' stroke-opacity='.55'/%3E%3Ccircle cx='32' cy='24' r='13' fill='%23d8f3e3' fill-opacity='.22'/%3E%3Ctext x='32' y='31' font-family='Arial' font-size='20' font-weight='700' fill='%23fff' text-anchor='middle'%3E%D8%8B%3C/text%3E%3C/svg%3E";
 /* ===================== */
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1123,7 +1132,10 @@ const fmtFull = d => { const x = new Date(d); return fmtDate(x) + " · " + T.at 
 /* ===== بازارها و تم ===== */
 const MK = { xau:{ sym:"XAU/USD", unit:"usd", th:"img/th-xau.webp" }, xag:{ sym:"XAG/USD", unit:"usd", th:"img/th-xag.webp" }, usd:{ sym:"USD/AFN", unit:"afn", th:"img/th-usd.webp" } };
 let market = store.get("mk2", "xau"); if (!MK[market]) market = "xau";
-const getTheme = () => store.get("theme2", "light");
+const EMBED_TH = new URLSearchParams(location.search).get("theme");
+let embedTheme = EMBED_TH === "dark" || EMBED_TH === "light" ? EMBED_TH : null;
+const getTheme = () => embedTheme || store.get("theme2", "light");
+addEventListener("message", e => { const t = e.data && e.data.maTheme; if (e.source === parent && (t === "dark" || t === "light")) { embedTheme = t; document.documentElement.dataset.theme = t; } });
 function applyTheme(){
   const r = document.documentElement;
   r.dataset.theme = getTheme(); r.dataset.market = market;
@@ -1438,6 +1450,8 @@ L3.fa.afNews = "اخبار اقتصادی افغانستان"; L3.fa.hrAgo = "{n
 L3.ps.afNews = "د افغانستان اقتصادي خبرونه"; L3.ps.hrAgo = "{n} ساعته مخکې";
 L3.en.afNews = "Afghanistan economy news"; L3.en.hrAgo = "{n}h ago";
 L3.fa.xagTg = "زنده از forex.com / TradingView (کانال NoghreLahzeyi)"; L3.ps.xagTg = "ژوندی له forex.com / TradingView (NoghreLahzeyi چینل)"; L3.en.xagTg = "Live from forex.com / TradingView (@NoghreLahzeyi)";
+L3.fa.trAuto = "ترجمه‌ی خودکار"; L3.ps.trAuto = "اتومات ژباړه"; L3.en.trAuto = "auto-translated";
+L3.fa.xagLast = "آخرین نرخ قبل از بسته‌شدن بازار (کانال NoghreLahzeyi)"; L3.ps.xagLast = "د بازار تر بندېدو مخکې وروستۍ بیه (NoghreLahzeyi)"; L3.en.xagLast = "Last price before market close (@NoghreLahzeyi)";
 L3.fa.mktClosed = "بازار جهانی طلا و نقره آخر هفته بسته است؛ قیمت‌ها نرخ بسته‌شدن جمعه‌اند و از دوشنبه صبح دوباره زنده می‌شوند."; L3.ps.mktClosed = "د سرو او سپینو زرو نړیوال بازار د اونۍ په پای کې بند دی؛ بیې د جمعې د بندېدو نرخ دي."; L3.en.mktClosed = "World gold & silver markets are closed for the weekend; prices are Friday's close and go live again Monday morning.";
 L3.fa.story = "استوری استاد"; L3.fa.newStory = "استوری جدید استاد"; L3.fa.replyStory = "پاسخ به استوری…"; L3.fa.replySent = "پاسخ شما برای استاد رفت"; L3.fa.storyReply = "پاسخ به استوری";
 L3.ps.story = "د استاد سټوري"; L3.ps.newStory = "د استاد نوې سټوري"; L3.ps.replyStory = "سټوري ته ځواب…"; L3.ps.replySent = "ستاسو ځواب استاد ته ولېږل شو"; L3.ps.storyReply = "سټوري ته ځواب";
@@ -1480,6 +1494,10 @@ const GPM = 4.608, OZ = 31.1035;
 
 const EMBED = new URLSearchParams(location.search).get("embed");
 if (EMBED) document.documentElement.classList.add("embed");
+if (EMBED && parent !== window) { let lastH = 0;
+  const sendH = () => { const a = document.querySelector(".app") || document.body; const h = Math.ceil(a.getBoundingClientRect().height) + 8;
+    if (Math.abs(h - lastH) > 2) { lastH = h; parent.postMessage({ maEmbedH: h }, "*"); } };
+  addEventListener("load", () => { new ResizeObserver(sendH).observe(document.body); sendH(); }); setInterval(sendH, 1500); }
 let page = EMBED === "prc" ? "prc" : store.get("page", "sig"); if (!["sig","prc","tool","acad"].includes(page)) page = "sig";
 let per = store.get("per", "all"), sortBy = store.get("sort", "new");
 let prices = store.get("cache_prices", null), rates = store.get("cache_rates", []), pricesAt = 0;
@@ -1638,7 +1656,7 @@ function drawPrices(){
         <p>${tt(T.kabulNote, { d: local.gold.date })}</p></div></details>` : ""}</div>
     <div class="pcard glass glow" style="--bd:8s"><div class="ph"><img src="${MK.xag.th}" alt=""><div><b>${T.m.xag}</b><small>XAG/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xag", xag)}">$${nf(xag)}</b>${chgHTML(xag, p.xag?.prev)}</div></div>
       ${sparkSVG(p.xag?.spark, "#8e98a6")}
-      <div class="upd" style="margin:2px 0 8px;text-align:start">${p.xag?.src?.startsWith("tg") ? T.xagTg : T.world} · ${agoTxt(p.xag?.quoteAt)}</div>
+      <div class="upd" style="margin:2px 0 8px;text-align:start">${p.xag?.src?.startsWith("tg") ? (p.closed ? T.xagLast : T.xagTg) : T.world} · ${agoTxt(p.xag?.quoteAt)}</div>
       <div class="prow"><div><small>${T.silverMq}</small><b>${nf(sMq ?? calcMq(xag), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram}</small><b>${nf(xag && afn ? xag / OZ * afn : null, 1)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
     <div class="pcard glass glow" style="--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
       <div><b>${adminRate() || local?.fx?.usd ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b></div></div>
@@ -1803,8 +1821,10 @@ async function loadNews(){
 }
 function drawNews(){
   const box = $("newsbox"); if (!box) return;
-  const it = (news?.items || []).filter(i => i.kind === "news").slice(0, 8);
-  box.innerHTML = it.length ? it.map(i => `<a class="nlink" href="${esc(i.link)}" target="_blank" rel="noopener"><b>${esc(i.title)}</b>${i.desc ? `<p>${esc(i.desc.slice(0, 160))}…</p>` : ""}<small>${agoTxt(i.at)} · ${T.afaaq}</small></a>`).join("")
+  const it = (news?.items || []).filter(i => i.kind === "news").slice(0, 14);
+  const ORG = { dab: "🏦", mof: "🏛", wb: "🌐", gold: "🥇", afaaq: "📰", ariana: "📺" };
+  box.innerHTML = it.length ? it.map(i => { const t = lang === "en" && i.title_en ? i.title_en : i.title;
+    return `<a class="nlink org-${esc(i.org || "afaaq")}" href="${esc(i.link)}" target="_blank" rel="noopener"><span class="nsrc">${ORG[i.org] || "📰"} ${esc(i.src || T.afaaq)}</span><b>${esc(t)}</b>${i.desc ? `<p>${esc(i.desc.slice(0, 160))}…</p>` : ""}<small>${agoTxt(i.at)}${i.tr ? " · " + T.trAuto : ""}</small></a>`; }).join("")
     : `<div class="upd">${T.noContent}</div>`;
 }
 let cal = store.get("cache_cal", null), calAt = 0;

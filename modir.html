@@ -561,7 +561,7 @@
   .nav button{flex-direction:column!important;gap:1px!important;font-size:10.5px!important;height:52px!important}
   .nav button svg{width:18px!important;height:18px!important}
   .nav .nb{position:absolute!important;top:2px!important;left:calc(50% - 24px)!important;right:auto!important}
-  .prframe{display:block;width:100%;height:calc(100vh - 290px);min-height:520px;border:0;border-radius:30px;background:var(--bg)}
+  .prframe{display:block;width:100%;height:calc(100vh - 290px);min-height:520px;transition:height .35s ease;border:0;border-radius:30px;background:var(--bg)}
 
   .autoeng .egrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .autoeng .egrid div{padding:8px 10px;border-radius:14px;background:var(--tile);box-shadow:var(--raise);display:flex;flex-direction:column}
@@ -596,6 +596,18 @@
   .tog .k::after{content:"";position:absolute;top:3px;left:14%;right:14%;height:38%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
   .tog button{position:relative;z-index:1;font-weight:800}
   .tog button.on{color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+
+  .fpick{display:flex;align-items:center;gap:10px;padding:8px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);cursor:pointer;min-height:54px}
+  .fpick input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .fpick .fb{flex:none;padding:10px 16px;border-radius:999px;font-weight:800;font-size:13px;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy));box-shadow:0 8px 16px -8px var(--glowc)}
+  .fpick .fn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .fpick.has .fn{color:var(--text)}
+
+  .mfp{margin-bottom:8px}
+  .psum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+  .psum span{flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+  .psum b{display:block;font:800 16px/1.2 Montserrat,Arial,sans-serif;color:var(--text);margin-top:2px}
+  .psum .w b{color:var(--buy)} .psum .l b{color:var(--sell)} .psum .r b{color:#ff7a3d}
 </style>
 </head>
 <body>
@@ -610,7 +622,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611071739";
+const BUILD = "202611072111";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -685,6 +697,9 @@ const paintProf = () => { const b = $("prof"); if (!b) return; b.innerHTML = tea
 const I = {
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
   users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .6 3.5 2.3 3.5 5.2"/></svg>',
+  coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M9 15v2c0 1.7 2.7 3 6 3s6-1.3 6-3v-5c0-1.6-2.4-2.9-5.5-3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 11h18"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5" stroke-linecap="round"/></svg>',
   chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
   eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
@@ -700,7 +715,7 @@ const I = {
 
 /* ابزارها */
 const getTheme = () => { try { return localStorage.getItem("theme") || "light"; } catch { return "light"; } };
-const setTheme = t => { document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch {} };
+const setTheme = t => { document.documentElement.dataset.theme = t; try { localStorage.setItem("theme", t); } catch {} document.querySelectorAll(".prframe").forEach(f => f.contentWindow?.postMessage({ maTheme: t }, "*")); };
 setTheme(getTheme());
 document.addEventListener("pointerdown", e => {
   const el = e.target.closest(".cta,.ib,.it,.add,.ghost,.nav button,.stlist button"); if (!el) return;
@@ -821,7 +836,7 @@ function renderPanel(){
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">💹<span>قیمت‌ها</span></button><button data-t="content">🗂<span>محتوا</span></button><button data-t="msgs">💬<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
+      <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">${I.coins}<span>قیمت‌ها</span></button><button data-t="content">${I.folder}<span>محتوا</span></button><button data-t="msgs">${I.chat}<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
   $("out").onclick = () => sb.auth.signOut();
   $("prof").onclick = sheetProfile; loadTeacherSet();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
@@ -858,7 +873,7 @@ function drawPane(){
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
   if (tab === "content") return drawContent();
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><button class="add press" data-ct2="rates">${I.plus}ثبت نرخ</button></div>
-      <iframe class="prframe glass" src="index.html?embed=prc&t=${Date.now()}" title="prices"></iframe>`;
+      <iframe class="prframe glass" src="index.html?embed=prc&theme=${document.documentElement.dataset.theme === "dark" ? "dark" : "light"}&t=${Date.now()}" title="prices"></iframe>`;
     $("pane").querySelector("[data-ct2]").onclick = () => { loadContent().then(sheetRates); }; return; }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
@@ -886,8 +901,14 @@ function drawList(){
     return;
   }
   if (tab === "signals") {
-    const shown = mfilter === "all" ? signals : signals.filter(x => (x.market || "xag") === mfilter);
-    el.innerHTML = `<div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
+    const PER = [["all","همه"],["day","امروز"],["week","این هفته"],["month","این ماه"],["year","امسال"]];
+    const inPer = x => { if (pfilter === "all") return true; const d = new Date(x.created_at), n = new Date();
+      return pfilter === "day" ? d.toDateString() === n.toDateString() : n - d < (pfilter === "week" ? 7 : pfilter === "month" ? 30 : 365) * 864e5; };
+    const shown = signals.filter(x => (mfilter === "all" || (x.market || "xag") === mfilter) && inPer(x));
+    const pw = shown.filter(x => /^tp[123]$/.test(x.status)).length, pl = shown.filter(x => x.status === "sl").length, pa = shown.filter(x => x.status === "active").length;
+    el.innerHTML = `<div class="mf mfp">${PER.map(([k, v]) => `<button data-pf="${k}" class="${k===pfilter?"on":""}">🗓 ${v}</button>`).join("")}</div>
+    <div class="psum"><span>کل <b>${shown.length}</b></span><span class="w">موفق <b>${pw}</b></span><span class="l">ناموفق <b>${pl}</b></span><span>باز <b>${pa}</b></span><span class="r">درصد موفقیت <b>${pw + pl ? Math.round(pw / (pw + pl) * 100) : 0}%</b></span></div>
+    <div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
     <div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${shown.length ? shown.map(s => {
       const b = s.type === "buy";
       const c = s.status === "sl" ? "off" : s.status === "closed" || s.status === "expired" ? "mute" : s.auto && s.phase === "waiting" ? "warn" : "on";
@@ -908,11 +929,12 @@ function drawList(){
       ${dels.length ? `<div class="sec" style="margin-top:18px"><h3>حذف‌شده‌ها</h3></div><div class="list glass rise" style="--i:3;opacity:.92">${dels.map(rowHTML).join("")}</div>` : ""}`;
   }
 }
-async function loadSignals(){ const { data } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(100); signals = data || []; drawList(); drawStats(); backfillTranslations(); }
+async function loadSignals(){ const { data } = await sb.from("signals").select("*").order("created_at",{ascending:false}).limit(500); signals = data || []; drawList(); drawStats(); backfillTranslations(); }
 async function loadMembers(){ const { data } = await sb.from("profiles").select("*").eq("role","member").order("expires_at",{ascending:true}); members = data || []; drawList(); drawStats(); }
 
 function paneClick(e){
   const f = e.target.closest("[data-mf]"); if (f) { mfilter = f.dataset.mf; return drawList(); }
+  const pf = e.target.closest("[data-pf]"); if (pf) { pfilter = pf.dataset.pf; try { sfx("select", .3); } catch {} return drawList(); }
   const a = e.target.closest("[data-act]"); if (a) return a.dataset.act === "newSignal" ? sheetNewSignal() : sheetNewMember();
   const s = e.target.closest("[data-sig]"); if (s) return sheetSignal(signals.find(x => String(x.id) === s.dataset.sig));
   const m = e.target.closest("[data-mem]"); if (m) return sheetMember(members.find(x => x.id === m.dataset.mem));
@@ -928,7 +950,7 @@ const MARKETS = {
   xag: { name: "نقره", sym: "XAG/USD", unit: "دالر", th: "img/th-xag.webp" },
   usd: { name: "دالر", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
 };
-let mfilter = "all";
+let mfilter = "all", pfilter = "all";
 const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسانی 4 ساعته", d1:"روزانه", w1:"هفتگی" };
 /* ===== محتوا: نرخ‌ها، آکادمی، اخبار، آموزش، ویدیو، نظرسنجی ===== */
 const PLACES = { kabul:"کابل (سرای شهزاده)", herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال‌آباد" };
@@ -1127,6 +1149,19 @@ function sheetPoll(){
 }
 
 
+/* انتخاب فایل فارسی به‌جای «Choose File / No file chosen» */
+function fileUI(inp){
+  if (inp.dataset.ui) return; inp.dataset.ui = 1;
+  const w = document.createElement("label"); w.className = "fpick";
+  w.innerHTML = `<span class="fb">📎 انتخاب فایل</span><span class="fn">هنوز فایلی انتخاب نشده</span>`;
+  inp.replaceWith(w); w.prepend(inp); inp.classList.remove("in"); inp.removeAttribute("style");
+  inp.addEventListener("change", () => { const f = inp.files && inp.files[0]; const n = w.querySelector(".fn");
+    n.textContent = f ? `${f.name} · ${(f.size / 1048576).toFixed(1)} MB` : "هنوز فایلی انتخاب نشده"; w.classList.toggle("has", !!f); });
+}
+new MutationObserver(() => document.querySelectorAll('input.in[type="file"]').forEach(fileUI)).observe(document.documentElement, { childList: true, subtree: true });
+/* ارتفاع خودکار قاب قیمت‌ها تا اسکرول تودرتو نشود */
+addEventListener("message", e => { const h = e.data && e.data.maEmbedH; if (!h || e.source == null) return;
+  document.querySelectorAll(".prframe").forEach(f => { if (f.contentWindow === e.source) { f.style.height = h + "px"; f.style.minHeight = "0"; } }); });
 /* دکمه‌ی کشیدنی برای تأیید (مثل «بکشید تا باز شود») */
 function slideAct(el, onFire){
   const kn = el.querySelector(".sknob"), fill = el.querySelector(".sfill"), rtl = getComputedStyle(el).direction === "rtl";
