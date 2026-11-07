@@ -856,6 +856,17 @@
   .livebar button{margin-inline-start:auto;border:0;border-radius:999px;padding:5px 12px;font-family:inherit;font-size:12px;font-weight:800;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy));box-shadow:0 6px 14px -8px var(--glowc)}
   .inp.flash{animation:fieldflash 1.1s ease}
   @keyframes fieldflash{0%{box-shadow:var(--sh-in),0 0 0 2px var(--glowc)}100%{box-shadow:var(--sh-in)}}
+
+  .kbx{margin-top:10px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in)}
+  .kbx>summary{list-style:none;cursor:pointer;padding:10px 14px;font-size:12.5px;font-weight:800;display:flex;justify-content:space-between;color:var(--text)}
+  .kbx>summary::-webkit-details-marker{display:none}
+  .kbx[open]>summary span{transform:rotate(180deg)}
+  .ktab{padding:0 14px 10px}
+  .ktab div{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+  .ktab b{font-family:Montserrat,Arial,sans-serif;direction:ltr;unicode-bidi:isolate}
+  .ktab p{margin:6px 0 0;font-size:11px;color:var(--soft)}
+  .cnote{font-size:11.5px!important;color:var(--soft)!important;border-top:1px solid var(--line);display:block!important}
+  #cbase{margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -867,7 +878,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794045950";
+const BUILD = "1794046438";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -912,6 +923,7 @@ document.addEventListener("click", e => {
 });
 /* کیبورد باز است → نوار پایین مخفی */
 document.addEventListener("focusin", e => { if (e.target.matches("input:not([type=checkbox]):not([type=radio]),textarea,select") && !e.target.closest(".chat")) document.body.classList.add("kb"); });
+if (window.visualViewport) visualViewport.addEventListener("resize", () => { if (innerHeight - visualViewport.height < 120) document.body.classList.remove("kb"); else if (document.activeElement?.matches?.("input,textarea,select") && !document.activeElement.closest(".chat")) document.body.classList.add("kb"); });
 document.addEventListener("focusout", () => setTimeout(() => { if (!document.activeElement?.matches?.("input,textarea,select")) document.body.classList.remove("kb"); }, 120));
 
 /* ظاهر شدن نرم موقع اسکرول */
@@ -1260,6 +1272,12 @@ const L3 = {
     modeW:"⚖️ By weight", modeM:"💵 By money", amount:"Amount", money:"Money", curr:"Currency", kg:"Kilo", afnC:"AFN", usdC:"USD", goldOz:"Gold oz ($)", silverOz:"Silver oz ($)",
     valUsd:"Value in USD", valAfn:"Value in AFN", eqIn:"Equivalent in {m}", canBuy:"You can buy", ratio:"Gold/silver ratio", quick:"Quick table (24K gold & pure silver)", liveNote:"Prices fill in live from the world market and can be edited.", pure:"pure" },
 };
+L3.fa.kabulMkt = "بازار کابل"; L3.fa.kabul = "کابل"; L3.fa.afaaq = "آفاق"; L3.fa.kabulAll = "نرخ همه‌ی عیارها در کابل و هرات (افغانی/گرم)"; L3.fa.coinQ = "سکه ربع"; L3.fa.coinH = "سکه نیم"; L3.fa.coinF = "سکه کامل";
+L3.fa.kabulNote = "منبع: گزارش روزانه‌ی آفاق ({d})؛ با تغییر لحظه‌ای انس جهانی به‌روز می‌شود. خرید / فروش."; L3.fa.kabulCalcNote = "بر اساس نرخ واقعی بازار کابل (آفاق، {d}) + تغییر زنده‌ی انس جهانی"; L3.fa.noLocal = "نرخ کابل در دسترس نیست؛ از قیمت جهانی استفاده شد.";
+L3.ps.kabulMkt = "د کابل بازار"; L3.ps.kabul = "کابل"; L3.ps.afaaq = "آفاق"; L3.ps.kabulAll = "په کابل او هرات کې د ټولو عیارونو نرخ (افغانۍ/ګرام)"; L3.ps.coinQ = "ربع سکه"; L3.ps.coinH = "نیمه سکه"; L3.ps.coinF = "بشپړه سکه";
+L3.ps.kabulNote = "سرچینه: د آفاق ورځنی راپور ({d})؛ د نړیوال اونس له بدلون سره تازه کېږي. پېرود / پلور."; L3.ps.kabulCalcNote = "د کابل بازار د رښتیني نرخ پر بنسټ (آفاق، {d}) + د اونس ژوندی بدلون"; L3.ps.noLocal = "د کابل نرخ نشته؛ نړیواله بیه وکارول شوه.";
+L3.en.kabulMkt = "Kabul market"; L3.en.kabul = "Kabul"; L3.en.afaaq = "Afaaq"; L3.en.kabulAll = "All karats in Kabul & Herat (AFN/gram)"; L3.en.coinQ = "Quarter coin"; L3.en.coinH = "Half coin"; L3.en.coinF = "Full coin";
+L3.en.kabulNote = "Source: Afaaq daily report ({d}); adjusted live by the world ounce move. Buy / sell."; L3.en.kabulCalcNote = "Based on real Kabul market rate (Afaaq, {d}) + live world ounce move"; L3.en.noLocal = "Kabul rate unavailable; world price used.";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
 L3.ps.mktRate = "د بازار نرخ (رسمي)"; L3.ps.secAgo = "{n} ثانیې مخکې"; L3.ps.minAgo = "{n} دقیقې مخکې"; L3.ps.backLive = "ژوندۍ بیه"; L3.ps.liveSrc = "له نړیوال بازار ژوندی";
 L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAgo = "{n} min ago"; L3.en.backLive = "Live prices"; L3.en.liveSrc = "Live from world market";
@@ -1381,6 +1399,7 @@ async function loadPrices(force){
   if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 5000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
+  if (Date.now() - localAt > 300000 || force) { localAt = Date.now(); try { const r = await fetch(SUPABASE_URL + "/functions/v1/local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
   if (data) { rates = data; store.set("cache_rates", rates); }
   checkAlerts();
@@ -1389,8 +1408,15 @@ async function loadPrices(force){
 }
 const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null));
 const latestField = f => rates.find(r => r.place === "kabul" && r[f] != null)?.[f];
-const usdAfn = () => { const k = latestRate("kabul"); return k ? Number(k.sell ?? k.buy) : (prices?.afn?.rate ? Math.round(prices.afn.rate * 100) / 100 : null); };
-const afnSrc = () => latestRate("kabul") ? T.sarai : T.mktRate;
+let local = store.get("cache_local", null), localAt = 0;
+const adminRate = () => { const k = latestRate("kabul"); return k && Date.now() - new Date(k.created_at) < 36 * 3600000 ? k : null; };
+const usdAfn = () => { const k = adminRate(); if (k) return Number(k.sell ?? k.buy); if (local?.fx?.usd?.sell) return local.fx.usd.sell; return prices?.afn?.rate ? Math.round(prices.afn.rate * 100) / 100 : null; };
+const usdBuySell = () => { const k = adminRate(); if (k) return { buy: k.buy, sell: k.sell, src: T.sarai + " · " + timeOnly(k.created_at) }; if (local?.fx?.usd) return { ...local.fx.usd, src: T.sarai + " · " + T.afaaq }; const m = usdAfn(); return { buy: m, sell: m, src: T.mktRate }; };
+const afnSrc = () => adminRate() ? T.sarai : local?.fx?.usd ? T.sarai + " (" + T.afaaq + ")" : T.mktRate;
+/* نرخ واقعی بازار کابل: قیمت روزانه‌ی هر گرم (آفاق) × تغییر لحظه‌ای انس جهانی از زمان انتشار */
+const kabulMove = () => { const w = local?.gold?.worldOz, x = prices?.xau?.price; return w && x ? x / w : 1; };
+const kabulGram = k => { const g = local?.gold?.kabul?.[k]; if (g == null) return null; const f = kabulMove(); return typeof g === "object" ? { buy: g.buy * f, sell: g.sell * f } : { buy: g * f, sell: g * f }; };
+const kabulPure = () => { const g = kabulGram("k18"); return g ? g.sell / .75 : null; };
 const agoTxt = iso => { if (!iso) return "—"; const s = Math.max(0, Math.round((Date.now() - new Date(iso)) / 1000)); return s < 60 ? tt(T.secAgo, { n: s }) : s < 3600 ? tt(T.minAgo, { n: Math.round(s / 60) }) : timeOnly(iso); };
 /* شمارنده‌ی «چند ثانیه پیش» و به‌روزرسانی هر ۵ ثانیه در صفحه‌ی قیمت و ابزار */
 setInterval(() => {
@@ -1412,9 +1438,10 @@ let shown = {};
 let pSig = "";
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
-  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
+  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
   if (sigP === pSig && el.firstChild) return;
-  pSig = sigP;
+  pSig = sigP; const kOpen = el.querySelector(".kbx")?.open;
+  queueMicrotask(() => { if (kOpen && el.querySelector(".kbx")) el.querySelector(".kbx").open = true; });
   const p = prices || {}, afn = usdAfn(), k = latestRate("kabul");
   const gMq = latestField("gold_mithqal"), sMq = latestField("silver_mithqal");
   const xau = p.xau?.price, xag = p.xag?.price;
@@ -1425,14 +1452,20 @@ function drawPrices(){
   el.innerHTML = `<div class="upd"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${T.lastUpd}: <b data-ago>${agoTxt(p.at)}</b></div>
     <div class="pcard glass glow" style="--bd:7s"><div class="ph"><img src="${MK.xau.th}" alt=""><div><b>${T.m.xau}</b><small>XAU/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xau", xau)}">$${nf(xau)}</b>${chgHTML(xau, p.xau?.prev)}</div></div>
       ${sparkSVG(p.xau?.spark, "#d4a53b")}
-      <div class="prow"><div><small>${T.kabulMq}</small><b>${nf(gMq ?? calcMq(xau), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram18}</small><b>${nf(xau && afn ? xau / OZ * .75 * afn : null, 0)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
+      <div class="prow"><div><small>${T.kabulMq}</small><b>${nf(gMq ?? (kabulPure() ? kabulPure() * GPM : calcMq(xau)), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram18} · ${T.kabulMkt}</small><b>${nf(kabulGram("k18")?.sell ?? (xau && afn ? xau / OZ * .75 * afn : null), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div></div>
+      ${local?.gold ? `<details class="kbx"><summary>${T.kabulAll} <span>⌄</span></summary><div class="ktab">
+        ${[["k22","22"],["k21","21"],["k18","18"],["k14","14"]].map(([k, n]) => { const g = kabulGram(k); return g ? `<div><span>${T.kabul} · ${n} ${T.karat}</span><b>${g.buy !== g.sell ? nf(g.buy, 0) + " / " : ""}${nf(g.sell, 0)}</b></div>` : ""; }).join("")}
+        ${["k21","k18"].map(k => { const g = local.gold.herat?.[k]; const f = kabulMove(); return g ? `<div><span>${T.cities.herat} · ${k.slice(1)} ${T.karat}</span><b>${nf(g.buy * f, 0)} / ${nf(g.sell * f, 0)}</b></div>` : ""; }).join("")}
+        ${[["quarter",T.coinQ],["half",T.coinH],["full",T.coinF]].map(([k, n]) => { const c = local.gold.coins?.[k]; return c ? `<div><span>${n}</span><b>${nf(c.buy, 0)} / ${nf(c.sell, 0)}</b></div>` : ""; }).join("")}
+        <p>${tt(T.kabulNote, { d: local.gold.date })}</p></div></details>` : ""}</div>
     <div class="pcard glass glow" style="--bd:8s"><div class="ph"><img src="${MK.xag.th}" alt=""><div><b>${T.m.xag}</b><small>XAG/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xag", xag)}">$${nf(xag)}</b>${chgHTML(xag, p.xag?.prev)}</div></div>
       ${sparkSVG(p.xag?.spark, "#8e98a6")}
       <div class="prow"><div><small>${T.silverMq}</small><b>${nf(sMq ?? calcMq(xag), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram}</small><b>${nf(xag && afn ? xag / OZ * afn : null, 1)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
     <div class="pcard glass glow" style="--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
-      <div><b>${k ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b><span class="chg">${k ? timeOnly(k.created_at) : T.noRate}</span></div></div>
+      <div><b>${adminRate() || local?.fx?.usd ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b></div></div>
       ${sparkSVG(afnSpark, "#2f8a5b")}
-      <div class="prow"><div><small>${T.buyR}</small><b>${k?.buy != null ? nf(k.buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${k?.sell != null ? nf(k.sell) : "—"}</b></div></div>
+      <div class="prow"><div><small>${T.buyR}</small><b>${usdBuySell().buy != null ? nf(usdBuySell().buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${usdBuySell().sell != null ? nf(usdBuySell().sell) : "—"}</b></div></div>
+      <div class="upd" style="margin:6px 0 0">${usdBuySell().src}</div>
       <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
     <div class="pcard glass glow" style="--bd:10s"><div class="ph"><span class="pp2" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--field);font-size:20px">💵</span><div><b>${T.dxy}</b><small>DXY</small></div><div class="pv"><b class="${fl("dxy", p.dxy?.price)}">${nf(p.dxy?.price)}</b>${chgHTML(p.dxy?.price, p.dxy?.prev)}</div></div>
       ${sparkSVG(p.dxy?.spark, "#6c7684")}<div class="upd" style="margin:6px 0 0">${T.dxySub}</div></div>`;
@@ -1478,6 +1511,7 @@ function drawTools(){
   el.innerHTML = `
   <details class="tool glass rise" open><summary><span class="ti">🧮</span><div>${T.calcT}<small>${T.calcS}</small></div></summary><div class="tb">
     <div class="seg2" id="cmode"><button data-cm="w" class="on">${T.modeW}</button><button data-cm="m">${T.modeM}</button></div>
+    <div class="seg2" id="cbase"><button data-cb="kabul" class="on">🏛 ${T.kabulMkt}</button><button data-cb="world">🌐 ${T.world}</button></div>
     <div class="fgrid"><label>${T.metal}<select class="inp" id="cm"><option value="xau">${T.gold}</option><option value="xag">${T.silver}</option></select></label>
       <label id="ckl">${T.karat}<select class="inp" id="ck"><option value="1">24</option><option value="0.916">22</option><option value="0.875">21</option><option value="0.75">18</option></select></label>
       <label class="cw">${T.amount}<input class="inp" id="cw" inputmode="decimal" value="1"></label>
@@ -1510,7 +1544,9 @@ function drawTools(){
   <details class="tool glass rise" style="--i:4"><summary><span class="ti">📖</span><div>${T.dictT}<small>${T.dictS}</small></div></summary><div class="tb">
     <input class="inp" id="dq" placeholder="${T.search}"><div class="dict" id="dlist" style="margin-top:8px"></div></div></details>`;
   const n = v => { v = toEn(String(v || "")).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); return v === "" ? NaN : Number(v); };
-  let cmode = "w";
+  let cmode = "w", cbase = local?.gold ? "kabul" : "world";
+  const paintBase = () => $("cbase").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.cb === cbase));
+  paintBase(); $("cbase").onclick = e => { const b = e.target.closest("[data-cb]"); if (!b) return; cbase = b.dataset.cb; paintBase(); calc(); };
   ["cgo","cso","cr"].forEach(id => $(id).addEventListener("input", () => { $(id).dataset.edited = "1"; $("clive").hidden = false; }));
   const calc = () => {
     const metal = $("cm").value, other = metal === "xau" ? "xag" : "xau";
@@ -1523,20 +1559,23 @@ function drawTools(){
     if (cmode === "w") {
       const w = n($("cw").value) || 0, u = $("cu").value;
       const grams = u === "mq" ? w * GPM : u === "oz" ? w * OZ : u === "kg" ? w * 1000 : w;
-      const usd = oz / OZ * grams * pur, afnv = usd * rate;
+      const kp = metal === "xau" && cbase === "kabul" ? kabulPure() : null;
+      const afnv = kp ? kp * grams * pur : oz / OZ * grams * pur * rate, usd = kp ? afnv / rate : oz / OZ * grams * pur;
       out += row(T.valUsd, isNaN(usd) ? "—" : "$" + nf(usd, 2));
       out += row(T.valAfn, isNaN(afnv) ? "—" : nf(afnv, 0) + " ؋");
       if (!isNaN(usd) && ozO) out += row(tt(T.eqIn, { m: T.m[other] }), wtxt(usd / ozO * OZ));
     } else {
       const mv = n($("cmv").value) || 0, usdAmt = $("ccur").value === "usd" ? mv : mv / rate;
-      const grams = usdAmt / (oz * pur) * OZ;
+      const kp = metal === "xau" && cbase === "kabul" ? kabulPure() : null;
+      const grams = kp ? usdAmt * rate / (kp * pur) : usdAmt / (oz * pur) * OZ;
       out += row(T.canBuy + " (" + T.m[metal] + (metal === "xau" ? " " + Math.round(pur * 24) + "K" : "") + ")", isNaN(grams) || !isFinite(grams) ? "—" : wtxt(grams));
       out += $("ccur").value === "usd" ? row(T.valAfn, isNaN(usdAmt * rate) ? "—" : nf(usdAmt * rate, 0) + " ؋") : row(T.valUsd, isNaN(usdAmt) ? "—" : "$" + nf(usdAmt, 2));
     }
     if (go && so) out += row(T.ratio, "1 : " + nf(go / so, 2));
+    if (metal === "xau" && cbase === "kabul") out += `<div class="cnote">${kabulPure() ? tt(T.kabulCalcNote, { d: local.gold.date }) : T.noLocal}</div>`;
     $("cres").innerHTML = out;
     $("qtab").innerHTML = `<tr><th></th><th>$</th><th>؋</th></tr>` + [["xau", go], ["xag", so]].flatMap(([m, p]) => [1, 10, 20].map(q =>
-      `<tr><td>${q} ${T.ounce} ${T.m[m]}</td><td>${p ? nf(p * q, 2) : "—"}</td><td>${p && rate ? nf(p * q * rate, 0) : "—"}</td></tr>`)).join("");
+      `<tr><td>${q} ${T.ounce} ${T.m[m]}</td><td>${p ? nf(p * q, 2) : "—"}</td><td>${p && rate ? nf(m === "xau" && cbase === "kabul" && kabulPure() ? kabulPure() * OZ * q : p * q * rate, 0) : "—"}</td></tr>`)).join("");
   };
   window.fillCalcLive = () => { if (!$("cgo")) return;
     const set = (id, v) => { const el = $(id); if (v == null || el.dataset.edited || document.activeElement === el) return; const nv = String(Math.round(v * 100) / 100); if (el.value !== nv) { el.value = nv; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); } };
