@@ -750,6 +750,26 @@
   .bnav{transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .4s}
   input,textarea,select{touch-action:manipulation}
   button,a,.it,.chips button{touch-action:manipulation}
+
+  /* قفل پس‌زمینه وقتی پنجره باز است */
+  html.locked,html.locked body{overflow:hidden!important;overscroll-behavior:none}
+  .cbody,.chat form,#cfm{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .tool .tb{animation:none!important}
+  details>summary{-webkit-user-select:none;user-select:none}
+  details.nitem>summary::-webkit-details-marker{display:none}
+  .tool[open]>summary::after{transform:rotate(180deg)}
+
+  /* گفتگو و پخش صدا هماهنگ با طراحی جدید */
+  .bub.me{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 10px 22px -12px var(--glowc)}
+  .bub.him{background:var(--gl)!important;border:0!important;box-shadow:var(--raise)}
+  .bub .vp{background:rgba(255,255,255,.12)!important}
+  .cfoot{border-top:0!important;background:var(--bg)}
+  .cfoot textarea{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important;border-radius:999px!important}
+  .cfoot .send,.vplay{background:linear-gradient(180deg,var(--navy2),var(--navy))!important;color:var(--onNavy)!important;box-shadow:0 8px 20px -8px var(--glowc)!important}
+  .cfoot .ctool{border-radius:50%}
+  .chead{border-bottom:0!important}
+  .vp{background:var(--field)!important;box-shadow:var(--sh-in)!important;border:0!important;border-radius:999px!important}
+  .cstate.wait{color:#e08a2c}
 </style>
 </head>
 <body>
@@ -761,7 +781,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794043398";
+const BUILD = "1794043777";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -778,6 +798,31 @@ const AFN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1000_
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 const $app = document.getElementById("app");
+/* پنجره‌ها با دکمه‌ی «برگشت» گوشی بسته می‌شوند */
+const overlays = [];
+function overlayPush(closeFn){ overlays.push(closeFn); try { history.pushState({ ov: overlays.length }, ""); } catch {} }
+addEventListener("popstate", () => { const f = overlays.pop(); if (f) f(); });
+let lockN = 0, lockY = 0;
+function lockBody(){ if (lockN++ === 0) { lockY = scrollY; document.documentElement.classList.add("locked"); } }
+function unlockBody(){ if (lockN > 0 && --lockN === 0) { document.documentElement.classList.remove("locked"); } }
+/* بازشوهای نرم: هر بار فقط یکی باز (ابزارها، آموزش‌ها) */
+document.addEventListener("click", e => {
+  const sum = e.target.closest("details.tool>summary,details.nitem>summary"); if (!sum) return;
+  e.preventDefault();
+  const d = sum.parentElement;
+  const anim = (el, open) => {
+    if (el._a) { el._a.cancel(); el._a = null; }
+    const from = el.offsetHeight;
+    el.open = false; const closedH = el.offsetHeight; el.open = true; const openH = el.offsetHeight;
+    el.style.overflow = "hidden";
+    const a = el._a = el.animate([{ height: from + "px" }, { height: (open ? openH : closedH) + "px" }], { duration: 650, easing: "cubic-bezier(.22,1,.36,1)" });
+    a.onfinish = () => { el._a = null; el.style.overflow = ""; el.open = open; };
+  };
+  if (d.open && !d._closing) { d._closing = true; anim(d, false); setTimeout(() => d._closing = false, 660); return; }
+  d.parentElement.querySelectorAll(":scope > details[open]").forEach(o => { if (o !== d) { o._closing = true; anim(o, false); setTimeout(() => o._closing = false, 660); } });
+  anim(d, true);
+  setTimeout(() => { const r = d.getBoundingClientRect(); if (r.top < 70 || r.top > innerHeight * .6) scrollTo({ top: scrollY + r.top - 80, behavior: "smooth" }); }, 380);
+});
 /* کیبورد باز است → نوار پایین مخفی */
 document.addEventListener("focusin", e => { if (e.target.matches("input:not([type=checkbox]):not([type=radio]),textarea,select") && !e.target.closest(".chat")) document.body.classList.add("kb"); });
 document.addEventListener("focusout", () => setTimeout(() => { if (!document.activeElement?.matches?.("input,textarea,select")) document.body.classList.remove("kb"); }, 120));
@@ -1505,8 +1550,11 @@ function drawAcademy(){
 
 /* ----- پوسته و ناوبری ----- */
 function bnavHTML(){ return `<nav class="bnav" id="bnav">${[["sig","📈"],["prc","💹"],["tool","🧮"],["acad","🎓"]].map(([k, ic]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${T.nav[k]}</button>`).join("")}</nav>`; }
-function setPage(p){
+let tabHist = false;
+function setPage(p, fromBack){
   if (page === p) { scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if (p === "sig" && tabHist && !fromBack && overlays[overlays.length - 1]?._tab) { history.back(); return; }
+  if (p !== "sig" && !tabHist) { tabHist = true; const f = () => { tabHist = false; if (view === "feed") setPage("sig", true); }; f._tab = true; overlayPush(f); }
   page = p; store.set("page", p);
   document.querySelectorAll("#bnav button").forEach(b => b.classList.toggle("on", b.dataset.pg === p));
   drawPage(); scrollTo({ top: 0 });
@@ -1525,7 +1573,8 @@ function drawPage(){
     $("sl2").querySelector(".lv2").onclick = () => loadFeed();
     $("perc").onclick = e => { const b = e.target.closest("[data-per]"); if (!b) return; per = b.dataset.per; store.set("per", per); $("perc").querySelectorAll("[data-per]").forEach(x => x.classList.toggle("on", x === b)); drawFeed(); };
     $("sortS").onchange = e => { sortBy = e.target.value; store.set("sort", sortBy); drawFeed(); };
-    $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
+    $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (!it) return; const was = it.classList.contains("open");
+      $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
   } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
@@ -1717,13 +1766,14 @@ function hydrateImages(root){
 document.addEventListener("click", e => {
   const img = e.target.closest(".cimg img"); if (!img) return;
   const v = document.createElement("div"); v.className = "iview"; v.innerHTML = `<img src="${img.src}" alt="">`;
-  v.onclick = () => { v.classList.remove("show"); setTimeout(() => v.remove(), 350); };
+  let gone = false; const close = () => { if (gone) return; gone = true; v.classList.remove("show"); setTimeout(() => v.remove(), 400); };
+  v.onclick = () => history.back(); overlayPush(close);
   document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
 });
 
 /* ===== گفتگو با استاد ===== */
 let msgs = [], msgsLoaded = false, chatOpen = false, chatSig = "";
-function removeChat(){ ["fab","chat","cveil","fablab"].forEach(id => $(id)?.remove()); chatOpen = false; }
+function removeChat(){ ["fab","chat","cveil","fablab"].forEach(id => $(id)?.remove()); if (chatOpen) unlockBody(); chatOpen = false; }
 function setupChat(){
   if ($("fab")) return;
   const isAdmin = me.role === "admin";
@@ -1750,7 +1800,8 @@ function setupChat(){
   const posLabel = () => { const left = fab.offsetLeft + 31 < innerWidth / 2;
     lab.style.top = (fab.offsetTop + 16) + "px";
     lab.style.left = left ? (fab.offsetLeft + 72) + "px" : ""; lab.style.right = left ? "" : (innerWidth - fab.offsetLeft + 10) + "px"; };
-  addEventListener("resize", () => { place(fab.offsetLeft, fab.offsetTop); posLabel(); });
+  window._fabResize && removeEventListener("resize", window._fabResize);
+  window._fabResize = () => { if (!fab.isConnected) return; place(fab.offsetLeft, fab.offsetTop); posLabel(); }; addEventListener("resize", window._fabResize);
   posLabel(); setTimeout(() => lab.classList.add("show"), 900); setTimeout(() => lab.classList.remove("show"), 7000);
   fab.addEventListener("pointerdown", () => lab.classList.remove("show"));
   fab.addEventListener("pointerup", () => setTimeout(posLabel, 600));
@@ -1800,8 +1851,9 @@ async function sendMedia(kind, blob, ext){
   if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   loadChat();
 }
-function openChat(){ chatOpen = true; $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
-function closeChat(){ chatOpen = false; $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); drawChat(); }
+function openChat(){ if (chatOpen) return; chatOpen = true; overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
+function closeChatNow(){ if (!chatOpen) return; chatOpen = false; unlockBody(); try { rec?.cancel?.(); $("cform")?.classList.remove("recording"); } catch {} $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); document.activeElement?.blur?.(); drawChat(); }
+function closeChat(){ if (overlays.length && overlays[overlays.length - 1] === closeChatNow) history.back(); else closeChatNow(); }
 function drawChat(){
   const b = $("cbody");
   const unread = msgs.filter(m => m.sender === "admin" && !m.seen_at).length, bd = $("fbadge");
@@ -1876,8 +1928,11 @@ function openContact(){
       <button class="cta" id="ksend">${T.cSend}</button>
     </form>`;
   document.body.append(veil, box);
-  const close = () => { veil.classList.remove("show"); box.classList.remove("show"); setTimeout(() => { veil.remove(); box.remove(); }, 600); };
-  veil.onclick = close; $("cx").onclick = close;
+  let closed = false;
+  const close = () => { if (closed) return; closed = true; veil.id = box.id = ""; box.querySelectorAll("[id]").forEach(x => x.id = "");
+    veil.classList.remove("show"); box.classList.remove("show"); unlockBody(); setTimeout(() => { veil.remove(); box.remove(); }, 1000); };
+  veil.onclick = () => history.back(); $("cx").onclick = () => history.back();
+  overlayPush(close); lockBody();
   requestAnimationFrame(() => { veil.classList.add("show"); box.classList.add("show"); });
   $("cfm").onsubmit = async e => {
     e.preventDefault();
@@ -1885,7 +1940,7 @@ function openContact(){
     const { error } = await sb.from("contact_requests").insert({ name: $("kn").value.trim(), contact: toEn($("kc").value.trim()), body: $("kb").value.trim() });
     if (error) { b.disabled = false; b.textContent = T.cSend; $("kerr").textContent = T.cErr; return; }
     $("cfm").innerHTML = `<div class="cempty" style="padding:40px 10px"><div style="font-size:44px">✅</div>${T.cOk}</div><button type="button" class="cta" id="kclose">${T.close}</button>`;
-    $("kclose").onclick = close;
+    $("kclose").onclick = () => history.back();
   };
 }
 

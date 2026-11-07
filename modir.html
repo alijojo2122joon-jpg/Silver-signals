@@ -37,6 +37,8 @@
   html{background:var(--bg2)}
   body{background:linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed;color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   body.lock{overflow:hidden}
+  html:has(body.lock){overflow:hidden;overscroll-behavior:none}
+  .sheet{overscroll-behavior:contain}
   .blob{position:fixed;border-radius:50%;z-index:0;pointer-events:none;animation:float 14s ease-in-out infinite}
   .b1{width:260px;height:260px;top:-90px;right:-90px;background:radial-gradient(circle at 30% 30%,#fff,var(--blob1) 70%);opacity:.8}
   .b2{width:170px;height:170px;top:40%;left:-70px;background:radial-gradient(circle at 60% 40%,#fff,var(--blob2) 70%);opacity:.7;animation-delay:-5s}
@@ -522,7 +524,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794043398";
+const BUILD = "1794043777";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -644,9 +646,12 @@ function openSheet(html){
   sh.innerHTML = `<div class="grab"></div>` + html; sh.scrollTop = 0;
   requestAnimationFrame(() => { $("veil").classList.add("show"); sh.classList.add("show"); });
   document.body.classList.add("lock");
+  if (!sheetHist) { sheetHist = true; try { history.pushState({ sheet: 1 }, ""); } catch {} }
 }
-function closeSheet(){ openChatId = null; if (typeof curAudio !== 'undefined' && curAudio) { curAudio.pause(); } $("veil").classList.remove("show"); $("sheet").classList.remove("show"); document.body.classList.remove("lock"); }
-$("veil").onclick = closeSheet;
+let sheetHist = false;
+addEventListener("popstate", () => { if (sheetHist) { sheetHist = false; closeSheet(true); } });
+function closeSheet(fromBack){ if (!fromBack) sheetHist = false; openChatId = null; if (typeof curAudio !== 'undefined' && curAudio) { curAudio.pause(); } $("veil").classList.remove("show"); $("sheet").classList.remove("show"); document.body.classList.remove("lock"); }
+$("veil").onclick = () => closeSheet();
 let y0 = null;
 $("sheet").addEventListener("touchstart", e => { y0 = ($("sheet").scrollTop <= 0 && e.target.closest(".grab,h2,.hint,.head")) ? e.touches[0].clientY : null; }, {passive:true});
 $("sheet").addEventListener("touchend", e => { if (y0 != null && e.changedTouches[0].clientY - y0 > 90) closeSheet(); y0 = null; });
@@ -1395,7 +1400,7 @@ function sheetNewMember(){
       $("shareBox").innerHTML = `<div class="share rise"><b>این پیام را برای صراف بفرستید:</b>\n${esc(text)}</div>
         <button class="cta press" id="cp">کپی پیام</button><button class="ghost" id="cl">بستن</button>`;
       $("cp").onclick = async () => { try { await navigator.clipboard.writeText(text); toast("کپی شد ✓"); } catch { toast("متن را دستی کپی کنید", true); } };
-      $("cl").onclick = closeSheet;
+      $("cl").onclick = () => closeSheet();
     } catch (x) {
       busy(b, false, "ساختن حساب");
       toast(x.message === "email_exists" ? "این ایمیل قبلاً ثبت شده است" : x.message === "invalid_input" ? "ایمیل درست و رمز 6 حرفی لازم است" : "خطا: " + x.message, true);
