@@ -44,6 +44,8 @@ async function ariana(): Promise<Item[]> {
 // Google News (English) → translated
 const GN = (q: string) => `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
 const AFG = /afghan|kabul|taliban|islamic emirate/i;
+const ECO_EN = /bank|currenc|afghani|auction|dollar|econom|financ|budget|revenue|customs|tax|trade|inflation|exchange|money|invest|export|import|price|market|loan|aid|fund|imf/i;
+const JUNK = /stock price, news, quote|cricket|icc |odi |t20|football|match/i;
 const GQ: { org: string; src: string; kind: string; q: string; must?: RegExp; max: number }[] = [
   { org: "dab", src: "بانک مرکزی (د افغانستان بانک)", kind: "news", q: '("Da Afghanistan Bank" OR "Afghanistan central bank" OR "Afghan central bank" OR "DAB auction" OR afghani currency) when:7d', must: AFG, max: 6 },
   { org: "mof", src: "وزارت مالیه", kind: "news", q: 'Afghanistan ("Ministry of Finance" OR "finance ministry" OR budget OR customs revenue) when:7d', must: AFG, max: 5 },
@@ -63,7 +65,7 @@ async function gnews(admin: any): Promise<Item[]> {
         const raw = tag(x, "title"), srcName = tag(x, "source");
         const title = srcName && raw.endsWith(" - " + srcName) ? raw.slice(0, -(srcName.length + 3)) : raw.replace(/ - [^-]{2,40}$/, "");
         return { title_en: title, publisher: srcName, link: tag(x, "link"), at: isoOf(tag(x, "pubDate")) };
-      }).filter(r => r.title_en && r.link && (!g.must || g.must.test(r.title_en)));
+      }).filter(r => r.title_en && r.link && (!g.must || g.must.test(r.title_en)) && (g.org === "gold" || g.org === "wb" || ECO_EN.test(r.title_en)) && !JUNK.test(r.title_en));
       rows.sort((a, b) => b.at.localeCompare(a.at));
       for (const r of rows.slice(0, g.max)) out.push({ title: r.title_en, title_en: r.title_en, link: r.link, at: r.at, kind: g.kind, org: g.org, src: g.src + (r.publisher ? " · " + r.publisher : "") });
       gErr.push(g.org + ":" + rows.length + (xml ? " (db)" : ""));
