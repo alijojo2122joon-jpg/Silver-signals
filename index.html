@@ -888,6 +888,8 @@
   .nlink b{display:block;font-size:14.5px;line-height:1.7}
   .nlink p{margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.7}
   .nlink small{display:block;margin-top:3px;font-size:11px;color:var(--soft)}
+
+  .closedb{margin:0 0 10px;padding:10px 14px;border-radius:18px;font-size:12.5px;font-weight:700;line-height:1.8;color:var(--text);background:var(--field);box-shadow:var(--sh-in)}
 </style>
 </head>
 <body>
@@ -899,7 +901,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794047482";
+const BUILD = "1794048216";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1353,6 +1355,8 @@ L3.en.myProfile = "My profile"; L3.en.changePhoto = "Choose photo"; L3.en.savePh
 L3.fa.afNews = "اخبار اقتصادی افغانستان"; L3.fa.hrAgo = "{n} ساعت پیش";
 L3.ps.afNews = "د افغانستان اقتصادي خبرونه"; L3.ps.hrAgo = "{n} ساعته مخکې";
 L3.en.afNews = "Afghanistan economy news"; L3.en.hrAgo = "{n}h ago";
+L3.fa.xagTg = "زنده از forex.com / TradingView (کانال NoghreLahzeyi)"; L3.ps.xagTg = "ژوندی له forex.com / TradingView (NoghreLahzeyi چینل)"; L3.en.xagTg = "Live from forex.com / TradingView (@NoghreLahzeyi)";
+L3.fa.mktClosed = "بازار جهانی طلا و نقره آخر هفته بسته است؛ قیمت‌ها نرخ بسته‌شدن جمعه‌اند و از دوشنبه صبح دوباره زنده می‌شوند."; L3.ps.mktClosed = "د سرو او سپینو زرو نړیوال بازار د اونۍ په پای کې بند دی؛ بیې د جمعې د بندېدو نرخ دي."; L3.en.mktClosed = "World gold & silver markets are closed for the weekend; prices are Friday's close and go live again Monday morning.";
 L3.fa.tgSrc = "کانال تلگرام DollarKabul"; L3.ps.tgSrc = "د DollarKabul ټلګرام چینل"; L3.en.tgSrc = "Telegram @DollarKabul";
 L3.fa.pkrT = "دالر به کلدار"; L3.ps.pkrT = "ډالر په کلدار"; L3.en.pkrT = "USD to PKR";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
@@ -1529,7 +1533,7 @@ function drawPrices(){
   const afnSpark = rates.filter(r => r.place === "kabul" && r.sell != null).slice(0, 30).reverse().map(r => Number(r.sell));
   const fl = (key, v) => { const o = shown[key]; shown[key] = v; return o == null || v == null || o === v ? "" : v > o ? "fl-up" : "fl-dn"; };
   const ago = p.at ? Math.max(0, Math.round((Date.now() - new Date(p.at)) / 1000)) : null;
-  el.innerHTML = `<div class="upd"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${T.lastUpd}: <b data-ago>${agoTxt(p.at)}</b></div>
+  el.innerHTML = `${p.closed ? `<div class="closedb">🌙 ${T.mktClosed}</div>` : ""}<div class="upd"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${T.lastUpd}: <b data-ago>${agoTxt(p.at)}</b></div>
     <div class="pcard glass glow" style="--bd:7s"><div class="ph"><img src="${MK.xau.th}" alt=""><div><b>${T.m.xau}</b><small>XAU/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xau", xau)}">$${nf(xau)}</b>${chgHTML(xau, p.xau?.prev)}</div></div>
       ${sparkSVG(p.xau?.spark, "#d4a53b")}
       <div class="prow"><div><small>${T.kabulMq}</small><b>${nf(gMq ?? (kabulPure() ? kabulPure() * GPM : calcMq(xau)), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram18} · ${T.kabulMkt}</small><b>${nf(kabulGram("k18")?.sell ?? (xau && afn ? xau / OZ * .75 * afn : null), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div></div>
@@ -1540,6 +1544,7 @@ function drawPrices(){
         <p>${tt(T.kabulNote, { d: local.gold.date })}</p></div></details>` : ""}</div>
     <div class="pcard glass glow" style="--bd:8s"><div class="ph"><img src="${MK.xag.th}" alt=""><div><b>${T.m.xag}</b><small>XAG/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xag", xag)}">$${nf(xag)}</b>${chgHTML(xag, p.xag?.prev)}</div></div>
       ${sparkSVG(p.xag?.spark, "#8e98a6")}
+      <div class="upd" style="margin:2px 0 8px;text-align:start">${p.xag?.src?.startsWith("tg") ? T.xagTg : T.world} · ${agoTxt(p.xag?.quoteAt)}</div>
       <div class="prow"><div><small>${T.silverMq}</small><b>${nf(sMq ?? calcMq(xag), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram}</small><b>${nf(xag && afn ? xag / OZ * afn : null, 1)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
     <div class="pcard glass glow" style="--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
       <div><b>${adminRate() || local?.fx?.usd ? T.sarai : T.mktRate}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", usdAfn())}">${usdAfn() != null ? nf(usdAfn()) : "—"}</b></div></div>
