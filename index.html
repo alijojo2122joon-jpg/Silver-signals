@@ -417,6 +417,36 @@
   .inp{width:100%;height:46px;margin-top:4px;padding:0 12px;border-radius:14px;border:1px solid var(--line);background:var(--field);color:var(--text);font-family:inherit;font-size:16px;outline:none}
   .inp:focus{border-color:var(--brand)}
   textarea.inp{height:80px;padding:10px 12px;resize:vertical}
+  .tvbox{border-radius:18px;overflow:hidden;margin:0 0 12px;min-height:46px;background:var(--field)}
+  .tvbox .tradingview-widget-copyright{display:none}
+  .pv b.fl-up{animation:flu 1.2s ease}.pv b.fl-dn{animation:fld 1.2s ease}
+  @keyframes flu{0%{color:var(--buy);text-shadow:0 0 14px rgba(0,160,80,.5)}100%{}}
+  @keyframes fld{0%{color:var(--sell);text-shadow:0 0 14px rgba(220,40,40,.5)}100%{}}
+  .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:14px;background:var(--field);margin-bottom:10px}
+  .seg2 button{border:0;border-radius:11px;padding:9px;font-family:inherit;font-weight:800;font-size:13px;color:var(--muted);background:none;cursor:pointer}
+  .seg2 button.on{background:var(--card,#fff);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  :root[data-theme="dark"] .seg2 button.on{background:rgba(255,255,255,.12)}
+  .qchips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+  .qchips button{border:1px solid var(--line);background:var(--field);border-radius:10px;padding:6px 10px;font-family:inherit;font-size:12px;font-weight:800;color:var(--text);cursor:pointer}
+  .rrows{margin-top:10px;border-radius:16px;background:var(--field);padding:4px 12px}
+  .cw[hidden],.cmn[hidden]{display:none!important}
+  .rrows b:has(.wt){direction:rtl;font-family:inherit;font-size:14px}
+  .wt bdi{font-family:Montserrat,Arial,sans-serif;font-weight:900;direction:ltr;unicode-bidi:isolate}
+  .rrows div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+  .rrows div:first-child{border-top:0}
+  .rrows b{font-family:Montserrat,Arial,sans-serif;direction:ltr;unicode-bidi:isolate;font-size:16px;font-weight:900}
+  .qtab{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+  .qtab th{color:var(--muted);font-weight:700;padding:6px 4px;text-align:start}
+  .qtab td{padding:7px 4px;border-top:1px solid var(--line);font-family:Montserrat,Arial,sans-serif;direction:ltr;unicode-bidi:isolate;text-align:start;font-weight:700}
+  .qtab td:first-child{font-family:inherit;direction:inherit}
+  .cal .cday{font-weight:900;font-size:13px;margin:12px 0 4px;color:var(--muted)}
+  .cal .cday:first-child{margin-top:0}
+  .cal .cev{display:grid;grid-template-columns:46px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+  .cal .cev.past{opacity:.55}
+  .cal .ct{font-family:Montserrat,Arial,sans-serif;font-weight:800;font-size:13px;direction:ltr}
+  .cal .cev b{font-size:14px;display:block;line-height:1.6}
+  .cal .cm{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+  .cal .src{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
   .res2{margin-top:10px;padding:12px;border-radius:16px;background:var(--field);display:grid;gap:4px;font-size:13px}
   .res2 b{font-size:20px;font-weight:900;font-family:Montserrat,Arial,sans-serif;direction:ltr;display:inline-block;color:var(--text)}
   .btn2{border:0;border-radius:14px;height:44px;padding:0 16px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;color:var(--aText);background:linear-gradient(180deg,var(--a1),var(--a2) 60%,var(--a3));margin-top:10px}
@@ -469,7 +499,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1793955307";
+const BUILD = "1794041453";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -701,7 +731,7 @@ function topbar(){
 }
 function bindTop(){
   $("out").onclick = () => { store.set("cache_me", null); store.set("cache_msgs", []); sb.auth.signOut(); };
-  $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
+  $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
   $("pop").onclick = e => { const b = e.target.closest("[data-lang]"); if (b) setLang(b.dataset.lang); };
@@ -763,7 +793,7 @@ const L2 = {
     total:"کل سیگنال‌ها", wins:"موفق", losses:"ناموفق", winRate:"درصد موفقیت", pnl:"سود فرضی", points:"واحد", share:"اشتراک آمار",
     emptyPer:"در این بازه سیگنالی ثبت نشده است.", rate:"امتیاز شما", avgRate:"میانگین", rr:"ریسک به ریوارد", reason:"دلیل تحلیل",
     world:"قیمت جهانی", ounce:"انس", mithqal:"مثقال", gram18:"گرم 18 عیار", gram:"گرم", kabulMq:"مثقال کابل (24 عیار)", silverMq:"مثقال نقره",
-    sarai:"سرای شهزاده کابل", buyR:"خرید", sellR:"فروش", cities:{herat:"هرات", mazar:"مزار شریف", jalalabad:"جلال‌آباد", kabul:"کابل"},
+    sarai:"سرای شهزاده کابل", buyR:"خرید", sellR:"فروش", cities:{herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال‌آباد", kabul:"کابل"},
     dxy:"شاخص دالر (DXY)", dxySub:"قدرت دالر جهانی؛ روی طلا و نقره اثر مستقیم دارد", lastUpd:"آخرین به‌روزرسانی", noRate:"نرخ هنوز ثبت نشده",
     calcT:"ماشین‌حساب طلا و نقره", calcS:"قیمت مثقال و گرم به افغانی", metal:"فلز", gold:"طلا", silver:"نقره", karat:"عیار", weight:"وزن", unitL:"واحد", ozPrice:"قیمت انس (دالر)", usdAfn:"نرخ دالر (افغانی)", result:"نتیجه",
     riskT:"مدیریت ریسک", riskS:"حجم مجاز معامله با حداکثر 2٪ ریسک", balance:"موجودی", riskPct:"درصد ریسک", entryP:"قیمت ورود", stopP:"حد ضرر", maxLoss:"حداکثر ضرر مجاز", posSize:"حجم معامله",
@@ -781,7 +811,7 @@ const L2 = {
     total:"ټول سیګنالونه", wins:"بریالي", losses:"ناکام", winRate:"د بریا سلنه", pnl:"فرضي ګټه", points:"واحد", share:"شمېرې شریکول",
     emptyPer:"په دې موده کې سیګنال نشته.", rate:"ستاسو نمره", avgRate:"منځنۍ", rr:"خطر او ګټه", reason:"د تحلیل دلیل",
     world:"نړیواله بیه", ounce:"اونس", mithqal:"مثقال", gram18:"18 عیار ګرام", gram:"ګرام", kabulMq:"د کابل مثقال (24 عیار)", silverMq:"د سپینو زرو مثقال",
-    sarai:"د کابل سرای شهزاده", buyR:"پېرود", sellR:"پلور", cities:{herat:"هرات", mazar:"مزار شریف", jalalabad:"جلال آباد", kabul:"کابل"},
+    sarai:"د کابل سرای شهزاده", buyR:"پېرود", sellR:"پلور", cities:{herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال آباد", kabul:"کابل"},
     dxy:"د ډالر شاخص (DXY)", dxySub:"د نړیوال ډالر ځواک؛ پر سرو او سپینو زرو مستقیم اغېز لري", lastUpd:"وروستی تازه کېدل", noRate:"نرخ لا نه دی ثبت شوی",
     calcT:"د سرو او سپینو زرو حساب", calcS:"د مثقال او ګرام بیه په افغانیو", metal:"فلز", gold:"سره زر", silver:"سپین زر", karat:"عیار", weight:"وزن", unitL:"واحد", ozPrice:"د اونس بیه (ډالر)", usdAfn:"د ډالر نرخ (افغانۍ)", result:"پایله",
     riskT:"د خطر مدیریت", riskS:"د اعظمي 2٪ خطر سره د معاملې اندازه", balance:"شتمني", riskPct:"د خطر سلنه", entryP:"د ننوتلو بیه", stopP:"د تاوان حد", maxLoss:"اعظمي مجاز تاوان", posSize:"د معاملې اندازه",
@@ -799,7 +829,7 @@ const L2 = {
     total:"Total signals", wins:"Wins", losses:"Losses", winRate:"Win rate", pnl:"Hypothetical P/L", points:"pts", share:"Share stats",
     emptyPer:"No signals in this period.", rate:"Your rating", avgRate:"avg", rr:"Risk/Reward", reason:"Analysis reason",
     world:"World price", ounce:"oz", mithqal:"Mithqal", gram18:"18K gram", gram:"Gram", kabulMq:"Kabul mithqal (24K)", silverMq:"Silver mithqal",
-    sarai:"Sarai Shahzada, Kabul", buyR:"Buy", sellR:"Sell", cities:{herat:"Herat", mazar:"Mazar-i-Sharif", jalalabad:"Jalalabad", kabul:"Kabul"},
+    sarai:"Sarai Shahzada, Kabul", buyR:"Buy", sellR:"Sell", cities:{herat:"Herat", mazar:"Mazar-i-Sharif", kandahar:"Kandahar", jalalabad:"Jalalabad", kabul:"Kabul"},
     dxy:"Dollar Index (DXY)", dxySub:"Global dollar strength; directly affects gold and silver", lastUpd:"Last update", noRate:"Rate not posted yet",
     calcT:"Gold & silver calculator", calcS:"Mithqal and gram price in AFN", metal:"Metal", gold:"Gold", silver:"Silver", karat:"Karat", weight:"Weight", unitL:"Unit", ozPrice:"Ounce price (USD)", usdAfn:"USD rate (AFN)", result:"Result",
     riskT:"Risk manager", riskS:"Position size with max 2% risk", balance:"Balance", riskPct:"Risk %", entryP:"Entry price", stopP:"Stop loss", maxLoss:"Max allowed loss", posSize:"Position size",
@@ -811,6 +841,18 @@ const L2 = {
     impact:"Impact", upI:"Bullish", dnI:"Bearish", neuI:"Neutral", prevV:"Previous", fcV:"Forecast", actV:"Actual", imp:{high:"High", medium:"Medium", low:"Low"}, noContent:"Nothing published yet.",
     disc2:"All gold, silver and dollar analyses and signals are educational. The final decision and trading risk are the trader's own responsibility.", shareTxt:"{p}% win rate in {m} ({per})" },
 };
+const L3 = {
+  fa: { kandahar:"کندهار", tvT:"بازار جهانی زنده · TradingView", calT:"تقویم اقتصادی · Forex Factory", today:"امروز", tomorrow:"فردا", affects:"اثر بر", calEmpty:"رویداد مهمی در این هفته نیست.", calSrc:"منبع: Forex Factory · ساعت‌ها به وقت گوشی شما", allDay:"تمام روز",
+    modeW:"⚖️ از روی وزن", modeM:"💵 از روی پول", amount:"مقدار", money:"مبلغ", curr:"واحد پول", kg:"کیلو", afnC:"افغانی", usdC:"دالر", goldOz:"انس طلا ($)", silverOz:"انس نقره ($)",
+    valUsd:"ارزش به دالر", valAfn:"ارزش به افغانی", eqIn:"معادل در {m}", canBuy:"مقدار قابل خرید", ratio:"نسبت طلا به نقره", quick:"جدول سریع (طلای 24 و نقره خالص)", liveNote:"قیمت‌ها خودکار از بازار جهانی پر می‌شوند و قابل تغییرند.", pure:"خالص" },
+  ps: { kandahar:"کندهار", tvT:"ژوندی نړیوال بازار · TradingView", calT:"اقتصادي جنتري · Forex Factory", today:"نن", tomorrow:"سبا", affects:"اغېز پر", calEmpty:"پدې اونۍ کې مهمه پېښه نشته.", calSrc:"سرچینه: Forex Factory · وختونه ستاسو د ګوشي له مخې", allDay:"ټوله ورځ",
+    modeW:"⚖️ د وزن له مخې", modeM:"💵 د پیسو له مخې", amount:"اندازه", money:"مبلغ", curr:"اسعار", kg:"کیلو", afnC:"افغانۍ", usdC:"ډالر", goldOz:"د سرو زرو اونس ($)", silverOz:"د سپینو زرو اونس ($)",
+    valUsd:"ارزښت په ډالرو", valAfn:"ارزښت په افغانیو", eqIn:"په {m} کې معادل", canBuy:"د پېرودلو وړ اندازه", ratio:"د سرو او سپینو زرو نسبت", quick:"چټک جدول (24 عیاره سره زر او خالص سپین زر)", liveNote:"بیې په اتومات ډول له نړیوال بازار ډکېږي او بدلېدای شي.", pure:"خالص" },
+  en: { kandahar:"Kandahar", tvT:"Live world market · TradingView", calT:"Economic calendar · Forex Factory", today:"Today", tomorrow:"Tomorrow", affects:"Affects", calEmpty:"No major events this week.", calSrc:"Source: Forex Factory · times in your phone's timezone", allDay:"All day",
+    modeW:"⚖️ By weight", modeM:"💵 By money", amount:"Amount", money:"Money", curr:"Currency", kg:"Kilo", afnC:"AFN", usdC:"USD", goldOz:"Gold oz ($)", silverOz:"Silver oz ($)",
+    valUsd:"Value in USD", valAfn:"Value in AFN", eqIn:"Equivalent in {m}", canBuy:"You can buy", ratio:"Gold/silver ratio", quick:"Quick table (24K gold & pure silver)", liveNote:"Prices fill in live from the world market and can be edited.", pure:"pure" },
+};
+for (const k in L3) { Object.assign(L[k], L3[k]); }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
 
 const DICT = [
@@ -918,39 +960,52 @@ document.addEventListener("click", async e => {
 
 /* ----- قیمت‌ها ----- */
 async function loadPrices(force){
-  if (!force && Date.now() - pricesAt < 55000) return;
+  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 7000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
   if (data) { rates = data; store.set("cache_rates", rates); }
   checkAlerts();
   if (page === "prc") drawPrices();
-  if (page === "tool" && $("co")) { const fill = (id, v) => { if (v && !$(id).value) { $(id).value = String(Math.round(v * 100) / 100); $(id).dispatchEvent(new Event("input")); } };
-    fill("co", prices?.[$("cm").value]?.price); fill("cr", usdAfn()); }
+  if (page === "tool") fillCalcLive();
 }
 const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null));
 const latestField = f => rates.find(r => r.place === "kabul" && r[f] != null)?.[f];
 const usdAfn = () => { const k = latestRate("kabul"); return k ? Number(k.sell ?? k.buy) : null; };
+function tvWidget(){
+  const box = $("tvbox"); if (!box) return;
+  box.innerHTML = `<div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>`;
+  const s = document.createElement("script");
+  s.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"; s.async = true;
+  s.textContent = JSON.stringify({ symbols: [
+    { proName: "OANDA:XAUUSD", title: "Gold · XAU/USD" }, { proName: "OANDA:XAGUSD", title: "Silver · XAG/USD" },
+    { proName: "TVC:DXY", title: "DXY" }, { proName: "FX:EURUSD", title: "EUR/USD" }, { proName: "TVC:USOIL", title: "Oil" } ],
+    showSymbolLogo: true, isTransparent: true, displayMode: "adaptive", colorTheme: getTheme() === "dark" ? "dark" : "light", locale: "en" });
+  box.firstChild.appendChild(s);
+}
+let shown = {};
 function drawPrices(){
-  const el = $("pg"); if (!el || page !== "prc") return;
+  const el = $("pcards"); if (!el || page !== "prc") return;
   const p = prices || {}, afn = usdAfn(), k = latestRate("kabul");
   const gMq = latestField("gold_mithqal"), sMq = latestField("silver_mithqal");
   const xau = p.xau?.price, xag = p.xag?.price;
   const calcMq = (oz, pur = 1) => oz && afn ? oz / OZ * GPM * pur * afn : null;
   const afnSpark = rates.filter(r => r.place === "kabul" && r.sell != null).slice(0, 30).reverse().map(r => Number(r.sell));
-  el.innerHTML = `<div class="upd">${T.lastUpd}: ${p.at ? timeOnly(p.at) : "—"}</div>
-    <div class="pcard glass glow rise" style="--bd:7s"><div class="ph"><img src="${MK.xau.th}" alt=""><div><b>${T.m.xau}</b><small>XAU/USD · ${T.world}</small></div><div class="pv"><b>$${nf(xau)}</b>${chgHTML(xau, p.xau?.prev)}</div></div>
+  const fl = (key, v) => { const o = shown[key]; shown[key] = v; return o == null || v == null || o === v ? "" : v > o ? "fl-up" : "fl-dn"; };
+  const ago = p.at ? Math.max(0, Math.round((Date.now() - new Date(p.at)) / 1000)) : null;
+  el.innerHTML = `<div class="upd">${T.lastUpd}: ${p.at ? timeOnly(p.at) + ":" + String(new Date(p.at).getSeconds()).padStart(2, "0") : "—"}</div>
+    <div class="pcard glass glow" style="--bd:7s"><div class="ph"><img src="${MK.xau.th}" alt=""><div><b>${T.m.xau}</b><small>XAU/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xau", xau)}">$${nf(xau)}</b>${chgHTML(xau, p.xau?.prev)}</div></div>
       ${sparkSVG(p.xau?.spark, "#d4a53b")}
       <div class="prow"><div><small>${T.kabulMq}</small><b>${nf(gMq ?? calcMq(xau), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram18}</small><b>${nf(xau && afn ? xau / OZ * .75 * afn : null, 0)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
-    <div class="pcard glass glow rise" style="--i:1;--bd:8s"><div class="ph"><img src="${MK.xag.th}" alt=""><div><b>${T.m.xag}</b><small>XAG/USD · ${T.world}</small></div><div class="pv"><b>$${nf(xag)}</b>${chgHTML(xag, p.xag?.prev)}</div></div>
+    <div class="pcard glass glow" style="--bd:8s"><div class="ph"><img src="${MK.xag.th}" alt=""><div><b>${T.m.xag}</b><small>XAG/USD · ${T.world}</small></div><div class="pv"><b class="${fl("xag", xag)}">$${nf(xag)}</b>${chgHTML(xag, p.xag?.prev)}</div></div>
       ${sparkSVG(p.xag?.spark, "#8e98a6")}
       <div class="prow"><div><small>${T.silverMq}</small><b>${nf(sMq ?? calcMq(xag), 0)}</b> <small style="display:inline">${T.unit.afn}</small></div><div><small>${T.gram}</small><b>${nf(xag && afn ? xag / OZ * afn : null, 1)}</b> <small style="display:inline">${T.unit.afn}</small></div></div></div>
-    <div class="pcard glass glow rise" style="--i:2;--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
-      <div><b>${T.sarai}</b><small>USD/AFN</small></div><div class="pv"><b>${k ? nf(k.sell ?? k.buy) : "—"}</b><span class="chg">${k ? timeOnly(k.created_at) : T.noRate}</span></div></div>
+    <div class="pcard glass glow" style="--bd:9s"><div class="ph"><span class="dual" style="position:relative;width:40px;height:40px"><img src="${MK.usd.th}" alt="" style="position:absolute;width:32px;height:24px;top:0;inset-inline-end:0;border-radius:6px"><img src="${AFN_IMG}" alt="" style="position:absolute;width:32px;height:24px;bottom:0;inset-inline-start:0;border-radius:6px"></span>
+      <div><b>${T.sarai}</b><small>USD/AFN</small></div><div class="pv"><b class="${fl("afn", k ? Number(k.sell ?? k.buy) : null)}">${k ? nf(k.sell ?? k.buy) : "—"}</b><span class="chg">${k ? timeOnly(k.created_at) : T.noRate}</span></div></div>
       ${sparkSVG(afnSpark, "#2f8a5b")}
       <div class="prow"><div><small>${T.buyR}</small><b>${k?.buy != null ? nf(k.buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${k?.sell != null ? nf(k.sell) : "—"}</b></div></div>
-      <div class="cities">${["herat","mazar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
-    <div class="pcard glass glow rise" style="--i:3;--bd:10s"><div class="ph"><span class="pp2" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--field);font-size:20px">💵</span><div><b>${T.dxy}</b><small>DXY</small></div><div class="pv"><b>${nf(p.dxy?.price)}</b>${chgHTML(p.dxy?.price, p.dxy?.prev)}</div></div>
+      <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
+    <div class="pcard glass glow" style="--bd:10s"><div class="ph"><span class="pp2" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--field);font-size:20px">💵</span><div><b>${T.dxy}</b><small>DXY</small></div><div class="pv"><b class="${fl("dxy", p.dxy?.price)}">${nf(p.dxy?.price)}</b>${chgHTML(p.dxy?.price, p.dxy?.prev)}</div></div>
       ${sparkSVG(p.dxy?.spark, "#6c7684")}<div class="upd" style="margin:6px 0 0">${T.dxySub}</div></div>`;
 }
 
@@ -991,16 +1046,21 @@ function drawJournal(){
 
 function drawTools(){
   const el = $("pg"); if (!el || page !== "tool") return;
-  const afn = usdAfn() || "", xau = prices?.xau?.price || "";
   el.innerHTML = `
   <details class="tool glass rise" open><summary><span class="ti">🧮</span><div>${T.calcT}<small>${T.calcS}</small></div></summary><div class="tb">
+    <div class="seg2" id="cmode"><button data-cm="w" class="on">${T.modeW}</button><button data-cm="m">${T.modeM}</button></div>
     <div class="fgrid"><label>${T.metal}<select class="inp" id="cm"><option value="xau">${T.gold}</option><option value="xag">${T.silver}</option></select></label>
-      <label>${T.karat}<select class="inp" id="ck"><option value="1">24</option><option value=".916">22</option><option value=".875">21</option><option value=".75">18</option></select></label>
-      <label>${T.ozPrice}<input class="inp" id="co" inputmode="decimal" value="${xau ? nf(xau).replace(/,/g, "") : ""}"></label>
-      <label>${T.usdAfn}<input class="inp" id="cr" inputmode="decimal" value="${afn}"></label>
-      <label>${T.weight}<input class="inp" id="cw" inputmode="decimal" value="1"></label>
-      <label>${T.unitL}<select class="inp" id="cu"><option value="mq">${T.mithqal}</option><option value="g">${T.gram}</option><option value="oz">${T.ounce}</option></select></label></div>
-    <div class="res2" id="cres"></div></div></details>
+      <label id="ckl">${T.karat}<select class="inp" id="ck"><option value="1">24</option><option value="0.916">22</option><option value="0.875">21</option><option value="0.75">18</option></select></label>
+      <label class="cw">${T.amount}<input class="inp" id="cw" inputmode="decimal" value="1"></label>
+      <label class="cw">${T.unitL}<select class="inp" id="cu"><option value="oz">${T.ounce}</option><option value="mq">${T.mithqal}</option><option value="g">${T.gram}</option><option value="kg">${T.kg}</option></select></label>
+      <label class="cmn" hidden>${T.money}<input class="inp" id="cmv" inputmode="decimal" value="1000"></label>
+      <label class="cmn" hidden>${T.curr}<select class="inp" id="ccur"><option value="usd">${T.usdC}</option><option value="afn">${T.afnC}</option></select></label></div>
+    <div class="qchips cw" id="qch"><button data-q="1:oz">1 ${T.ounce}</button><button data-q="10:oz">10 ${T.ounce}</button><button data-q="20:oz">20 ${T.ounce}</button><button data-q="1:mq">1 ${T.mithqal}</button><button data-q="100:g">100 ${T.gram}</button><button data-q="1:kg">1 ${T.kg}</button></div>
+    <div class="fgrid" style="margin-top:8px"><label>${T.goldOz}<input class="inp" id="cgo" inputmode="decimal"></label><label>${T.silverOz}<input class="inp" id="cso" inputmode="decimal"></label>
+      <label style="grid-column:1/-1">${T.usdAfn}<input class="inp" id="cr" inputmode="decimal"></label></div>
+    <div class="upd" style="text-align:start;margin:6px 2px 0">${T.liveNote}</div>
+    <div class="rrows" id="cres"></div>
+    <div style="margin-top:12px;font-weight:800;font-size:13px">${T.quick}</div><table class="qtab" id="qtab"></table></div></details>
   <details class="tool glass rise" style="--i:1"><summary><span class="ti">🛡</span><div>${T.riskT}<small>${T.riskS}</small></div></summary><div class="tb">
     <div class="fgrid"><label>${T.balance}<input class="inp" id="rb" inputmode="decimal"></label><label>${T.riskPct}<input class="inp" id="rp" inputmode="decimal" value="2"></label>
       <label>${T.entryP}<input class="inp" id="re" inputmode="decimal"></label><label>${T.stopP}<input class="inp" id="rs" inputmode="decimal"></label></div>
@@ -1021,15 +1081,43 @@ function drawTools(){
   <details class="tool glass rise" style="--i:4"><summary><span class="ti">📖</span><div>${T.dictT}<small>${T.dictS}</small></div></summary><div class="tb">
     <input class="inp" id="dq" placeholder="${T.search}"><div class="dict" id="dlist" style="margin-top:8px"></div></div></details>`;
   const n = v => { v = toEn(String(v || "")).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); return v === "" ? NaN : Number(v); };
+  let cmode = "w";
+  ["cgo","cso","cr"].forEach(id => $(id).addEventListener("input", () => { $(id).dataset.edited = "1"; }));
   const calc = () => {
-    const metal = $("cm").value, oz = n($("co").value), rate = n($("cr").value), pur = metal === "xau" ? Number($("ck").value) : 1, w = n($("cw").value) || 0, u = $("cu").value;
-    const grams = u === "mq" ? w * GPM : u === "oz" ? w * OZ : w;
-    const usd = oz / OZ * grams * pur, afnv = usd * rate;
-    $("cres").innerHTML = isNaN(usd) ? "—" : `<span>${T.result}</span><b>${nf(afnv, 0)} ${T.unit.afn}</b><span class="ltr" style="text-align:start">≈ $${nf(usd)}</span>`;
+    const metal = $("cm").value, other = metal === "xau" ? "xag" : "xau";
+    const go = n($("cgo").value), so = n($("cso").value), rate = n($("cr").value);
+    const oz = metal === "xau" ? go : so, ozO = metal === "xau" ? so : go;
+    const pur = metal === "xau" ? Number($("ck").value) : 1;
+    const row = (l, v) => `<div><span>${l}</span><b>${v}</b></div>`;
+    const wtxt = g => `<span class="wt"><bdi>${nf(g / OZ, 4)}</bdi> ${T.ounce} · <bdi>${nf(g / GPM, 3)}</bdi> ${T.mithqal} · <bdi>${nf(g, 2)}</bdi> ${T.gram}</span>`;
+    let out = "";
+    if (cmode === "w") {
+      const w = n($("cw").value) || 0, u = $("cu").value;
+      const grams = u === "mq" ? w * GPM : u === "oz" ? w * OZ : u === "kg" ? w * 1000 : w;
+      const usd = oz / OZ * grams * pur, afnv = usd * rate;
+      out += row(T.valUsd, isNaN(usd) ? "—" : "$" + nf(usd, 2));
+      out += row(T.valAfn, isNaN(afnv) ? "—" : nf(afnv, 0) + " ؋");
+      if (!isNaN(usd) && ozO) out += row(tt(T.eqIn, { m: T.m[other] }), wtxt(usd / ozO * OZ));
+    } else {
+      const mv = n($("cmv").value) || 0, usdAmt = $("ccur").value === "usd" ? mv : mv / rate;
+      const grams = usdAmt / (oz * pur) * OZ;
+      out += row(T.canBuy + " (" + T.m[metal] + (metal === "xau" ? " " + Math.round(pur * 24) + "K" : "") + ")", isNaN(grams) || !isFinite(grams) ? "—" : wtxt(grams));
+      out += $("ccur").value === "usd" ? row(T.valAfn, isNaN(usdAmt * rate) ? "—" : nf(usdAmt * rate, 0) + " ؋") : row(T.valUsd, isNaN(usdAmt) ? "—" : "$" + nf(usdAmt, 2));
+    }
+    if (go && so) out += row(T.ratio, "1 : " + nf(go / so, 2));
+    $("cres").innerHTML = out;
+    $("qtab").innerHTML = `<tr><th></th><th>$</th><th>؋</th></tr>` + [["xau", go], ["xag", so]].flatMap(([m, p]) => [1, 10, 20].map(q =>
+      `<tr><td>${q} ${T.ounce} ${T.m[m]}</td><td>${p ? nf(p * q, 2) : "—"}</td><td>${p && rate ? nf(p * q * rate, 0) : "—"}</td></tr>`)).join("");
   };
-  ["cm","ck","co","cr","cw","cu"].forEach(id => $(id).oninput = $(id).onchange = calc);
-  $("cm").onchange = () => { const v = prices?.[$("cm").value]?.price; if (v) $("co").value = String(v); $("ck").disabled = $("cm").value !== "xau"; calc(); };
-  calc();
+  window.fillCalcLive = () => { if (!$("cgo")) return; const set = (id, v) => { if (v && !$(id).dataset.edited) $(id).value = String(Math.round(v * 100) / 100); };
+    set("cgo", prices?.xau?.price); set("cso", prices?.xag?.price); set("cr", usdAfn()); calc(); };
+  ["cm","ck","cw","cu","cmv","ccur","cgo","cso","cr"].forEach(id => { $(id).oninput = calc; $(id).onchange = calc; });
+  $("cm").onchange = () => { $("ckl").style.display = $("cm").value === "xau" ? "" : "none"; calc(); };
+  $("cmode").onclick = e => { const b = e.target.closest("[data-cm]"); if (!b) return; cmode = b.dataset.cm;
+    $("cmode").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+    el.querySelectorAll(".cw").forEach(x => x.hidden = cmode !== "w"); el.querySelectorAll(".cmn").forEach(x => x.hidden = cmode !== "m"); calc(); };
+  $("qch").onclick = e => { const b = e.target.closest("[data-q]"); if (!b) return; const [q, u] = b.dataset.q.split(":"); $("cw").value = q; $("cu").value = u; calc(); };
+  fillCalcLive();
   const risk = () => { const b = n($("rb").value), p = n($("rp").value), e = n($("re").value), s = n($("rs").value);
     const loss = b * p / 100, size = Math.abs(e - s) ? loss / Math.abs(e - s) : NaN;
     $("rres").innerHTML = isNaN(loss) ? "—" : `<span>${T.maxLoss}: <b>${nf(loss)}</b></span>${isNaN(size) ? "" : `<span>${T.posSize}: <b>${nf(size, 3)}</b></span>`}`; };
@@ -1050,6 +1138,39 @@ function drawTools(){
 }
 
 /* ----- آکادمی ----- */
+let cal = store.get("cache_cal", null), calAt = 0;
+async function loadCalendar(){
+  if (Date.now() - calAt < 10 * 60000 && cal) return drawCal();
+  calAt = Date.now();
+  try { const r = await fetch(SUPABASE_URL + "/functions/v1/calendar"); if (r.ok) { cal = await r.json(); store.set("cache_cal", cal); } } catch {}
+  drawCal();
+}
+const calTitle = e => {
+  if (lang === "en") return e.title;
+  if (lang === "fa" && e.tr) return e.title_fa;
+  const key = "cal:" + lang + ":" + e.title;
+  if (trCache[key]) return trCache[key];
+  gTranslate(e.title, lang).then(t => { trCache[key] = t; saveTr(); clearTimeout(window._calT); window._calT = setTimeout(drawCal, 300); }).catch(() => {});
+  return e.title;
+};
+function drawCal(){
+  const box = $("calbox"); if (!box) return;
+  const ev = (cal?.events || []).filter(e => e.impact !== "low" || e.country === "USD");
+  if (!ev.length) { box.innerHTML = `<div class="upd">${cal ? T.calEmpty : T.noContent}</div>`; return; }
+  const now = new Date(), dkey = d => d.toDateString(), tm = new Date(now.getTime() + DAY);
+  let lastDay = "", html = "";
+  ev.forEach(e => {
+    const d = new Date(e.at), k = dkey(d);
+    if (k !== lastDay) { lastDay = k;
+      html += `<div class="cday">${k === dkey(now) ? "📍 " + T.today + " · " : k === dkey(tm) ? T.tomorrow + " · " : ""}${fmtDate(e.at)}</div>`; }
+    const past = d < new Date(now.getTime() - 3600000);
+    html += `<div class="cev ${past ? "past" : ""}"><div class="ct">${e.impact === "low" ? T.allDay : timeOnly(e.at)}</div><div><b>${esc(calTitle(e))}</b>
+      <div class="cm"><span class="tag2 lvl-${e.impact}">● ${T.imp[e.impact]}</span><span class="tag2">${lang === "en" ? e.country : e.country_fa || e.country}</span>
+      ${e.forecast ? `<span class="tag2">${T.fcV}: <bdi class="ltr">${esc(e.forecast)}</bdi></span>` : ""}${e.previous ? `<span class="tag2">${T.prevV}: <bdi class="ltr">${esc(e.previous)}</bdi></span>` : ""}</div>
+      <div class="imp" style="margin-top:4px"><span>${T.affects}: ${(e.assets || []).map(a => T.m[a]).join(" · ")}</span></div></div></div>`;
+  });
+  box.innerHTML = html + `<div class="src">${T.calSrc}</div>`;
+}
 async function loadAcademy(){
   const [{ data: a }, { data: ps }, { data: pl }] = await Promise.all([
     sb.from("settings").select("value").eq("key", "academy").maybeSingle(),
@@ -1082,6 +1203,8 @@ function drawAcademy(){
       ${(poll.options || []).map((o, i) => { const c = Number(pollRes[i] || 0), pc = tot ? Math.round(c / tot * 100) : 0;
         return `<button class="opt ${myVote === i ? "mine" : ""}" data-vote="${i}" ${myVote != null ? "disabled" : ""}><span class="bar" style="width:${myVote != null ? pc : 0}%"></span><span>${esc(o)}</span>${myVote != null ? `<em>${pc}%</em>` : ""}</button>`; }).join("")}
       ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}
+    <div class="sec2"><h3>🗓 ${T.calT}</h3></div>
+    <div class="acard glass rise cal" id="calbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
     <div class="sec2"><h3>📰 ${T.newsT}</h3></div>
     <div class="acard glass rise news" style="--i:3">${news.length ? news.map(p => `<div class="nitem"><b>${esc(p.title)}</b>
       ${p.kind === "event" ? `<div class="tags"><span class="tag2 lvl-${p.importance || "low"}">● ${T.imp[p.importance || "low"]}</span>${p.event_at ? `<span class="tag2">${fmtFull(p.event_at)}</span>` : ""}${p.previous ? `<span class="tag2">${T.prevV}: ${esc(p.previous)}</span>` : ""}${p.forecast ? `<span class="tag2">${T.fcV}: ${esc(p.forecast)}</span>` : ""}${p.actual ? `<span class="tag2">${T.actV}: ${esc(p.actual)}</span>` : ""}</div>` : `<div class="upd" style="text-align:start;margin:2px 0">${fmtFull(p.created_at)}</div>`}
@@ -1090,6 +1213,7 @@ function drawAcademy(){
     <div class="acard glass rise vid" style="--i:4">${vids.length ? vids.map(p => `<div class="nitem news"><b>${esc(p.title)}</b>${p.body ? `<p style="color:var(--muted);font-size:13px">${esc(p.body)}</p>` : ""}<video controls preload="none" playsinline data-vpath="${esc(p.file_path || "")}"></video></div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
     <div class="sec2"><h3>🎓 ${T.articlesT}</h3></div>
     <div class="acard glass rise news" style="--i:5">${arts.length ? arts.map(p => `<details class="nitem"><summary style="cursor:pointer;list-style:none"><b>${esc(p.title)}</b></summary><p>${esc(p.body || "")}</p></details>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>`;
+  drawCal(); loadCalendar();
   el.querySelectorAll("video[data-vpath]").forEach(async v => { if (!v.dataset.vpath) return; const { data } = await sb.storage.from("media").createSignedUrl(v.dataset.vpath, 3600); if (data?.signedUrl) v.src = data.signedUrl; });
   el.querySelectorAll("[data-vote]").forEach(b => b.onclick = async () => {
     const i = Number(b.dataset.vote); myVote = i; pollRes[i] = Number(pollRes[i] || 0) + 1; drawAcademy();
@@ -1122,7 +1246,7 @@ function drawPage(){
     $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (it) it.classList.toggle("open"); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
-  } else if (page === "prc") { el.innerHTML = ""; drawPrices(); loadPrices(true); }
+  } else if (page === "prc") { shown = {}; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
   else if (page === "tool") { drawTools(); loadPrices(); }
   else if (page === "acad") { el.innerHTML = `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
 }
