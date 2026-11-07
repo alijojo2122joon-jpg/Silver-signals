@@ -6,8 +6,8 @@ android {
         applicationId "af.marketanalysts.app"
         minSdk 24
         targetSdk 34
-        versionCode (project.findProperty("vc") ?: "3").toInteger()
-        versionName "1." + (project.findProperty("vc") ?: "3")
+        versionCode = (project.findProperty("vc") ?: "3").toString().toInteger()
+        versionName = "1." + (project.findProperty("vc") ?: "3")
     }
     signingConfigs {
         fixed {
