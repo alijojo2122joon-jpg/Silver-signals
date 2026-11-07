@@ -890,6 +890,48 @@
   .nlink small{display:block;margin-top:3px;font-size:11px;color:var(--soft)}
 
   .closedb{margin:0 0 10px;padding:10px 14px;border-radius:18px;font-size:12.5px;font-weight:700;line-height:1.8;color:var(--text);background:var(--field);box-shadow:var(--sh-in)}
+
+  /* ===== استوری ===== */
+  .stbar{margin:0 0 12px}
+  .stpill{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:999px;padding:8px 14px 8px 8px;background:var(--gl);box-shadow:var(--raise);font-family:inherit;color:var(--text);cursor:pointer;text-align:start}
+  .stav{position:relative;flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--tile);overflow:hidden}
+  .stav img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .stav b{font-weight:900;font-size:18px}
+  .stpill .stav{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--line)}
+  .stpill.new .stav{box-shadow:0 0 0 3px var(--bg),0 0 0 5.5px #ff8a3d,0 8px 20px -6px #ff7a3d}
+  .sttx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+  .sttx b{font-size:14.5px}.sttx small{font-size:12px;color:var(--muted)}
+  .stplay{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy))}
+  .sview{position:fixed;inset:0;z-index:150;background:#000;color:#fff;display:flex;flex-direction:column;opacity:0;transition:opacity .3s ease,transform .3s cubic-bezier(.2,.8,.2,1);touch-action:none}
+  .sview.show{opacity:1}
+  .sbars{position:absolute;z-index:3;top:calc(8px + env(safe-area-inset-top));left:10px;right:10px;display:flex;gap:4px;direction:ltr}
+  :root[dir="rtl"] .sbars{direction:rtl}
+  .sbars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3);overflow:hidden}
+  .sbars i b{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:var(--to,left)}
+  :root[dir="rtl"] .sbars i b{transform-origin:right}
+  .shead{position:absolute;z-index:3;top:calc(20px + env(safe-area-inset-top));left:12px;right:12px;display:flex;align-items:center;gap:10px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .shead .stav{width:38px;height:38px;background:rgba(255,255,255,.15)}
+  .shead div{flex:1;display:flex;flex-direction:column;line-height:1.3}.shead small{opacity:.8;font-size:11.5px}
+  .sx{border:0;background:rgba(0,0,0,.25);color:#fff;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
+  .sx svg{width:20px;height:20px}
+  .smedia{flex:1;display:grid;place-items:center;overflow:hidden}
+  .smedia img,.smedia video{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
+  .scap{position:absolute;z-index:3;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));text-align:center;font-size:15px;line-height:1.8;padding:10px 14px;border-radius:16px;background:rgba(0,0,0,.45)}
+  .stap{position:absolute;z-index:2;top:70px;bottom:90px;width:50%}
+  .stap.l{left:0}.stap.r{right:0}
+  .sfoot{position:absolute;z-index:4;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center}
+  .sfoot input{flex:1;height:48px;border-radius:999px;border:1.5px solid rgba(255,255,255,.55);background:rgba(0,0,0,.25);color:#fff;padding:0 18px;font-family:inherit;font-size:16px;outline:none}
+  .sfoot input::placeholder{color:rgba(255,255,255,.75)}
+  .ssend,.slike{flex:none;width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;font-size:22px;color:#fff;background:rgba(255,255,255,.14);cursor:pointer}
+  .ssend svg{width:20px;height:20px}:root[dir="rtl"] .ssend svg{transform:scaleX(-1)}
+  .slike.on{color:#ff3b5c}.slike.pop{animation:lk .5s cubic-bezier(.2,.8,.2,1)}
+  @keyframes lk{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+  .stoast{position:absolute;z-index:5;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translate(-50%,10px);padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.92);color:#11162c;font-size:13px;font-weight:800;opacity:0;pointer-events:none;white-space:nowrap}
+  .stoast.show{animation:stt 2.2s ease}
+  @keyframes stt{0%{opacity:0;transform:translate(-50%,10px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+  .strep{display:block;font-size:11.5px;font-weight:800;opacity:.8;margin-bottom:2px}
+
+  .cago{display:block;font-size:10px;color:var(--soft);font-weight:600}
 </style>
 </head>
 <body>
@@ -901,7 +943,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794048216";
+const BUILD = "1794049202";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1357,6 +1399,12 @@ L3.ps.afNews = "د افغانستان اقتصادي خبرونه"; L3.ps.hrAgo 
 L3.en.afNews = "Afghanistan economy news"; L3.en.hrAgo = "{n}h ago";
 L3.fa.xagTg = "زنده از forex.com / TradingView (کانال NoghreLahzeyi)"; L3.ps.xagTg = "ژوندی له forex.com / TradingView (NoghreLahzeyi چینل)"; L3.en.xagTg = "Live from forex.com / TradingView (@NoghreLahzeyi)";
 L3.fa.mktClosed = "بازار جهانی طلا و نقره آخر هفته بسته است؛ قیمت‌ها نرخ بسته‌شدن جمعه‌اند و از دوشنبه صبح دوباره زنده می‌شوند."; L3.ps.mktClosed = "د سرو او سپینو زرو نړیوال بازار د اونۍ په پای کې بند دی؛ بیې د جمعې د بندېدو نرخ دي."; L3.en.mktClosed = "World gold & silver markets are closed for the weekend; prices are Friday's close and go live again Monday morning.";
+L3.fa.story = "استوری استاد"; L3.fa.newStory = "استوری جدید استاد"; L3.fa.replyStory = "پاسخ به استوری…"; L3.fa.replySent = "پاسخ شما برای استاد رفت"; L3.fa.storyReply = "پاسخ به استوری";
+L3.ps.story = "د استاد سټوري"; L3.ps.newStory = "د استاد نوې سټوري"; L3.ps.replyStory = "سټوري ته ځواب…"; L3.ps.replySent = "ستاسو ځواب استاد ته ولېږل شو"; L3.ps.storyReply = "سټوري ته ځواب";
+L3.en.story = "Instructor story"; L3.en.newStory = "New story from the instructor"; L3.en.replyStory = "Reply to story…"; L3.en.replySent = "Your reply was sent to the instructor"; L3.en.storyReply = "Story reply";
+L3.fa.tgCh = "تلگرام"; L3.ps.tgCh = "ټلګرام"; L3.en.tgCh = "Telegram";
+L3.fa.usdToman = "دالر به تومان"; L3.ps.usdToman = "ډالر په تومان"; L3.en.usdToman = "USD → Toman";
+L3.fa.cash = "نقدی"; L3.ps.cash = "نغدي"; L3.en.cash = "Cash";
 L3.fa.tgSrc = "کانال تلگرام DollarKabul"; L3.ps.tgSrc = "د DollarKabul ټلګرام چینل"; L3.en.tgSrc = "Telegram @DollarKabul";
 L3.fa.pkrT = "دالر به کلدار"; L3.ps.pkrT = "ډالر په کلدار"; L3.en.pkrT = "USD to PKR";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
@@ -1481,6 +1529,7 @@ async function loadPrices(force){
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   if (Date.now() - newsAt > 120000) loadNews();
+  if (Date.now() - tgcAt > 30000) { tgcAt = Date.now(); const { data: t } = await sb.from("settings").select("value").eq("key", "tg_cache").maybeSingle(); if (t?.value) tgc = t.value; }
   if (Date.now() - localAt > 120000 || force) { localAt = Date.now(); try { const r = await fetch(SUPABASE_URL + "/functions/v1/local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
   if (data) { rates = data; store.set("cache_rates", rates); }
@@ -1491,10 +1540,10 @@ async function loadPrices(force){
 const okRate = v => v == null || (Number(v) > 30 && Number(v) < 200);
 const latestRate = place => rates.find(r => r.place === place && (r.buy != null || r.sell != null) && okRate(r.buy) && okRate(r.sell));
 const latestField = f => rates.find(r => r.place === "kabul" && r[f] != null)?.[f];
-let local = store.get("cache_local", null), localAt = 0;
+let local = store.get("cache_local", null), localAt = 0, tgc = null, tgcAt = 0;
 const adminRate = () => { const k = latestRate("kabul"); return k && Date.now() - new Date(k.created_at) < 36 * 3600000 ? k : null; };
 const usdAfn = () => { const k = adminRate(); if (k) return Number(k.sell ?? k.buy); if (local?.fx?.usd?.sell) return local.fx.usd.sell; return prices?.afn?.rate ? Math.round(prices.afn.rate * 100) / 100 : null; };
-const usdBuySell = () => { const k = adminRate(); if (k) return { buy: k.buy, sell: k.sell, src: (k.src === "tg" ? T.sarai + " · " + T.tgSrc : T.sarai) + " · " + agoTxt(k.created_at) }; if (local?.fx?.usd) return { ...local.fx.usd, src: T.sarai + " · " + T.afaaq }; const m = usdAfn(); return { buy: m, sell: m, src: T.mktRate }; };
+const usdBuySell = () => { const k = adminRate(); if (k) return { buy: k.buy, sell: k.sell, src: (String(k.src || "").startsWith("tg") ? T.sarai + " · " + T.tgCh + " " + (k.src.split(":")[1] || "DollarKabul") : T.sarai) + " · " + agoTxt(k.created_at) }; if (local?.fx?.usd) return { ...local.fx.usd, src: T.sarai + " · " + T.afaaq }; const m = usdAfn(); return { buy: m, sell: m, src: T.mktRate }; };
 const afnSrc = () => adminRate() ? T.sarai : local?.fx?.usd ? T.sarai + " (" + T.afaaq + ")" : T.mktRate;
 /* نرخ واقعی بازار کابل: قیمت روزانه‌ی هر گرم (آفاق) × تغییر لحظه‌ای انس جهانی از زمان انتشار */
 const kabulMove = () => { const w = local?.gold?.worldOz, x = prices?.xau?.price; return w && x ? x / w : 1; };
@@ -1522,7 +1571,7 @@ let shown = {};
 let pSig = "";
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
-  const sigP = JSON.stringify([prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
+  const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
   if (sigP === pSig && el.firstChild) return;
   pSig = sigP; const kOpen = el.querySelector(".kbx")?.open;
   queueMicrotask(() => { if (kOpen && el.querySelector(".kbx")) el.querySelector(".kbx").open = true; });
@@ -1552,7 +1601,8 @@ function drawPrices(){
       <div class="prow"><div><small>${T.buyR}</small><b>${usdBuySell().buy != null ? nf(usdBuySell().buy) : "—"}</b></div><div><small>${T.sellR}</small><b>${usdBuySell().sell != null ? nf(usdBuySell().sell) : "—"}</b></div></div>
       <div class="upd" style="margin:6px 0 0"><span class="ldot" style="display:inline-block;margin-inline-end:6px"></span>${usdBuySell().src}</div>
       ${adminRate()?.pkr ? `<div class="cities"><div><span>${T.pkrT}</span><span></span><span><b>${nf(adminRate().pkr)}</b></span></div></div>` : ""}
-      <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}</div></div>
+      <div class="cities">${["herat","mazar","kandahar","jalalabad"].map(c => { const r = latestRate(c); return `<div><span>${T.cities[c]}${r ? `<small class="cago">${agoTxt(r.created_at)}</small>` : ""}</span><span>${T.buyR} <b>${r?.buy != null ? nf(r.buy) : "—"}</b></span><span>${T.sellR} <b>${r?.sell != null ? nf(r.sell) : "—"}</b></span></div>`; }).join("")}
+        ${tgc?.heratToman ? `<div><span>${T.cities.herat} · ${T.usdToman}</span><span>${T.cash} <b>${nf(tgc.heratToman.cash, 0)}</b></span><span>${T.tomorrow} <b>${nf(tgc.heratToman.tomorrow, 0)}</b></span></div>` : ""}</div></div>
     <div class="pcard glass glow" style="--bd:10s"><div class="ph"><span class="pp2" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--field);font-size:20px">💵</span><div><b>${T.dxy}</b><small>DXY</small></div><div class="pv"><b class="${fl("dxy", p.dxy?.price)}">${nf(p.dxy?.price)}</b>${chgHTML(p.dxy?.price, p.dxy?.prev)}</div></div>
       ${sparkSVG(p.dxy?.spark, "#6c7684")}<div class="upd" style="margin:6px 0 0">${T.dxySub}</div></div>`;
 }
@@ -1812,7 +1862,7 @@ function drawPage(){
   const el = $("pg"); if (!el) return;
   el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
   if (page === "sig") {
-    el.innerHTML = `<div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
+    el.innerHTML = `<div id="stbar" class="stbar" hidden></div><div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
       <div class="sline" id="sl2"><span class="lv2"><span class="ldot"></span><b>${offline?T.offline:T.live}</b></span><span class="subtxt">${subLine()}</span></div>
       <div class="chips" id="perc">${Object.keys(T.per).map(k => `<button data-per="${k}" class="${k===per?"on":""}">📅 ${T.per[k]}</button>`).join("")}
         <select id="sortS">${Object.keys(T.sort).map(k => `<option value="${k}" ${k===sortBy?"selected":""}>${T.sort[k]}</option>`).join("")}</select></div>
@@ -1826,11 +1876,126 @@ function drawPage(){
       $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); if (!was) sfx("tap_04", .26); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
+    drawStoryBar(); if (Date.now() - storyAt > 60000) loadStories();
   } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div>`; tvWidget(); drawPrices(); loadPrices(true); }
   else if (page === "tool") { drawTools(); loadPrices(); }
   else if (page === "acad") { el.innerHTML = `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
 }
 function subLine(){ if (me.role === "admin") return ""; const days = Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY)); return `<span style="${days <= 5 ? "color:var(--amber)" : ""}">${tt(T.subDays, {n: `<b class="num">${days}</b>`})}</span>`; }
+
+
+/* ===== استوری استاد ===== */
+let stories = [], storySeen = new Set(store.get("st_seen", [])), storyLiked = new Set(), storyAt = 0;
+const storyUrl = {};
+async function storySrc(path){
+  if (storyUrl[path]) return storyUrl[path];
+  const { data } = await sb.storage.from("media").createSignedUrl(path, 3600);
+  return (storyUrl[path] = data?.signedUrl || "");
+}
+async function loadStories(){
+  storyAt = Date.now();
+  const { data } = await sb.from("stories").select("*").gt("expires_at", new Date().toISOString()).order("created_at", { ascending: true }).limit(30);
+  stories = data || [];
+  if (stories.length && me?.role !== "admin") {
+    const ids = stories.map(s => s.id);
+    const [{ data: v }, { data: l }] = await Promise.all([
+      sb.from("story_views").select("story_id").in("story_id", ids).eq("user_id", me.id),
+      sb.from("story_likes").select("story_id").in("story_id", ids).eq("user_id", me.id)]);
+    (v || []).forEach(x => storySeen.add(x.story_id)); storyLiked = new Set((l || []).map(x => x.story_id));
+  }
+  drawStoryBar();
+}
+function drawStoryBar(){
+  const el = $("stbar"); if (!el) return;
+  if (!stories.length) { el.innerHTML = ""; el.hidden = true; return; }
+  el.hidden = false;
+  const unseen = stories.some(s => !storySeen.has(s.id)), last = stories[stories.length - 1], tn = teacher.name || T.teacher;
+  el.innerHTML = `<button class="stpill ${unseen ? "new" : ""}" id="stopen"><span class="stav">${teacher.photo ? `<img src="${esc(teacher.photo)}" alt="">` : `<b>${initial(tn)}</b>`}</span>
+    <span class="sttx"><b>${unseen ? T.newStory : T.story}</b><small>${esc(tn)} · ${agoTxt(last.created_at)} · ${stories.length}</small></span><span class="stplay">▶</span></button>`;
+  $("stopen").onclick = () => openStories(Math.max(0, stories.findIndex(s => !storySeen.has(s.id))));
+}
+function openStories(start = 0){
+  if (!stories.length || $("sview")) return;
+  let i = start, t0 = 0, paused = false, raf = 0, dur = 7, vid = null, closed = false, pausedAt = 0, holdT = 0, elapsedBefore = 0;
+  const v = document.createElement("div"); v.className = "sview"; v.id = "sview";
+  const tn = teacher.name || T.teacher;
+  v.innerHTML = `<div class="sbars">${stories.map(() => `<i><b></b></i>`).join("")}</div>
+    <div class="shead"><span class="stav">${teacher.photo ? `<img src="${esc(teacher.photo)}" alt="">` : `<b>${initial(tn)}</b>`}</span><div><b>${esc(tn)}</b><small id="sago"></small></div><button class="sx" id="sx" aria-label="close">${I.x}</button></div>
+    <div class="smedia" id="smedia"></div><div class="scap" id="scap"></div>
+    <div class="stap l" id="stl"></div><div class="stap r" id="str"></div>
+    <form class="sfoot" id="sform"><input id="srep" maxlength="500" autocomplete="off" placeholder="${T.replyStory}"><button type="submit" class="ssend" aria-label="send">${I.send || "➤"}</button>
+      <button type="button" class="slike" id="slike" aria-label="like">♥</button></form><div class="stoast" id="stoast"></div>`;
+  document.body.appendChild(v); lockBody();
+  const close = () => { if (closed) return; closed = true; cancelAnimationFrame(raf); if (vid) vid.pause(); v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 400); drawStoryBar(); };
+  overlayPush(close);
+  requestAnimationFrame(() => v.classList.add("show"));
+  const bars = [...v.querySelectorAll(".sbars i b")];
+  const paintBars = p => bars.forEach((b, k) => b.style.transform = `scaleX(${k < i ? 1 : k > i ? 0 : Math.min(1, p)})`);
+  const pause = on => { if (on === paused) return; paused = on; if (on) { pausedAt = performance.now(); vid?.pause(); } else { t0 += performance.now() - pausedAt; vid?.play().catch(() => {}); } };
+  const tick = now => {
+    if (closed) return;
+    if (!paused) { const p = vid && vid.duration ? vid.currentTime / Math.min(vid.duration, 60) : (now - t0) / (dur * 1000);
+      paintBars(p); if (p >= 1) return next(); }
+    raf = requestAnimationFrame(tick);
+  };
+  const show = async () => {
+    cancelAnimationFrame(raf); if (vid) { vid.pause(); vid = null; }
+    const s = stories[i]; if (!s) return close();
+    $("sago").textContent = agoTxt(s.created_at);
+    $("scap").textContent = s.caption || ""; $("scap").hidden = !s.caption;
+    $("slike").classList.toggle("on", storyLiked.has(s.id));
+    const m = $("smedia"); m.innerHTML = `<span class="spin"></span>`;
+    const url = await storySrc(s.file_path); if (closed || stories[i] !== s) return;
+    if (s.kind === "video") {
+      vid = document.createElement("video"); vid.src = url; vid.playsInline = true; vid.setAttribute("playsinline", ""); vid.preload = "auto";
+      vid.onended = () => next(); m.innerHTML = ""; m.appendChild(vid);
+      try { await vid.play(); } catch { vid.muted = true; vid.play().catch(() => {}); }
+    } else {
+      const img = new Image(); img.src = url; img.alt = "";
+      try { await img.decode(); } catch {} if (closed || stories[i] !== s) return;
+      m.innerHTML = ""; m.appendChild(img); dur = Number(s.duration_sec) || 7;
+    }
+    t0 = performance.now(); paused = false; paintBars(0); raf = requestAnimationFrame(tick);
+    if (!storySeen.has(s.id)) { storySeen.add(s.id); store.set("st_seen", [...storySeen].slice(-80));
+      if (me.role !== "admin") sb.from("story_views").upsert({ story_id: s.id, user_id: me.id }, { onConflict: "story_id,user_id", ignoreDuplicates: true }).then(() => {}); }
+    const n = stories[i + 1]; if (n) storySrc(n.file_path).then(u => { if (n.kind === "image") { const im = new Image(); im.src = u; } });
+  };
+  const next = () => { if (i < stories.length - 1) { i++; show(); } else history.back(); };
+  const prev = () => { if (i > 0) { i--; show(); } else { t0 = performance.now(); if (vid) vid.currentTime = 0; } };
+  const rtl = T.dir === "rtl";
+  // لمس: نگه داشتن = مکث، ضربه = قبلی/بعدی، کشیدن به پایین = بستن
+  let sy = 0, sx0 = 0, moved = false, down = 0;
+  const onDown = e => { down = performance.now(); sy = e.clientY; sx0 = e.clientX; moved = false; holdT = setTimeout(() => pause(true), 180); };
+  const onMove = e => { if (!down) return; const dy = e.clientY - sy; if (Math.abs(dy) > 10 || Math.abs(e.clientX - sx0) > 10) moved = true; if (dy > 0) v.style.transform = `translateY(${dy * .6}px)`; };
+  const onUp = (e, side) => { clearTimeout(holdT); const held = performance.now() - down; down = 0; const dy = e.clientY - sy; v.style.transform = "";
+    if (dy > 110) return history.back();
+    if (paused && held > 180) return pause(false);
+    if (!moved) { const goNext = (side === "l") === rtl; goNext ? next() : prev(); } };
+  [["stl", "l"], ["str", "r"]].forEach(([id, side]) => { const z = $(id);
+    z.addEventListener("pointerdown", onDown); z.addEventListener("pointermove", onMove); z.addEventListener("pointerup", e => onUp(e, side));
+    z.addEventListener("pointercancel", () => { clearTimeout(holdT); down = 0; v.style.transform = ""; pause(false); }); });
+  $("sx").onclick = () => history.back();
+  const ri = $("srep");
+  ri.addEventListener("focus", () => pause(true)); ri.addEventListener("blur", () => { if (!ri.value.trim()) pause(false); });
+  const toast = t => { const el = $("stoast"); el.textContent = t; el.classList.remove("show"); void el.offsetWidth; el.classList.add("show"); };
+  $("slike").onclick = async () => {
+    const s = stories[i], b = $("slike"); if (me.role === "admin") return;
+    const on = !storyLiked.has(s.id);
+    if (on) { storyLiked.add(s.id); b.classList.add("on", "pop"); setTimeout(() => b.classList.remove("pop"), 500); sfx("tap_03", .5);
+      const { error } = await sb.from("story_likes").insert({ story_id: s.id, user_id: me.id }); if (error && !/duplicate/i.test(error.message)) { storyLiked.delete(s.id); b.classList.remove("on"); } }
+    else { storyLiked.delete(s.id); b.classList.remove("on"); await sb.from("story_likes").delete().eq("story_id", s.id).eq("user_id", me.id); }
+  };
+  $("sform").onsubmit = async e => {
+    e.preventDefault(); const txt = ri.value.trim(); if (!txt || me.role === "admin") return;
+    const s = stories[i]; ri.value = ""; ri.blur();
+    const { error } = await sb.from("messages").insert({ member_id: me.id, sender: "member", kind: "text", body: txt, story_id: s.id });
+    if (error) { toast("⚠️ " + T.sendFail2); ri.value = txt; return; }
+    sfx("button", .4); toast("✓ " + T.replySent); loadChat(); pause(false);
+  };
+  if (me.role === "admin") v.querySelector(".sfoot").hidden = true;
+  addEventListener("keydown", function k(e){ if (closed) return removeEventListener("keydown", k); if (e.key === "ArrowLeft") (rtl ? next : prev)(); if (e.key === "ArrowRight") (rtl ? prev : next)(); });
+  show();
+}
 
 /* ===== کارت‌ها ===== */
 const range = s => s.entry_to != null && Number(s.entry_to) !== Number(s.entry_from) ? `${fa(s.entry_from)} – ${fa(s.entry_to)}` : fa(s.entry_from);
@@ -1991,7 +2156,8 @@ function renderFeed(){
       .on("postgres_changes", {event:"INSERT", schema:"public", table:"posts"}, ev => { const p = ev.new || {}; loadAcademy();
         banner(p.kind === "video" ? "🎬" : p.kind === "article" ? "🎓" : p.kind === "event" ? "🗓" : "📰", esc(p.title || T.newsT), T.tapView, () => setPage("acad")); })
       .on("postgres_changes", {event:"*", schema:"public", table:"posts"}, ev => { if (ev.eventType !== "INSERT") loadAcademy(); })
-      .on("postgres_changes", {event:"*", schema:"public", table:"polls"}, () => loadAcademy()).subscribe();
+      .on("postgres_changes", {event:"*", schema:"public", table:"polls"}, () => loadAcademy())
+      .on("postgres_changes", {event:"*", schema:"public", table:"stories"}, ev => { loadStories(); if (ev.eventType === "INSERT") banner("✨", T.newStory, esc(teacher.name || T.teacher) + " — " + T.tapView, () => { setPage("sig"); setTimeout(() => openStories(stories.length - 1), 900); }); }).subscribe();
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); if (page === "prc") loadPrices(); else if (Date.now() - pricesAt > 120000 && alerts.some(a => !a.done)) loadPrices(); } }, 8000);
   }
   loadFeed(); loadPrices(); loadMyRatings();
@@ -2156,7 +2322,7 @@ function drawChat(){
   const hb = $("hbadge"); if (hb) { hb.textContent = unread; hb.classList.toggle("show", unread > 0 && !chatOpen); }
   if (!b) return;
   if (!msgs.length) { b.innerHTML = `<div class="cempty">${T.chatEmpty}</div>`; return; }
-  b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"} ${m._up?"upl":""}">${m._up ? `<span class="cload"></span> ${T.uploading}` : mediaHTML(m)}${m.body ? esc(m.body) : ""}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");
+  b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"} ${m._up?"upl":""}">${m._up ? `<span class="cload"></span> ${T.uploading}` : mediaHTML(m)}${m.story_id ? `<span class="strep">↩ ${T.storyReply}</span>` : ""}${m.body ? esc(m.body) : ""}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");
   hydrateImages(b);
   const last = msgs[msgs.length - 1];
   if (last.sender === "member") b.insertAdjacentHTML("beforeend", `<div class="cstate ${last.seen_at?"seen":"wait"}">${last.seen_at ? "✓✓ " + T.seen : "⏳ " + T.waiting}</div>`);

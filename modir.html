@@ -550,6 +550,11 @@
   .tog .k{transition:transform .5s cubic-bezier(.2,.8,.2,1),background .4s!important}
   .chip{box-shadow:var(--raise);font-weight:800}
   input,textarea,select,button{touch-action:manipulation}
+
+  .sprev{margin-top:10px;border-radius:18px;overflow:hidden;max-height:320px;display:grid;place-items:center;background:var(--field)}
+  .sprev:empty{display:none}
+  .sprev img,.sprev video{max-width:100%;max-height:320px;display:block}
+  .strep{display:block;font-size:11.5px;font-weight:800;opacity:.85;margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -564,7 +569,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794048216";
+const BUILD = "1794049202";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -885,7 +890,57 @@ const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسان
 const PLACES = { kabul:"کابل (سرای شهزاده)", herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال‌آباد" };
 const KINDS = { news:"📰 خبر", event:"🗓 رویداد تقویم", article:"🎓 آموزش", video:"🎬 ویدیو" };
 let cPosts = [], cRates = [], cPolls = [];
+/* ===== استوری ===== */
+let cStories = [], cStoryStats = {};
+async function loadStoriesAdmin(){
+  const { data } = await sb.from("stories").select("*").gt("expires_at", new Date().toISOString()).order("created_at", { ascending: false });
+  cStories = data || []; cStoryStats = {};
+  if (cStories.length) { const ids = cStories.map(s => s.id);
+    const [{ data: v }, { data: l }] = await Promise.all([sb.from("story_views").select("story_id,user_id").in("story_id", ids), sb.from("story_likes").select("story_id,user_id").in("story_id", ids)]);
+    for (const s of cStories) cStoryStats[s.id] = { v: (v || []).filter(x => x.story_id === s.id), l: (l || []).filter(x => x.story_id === s.id) }; }
+  drawStoryAdmin();
+}
+function drawStoryAdmin(){
+  const el = $("stadm"); if (!el) return;
+  if (!cStories.length) { el.innerHTML = ""; return; }
+  const ago = d => { const m = Math.round((Date.now() - new Date(d)) / 60000); return m < 60 ? m + " دقیقه پیش" : Math.round(m / 60) + " ساعت پیش"; };
+  el.innerHTML = `<div class="sec" style="margin-top:18px"><h3>استوری‌های فعال</h3></div><div class="list glass">${cStories.map(s => { const st = cStoryStats[s.id] || { v: [], l: [] };
+    return `<div class="it" style="cursor:default"><span class="av" style="--ac:#ff8a3d;background:var(--field)">${s.kind === "video" ? "🎬" : "🖼"}</span>
+      <div><div class="t">${esc(s.caption || (s.kind === "video" ? "ویدیو" : "عکس"))}</div><div class="s">👁 ${st.v.length} بازدید · ♥ ${st.l.length} لایک · ${ago(s.created_at)}</div>
+      ${st.l.length ? `<div class="s">♥ ${st.l.map(x => esc(members.find(m => m.id === x.user_id)?.name || "")).filter(Boolean).join("، ")}</div>` : ""}</div>
+      <button class="ghost red" style="width:auto;height:36px;margin:0;padding:0 12px" data-delst="${s.id}">حذف</button></div>`; }).join("")}</div>`;
+  el.onclick = async e => { const b = e.target.closest("[data-delst]"); if (!b || !confirm("این استوری حذف شود؟")) return;
+    const s = cStories.find(x => String(x.id) === b.dataset.delst); await sb.from("stories").delete().eq("id", s.id); sb.storage.from("media").remove([s.file_path]); toast("حذف شد"); loadStoriesAdmin(); };
+}
+function sheetStory(){
+  openSheet(`<h2>✨ استوری جدید</h2><p class="hint">۲۴ ساعت برای اعضا نمایش داده می‌شود. ویدیو حداکثر ۱ دقیقه. اعضا می‌توانند لایک کنند و پاسخشان مستقیم به بخش پیام‌ها می‌آید.</p>
+    <label class="l">عکس یا ویدیو</label><input class="in" id="sfile" type="file" accept="image/*,video/*" style="padding-top:13px">
+    <div id="sprev" class="sprev"></div>
+    <label class="l">متن روی استوری (اختیاری)</label><input class="in" id="scap" maxlength="300" placeholder="مثلاً: تحلیل صبح طلا، به سطح 4050 دقت کنید">
+    <div class="hint" id="sprog"></div>
+    <button class="cta press" id="spub">انتشار استوری</button>`);
+  let file = null, kind = null, dur = 7;
+  $("sfile").onchange = async e => { file = e.target.files[0]; if (!file) return; kind = file.type.startsWith("video") ? "video" : "image"; const url = URL.createObjectURL(file);
+    if (kind === "video") { const v = document.createElement("video"); v.src = url; v.muted = true; v.playsInline = true; v.controls = true;
+      await new Promise(r => { v.onloadedmetadata = r; v.onerror = r; }); dur = Math.min(60, Math.ceil(v.duration || 0));
+      if ((v.duration || 0) > 61) { file = null; $("sprev").innerHTML = ""; return toast("ویدیو بیشتر از ۱ دقیقه است. یک ویدیوی کوتاه‌تر انتخاب کنید.", true); }
+      if (file.size > 50 * 1024 * 1024) { file = null; return toast("ویدیو بیشتر از ۵۰ مگابایت است", true); }
+      $("sprev").innerHTML = ""; $("sprev").appendChild(v); }
+    else { dur = 7; file = await compressImage(file, 1440); $("sprev").innerHTML = `<img src="${URL.createObjectURL(file)}" alt="">`; } };
+  $("spub").onclick = async () => {
+    if (!file) return toast("یک عکس یا ویدیو انتخاب کنید", true);
+    const b = $("spub"); busy(b, true); $("sprog").textContent = "در حال آپلود…";
+    const ext = kind === "video" ? ((file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "") || "mp4") : "jpg";
+    const path = `stories/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+    const up = await sb.storage.from("media").upload(path, file, { contentType: file.type || (kind === "video" ? "video/mp4" : "image/jpeg") });
+    if (up.error) { busy(b, false, "انتشار استوری"); $("sprog").textContent = ""; return toast("آپلود ناموفق: " + up.error.message, true); }
+    const { error } = await sb.from("stories").insert({ kind, file_path: path, caption: $("scap").value.trim() || null, duration_sec: dur });
+    if (error) { sb.storage.from("media").remove([path]); busy(b, false, "انتشار استوری"); return toast("خطا: " + error.message, true); }
+    closeSheet(); sfx("notification", .5); toast("استوری منتشر شد ✓"); loadStoriesAdmin();
+  };
+}
 async function loadContent(){
+  loadStoriesAdmin();
   const [a, b, c] = await Promise.all([
     sb.from("posts").select("*").order("created_at", { ascending: false }).limit(50),
     sb.from("rates").select("*").order("created_at", { ascending: false }).limit(40),
@@ -894,18 +949,19 @@ async function loadContent(){
   if (tab === "content") drawContentList();
 }
 function drawContent(){
-  const tiles = [["rates","💱","نرخ‌های امروز","دالر سرای شهزاده، هرات، مزار، جلال‌آباد و مثقال"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
+  const tiles = [["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["rates","💱","نرخ‌های امروز","دالر سرای شهزاده، هرات، مزار، جلال‌آباد و مثقال"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
     ["news","📰","خبر اقتصادی","با تأثیر بر طلا/نقره/دالر"],["event","🗓","رویداد تقویم اقتصادی","زمان، اهمیت، قبلی و پیش‌بینی"],
     ["article","🎓","آموزش کوتاه","مثلاً: حد ضرر چیست؟"],["video","🎬","ویدیوی تحلیل روزانه","ویدیوی 1 تا 2 دقیقه‌ای"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
   $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت محتوا</h3></div>
     <div class="list glass rise" style="--i:1">${tiles.map(([k, ic, t, s]) => `<div class="it ctile" data-ct="${k}"><span class="av" style="background:var(--field)">${ic}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="s">${I.plus}</span></div>`).join("")}</div>
-    <div id="clist"></div>`;
+    <div id="stadm"></div><div id="clist"></div>`;
   $("pane").querySelectorAll("[data-ct]").forEach(el => el.onclick = () => { const k = el.dataset.ct;
-    k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
+    k === "story" ? sheetStory() : k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
   drawContentList(); loadContent();
 }
 function drawContentList(){
   const el = $("clist"); if (!el) return;
+  drawStoryAdmin();
   const lastR = p => cRates.find(r => r.place === p);
   const rateTxt = r => r ? [r.buy != null ? "خرید " + fa(r.buy) : "", r.sell != null ? "فروش " + fa(r.sell) : "", r.gold_mithqal != null ? "مثقال طلا " + fa(r.gold_mithqal) : ""].filter(Boolean).join(" · ") + " — " + fmtFull(r.created_at) : "ثبت نشده";
   const ap = cPolls.find(p => p.active);
@@ -1373,7 +1429,7 @@ async function markSeenAdmin(id){
 function drawChatSheet(){
   const b = $("cbody"); if (!b) return;
   const ms = allMsgs.filter(x => x.member_id === openChatId);
-  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"} ${x._up ? "upl" : ""}">${x._up ? '<span class="cload"></span> در حال ارسال…' : mediaHTML(x)}${x.body ? esc(x.body) : ""}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
+  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"} ${x._up ? "upl" : ""}">${x._up ? '<span class="cload"></span> در حال ارسال…' : mediaHTML(x)}${x.story_id ? '<span class="strep">↩ پاسخ به استوری شما</span>' : ""}${x.body ? esc(x.body) : ""}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
   hydrateImages(b);
   const last = ms[ms.length - 1];
   if (last && last.sender === "admin") b.insertAdjacentHTML("beforeend", `<div class="cst ${last.seen_at ? "seen" : "wait"}">${last.seen_at ? "✓✓ دیده شد" : "⏳ هنوز دیده نشده"}</div>`);
