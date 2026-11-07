@@ -59,8 +59,8 @@ async function gnews(admin: any): Promise<Item[]> {
   await Promise.all(GQ.map(async g => {
     try {
       const xml = stored.get(g.org);
-      const raw = xml ? [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 25).map(m => m[1]) : await rss(GN(g.q), 25);
-      const rows = raw.map(x => {
+      const blocks = xml ? [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 25).map(m => m[1]) : await rss(GN(g.q), 25);
+      const rows = blocks.map(x => {
         const raw = tag(x, "title"), srcName = tag(x, "source");
         const title = srcName && raw.endsWith(" - " + srcName) ? raw.slice(0, -(srcName.length + 3)) : raw.replace(/ - [^-]{2,40}$/, "");
         return { title_en: title, publisher: srcName, link: tag(x, "link"), at: isoOf(tag(x, "pubDate")) };
