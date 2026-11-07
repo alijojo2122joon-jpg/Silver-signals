@@ -867,6 +867,21 @@
   .ktab p{margin:6px 0 0;font-size:11px;color:var(--soft)}
   .cnote{font-size:11.5px!important;color:var(--soft)!important;border-top:1px solid var(--line);display:block!important}
   #cbase{margin-bottom:10px}
+
+  .meav{overflow:hidden;padding:0}
+  .meav img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .meav span{font-weight:900;font-size:16px;color:var(--text)}
+  .chat.prof{height:auto;max-height:88vh}
+  .pbody{padding:10px 20px calc(24px + env(safe-area-inset-bottom));text-align:center;overflow:auto}
+  .bigav{position:relative;display:grid;place-items:center;width:132px;height:132px;margin:6px auto 12px;border-radius:50%;background:var(--tile);box-shadow:var(--raise),0 14px 30px -14px var(--glowc);cursor:pointer;overflow:hidden}
+  .bigav img{width:100%;height:100%;object-fit:cover}
+  .bigav>span:not(.cam){font-size:48px;font-weight:900}
+  .bigav .cam{position:absolute;inset:auto 0 0 0;padding:6px 0 8px;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+  .pbody h2{margin:4px 0 0;font-size:20px}
+  .pmail{color:var(--muted);font-size:13px}
+  .pdays{margin:12px auto 4px;display:inline-block;padding:7px 16px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);font-size:13px}
+  .pbody .cta{margin-top:16px}
+  .ghost2{margin-top:12px;width:100%;height:48px;border:0;border-radius:999px;background:var(--tile);box-shadow:var(--raise);font-family:inherit;font-weight:800;color:var(--sell);cursor:pointer}
 </style>
 </head>
 <body>
@@ -878,7 +893,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794046438";
+const BUILD = "1794046675";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1137,10 +1152,57 @@ let channel = null, chatCh = null, pollT = null, loading = false, titleT = null,
 const stopLive = () => { if (channel) { sb.removeChannel(channel); channel = null; } if (chatCh) { sb.removeChannel(chatCh); chatCh = null; } clearInterval(pollT); };
 
 const langsHTML = () => `<div class="langs">${Object.entries(L).map(([k, v]) => `<button type="button" data-lang="${k}" class="${k===lang?"on":""}">${v.name}</button>`).join("")}</div>`;
+const initial = n => esc([...String(n || "").replace("استاد", "").trim()][0] || "؟");
+const myAvatarHTML = () => me?.avatar ? `<img src="${esc(me.avatar)}" alt="">` : `<span>${initial(me?.name)}</span>`;
+async function squareJpeg(file, size = 400){
+  const bmp = await createImageBitmap(file); const s = Math.min(bmp.width, bmp.height);
+  const c = document.createElement("canvas"); c.width = c.height = size;
+  c.getContext("2d").drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
+  return await new Promise((r, j) => c.toBlob(b => b ? r(b) : j(), "image/jpeg", .86));
+}
+function openProfile(){
+  if ($("prof")) return;
+  const veil = document.createElement("div"); veil.className = "cveil"; veil.id = "pveil";
+  const box = document.createElement("div"); box.className = "chat prof"; box.id = "prof";
+  const days = me.role === "admin" ? null : Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY));
+  let pick = null;
+  const draw = () => {
+    box.innerHTML = `<div class="chead"><b style="flex:1">${T.myProfile}</b><button class="ib x" id="px">${I.x}</button></div>
+      <div class="pbody">
+        <label class="bigav" id="pav">${pick ? `<img src="${URL.createObjectURL(pick)}" alt="">` : myAvatarHTML()}<span class="cam">📷 ${T.changePhoto}</span>
+          <input type="file" accept="image/*" id="pfile" hidden></label>
+        <h2>${esc(me.name || "")}</h2><div class="pmail ltr">${esc(me.email || "")}</div>
+        ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })}</div>` : ""}
+        ${pick ? `<button class="cta" id="psave">${T.savePhoto}</button>` : ""}
+        ${me.avatar && !pick ? `<button class="ghost2" id="pdel">${T.removePhoto}</button>` : ""}
+        <div class="err" id="perr"></div></div>`;
+    $("px").onclick = () => history.back();
+    $("pfile").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { pick = await squareJpeg(f); draw(); } catch { $("perr").textContent = T.badPhoto; } };
+    if ($("psave")) $("psave").onclick = async () => {
+      const b = $("psave"); b.disabled = true; b.innerHTML = '<span class="spin"></span>';
+      const path = `${me.id}/${Date.now()}.jpg`;
+      const up = await sb.storage.from("avatars").upload(path, pick, { contentType: "image/jpeg", upsert: true });
+      if (up.error) { b.disabled = false; b.textContent = T.savePhoto; $("perr").textContent = T.sendFail2; return; }
+      const url = sb.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      const { error } = await sb.rpc("set_my_avatar", { p_url: url });
+      if (error) { b.disabled = false; b.textContent = T.savePhoto; $("perr").textContent = T.sendFail2; return; }
+      const old = me.avatar; me.avatar = url; store.set("cache_me", me); pick = null; sfx("button", .4);
+      if (old) { const m = old.split("/avatars/")[1]; if (m && m.startsWith(me.id + "/")) sb.storage.from("avatars").remove([m]); }
+      document.querySelectorAll("#meav").forEach(x => x.innerHTML = myAvatarHTML()); draw(); };
+    if ($("pdel")) $("pdel").onclick = async () => { const old = me.avatar; const { error } = await sb.rpc("set_my_avatar", { p_url: null }); if (error) return;
+      me.avatar = null; store.set("cache_me", me); const m = old?.split("/avatars/")[1]; if (m && m.startsWith(me.id + "/")) sb.storage.from("avatars").remove([m]);
+      document.querySelectorAll("#meav").forEach(x => x.innerHTML = myAvatarHTML()); draw(); };
+  };
+  document.body.append(veil, box); draw();
+  let closed = false; const close = () => { if (closed) return; closed = true; veil.id = box.id = ""; veil.classList.remove("show"); box.classList.remove("show"); unlockBody(); setTimeout(() => { veil.remove(); box.remove(); }, 700); };
+  veil.onclick = () => history.back(); overlayPush(close); lockBody();
+  requestAnimationFrame(() => { veil.classList.add("show"); box.classList.add("show"); });
+}
 function topbar(){
   return `<div class="top rise">
     <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div></div>
     <div class="icons">
+      ${me ? `<button class="ib meav" id="meav" aria-label="${T.myProfile}">${myAvatarHTML()}</button>` : ""}
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
@@ -1148,6 +1210,7 @@ function topbar(){
     </div></div>`;
 }
 function bindTop(){
+  if ($("meav")) $("meav").onclick = openProfile;
   $("out").onclick = () => { store.set("cache_me", null); store.set("cache_msgs", []); sb.auth.signOut(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
@@ -1278,6 +1341,9 @@ L3.ps.kabulMkt = "د کابل بازار"; L3.ps.kabul = "کابل"; L3.ps.afaaq
 L3.ps.kabulNote = "سرچینه: د آفاق ورځنی راپور ({d})؛ د نړیوال اونس له بدلون سره تازه کېږي. پېرود / پلور."; L3.ps.kabulCalcNote = "د کابل بازار د رښتیني نرخ پر بنسټ (آفاق، {d}) + د اونس ژوندی بدلون"; L3.ps.noLocal = "د کابل نرخ نشته؛ نړیواله بیه وکارول شوه.";
 L3.en.kabulMkt = "Kabul market"; L3.en.kabul = "Kabul"; L3.en.afaaq = "Afaaq"; L3.en.kabulAll = "All karats in Kabul & Herat (AFN/gram)"; L3.en.coinQ = "Quarter coin"; L3.en.coinH = "Half coin"; L3.en.coinF = "Full coin";
 L3.en.kabulNote = "Source: Afaaq daily report ({d}); adjusted live by the world ounce move. Buy / sell."; L3.en.kabulCalcNote = "Based on real Kabul market rate (Afaaq, {d}) + live world ounce move"; L3.en.noLocal = "Kabul rate unavailable; world price used.";
+L3.fa.myProfile = "پروفایل من"; L3.fa.changePhoto = "انتخاب عکس"; L3.fa.savePhoto = "ذخیره‌ی عکس"; L3.fa.removePhoto = "حذف عکس"; L3.fa.badPhoto = "این عکس قابل خواندن نیست.";
+L3.ps.myProfile = "زما پروفایل"; L3.ps.changePhoto = "انځور وټاکئ"; L3.ps.savePhoto = "انځور خوندي کړئ"; L3.ps.removePhoto = "انځور لرې کړئ"; L3.ps.badPhoto = "دا انځور نه لوستل کېږي.";
+L3.en.myProfile = "My profile"; L3.en.changePhoto = "Choose photo"; L3.en.savePhoto = "Save photo"; L3.en.removePhoto = "Remove photo"; L3.en.badPhoto = "This image can't be read.";
 L3.fa.mktRate = "نرخ بازار (رسمی)"; L3.fa.secAgo = "{n} ثانیه پیش"; L3.fa.minAgo = "{n} دقیقه پیش"; L3.fa.backLive = "قیمت زنده"; L3.fa.liveSrc = "زنده از بازار جهانی";
 L3.ps.mktRate = "د بازار نرخ (رسمي)"; L3.ps.secAgo = "{n} ثانیې مخکې"; L3.ps.minAgo = "{n} دقیقې مخکې"; L3.ps.backLive = "ژوندۍ بیه"; L3.ps.liveSrc = "له نړیوال بازار ژوندی";
 L3.en.mktRate = "Market rate (official)"; L3.en.secAgo = "{n}s ago"; L3.en.minAgo = "{n} min ago"; L3.en.backLive = "Live prices"; L3.en.liveSrc = "Live from world market";
@@ -2062,7 +2128,7 @@ async function loadTeacher(){
 teacher = store.get("teacher", teacher);
 async function loadChat(){
   if (!me || me.role === "admin" || (view !== "feed" && view !== "msg")) return;
-  if (!msgsLoaded) loadTeacher();
+  if (!msgsLoaded || Date.now() - (window._tAt || 0) > 60000) { window._tAt = Date.now(); loadTeacher(); }
   const { data, error } = await sb.from("messages").select("*").eq("member_id", me.id).order("created_at", {ascending:true});
   if (error) return;
   const known = new Set(msgs.map(m => m.id));

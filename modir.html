@@ -564,7 +564,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794046438";
+const BUILD = "1794046675";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -632,7 +632,9 @@ const mState = m => {
 };
 const COLORS = ["#3566ff","#12a46b","#d8911c","#9b51e0","#e5484d","#0aa2c0"];
 const avColor = s => COLORS[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % COLORS.length];
-const avatar = m => `<span class="av" style="background:${avColor(m.name)}22;color:${avColor(m.name)}">${esc([...String(m.name)][0] || "؟")}</span>`;
+const avatar = m => m.avatar ? `<span class="av" style="--ac:${avColor(m.name)};padding:0"><img src="${esc(m.avatar)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover"></span>`
+  : `<span class="av" style="--ac:${avColor(m.name)};background:${avColor(m.name)}22;color:${avColor(m.name)}">${esc([...String(m.name)][0] || "؟")}</span>`;
+const paintProf = () => { const b = $("prof"); if (!b) return; b.innerHTML = teacherSet.photo ? `<img src="${esc(teacherSet.photo)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : "👤"; b.style.padding = teacherSet.photo ? "0" : ""; b.style.overflow = "hidden"; };
 
 const I = {
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
@@ -775,7 +777,7 @@ function renderPanel(){
     <div class="nav glass"><span class="pill" id="np"></span>
       <button data-t="signals">${I.chart}سیگنال‌ها</button><button data-t="members">${I.users}اعضا</button><button data-t="msgs">💬 پیام‌ها<span class="nb" id="nb"></span></button><button data-t="content">🗂 محتوا</button></div>`;
   $("out").onclick = () => sb.auth.signOut();
-  $("prof").onclick = sheetProfile;
+  $("prof").onclick = sheetProfile; loadTeacherSet();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
   $("pane").onclick = paneClick;
@@ -1285,7 +1287,7 @@ document.addEventListener("click", e => {
 
 /* ===== پروفایل استاد ===== */
 let teacherSet = { name: "استاد محمد ظریف محمدی", photo: null };
-async function loadTeacherSet(){ const { data } = await sb.from("settings").select("value").eq("key", "teacher").maybeSingle(); if (data?.value) teacherSet = { ...teacherSet, ...data.value }; }
+async function loadTeacherSet(){ const { data } = await sb.from("settings").select("value").eq("key", "teacher").maybeSingle(); if (data?.value) teacherSet = { ...teacherSet, ...data.value }; paintProf(); }
 async function squareJpeg(file, size = 400){
   const bmp = await createImageBitmap(file); const s = Math.min(bmp.width, bmp.height);
   const c = document.createElement("canvas"); c.width = c.height = size;
@@ -1321,7 +1323,7 @@ async function sheetProfile(){
 }
 async function saveTeacher(){
   const { error } = await sb.from("settings").upsert({ key: "teacher", value: teacherSet, updated_at: new Date().toISOString() });
-  if (error) { toast("ذخیره نشد: " + error.message, true); return false; } return true;
+  if (error) { toast("ذخیره نشد: " + error.message, true); return false; } paintProf(); return true;
 }
 
 /* ===== پیام‌های اعضا ===== */
