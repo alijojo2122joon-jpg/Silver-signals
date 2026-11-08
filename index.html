@@ -1148,6 +1148,26 @@
     .fxu b{font-weight:800} .fxu small{font:700 12px Montserrat,Arial,sans-serif;color:var(--muted)}
     .fxn .fxfull{display:none}
   }
+
+  .fxcities{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 10px}
+  .fxcities button{flex:none;border:0;border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;font-weight:800;color:var(--text);background:var(--field);box-shadow:var(--sh-in);cursor:pointer}
+  .fxcities button.on{color:#fff;background:linear-gradient(180deg,#ffb23f,#ff7a3d);box-shadow:0 8px 16px -8px rgba(255,122,61,.6)}
+  .fxcitynote{margin:6px 2px;font-size:11.5px;font-weight:700;color:var(--muted)}
+  .fxcmph,.fxcmpr{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));align-items:center;gap:6px;text-align:center}
+  .fxcmph{margin-top:12px;padding:4px 10px;font-size:11px;font-weight:800;color:var(--muted)} .fxcmph span:first-child{text-align:start}
+  .fxcmpr{width:100%;margin-top:6px;padding:10px;border:0;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);font:800 13.5px Montserrat,Arial,sans-serif;color:var(--text);cursor:pointer}
+  .fxcmpr.on{box-shadow:var(--sh-in),inset 0 0 0 2px #ff9d3c}
+  .fxcmpr>span:first-child{text-align:start;font-family:inherit} .fxcmpr b{display:block;font:800 13px inherit;font-family:var(--font,inherit)} .fxcmpr small{display:block;font:600 10.5px inherit;color:var(--muted)}
+  .fxcmpr .b{color:var(--buy)} .fxcmpr .s{color:var(--sell)} .fxcmpr .up{color:var(--sell)} .fxcmpr .dn{color:var(--buy)}
+
+  .pform{margin-top:18px;text-align:start;padding:14px;border-radius:22px;background:var(--field);box-shadow:var(--sh-in)}
+  .pform h3{margin:0 0 6px;font-size:15px}
+  .pfjoin{font-size:12px;color:var(--muted);margin-bottom:8px}
+  .pfl{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:11.5px;font-weight:800;color:var(--muted)}
+  .pfl input,.pfl select,.pfl textarea{width:100%;padding:10px 12px;border:0;border-radius:14px;background:var(--bg);box-shadow:var(--sh-in);font:inherit;font-size:14px;color:var(--text);outline:0;resize:vertical}
+  .pfl input,.pfl select{height:44px}
+  .pf2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pform .cta{margin-top:12px;width:100%}
 </style>
 </head>
 <body>
@@ -1159,7 +1179,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081240";
+const BUILD = "202611081351";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1429,6 +1449,25 @@ async function squareJpeg(file, size = 400){
   c.getContext("2d").drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
   return await new Promise((r, j) => c.toBlob(b => b ? r(b) : j(), "image/jpeg", .86));
 }
+
+/* ===== پروفایل کامل عضو ===== */
+const PFL = { fa: { t: "اطلاعات من", name: "نام و نام خانوادگی", phone: "شماره تماس", wa: "واتساپ", tg: "آیدی تلگرام", country: "کشور", city: "شهر", exp: "سابقه در بازار (سال)", lv: "سطح تجربه", lvs: { "": "—", beginner: "مبتدی", intermediate: "متوسط", pro: "حرفه‌ای" }, skills: "مهارت‌ها و تخصص‌ها", bio: "درباره‌ی من", join: "تاریخ عضویت", save: "ذخیره‌ی اطلاعات", ok: "ذخیره شد ✓", email: "ایمیل (فقط مدیر می‌تواند عوض کند)" },
+  ps: { t: "زما معلومات", name: "نوم", phone: "د اړیکې شمېره", wa: "واټساپ", tg: "د ټلګرام آیډي", country: "هېواد", city: "ښار", exp: "په بازار کې تجربه (کال)", lv: "د تجربې کچه", lvs: { "": "—", beginner: "نوی", intermediate: "منځنی", pro: "مسلکي" }, skills: "مهارتونه", bio: "زما په اړه", join: "د غړیتوب نېټه", save: "خوندي کول", ok: "خوندي شو ✓", email: "برېښنالیک" },
+  en: { t: "My details", name: "Full name", phone: "Phone", wa: "WhatsApp", tg: "Telegram ID", country: "Country", city: "City", exp: "Years in markets", lv: "Experience level", lvs: { "": "—", beginner: "Beginner", intermediate: "Intermediate", pro: "Professional" }, skills: "Skills", bio: "About me", join: "Member since", save: "Save details", ok: "Saved ✓", email: "Email (only admin can change)" } };
+function profFormHTML(){ const L = PFL[lang] || PFL.fa, f = (id, l, v, a = "") => `<label class="pfl">${l}<input id="${id}" value="${esc(v ?? "")}" ${a}></label>`;
+  return `<div class="pform"><h3>👤 ${L.t}</h3><div class="pfjoin">${L.join}: <b>${fmtDate(me.created_at)}</b></div>
+    ${f("pf_name", L.name, me.name, 'maxlength="80"')}<div class="pf2">${f("pf_phone", L.phone, me.phone, 'dir="ltr" inputmode="tel"')}${f("pf_wa", L.wa, me.whatsapp, 'dir="ltr" inputmode="tel"')}</div>
+    <div class="pf2">${f("pf_tg", L.tg, me.telegram, 'dir="ltr"')}${f("pf_exp", L.exp, me.experience_years, 'dir="ltr" inputmode="numeric"')}</div>
+    <div class="pf2">${f("pf_country", L.country, me.country)}${f("pf_city", L.city, me.city)}</div>
+    <label class="pfl">${L.lv}<select id="pf_lv">${Object.entries(L.lvs).map(([k, v]) => `<option value="${k}" ${k === (me.level || "") ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+    ${f("pf_skills", L.skills, me.skills, 'maxlength="300"')}<label class="pfl">${L.bio}<textarea id="pf_bio" rows="3" maxlength="1000">${esc(me.bio || "")}</textarea></label>
+    <button class="cta" id="pfsave">${L.save}</button><div class="err" id="pferr"></div></div>`; }
+async function saveProfForm(){ const L = PFL[lang] || PFL.fa, b = $("pfsave"), g = id => $(id).value;
+  const p = { name: g("pf_name"), phone: g("pf_phone"), whatsapp: g("pf_wa"), telegram: g("pf_tg"), country: g("pf_country"), city: g("pf_city"), experience_years: g("pf_exp").replace(/[^0-9]/g, ""), level: g("pf_lv"), skills: g("pf_skills"), bio: g("pf_bio") };
+  b.disabled = true; const { error } = await sb.rpc("update_my_profile", { p }); b.disabled = false;
+  if (error) { $("pferr").textContent = error.message; return; }
+  const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle(); if (data) { me = data; store.set("cache_me", me); }
+  b.textContent = L.ok; sfx("button", .4); setTimeout(() => { if ($("pfsave")) $("pfsave").textContent = L.save; }, 1800); }
 function openProfile(){
   if ($("prof")) return;
   const veil = document.createElement("div"); veil.className = "cveil"; veil.id = "pveil";
@@ -1444,9 +1483,11 @@ function openProfile(){
         <button class="ghost2 instbtn" onclick="installApp()">🖥 ${lang === "en" ? "Install on this computer/phone" : lang === "ps" ? "په کمپیوټر/موبایل نصب کړئ" : "نصب برنامه روی همین کامپیوتر/گوشی"}</button>
         ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })} · ${planName(me.plan)}</div><button class="cta" id="prenew" style="margin-top:10px">${PT().renew}</button>` : ""}
         ${pick ? `<button class="cta" id="psave">${T.savePhoto}</button>` : ""}
+        ${me.role !== "admin" ? profFormHTML() : ""}
         ${me.avatar && !pick ? `<button class="ghost2" id="pdel">${T.removePhoto}</button>` : ""}
         <div class="err" id="perr"></div></div>`;
     $("px").onclick = () => history.back();
+    if ($("pfsave")) $("pfsave").onclick = saveProfForm;
     if ($("prenew")) $("prenew").onclick = () => { history.back(); setTimeout(openPlans, 450); };
     $("pfile").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { pick = await squareJpeg(f); draw(); } catch { $("perr").textContent = T.badPhoto; } };
     if ($("psave")) $("psave").onclick = async () => {
@@ -1809,6 +1850,7 @@ let shown = {};
 let pSig = "";
 
 /* ===== جدول نرخ ارزها (از کانال تلگرام kabul_dalarr_Toman + نرخ دستی مدیر) ===== */
+let fxCities = store.get("cache_fxc", []), fxCityRows = store.get("cache_fxcr", []), fxCity = store.get("fx_city", "kabul");
 let fxRows = store.get("cache_fx", []), fxAt = 0, fxQ = "", fxSort = store.get("fx_sort", "pop"), fxOpen = null, fxPer = "7d", fxCh = null, fxBusy = false;
 const FXL = {
   fa: { title: "جدول نرخ ارزها", srcLine: "خودکار از کانال تلگرام kabul_dalarr_Toman · نرخ‌های دستی با برچسب «دستی»", search: "جست‌وجوی نام یا نماد ارز…", cur: "ارز", buy: "خرید", sell: "فروش", chg: "تغییر",
@@ -1820,7 +1862,25 @@ const FXL = {
   en: { title: "Currency rates", srcLine: "Automatic from Telegram @kabul_dalarr_Toman · manual rates are marked “manual”", search: "Search name or symbol…", cur: "Currency", buy: "Buy", sell: "Sell", chg: "Change",
     sPop: "Popular", sName: "Name", sUp: "Top gainers", sDn: "Top losers", manual: "manual", noRate: "No valid rate yet", ref: "Reference", approx: "≈ in AFN",
     pToday: "Today", pYest: "Yesterday", p7: "7 days", p30: "1 month", p90: "3 months", hist: "Rate history", noHist: "No rates in this period", none: "No currency found", updated: "Updated", buyL: "Buy", sellL: "Sell", midL: "Rate" } };
+Object.assign(FXL.fa, { city: "شهر", cmpT: "💵 نرخ دالر در شهرهای افغانستان", cmpS: "مقایسه‌ی خرید و فروش دالر به افغانی؛ تفاوت نسبت به کابل", diff: "تفاوت با کابل", cityOnly: "در این شهر کانال فقط نرخ این ارزها را منتشر می‌کند." });
+Object.assign(FXL.ps, { city: "ښار", cmpT: "💵 په ښارونو کې د ډالر نرخ", cmpS: "د ډالر پېرل او پلورل؛ له کابل سره توپیر", diff: "له کابل سره توپیر", cityOnly: "په دې ښار کې چینل یوازې د دې اسعارو نرخ خپروي." });
+Object.assign(FXL.en, { city: "City", cmpT: "💵 USD rate across Afghan cities", cmpS: "USD→AFN buy and sell; difference vs Kabul", diff: "vs Kabul", cityOnly: "In this city the channel only publishes these currencies." });
 const fxT = () => FXL[lang] || FXL.fa;
+const cityName = c => { const x = fxCities.find(k => k.code === c); return x ? ((lang === "ps" ? x.name_ps : lang === "en" ? x.name_en : x.name_fa) || x.name_fa) : c; };
+function fxRowsForCity(){
+  if (fxCity === "kabul") return fxRows;
+  return fxCityRows.filter(r => r.city === fxCity).map(r => { const m = fxRows.find(x => x.id === r.currency_id); return m ? { ...m, buy: r.buy, sell: r.sell, mid: r.mid, prev_buy: r.prev_buy, prev_sell: r.prev_sell, prev_mid: r.prev_mid, rate_at: r.rate_at, kind: r.kind } : null; }).filter(Boolean);
+}
+function fxCompareHTML(){
+  const L = fxT(), usd = fxRows.find(x => x.code === "USD"); if (!usd) return "";
+  const rows = fxCityRows.filter(r => r.currency_id === usd.id).sort((a, b) => (fxCities.findIndex(c => c.code === a.city) + 1 || 99) - (fxCities.findIndex(c => c.code === b.city) + 1 || 99));
+  if (!rows.length) return ""; const kb = rows.find(r => r.city === "kabul");
+  return `<div class="fxcmp"><div class="fxh"><h3>${L.cmpT}</h3><small>${L.cmpS}</small></div>
+    <div class="fxcmph"><span>${L.city}</span><span>${L.buy}</span><span>${L.sell}</span><span>${L.diff}</span></div>
+    ${rows.map(r => { const d = kb && r.city !== "kabul" && r.sell != null && kb.sell != null ? Number(r.sell) - Number(kb.sell) : null;
+      return `<button type="button" class="fxcmpr ${r.city === fxCity ? "on" : ""}" data-city="${esc(r.city)}"><span><b>${esc(cityName(r.city))}</b><small data-ts="${r.rate_at}">${agoTxt(r.rate_at)}</small></span>
+        <span class="b ltr">${fxNum(r.buy, 2)}</span><span class="s ltr">${fxNum(r.sell, 2)}</span><span class="ltr ${d == null ? "" : d > 0 ? "up" : d < 0 ? "dn" : ""}">${d == null ? "—" : (d > 0 ? "+" : d < 0 ? "−" : "") + fxNum(Math.abs(d), 2)}</span></button>`; }).join("")}</div>`;
+}
 const fxName = r => (lang === "ps" ? r.name_ps : lang === "en" ? r.name_en : r.name_fa) || r.name_fa;
 const fxNum = (v, d) => v == null ? "—" : Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
 const fxMain = r => r.sell != null ? ["sell", r.sell, r.prev_sell] : r.buy != null ? ["buy", r.buy, r.prev_buy] : ["mid", r.mid, r.prev_mid];
@@ -1835,7 +1895,9 @@ function fxAfn(r){ // AFN value of one unit of the priced currency, only when it
 async function loadFx(force){
   if (fxBusy || (!force && Date.now() - fxAt < 20000 && fxRows.length)) return drawFx();
   fxBusy = true;
-  try { const { data, error } = await sb.from("currency_board").select("*").order("sort"); if (!error && data) { fxRows = data.filter(r => r.visible !== false); fxAt = Date.now(); store.set("cache_fx", fxRows); } }
+  try { const [{ data, error }, { data: cr }, { data: cc }] = await Promise.all([sb.from("currency_board").select("*").order("sort"), sb.from("currency_city_board").select("*"), sb.from("fx_cities").select("*").eq("active", true).order("sort")]);
+    if (!error && data) { fxRows = data.filter(r => r.visible !== false); fxAt = Date.now(); store.set("cache_fx", fxRows); }
+    if (cr) { fxCityRows = cr; store.set("cache_fxcr", cr); } if (cc) { fxCities = cc; store.set("cache_fxc", cc); } }
   catch {} finally { fxBusy = false; }
   drawFx(); refreshDashData();
   if (!fxCh) fxCh = sb.channel("fxr").on("postgres_changes", { event: "*", schema: "public", table: "currency_rates" }, () => { clearTimeout(loadFx.t); loadFx.t = setTimeout(() => loadFx(true), 800); }).subscribe();
@@ -1862,20 +1924,25 @@ function fxRowHTML(r){
 function drawFx(){
   const el = $("fxboard"); if (!el || page !== "prc") return;
   const L = fxT(), q = toEn(fxQ).trim().toLowerCase();
-  let rows = fxRows.filter(r => !q || [r.name_fa, r.name_ps, r.name_en, r.sym, r.code].some(x => (x || "").toLowerCase().includes(q)));
+  let rows = fxRowsForCity().filter(r => !q || [r.name_fa, r.name_ps, r.name_en, r.sym, r.code].some(x => (x || "").toLowerCase().includes(q)));
   const hasRate = r => r.buy != null || r.sell != null || r.mid != null;
   rows.sort((a, b) => (hasRate(b) - hasRate(a)) || (fxSort === "name" ? fxName(a).localeCompare(fxName(b), lang === "en" ? "en" : "fa")
     : fxSort === "up" ? fxPct(b) - fxPct(a) : fxSort === "dn" ? fxPct(a) - fxPct(b) : (b.popular - a.popular) || (a.sort - b.sort)));
   const focused = document.activeElement?.id === "fxq";
   if (!el.firstChild) el.innerHTML = `<div class="fxb glass rise"><div class="fxh"><h3>💱 ${L.title}</h3><small>${L.srcLine}</small></div>
     <label class="fxs">${I.search || "🔍"}<input id="fxq" type="search" placeholder="${L.search}" autocomplete="off" value="${esc(fxQ)}"></label>
+    <div class="fxcities" id="fxcities"></div>
     <div class="fxsort" id="fxsort">${[["pop", L.sPop], ["name", L.sName], ["up", L.sUp], ["dn", L.sDn]].map(([k, t]) => `<button type="button" data-fs="${k}" class="${k === fxSort ? "on" : ""}">${t}</button>`).join("")}</div>
     <div class="fxhead"><span>${L.cur}</span><span>${L.buy}</span><span>${L.sell}</span><span>${L.chg}</span><span class="fxu">${L.updated}</span></div><div id="fxlist"></div></div>`;
-  $("fxlist").innerHTML = rows.length ? rows.map(fxRowHTML).join("") : !planHas("sarraf") ? `<div class="upd">🔒 ${PT().sarraf_up} <button class="ghost2" onclick="openPlans()">${PT().up}</button></div>` : `<div class="upd">${L.none}</div>`;
+  const citiesWithData = new Set(["kabul", ...fxCityRows.map(r => r.city)]);
+  $("fxcities").innerHTML = fxCities.filter(c => citiesWithData.has(c.code)).map(c => `<button type="button" data-city="${esc(c.code)}" class="${c.code === fxCity ? "on" : ""}">📍 ${esc(cityName(c.code))}</button>`).join("");
+  if ($("fxcmpbox")) $("fxcmpbox").innerHTML = fxCompareHTML(); else el.insertAdjacentHTML("afterbegin", `<div class="fxb glass rise" id="fxcmpbox">${fxCompareHTML()}</div>`);
+  $("fxlist").innerHTML = (fxCity !== "kabul" && rows.length ? `<div class="fxcitynote">📍 ${esc(cityName(fxCity))} — ${L.cityOnly}</div>` : "") + (rows.length ? rows.map(fxRowHTML).join("") : !planHas("sarraf") ? `<div class="upd">🔒 ${PT().sarraf_up} <button class="ghost2" onclick="openPlans()">${PT().up}</button></div>` : `<div class="upd">${L.none}</div>`);
   if (fxOpen) fxHist();
   if (el.dataset.wired) return; el.dataset.wired = 1;
   el.addEventListener("input", e => { if (e.target.id === "fxq") { fxQ = e.target.value; drawFx(); } });
   el.addEventListener("click", e => {
+    const ct = e.target.closest("[data-city]"); if (ct) { fxCity = ct.dataset.city; store.set("fx_city", fxCity); fxOpen = null; try { sfx("select", .3); } catch {} return drawFx(); }
     const s = e.target.closest("[data-fs]"); if (s) { fxSort = s.dataset.fs; store.set("fx_sort", fxSort); $("fxsort").querySelectorAll("button").forEach(b => b.classList.toggle("on", b === s)); try { sfx("select", .3); } catch {} return drawFx(); }
     const pr = e.target.closest("[data-fp]"); if (pr) { fxPer = pr.dataset.fp; return fxHist(); }
     const row = e.target.closest(".fxrow"); if (row) { const c = row.parentElement.dataset.fx; fxOpen = fxOpen === c ? null : c; try { sfx("tap_02", .3); } catch {} drawFx(); }
@@ -1884,11 +1951,11 @@ function drawFx(){
 const fxRange = () => { const n = new Date(), day = new Date(n.getFullYear(), n.getMonth(), n.getDate());
   return fxPer === "today" ? [day, null] : fxPer === "yest" ? [new Date(day - 864e5), day] : [new Date(Date.now() - (fxPer === "30d" ? 30 : fxPer === "90d" ? 90 : 7) * 864e5), null]; };
 async function fxHist(){
-  const box = $("fxd"), r = fxRows.find(x => x.code === fxOpen); if (!box || !r) return;
+  const box = $("fxd"), r = fxRowsForCity().find(x => x.code === fxOpen); if (!box || !r) return;
   const L = fxT(), d = r.digits ?? 2;
   box.innerHTML = `<div class="fxper">${[["today", L.pToday], ["yest", L.pYest], ["7d", L.p7], ["30d", L.p30], ["90d", L.p90]].map(([k, t]) => `<button type="button" data-fp="${k}" class="${k === fxPer ? "on" : ""}">${t}</button>`).join("")}</div><div class="fxchart"><span class="spin"></span></div>`;
   const [from, to] = fxRange();
-  let qy = sb.from("currency_rates").select("buy,sell,mid,posted_at,kind").eq("currency_id", r.id).eq("valid", true).gte("posted_at", from.toISOString()).order("posted_at", { ascending: true }).limit(1500);
+  let qy = sb.from("currency_rates").select("buy,sell,mid,posted_at,kind").eq("currency_id", r.id).eq("city", fxCity).eq("valid", true).gte("posted_at", from.toISOString()).order("posted_at", { ascending: true }).limit(1500);
   if (to) qy = qy.lt("posted_at", to.toISOString());
   const { data } = await qy; if ($("fxd") !== box) return;
   const h = data || [], ch = box.querySelector(".fxchart");
@@ -2775,9 +2842,9 @@ function renderFeed(){
       .on("postgres_changes", {event:"*", schema:"public", table:"posts"}, ev => { if (ev.eventType !== "INSERT") loadAcademy(); })
       .on("postgres_changes", {event:"*", schema:"public", table:"polls"}, () => loadAcademy())
       .on("postgres_changes", {event:"*", schema:"public", table:"stories"}, ev => { loadStories(); if (ev.eventType === "INSERT") banner("✨", T.newStory, esc(teacher.name || T.teacher) + " — " + T.tapView, () => { setPage("sig"); setTimeout(() => openStories(stories.length - 1), 900); }); }).subscribe();
-    clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); if (page === "prc") loadPrices();  } }, 8000);
+    clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); sb.rpc("touch_seen").then(() => {}); if (page === "prc") loadPrices();  } }, 8000);
   }
-  loadFeed(); loadPrices(); loadMyRatings(); loadNotifs(); loadAlerts();
+  loadFeed(); loadPrices(); loadMyRatings(); loadNotifs(); loadAlerts(); sb.rpc("touch_seen").then(() => {});
   setupChat();
 }
 function rerender(){

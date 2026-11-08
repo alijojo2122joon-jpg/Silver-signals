@@ -27,9 +27,14 @@ export function num(raw: string): number | null {
   return isFinite(v) && v > 0 ? v : null;
 }
 
-type Quote = { code: string; buy?: number | null; sell?: number | null; mid?: number | null };
+type Quote = { code: string; city: string; buy?: number | null; sell?: number | null; mid?: number | null };
+// city names as written in the channel → city code
+const CITIES: [RegExp, string][] = [
+  [/کابل/, "kabul"], [/هرات/, "herat"], [/مزار/, "mazar"], [/کندهار|قندهار/, "kandahar"], [/جلال\s*آباد|ننگرهار|ننګرهار/, "jalalabad"],
+  [/غزنی|غزنى/, "ghazni"], [/کندز|قندوز|کندوز/, "kunduz"], [/خوست/, "khost"]];
+const cityOf = (t: string) => { for (const [re, c] of CITIES) if (re.test(t)) return c; return null; };
 const HEADS: [RegExp, string][] = [
-  [/دالر\s*به\s*افغانی[^\n|]{0,25}کابل/g, "USD"],
+  [/دالر\s*به\s*افغانی[^\n|]{0,30}/g, "USD"],
   [/دالر\s*به\s*کلدار/g, "USD_PKR"],
   [/کلدار\s*به\s*افغانی/g, "PKR"],
   [/یورو\s*به\s*دالر/g, "EUR_USD"],
@@ -43,29 +48,49 @@ const N = "(\\d[\\d.,]*)";
 export function parse(text: string): { quotes: Quote[]; review: boolean; reason?: string } {
   const quotes: Quote[] = [];
   let review = false, reason = "";
+  const push = (q: Quote) => { if (!quotes.some(x => x.code === q.code && x.city === q.city)) quotes.push(q); };
+  const firstLine = text.split("\n").find(l => l.trim()) || "";
+  const msgCity = cityOf(firstLine);                       // e.g. "غزنی اخیری", "پایان ساعت کاری" (none)
   const starts = [...text.matchAll(ANY_HEAD)].map(m => m.index!);
   for (const [re, code] of HEADS) {
     for (const m of text.matchAll(re)) {
       const from = m.index! + m[0].length;
       const next = starts.find(p => p >= from) ?? text.length;
       const seg = text.slice(from, Math.min(next, from + 160));
+      // city: written in the USD header ("دالر به افغانی … هرات"), else the message's city, else Kabul (Kabul market summary)
+      const city = (code === "USD" ? cityOf(m[0]) : null) ?? msgCity ?? (code === "USD" ? null : "kabul");
+      if (!city) { review = true; reason = code + ": city unknown"; continue; }
       const b = seg.match(new RegExp("خرید[^\\d\\n]{0,4}" + N)) || seg.match(new RegExp(N + "[^\\d\\n]{0,3}خرید"));
       const s = seg.match(new RegExp("فرو\\s?ش[^\\d\\n]{0,4}" + N));
       const buy = b ? num(b[1]) : null, sell = s ? num(s[1]) : null;
       if (buy == null && sell == null) { review = true; reason = code + ": no numbers"; continue; }
-      if (!quotes.some(q => q.code === code)) quotes.push({ code, buy, sell });
+      push({ code, city, buy, sell });
     }
   }
-  // Gulf cross rates against the dollar, one number each: 🇸🇦3.78.30 ریال | 🇦🇪3.68.30 درهم | ...
+  // provincial summary blocks: "غزنی اخیری / دالر کلدار 280.60 🔔 280.80 / دالر افغانی 65.21 🔔 65.23 / افغانی کلدار 4315 🔔 4317"
+  if (msgCity) {
+    const LINES: [RegExp, string][] = [[/دالر\s*کلدار/, "USD_PKR"], [/(?:دالر\s*افغانی|افغانی\s*دالر)/, "USD"], [/افغانی\s*کلدار/, "AFN_PKR"]];
+    for (const line of text.split("\n")) {
+      if (/خرید|فروش/.test(line)) continue;
+      for (const [re, code] of LINES) {
+        if (!re.test(line)) continue;
+        const nums = [...line.matchAll(/\d[\d.,]*/g)].map(x => num(x[0])).filter((v): v is number => v != null);
+        if (nums.length >= 2) push({ code, city: msgCity, buy: nums[0], sell: nums[1] });
+        else if (nums.length === 1) { review = true; reason = code + ": one number"; }
+        break;
+      }
+    }
+  }
+  // Gulf cross rates against the dollar (Kabul market), one number each
   if (/درهم|ریال|دینار/.test(text)) {
     for (const [flag, code] of [["🇸🇦", "SAR"], ["🇦🇪", "AED"], ["🇰🇼", "KWD"], ["🇶🇦", "QAR"], ["🇴🇲", "OMR"], ["🇧🇭", "BHD"]] as const) {
       const m = text.match(new RegExp(flag + "\\s*" + N));
-      if (m) { const v = num(m[1]); if (v) quotes.push({ code, mid: v }); }
+      if (m) { const v = num(m[1]); if (v) push({ code, city: "kabul", mid: v }); }
     }
   }
   // Herat dollar→toman "262,800 معامله ⏳ فردایی"
   const h = text.match(new RegExp(N + "\\s*معامله[^\\n]{0,12}فردا"));
-  if (h) { const v = num(h[1]); if (v) quotes.push({ code: "USD_IRR_HRT", mid: v }); }
+  if (h) { const v = num(h[1]); if (v) push({ code: "USD_IRR_HRT", city: "herat", mid: v }); }
   return { quotes, review, reason };
 }
 
@@ -110,19 +135,18 @@ Deno.serve(async (req) => {
         if (!inRange(q.buy) || !inRange(q.sell) || !inRange(q.mid) || !spreadOk) { rejected.push(q.code + ":out-of-range"); continue; }
         accepted.push(q);
         const postedAt = p.at ? new Date(p.at).toISOString() : new Date().toISOString();
-        const { data: last } = await admin.from("currency_rates").select("buy,sell,mid,posted_at").eq("currency_id", c.id).eq("valid", true)
+        const { data: last } = await admin.from("currency_rates").select("buy,sell,mid,posted_at").eq("currency_id", c.id).eq("city", q.city).eq("valid", true)
           .order("posted_at", { ascending: false }).order("id", { ascending: false }).limit(1).maybeSingle();
         if (last && new Date(last.posted_at) > new Date(postedAt)) continue;               // older than what we show
         const same = last && Number(last.buy ?? -1) === (q.buy ?? -1) && Number(last.sell ?? -1) === (q.sell ?? -1) && Number(last.mid ?? -1) === (q.mid ?? -1);
         if (same) continue;                                                                 // duplicate value
-        const { error } = await admin.from("currency_rates").insert({ currency_id: c.id, buy: q.buy ?? null, sell: q.sell ?? null, mid: q.mid ?? null,
+        const { error } = await admin.from("currency_rates").insert({ currency_id: c.id, city: q.city, buy: q.buy ?? null, sell: q.sell ?? null, mid: q.mid ?? null,
           kind: "auto", source: "tg:" + ch, msg_id: p.id, posted_at: postedAt });
         if (!error) inserted++;
       }
       const looksLikeRate = /خرید|فروش/.test(p.text) && /\d/.test(p.text);
-      const cityOnly = /دالر\s*به\s*افغانی/.test(p.text) && !quotes.some(q => q.code === "USD");
       const status = accepted.length ? (rejected.some(r => r.endsWith("out-of-range")) || review ? "review" : "ok")
-        : (looksLikeRate && !cityOnly) || rejected.length ? "review" : "ignored";
+        : looksLikeRate || rejected.length ? "review" : "ignored";
       await admin.from("tg_messages").upsert({ channel: ch, msg_id: p.id, text: p.text.slice(0, 4000), posted_at: p.at,
         status, parsed: { quotes, rejected, reason: reason || undefined } });
     }
