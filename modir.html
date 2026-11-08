@@ -703,6 +703,10 @@
   .cmrh{display:flex;gap:6px;align-items:center;flex-wrap:wrap} .cmrh small{margin-inline-start:auto;font-size:10.5px;color:var(--muted)}
   .cmrb{font-size:13.5px;line-height:1.8;margin:4px 0;white-space:pre-wrap;word-wrap:break-word}
   .cmra{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px} .cmra button{border:0;border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;font-weight:800;background:var(--field);box-shadow:var(--raise);color:var(--text);cursor:pointer} .cmra button.red{color:var(--sell)}
+
+  .brev{border:1.5px solid #d9770655} .bkv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:8px 0;font-size:12.5px} .bkv span{color:var(--muted)} .bkv b{overflow-wrap:anywhere}
+  .bproof{display:block;width:100%;max-height:320px;object-fit:contain;border-radius:14px;background:var(--field);margin:6px 0;cursor:zoom-in}
+  .fxabtn button.red{color:var(--sell)} .tgl2{display:flex;gap:8px;align-items:center;font-weight:800;font-size:13px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -1071,7 +1075,11 @@ let mfilter = "all", pfilter = "all", pfrom = "", pto = "", jfilter = "all";
 const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسانی 4 ساعته", d1:"روزانه", w1:"هفتگی" };
 /* ===== محتوا: نرخ‌ها، آکادمی، اخبار، آموزش، ویدیو، نظرسنجی ===== */
 const PLACES = { kabul:"کابل (سرای شهزاده)", herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال‌آباد" };
-const KINDS = { news:"📰 خبر", event:"🗓 رویداد تقویم", article:"🎓 آموزش", video:"🎬 ویدیو" };
+const KINDS = { news:"📰 خبر", event:"🗓 رویداد تقویم", afevent:"🇦🇫 تقویم افغانستان", article:"🧠 تحلیل/آموزش", video:"🎬 ویدیو" };
+const PCATS = { news: ["اقتصاد افغانستان","بانکی و ارزی","طلا و فلزات","بازار جهانی","تجارت و گمرک","سیاست پولی"], article: ["تحلیل طلا","تحلیل نقره","تحلیل دالر/افغانی","فارکس","آموزش","روانشناسی معامله","مدیریت ریسک"] };
+PCATS.video = PCATS.article;
+const EVST = { upcoming: "⏳ پیش رو", released: "✅ منتشر شد", postponed: "⏸ به تعویق افتاد", cancelled: "✖ لغو شد" };
+const postKind = p => p.kind === "event" && p.country === "af" ? "afevent" : p.kind;
 let cPosts = [], cRates = [], cPolls = [];
 /* ===== استوری ===== */
 let cStories = [], cStoryStats = {};
@@ -1122,6 +1130,7 @@ function sheetStory(){
     closeSheet(); sfx("notification", .5); toast("استوری منتشر شد ✓"); loadStoriesAdmin();
   };
 }
+let cpKind = "all";
 async function loadContent(){
   loadStoriesAdmin();
   const [a, b, c] = await Promise.all([
@@ -1133,8 +1142,8 @@ async function loadContent(){
 }
 function drawContent(){
   const tiles = [["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["rates","💱","نرخ‌های امروز","دالر سرای شهزاده، هرات، مزار، جلال‌آباد و مثقال"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
-    ["news","📰","خبر اقتصادی","با تأثیر بر طلا/نقره/دالر"],["event","🗓","رویداد تقویم اقتصادی","زمان، اهمیت، قبلی و پیش‌بینی"],
-    ["article","🎓","آموزش کوتاه","مثلاً: حد ضرر چیست؟"],["video","🎬","ویدیوی تحلیل روزانه","ویدیوی 1 تا 2 دقیقه‌ای"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
+    ["news","📰","خبر اقتصادی","دسته، منبع، تاریخ، متن کامل و تأثیر"],["event","🗓","رویداد تقویم جهانی","زمان، اهمیت، قبلی و پیش‌بینی"],["afevent","🇦🇫","رویداد تقویم اقتصادی افغانستان","فقط از منبع معتبر: عنوان، تاریخ، ساعت، منبع، وضعیت"],
+    ["article","🧠","تحلیل تخصصی / آموزش","متن، کاور، دسته، تحلیل‌گر، فایل پیوست، پیش‌نویس"],["video","🎬","ویدیوی تحلیل","ویدیو با کاور، دسته و تحلیل‌گر"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
   $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت محتوا</h3></div>
     <div class="list glass rise" style="--i:1">${tiles.map(([k, ic, t, s]) => `<div class="it ctile" data-ct="${k}"><span class="av" style="background:var(--field)">${ic}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="s">${I.plus}</span></div>`).join("")}</div>
     <div id="stadm"></div><div id="clist"></div>`;
@@ -1152,13 +1161,16 @@ function drawContentList(){
     <div class="list glass">${Object.entries(PLACES).map(([k, v]) => `<div class="it" style="grid-template-columns:1fr;cursor:default"><div><div class="t">${v}</div><div class="s num">${rateTxt(lastR(k))}</div></div></div>`).join("")}</div>
     ${ap ? `<div class="sec" style="margin-top:18px"><h3>نظرسنجی فعال</h3></div><div class="list glass"><div class="it" style="cursor:default"><span class="av" style="background:var(--field)">📊</span><div><div class="t">${esc(ap.question)}</div><div class="s">${(ap.options || []).map(esc).join(" / ")}</div></div><button class="ghost" style="width:auto;height:36px;margin:0;padding:0 12px" data-endpoll="${ap.id}">پایان</button></div></div>` : ""}
     <div class="sec" style="margin-top:18px"><h3>منتشرشده‌ها</h3></div>
-    <div class="list glass">${cPosts.length ? cPosts.filter(p => KINDS[p.kind]).map(p => `<div class="it" style="cursor:default"><span class="av" style="background:var(--field)">${KINDS[p.kind].split(" ")[0]}</span>
-      <div><div class="t">${esc(p.title)}</div><div class="s">${KINDS[p.kind].split(" ")[1]} · ${fmtFull(p.created_at)}</div></div><button class="ghost red" style="width:auto;height:36px;margin:0;padding:0 12px" data-delpost="${p.id}">حذف</button></div>`).join("")
+    <div class="chips" id="cpk">${[["all","همه"], ...Object.entries(KINDS)].map(([k, t]) => `<button type="button" data-pk="${k}" class="${k === cpKind ? "on" : ""}">${t}</button>`).join("")}</div>
+    <div class="list glass">${cPosts.filter(p => cpKind === "all" || postKind(p) === cpKind).length ? cPosts.filter(p => KINDS[postKind(p)] && (cpKind === "all" || postKind(p) === cpKind)).map(p => `<div class="it" data-editpost="${p.id}"><span class="av" style="background:var(--field)">${KINDS[postKind(p)].split(" ")[0]}</span>
+      <div><div class="t">${p.status === "draft" ? '<span class="chip warn" style="font-size:10px">پیش‌نویس</span> ' : ""}${esc(p.title)}</div><div class="s">${KINDS[postKind(p)].split(" ").slice(1).join(" ")}${p.category ? " · " + esc(p.category) : ""}${p.author ? " · " + esc(p.author) : ""} · ${fmtFull(p.event_at || p.created_at)}${p.event_status ? " · " + EVST[p.event_status] : ""}</div></div><button class="ghost red" style="width:auto;height:36px;margin:0;padding:0 12px" data-delpost="${p.id}">حذف</button></div>`).join("")
       : `<div class="empty"><div class="big">🗂</div>هنوز چیزی منتشر نشده.</div>`}</div>`;
   el.onclick = async e => {
+    const pk = e.target.closest("[data-pk]"); if (pk) { cpKind = pk.dataset.pk; return drawContentList(); }
+    const ed = e.target.closest("[data-editpost]"); if (ed && !e.target.closest("[data-delpost]")) { const p = cPosts.find(x => String(x.id) === ed.dataset.editpost); if (p) return sheetPost(postKind(p), p); }
     const d = e.target.closest("[data-delpost]");
     if (d && confirm("حذف شود؟")) { const p = cPosts.find(x => String(x.id) === d.dataset.delpost);
-      await sb.from("posts").delete().eq("id", d.dataset.delpost); if (p?.file_path) sb.storage.from("media").remove([p.file_path]); toast("حذف شد"); loadContent(); }
+      await sb.from("posts").delete().eq("id", d.dataset.delpost); const rm = [p?.file_path, p?.cover_path, p?.attachment_path].filter(Boolean); if (rm.length) sb.storage.from("media").remove(rm); toast("حذف شد"); loadContent(); }
     const ep = e.target.closest("[data-endpoll]");
     if (ep) { await sb.from("polls").update({ active: false }).eq("id", ep.dataset.endpoll); toast("نظرسنجی بسته شد"); loadContent(); }
   };
@@ -1209,41 +1221,59 @@ async function sheetAcademy(){
     closeSheet(); toast("ذخیره شد ✓");
   };
 }
-function sheetPost(kind){
+function sheetPost(kind, P){
   const impRow = (k, n) => `<span>${n}</span><div class="tfc" data-imp="${k}">${[["up","▲ صعودی"],["down","▼ نزولی"],["neutral","• خنثی"]].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join("")}</div>`;
-  const isEv = kind === "event", isVid = kind === "video", isArt = kind === "article";
-  openSheet(`<h2>${KINDS[kind]}</h2>
-    <label class="l">عنوان</label><input class="in" id="pt" maxlength="200" placeholder="${isEv ? "مثلاً: آمار تورم آمریکا (CPI)" : isArt ? "مثلاً: حد ضرر چیست؟" : isVid ? "مثلاً: تحلیل صبح طلا" : "مثلاً: تصمیم فدرال رزرو درباره نرخ بهره"}">
-    ${isEv ? `<label class="l">زمان رویداد (به وقت کابل)</label><input class="in" id="pe" type="datetime-local">
+  const isAf = kind === "afevent", isEv = kind === "event" || isAf, isVid = kind === "video", isArt = kind === "article", isNews = kind === "news", x = P || {};
+  const dtl = v => v ? new Date(new Date(v) - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 16) : "";
+  const cats = PCATS[kind] || [];
+  openSheet(`<h2>${P ? "ویرایش · " : ""}${KINDS[kind]}</h2>
+    ${isAf ? `<p class="hint">⚠️ فقط رویدادهایی را ثبت کنید که از منبع رسمی و معتبر (مثل د افغانستان بانک، وزارت مالیه، اداره ملی احصائیه) اعلام شده‌اند؛ منبع را حتماً بنویسید.</p>` : ""}
+    <label class="l">عنوان</label><input class="in" id="pt" maxlength="200" value="${esc(x.title || "")}" placeholder="${isAf ? "مثلاً: لیلام دالر د افغانستان بانک" : isEv ? "مثلاً: آمار تورم آمریکا (CPI)" : isArt ? "مثلاً: تحلیل هفتگی طلا" : isVid ? "مثلاً: تحلیل صبح طلا" : "مثلاً: تصمیم بانک مرکزی درباره لیلام دالر"}">
+    ${cats.length ? `<label class="l">دسته‌بندی</label><input class="in" id="pcat" list="pcatl" maxlength="40" value="${esc(x.category || "")}" placeholder="انتخاب یا نوشتن دسته"><datalist id="pcatl">${cats.map(c => `<option value="${c}">`).join("")}</datalist>` : ""}
+    ${isArt || isVid ? `<label class="l">نام تحلیل‌گر</label><input class="in" id="pau" maxlength="80" value="${esc(x.author || "")}" placeholder="مثلاً: استاد محمد ظریف محمدی">` : ""}
+    ${isEv ? `<label class="l">تاریخ و ساعت رویداد (به وقت کابل)</label><input class="in" id="pe" type="datetime-local" value="${dtl(x.event_at)}">
       <label class="l">اهمیت</label><div class="tfc" id="pimp">${[["high","🔴 مهم"],["medium","🟠 متوسط"],["low","⚪ کم"]].map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join("")}</div>
-      <div class="rrow"><div><label class="l">قبلی</label><input class="in num" id="pp" dir="ltr"></div><div><label class="l">پیش‌بینی</label><input class="in num" id="pf" dir="ltr"></div><div><label class="l">واقعی</label><input class="in num" id="pa" dir="ltr"></div></div>` : ""}
-    ${isVid ? `<label class="l">فایل ویدیو (حداکثر 50 مگابایت)</label><input class="in" id="pv" type="file" accept="video/*" style="padding-top:13px">` : ""}
-    <label class="l">${isArt ? "متن آموزش" : "توضیح / تحلیل خبر"}${isVid ? " (اختیاری)" : ""}</label><textarea class="in" id="pb" rows="${isArt ? 8 : 4}"></textarea>
-    ${!isArt && !isVid ? `<label class="l">تأثیر</label><div class="impsel">${impRow("xau","طلا")}${impRow("xag","نقره")}${impRow("usd","دالر")}</div>` : ""}
+      ${isAf ? `<label class="l">وضعیت</label><div class="tfc" id="pst">${Object.entries(EVST).map(([v, t]) => `<button type="button" data-v="${v}">${t}</button>`).join("")}</div>` : ""}
+      <div class="rrow"><div><label class="l">قبلی</label><input class="in num" id="pp" dir="ltr" value="${esc(x.previous || "")}"></div><div><label class="l">پیش‌بینی</label><input class="in num" id="pf" dir="ltr" value="${esc(x.forecast || "")}"></div><div><label class="l">واقعی</label><input class="in num" id="pa" dir="ltr" value="${esc(x.actual || "")}"></div></div>` : ""}
+    ${isNews || isAf ? `<div class="two"><div><label class="l">منبع ${isAf ? "(الزامی)" : ""}</label><input class="in" id="psrc" maxlength="120" value="${esc(x.source || "")}" placeholder="مثلاً: د افغانستان بانک"></div><div><label class="l">لینک منبع</label><input class="in" id="purl" dir="ltr" maxlength="400" value="${esc(x.source_url || "")}" placeholder="https://"></div></div>` : ""}
+    ${isVid ? `<label class="l">فایل ویدیو (حداکثر 50 مگابایت)${P ? " — برای تغییر انتخاب کنید" : ""}</label><input class="in" id="pv" type="file" accept="video/*" style="padding-top:13px">` : ""}
+    ${isArt || isVid || isNews ? `<label class="l">تصویر کاور (اختیاری)${x.cover_path ? " — دارد ✓" : ""}</label><input class="in" id="pcv" type="file" accept="image/*" style="padding-top:13px">` : ""}
+    ${isArt ? `<label class="l">فایل پیوست (PDF یا تصویر، اختیاری)${x.attachment_name ? " — " + esc(x.attachment_name) : ""}</label><input class="in" id="pat" type="file" accept="application/pdf,image/*" style="padding-top:13px">` : ""}
+    <label class="l">${isArt ? "متن کامل تحلیل" : isNews ? "متن کامل خبر" : "توضیح"}${isVid ? " (اختیاری)" : ""}</label><textarea class="in" id="pb" rows="${isArt || isNews ? 10 : 4}">${esc(x.body || "")}</textarea>
+    ${isNews || kind === "event" ? `<label class="l">تأثیر</label><div class="impsel">${impRow("xau","طلا")}${impRow("xag","نقره")}${impRow("usd","دالر")}</div>` : ""}
+    ${isArt || isVid ? `<label class="l">وضعیت انتشار</label><div class="tfc" id="pstat"><button type="button" data-v="published">✅ تأیید و انتشار</button><button type="button" data-v="draft">📝 پیش‌نویس (اعضا نمی‌بینند)</button></div>` : ""}
     <div class="hint" id="pprog"></div>
-    <button class="cta press" id="psave">انتشار</button>`);
-  const impact = {}; let importance = isEv ? "medium" : null;
-  $("sheet").querySelectorAll("[data-imp]").forEach(g => g.onclick = e => { const b = e.target.closest("button"); if (!b) return; const k = g.dataset.imp;
-    impact[k] = impact[k] === b.dataset.v ? undefined : b.dataset.v; g.querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.v === impact[k])); });
-  if (isEv) { const paint = () => $("pimp").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.v === importance)); paint();
-    $("pimp").onclick = e => { const b = e.target.closest("button"); if (b) { importance = b.dataset.v; paint(); } }; }
+    <button class="cta press" id="psave">${P ? "ذخیره‌ی تغییرات" : "انتشار"}</button>`);
+  const impact = { ...(x.impact || {}) }; let importance = x.importance || (isEv ? "medium" : null), evst = x.event_status || "upcoming", status = x.status || "published";
+  $("sheet").querySelectorAll("[data-imp]").forEach(g => { const k = g.dataset.imp, paint = () => g.querySelectorAll("button").forEach(z => z.classList.toggle("on", z.dataset.v === impact[k])); paint();
+    g.onclick = e => { const b = e.target.closest("button"); if (!b) return; impact[k] = impact[k] === b.dataset.v ? undefined : b.dataset.v; paint(); }; });
+  const seg = (id, get, set) => { const el = $(id); if (!el) return; const paint = () => el.querySelectorAll("button").forEach(z => z.classList.toggle("on", z.dataset.v === get())); paint(); el.onclick = e => { const b = e.target.closest("button"); if (b) { set(b.dataset.v); paint(); } }; };
+  seg("pimp", () => importance, v => importance = v); seg("pst", () => evst, v => evst = v); seg("pstat", () => status, v => status = v);
+  const upload = async (file, dir, types) => { const ext = (file.name.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "") || "bin";
+    const path = `${dir}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+    const up = await sb.storage.from("media").upload(path, file, { contentType: file.type || types }); if (up.error) throw up.error; return path; };
   $("psave").onclick = async () => {
     const title = $("pt").value.trim(); if (!title) return $("pt").focus();
-    const row = { kind, title, body: $("pb").value.trim() || null };
-    const imp = Object.fromEntries(Object.entries(impact).filter(([, v]) => v)); if (Object.keys(imp).length) row.impact = imp;
-    if (isEv) { row.importance = importance; if ($("pe").value) row.event_at = new Date($("pe").value).toISOString();
-      ["pp:previous","pf:forecast","pa:actual"].forEach(x => { const [id, k] = x.split(":"); const v = toEnA($(id).value.trim()); if (v) row[k] = v; }); }
-    const b = $("psave"); busy(b, true);
-    if (isVid) { const file = $("pv").files[0]; if (!file) { busy(b, false, "انتشار"); return toast("ویدیو را انتخاب کنید", true); }
-      if (file.size > 50 * 1024 * 1024) { busy(b, false, "انتشار"); return toast("ویدیو بیشتر از 50 مگابایت است", true); }
-      $("pprog").textContent = "در حال آپلود ویدیو…";
-      const ext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "") || "mp4";
-      row.file_path = `videos/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
-      const up = await sb.storage.from("media").upload(row.file_path, file, { contentType: file.type || "video/mp4" });
-      if (up.error) { busy(b, false, "انتشار"); $("pprog").textContent = ""; return toast("آپلود ناموفق: " + up.error.message, true); } }
-    const { error } = await sb.from("posts").insert(row);
-    if (error) { if (row.file_path) sb.storage.from("media").remove([row.file_path]); busy(b, false, "انتشار"); return toast("خطا: " + error.message, true); }
-    closeSheet(); toast("منتشر شد ✓"); loadContent();
+    const row = { kind: isAf ? "event" : kind, title, body: $("pb").value.trim() || null, updated_at: new Date().toISOString() };
+    if ($("pcat")) row.category = $("pcat").value.trim() || null;
+    if ($("pau")) row.author = $("pau").value.trim() || null;
+    if ($("psrc")) { row.source = $("psrc").value.trim() || null; const u = $("purl").value.trim(); if (u && !/^https?:\/\//.test(u)) return toast("لینک منبع باید با https:// شروع شود", true); row.source_url = u || null; }
+    if (isAf && !row.source) { $("psrc").focus(); return toast("برای تقویم افغانستان، منبع رسمی الزامی است", true); }
+    if (isNews || kind === "event") { const imp = Object.fromEntries(Object.entries(impact).filter(([, v]) => v)); row.impact = Object.keys(imp).length ? imp : null; }
+    if (isEv) { row.importance = importance; row.event_at = $("pe").value ? new Date($("pe").value).toISOString() : null; if (isAf && !row.event_at) { $("pe").focus(); return toast("تاریخ رویداد را وارد کنید", true); }
+      ["pp:previous","pf:forecast","pa:actual"].forEach(z => { const [id, k] = z.split(":"); row[k] = toEnA($(id).value.trim()) || null; }); row.country = isAf ? "af" : "global"; if (isAf) row.event_status = evst; }
+    if (isArt || isVid) row.status = status;
+    const b = $("psave"), label = b.textContent; busy(b, true); const added = [];
+    try {
+      const vf = $("pv")?.files[0]; if (isVid && !vf && !P) { busy(b, false, label); return toast("ویدیو را انتخاب کنید", true); }
+      if (vf) { if (vf.size > 50 * 1024 * 1024) { busy(b, false, label); return toast("ویدیو بیشتر از 50 مگابایت است", true); } $("pprog").textContent = "در حال آپلود ویدیو…"; row.file_path = await upload(vf, "videos", "video/mp4"); added.push(row.file_path); }
+      const cf = $("pcv")?.files[0]; if (cf) { $("pprog").textContent = "در حال آپلود کاور…"; row.cover_path = await upload(cf.type.startsWith("image/") ? await compressImage(cf) : cf, "covers", "image/jpeg"); added.push(row.cover_path); }
+      const af = $("pat")?.files[0]; if (af) { if (af.size > 20 * 1024 * 1024) { busy(b, false, label); return toast("پیوست بیشتر از 20 مگابایت است", true); } $("pprog").textContent = "در حال آپلود پیوست…"; row.attachment_path = await upload(af, "files", "application/pdf"); row.attachment_name = af.name.slice(0, 120); added.push(row.attachment_path); }
+    } catch (err) { if (added.length) sb.storage.from("media").remove(added); busy(b, false, label); $("pprog").textContent = ""; return toast("آپلود ناموفق: " + err.message, true); }
+    const { error } = P ? await sb.from("posts").update(row).eq("id", P.id) : await sb.from("posts").insert(row);
+    if (error) { if (added.length) sb.storage.from("media").remove(added); busy(b, false, label); return toast("خطا: " + error.message, true); }
+    if (P) { const old = [row.file_path && P.file_path, row.cover_path && P.cover_path, row.attachment_path && P.attachment_path].filter(Boolean); if (old.length) sb.storage.from("media").remove(old); }
+    closeSheet(); toast(P ? "ذخیره شد ✓" : status === "draft" ? "پیش‌نویس ذخیره شد" : "منتشر شد ✓"); loadContent();
   };
 }
 const toEnA = s => String(s).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
@@ -1440,26 +1470,57 @@ async function sheetFxMsgs(filter = "all"){
 
 
 /* ===== اشتراک‌ها و پرداخت‌ها ===== */
+let billF = "all";
 async function sheetBilling(){
-  openSheet(`<h2>💳 اشتراک‌ها و پرداخت‌ها</h2><p class="hint">پرداخت آنلاین با HesabPay. بعد از پرداخت موفق، اشتراک عضو خودکار تمدید می‌شود و نوع اشتراکش ثبت می‌شود. اعضای قدیمی (بدون نوع اشتراک) به همه‌چیز دسترسی دارند.</p><div id="bill"><span class="spin"></span></div>`);
-  const [{ data: plans }, { data: pays }, { data: profs }] = await Promise.all([
-    sb.from("plans").select("*").order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(80), sb.from("profiles").select("id,name,email,plan,expires_at").eq("role", "member")]);
+  openSheet(`<h2>💳 اشتراک‌ها و پرداخت‌ها</h2><p class="hint">دو روش: <b>HesabPay</b> (آنلاین؛ تأیید خودکار با امضای درگاه) و <b>Binance</b> (دستی؛ تا شما در حساب بایننس خود دریافت را بررسی و «تأیید» نکنید، هیچ پرداختی موفق نشان داده نمی‌شود و اشتراکی فعال نمی‌شود).</p><div id="bill"><span class="spin"></span></div>`);
+  const [{ data: plans }, { data: pays }, { data: profs }, { data: bset }] = await Promise.all([
+    sb.from("plans").select("*").order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(200), sb.from("profiles").select("id,name,email,plan,expires_at").eq("role", "member"),
+    sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle()]);
+  const BN = bset?.value || {};
   const el = $("bill"); if (!el) return;
   const nm = Object.fromEntries((profs || []).map(p => [p.id, p.name || p.email]));
   const paid = (pays || []).filter(p => p.status === "paid"), m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
   const mon = paid.filter(p => new Date(p.paid_at) >= m0).reduce((a, p) => a + Number(p.amount_afn), 0), all = paid.reduce((a, p) => a + Number(p.amount_afn), 0);
   const cnt = c => (profs || []).filter(p => (p.plan || "legacy") === c && new Date(p.expires_at) > Date.now()).length;
-  const ST = { pending: ["warn", "در انتظار"], paid: ["on", "پرداخت‌شده"], failed: ["off", "ناموفق"], expired: ["mute", "منقضی"] };
+  const ST = { pending: ["warn", "در انتظار درگاه"], review: ["warn", "⏳ منتظر تأیید شما"], paid: ["on", "پرداخت‌شده"], failed: ["off", "ناموفق"], expired: ["mute", "منقضی"], rejected: ["off", "رد شد"] };
+  const rev = (pays || []).filter(x => x.status === "review");
+  const PV = { hesabpay: "HesabPay", binance: "Binance" };
   el.innerHTML = `<div class="bsum"><div><small>درآمد این ماه</small><b class="ltr">${mon.toLocaleString("en-US")} ؋</b></div><div><small>کل درآمد آنلاین</small><b class="ltr">${all.toLocaleString("en-US")} ؋</b></div>
       <div><small>معامله‌گر</small><b>${cnt("trader")}</b></div><div><small>صراف</small><b>${cnt("sarraf")}</b></div><div><small>VIP</small><b>${cnt("vip")}</b></div><div><small>قدیمی (کامل)</small><b>${cnt("legacy")}</b></div></div>
+    <h3 class="bh">⏳ پرداخت‌های بایننس منتظر تأیید <b>${rev.length}</b></h3>
+    ${rev.length ? rev.map(x => `<div class="bplan brev" data-rid="${x.id}"><div class="bph"><b>${esc(nm[x.user_id] || "—")}</b><span class="chip warn">منتظر تأیید</span></div>
+      <div class="hint">${fmtFull(x.created_at)} · ${esc(x.plan_code || "")} · ${x.months} ماه · قیمت پلان <b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div>
+      <div class="bkv"><span>شناسه تراکنش / Order ID</span><b class="ltr">${esc(x.payer_ref || "—")}</b><span>مبلغ اعلام‌شده</span><b class="ltr">${x.amount_usd != null ? Number(x.amount_usd).toLocaleString("en-US") + " USDT" : "—"}</b>${x.note ? `<span>یادداشت عضو</span><b>${esc(x.note)}</b>` : ""}</div>
+      ${x.proof_path ? `<img class="bproof" data-proof="${esc(x.proof_path)}" alt="رسید">` : `<p class="hint">رسید تصویری ارسال نشده.</p>`}
+      <p class="hint">پیش از تأیید، در اپ بایننس خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
+      <div class="fxabtn"><button data-rv="ok">✅ تأیید و فعال‌سازی</button><button data-rv="no" class="red">✖ رد</button></div></div>`).join("") : `<p class="hint">پرداختی منتظر تأیید نیست.</p>`}
+    <h3 class="bh">⚙️ تنظیمات پرداخت بایننس</h3>
+    <div class="bplan" id="bnset"><label class="tgl2"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}> فعال باشد (اعضا گزینه‌ی Binance را ببینند)</label>
+      <div class="two"><div><label class="l">Binance Pay ID</label><input class="in ltr" id="bn_id" maxlength="40" value="${esc(BN.pay_id || "")}"></div><div><label class="l">نام حساب</label><input class="in" id="bn_name" maxlength="80" value="${esc(BN.name || "")}"></div></div>
+      <label class="l">آدرس کیف پول USDT (اختیاری)</label><input class="in ltr" id="bn_addr" maxlength="120" value="${esc(BN.address || "")}">
+      <div class="two"><div><label class="l">شبکه</label><input class="in ltr" id="bn_net" maxlength="30" value="${esc(BN.network || "TRC20")}"></div><div><label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="bn_link" maxlength="300" value="${esc(BN.link || "")}" placeholder="https://"></div></div>
+      <label class="l">راهنما برای عضو</label><textarea class="in" id="bn_note" rows="2" maxlength="500">${esc(BN.note || "")}</textarea>
+      <div class="fxabtn"><button id="bn_save">ذخیره تنظیمات بایننس</button></div></div>
     <h3 class="bh">پلان‌ها و قیمت‌ها</h3>
     ${(plans || []).map(p => `<div class="bplan" data-pid="${p.id}"><div class="bph"><b>${esc(p.name_fa)}</b><span class="chip ${p.active ? "on" : "mute"}">${p.active ? "فعال" : "غیرفعال"}</span></div>
       <div class="two"><div><label class="l">قیمت (افغانی)</label><input class="in num" data-f="price_afn" inputmode="decimal" dir="ltr" value="${p.price_afn}"></div><div><label class="l">مدت (ماه)</label><input class="in num" data-f="months" inputmode="numeric" dir="ltr" value="${p.months}"></div></div>
       <label class="l">امکانات (هر خط یک مورد)</label><textarea class="in" data-f="features" rows="3">${esc((p.features || []).join("\n"))}</textarea>
       <div class="fxabtn"><button data-b="save">ذخیره</button><button data-b="act">${p.active ? "غیرفعال کن" : "فعال کن"}</button></div></div>`).join("")}
-    <h3 class="bh">پرداخت‌های اخیر</h3>
-    ${(pays || []).length ? pays.map(x => `<div class="fxhr"><div><b>${esc(nm[x.user_id] || "—")}</b><small>${fmtFull(x.created_at)} · ${esc(x.plan_code || "")} · ${x.months} ماه${x.transaction_id ? " · TX " + esc(x.transaction_id) : ""}</small></div>
+    <h3 class="bh">تاریخچه‌ی پرداخت‌ها</h3>
+    <div class="chips" id="bflt">${[["all","همه"],["paid","موفق"],["review","منتظر تأیید"],["rejected","ردشده"],["failed","ناموفق"],["pending","در انتظار درگاه"]].map(([k, t]) => `<button type="button" data-bf="${k}" class="${k === billF ? "on" : ""}">${t}</button>`).join("")}</div>
+    ${(pays || []).filter(x => billF === "all" || x.status === billF).length ? pays.filter(x => billF === "all" || x.status === billF).map(x => `<div class="fxhr"><div><b>${esc(nm[x.user_id] || "—")}</b><small>${fmtFull(x.created_at)} · ${PV[x.provider] || esc(x.provider || "")} · ${esc(x.plan_code || "")} · ${x.months} ماه${x.transaction_id ? " · TX " + esc(x.transaction_id) : x.payer_ref ? " · REF " + esc(x.payer_ref) : ""}${x.reject_reason ? " · دلیل رد: " + esc(x.reject_reason) : ""}</small></div>
       <div class="v"><b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div><span class="chip ${ST[x.status]?.[0] || "mute"}">${ST[x.status]?.[1] || x.status}</span></div>`).join("") : `<p class="hint">هنوز پرداختی ثبت نشده است.</p>`}`;
+  el.querySelectorAll("img[data-proof]").forEach(async im => { const { data } = await sb.storage.from("payproof").createSignedUrl(im.dataset.proof, 3600); if (data?.signedUrl) { im.src = data.signedUrl; im.onclick = () => window.open(data.signedUrl, "_blank"); } });
+  $("bn_save").onclick = async () => { const v = { enabled: $("bn_on").checked, pay_id: $("bn_id").value.trim(), name: $("bn_name").value.trim(), address: $("bn_addr").value.trim(), network: $("bn_net").value.trim(), link: $("bn_link").value.trim(), note: $("bn_note").value.trim() };
+    if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
+    if (v.enabled && !v.pay_id && !v.address) return toast("حداقل Pay ID یا آدرس کیف پول لازم است", true);
+    const { error } = await sb.from("settings").upsert({ key: "pay_binance", value: v, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true); toast("تنظیمات بایننس ذخیره شد ✓"); };
+  el.addEventListener("click", async e => { const f = e.target.closest("[data-bf]"); if (f) { billF = f.dataset.bf; return sheetBilling(); }
+    const r = e.target.closest("[data-rv]"); if (!r) return; const id = r.closest("[data-rid]").dataset.rid, ok = r.dataset.rv === "ok";
+    let reason = null; if (ok) { if (!confirm("دریافت این مبلغ را در بایننس بررسی کرده‌اید؟ با تأیید، اشتراک عضو فعال می‌شود.")) return; } else { reason = prompt("دلیل رد (برای عضو نمایش داده می‌شود):", "پرداخت با این شناسه در حساب بایننس دریافت نشد."); if (reason === null) return; }
+    r.disabled = true; const { data, error } = await sb.rpc("admin_review_payment", { p_id: id, p_approve: ok, p_reason: reason });
+    if (error) { r.disabled = false; return toast("خطا: " + error.message, true); }
+    toast(data === "ok" ? "تأیید شد؛ اشتراک فعال شد ✓" : data === "rejected" ? "رد شد" : data === "already" ? "قبلاً تأیید شده بود" : "وضعیت: " + data); sheetBilling(); loadMembers(); });
   el.onclick = async e => { const b = e.target.closest("[data-b]"); if (!b) return; const box = b.closest("[data-pid]"), id = Number(box.dataset.pid), pl = plans.find(x => x.id === id); b.disabled = true;
     const patch = b.dataset.b === "act" ? { active: !pl.active } : { price_afn: num(box.querySelector('[data-f="price_afn"]').value), months: parseInt(box.querySelector('[data-f="months"]').value) || pl.months,
       features: box.querySelector('[data-f="features"]').value.split("\n").map(x => x.trim()).filter(Boolean) };

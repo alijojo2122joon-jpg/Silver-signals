@@ -1263,6 +1263,39 @@
   .jbars{justify-content:center} .jb{max-width:52px}
 
   .jform label[hidden]{display:none!important} .jtabs,#jper{padding:5px!important;height:auto!important} .jtabs button,#jper button{height:38px!important;border-radius:999px}
+
+  .pmb{display:grid;gap:10px;padding:16px} .pmh{margin:0 0 4px;text-align:center}
+  .pmo{display:grid;gap:3px;text-align:start;padding:14px 16px;border:0;border-radius:18px;background:var(--tile);box-shadow:var(--raise);font:inherit;color:var(--text);cursor:pointer} .pmo small{color:var(--muted);font-size:11.5px} .pmo:disabled{opacity:.5;cursor:not-allowed}
+  .bnamt{display:grid;gap:2px;text-align:center;padding:12px;border-radius:18px;background:linear-gradient(180deg,#f0b90b22,#f0b90b0d);margin-bottom:8px} .bnamt b{font:900 24px Montserrat,Arial,sans-serif;color:#b7860b} .bnamt small{font-size:11px;color:var(--muted)}
+  .bnrow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:var(--field);margin-top:6px;font-size:12.5px} .bnrow span{color:var(--muted);flex:none} .bnrow b{flex:1;min-width:0;overflow-wrap:anywhere}
+  .bncp{flex:none;border:0;border-radius:999px;padding:5px 12px;background:#f0b90b;color:#1e2026;font:inherit;font-weight:900;font-size:11.5px;cursor:pointer}
+  .bnlink{display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:10px;background:linear-gradient(180deg,#f8d12f,#f0b90b)!important;color:#1e2026!important}
+  .plh2 small{display:block;font-size:10.5px;color:var(--muted)} .pst.review{color:#d97706} .pst.rejected{color:var(--sell)}
+  #bn_img{width:100%;max-height:220px;object-fit:contain;border-radius:12px}
+
+  /* ===== مرحله ۴: محتوا ===== */
+  .acats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 0 10px} .acats::-webkit-scrollbar{display:none} .acats button{flex:none} .acats button.on{background:var(--navy);color:var(--onNavy)}
+  .nmeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0;font-size:11.5px;color:var(--muted);font-weight:700} .nmeta a,.nsrc a{color:#1f6bf0;text-decoration:none}
+  .nclip{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden} .nmore{border:0;background:none;color:#1f6bf0;font:inherit;font-size:12px;font-weight:800;padding:2px 0;cursor:pointer}
+  .ncov{width:100%;max-height:200px;object-fit:cover;border-radius:16px;margin-bottom:8px;background:var(--field)}
+  .afcal{display:grid;gap:10px} .afe{display:flex;gap:12px;padding:12px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in)}
+  .afd{flex:none;width:76px;text-align:center;padding:8px 4px;border-radius:14px;background:linear-gradient(180deg,var(--navy2),var(--navy));color:var(--onNavy)} .afd b{display:block;font-size:11.5px} .afd small{font-size:11px;opacity:.85}
+  .afb{flex:1;min-width:0} .afb>b{font-size:13.5px} .afb p{margin:6px 0 0;font-size:12.5px;line-height:1.8} .nsrc{margin-top:6px;font-size:11px;color:var(--muted);font-weight:700}
+  .afe.cancelled{opacity:.6} .afe.cancelled .afb>b{text-decoration:line-through} .st-released{color:#16a34a} .st-postponed{color:#d97706} .st-cancelled{color:var(--sell)}
+  .afpast summary{cursor:pointer;font-size:12.5px;font-weight:800;color:var(--muted);padding:4px 0} .afpast .afe{margin-top:8px;opacity:.85}
+  .angrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
+  .ancard{position:relative;border-radius:20px;overflow:hidden;background:var(--tile);box-shadow:var(--raise);cursor:pointer;display:flex;flex-direction:column}
+  .ancard>img,.anph{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--field);display:grid;place-items:center;font-size:34px}
+  .anb{padding:10px 12px;display:grid;gap:3px} .anb b{font-size:13px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .anb small{font-size:10.5px;color:var(--muted)}
+  .anfav{position:absolute;top:8px;inset-inline-end:8px;width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,255,255,.85);font-size:16px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+  .anplay{position:absolute;top:calc(31% - 20px);left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.55);color:#fff;font-size:16px}
+  .ancov,.anvid{width:100%;max-height:300px;object-fit:cover;border-radius:20px;background:#000;margin-top:6px} .anh{margin:12px 0 6px;font-size:19px;line-height:1.6}
+  .anm{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted);font-weight:700;align-items:center}
+  .anfav2{margin:10px 0;border:0;border-radius:999px;padding:8px 16px;background:var(--field);box-shadow:var(--raise);font:inherit;font-weight:800;cursor:pointer;color:var(--text)} .anfav2.on{color:#b7860b}
+  .anbody{font-size:15px;line-height:2.1;white-space:normal;word-wrap:break-word} .anatt{display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:14px}
+  @media (min-width:900px){ .angrid{grid-template-columns:repeat(3,minmax(0,1fr))} .anp{max-width:820px;margin:0 auto} }
+
+  .afcal>.src{font-size:11px;line-height:1.8;color:var(--muted);font-weight:600;text-align:start;margin-top:4px}
 </style>
 </head>
 <body>
@@ -1736,13 +1769,13 @@ const L2 = {
     disc2:"All gold, silver and dollar analyses and signals are educational. The final decision and trading risk are the trader's own responsibility.", shareTxt:"{p}% win rate in {m} ({per})" },
 };
 const L3 = {
-  fa: { kandahar:"کندهار", tvT:"بازار جهانی زنده · TradingView", calT:"تقویم اقتصادی · Forex Factory", today:"امروز", tomorrow:"فردا", affects:"اثر بر", calEmpty:"رویداد مهمی در این هفته نیست.", calSrc:"منبع: Forex Factory · ساعت‌ها به وقت گوشی شما", allDay:"تمام روز",
+  fa: { kandahar:"کندهار", tvT:"بازار جهانی زنده · TradingView", calT:"تقویم اقتصادی جهانی · سرای شهزاده", today:"امروز", tomorrow:"فردا", affects:"اثر بر", calEmpty:"رویداد مهمی در این هفته نیست.", calSrc:"تقویم سرای شهزاده · داده‌ها: Forex Factory · ساعت‌ها به وقت گوشی شما", allDay:"تمام روز",
     modeW:"⚖️ از روی وزن", modeM:"💵 از روی پول", amount:"مقدار", money:"مبلغ", curr:"واحد پول", kg:"کیلو", afnC:"افغانی", usdC:"دالر", goldOz:"انس طلا ($)", silverOz:"انس نقره ($)",
     valUsd:"ارزش به دالر", valAfn:"ارزش به افغانی", eqIn:"معادل در {m}", canBuy:"مقدار قابل خرید", ratio:"نسبت طلا به نقره", quick:"جدول سریع (طلای 24 و نقره خالص)", liveNote:"قیمت‌ها خودکار از بازار جهانی پر می‌شوند و قابل تغییرند.", pure:"خالص" },
-  ps: { kandahar:"کندهار", tvT:"ژوندی نړیوال بازار · TradingView", calT:"اقتصادي جنتري · Forex Factory", today:"نن", tomorrow:"سبا", affects:"اغېز پر", calEmpty:"پدې اونۍ کې مهمه پېښه نشته.", calSrc:"سرچینه: Forex Factory · وختونه ستاسو د ګوشي له مخې", allDay:"ټوله ورځ",
+  ps: { kandahar:"کندهار", tvT:"ژوندی نړیوال بازار · TradingView", calT:"نړیواله اقتصادي جنتري · سرای شهزاده", today:"نن", tomorrow:"سبا", affects:"اغېز پر", calEmpty:"پدې اونۍ کې مهمه پېښه نشته.", calSrc:"د سرای شهزاده جنتري · معلومات: Forex Factory", allDay:"ټوله ورځ",
     modeW:"⚖️ د وزن له مخې", modeM:"💵 د پیسو له مخې", amount:"اندازه", money:"مبلغ", curr:"اسعار", kg:"کیلو", afnC:"افغانۍ", usdC:"ډالر", goldOz:"د سرو زرو اونس ($)", silverOz:"د سپینو زرو اونس ($)",
     valUsd:"ارزښت په ډالرو", valAfn:"ارزښت په افغانیو", eqIn:"په {m} کې معادل", canBuy:"د پېرودلو وړ اندازه", ratio:"د سرو او سپینو زرو نسبت", quick:"چټک جدول (24 عیاره سره زر او خالص سپین زر)", liveNote:"بیې په اتومات ډول له نړیوال بازار ډکېږي او بدلېدای شي.", pure:"خالص" },
-  en: { kandahar:"Kandahar", tvT:"Live world market · TradingView", calT:"Economic calendar · Forex Factory", today:"Today", tomorrow:"Tomorrow", affects:"Affects", calEmpty:"No major events this week.", calSrc:"Source: Forex Factory · times in your phone's timezone", allDay:"All day",
+  en: { kandahar:"Kandahar", tvT:"Live world market · TradingView", calT:"Global economic calendar · Sarai Shahzada", today:"Today", tomorrow:"Tomorrow", affects:"Affects", calEmpty:"No major events this week.", calSrc:"Sarai Shahzada calendar · data: Forex Factory · times in your timezone", allDay:"All day",
     modeW:"⚖️ By weight", modeM:"💵 By money", amount:"Amount", money:"Money", curr:"Currency", kg:"Kilo", afnC:"AFN", usdC:"USD", goldOz:"Gold oz ($)", silverOz:"Silver oz ($)",
     valUsd:"Value in USD", valAfn:"Value in AFN", eqIn:"Equivalent in {m}", canBuy:"You can buy", ratio:"Gold/silver ratio", quick:"Quick table (24K gold & pure silver)", liveNote:"Prices fill in live from the world market and can be edited.", pure:"pure" },
 };
@@ -2267,17 +2300,27 @@ function openNotifs(){
 
 /* ===== اشتراک و پرداخت (HesabPay) ===== */
 const PL = {
-  fa: { t: "اشتراک‌ها", sub: "پرداخت امن آنلاین با HesabPay (حساب هساب‌پی، AfPay یا کارت). بعد از پرداخت، اشتراک شما خودکار تمدید می‌شود.", mon: "ماه", afn: "افغانی", pay: "پرداخت و فعال‌سازی", pop: "پیشنهاد ما",
+  fa: { t: "اشتراک‌ها", sub: "دو روش پرداخت: HesabPay (آنلاین؛ تمدید خودکار) یا Binance با USDT (پس از بررسی و تأیید مدیر). هیچ پرداختی پیش از تأیید، موفق نشان داده نمی‌شود.", mon: "ماه", afn: "افغانی", pay: "پرداخت و فعال‌سازی", pop: "پیشنهاد ما",
     cur: "اشتراک فعلی", legacy: "دسترسی کامل", days: "روز باقی‌مانده", trader: "معامله‌گر طلا", sarraf: "صراف حرفه‌ای", vip: "VIP کامل", renew: "💳 تمدید یا ارتقای اشتراک",
     off: "پرداخت آنلاین هنوز فعال نشده است. برای تمدید با استاد پیام دهید.", err: "اتصال به درگاه پرداخت ممکن نشد. کمی بعد دوباره امتحان کنید.", wait: "در حال انتقال به صفحه‌ی پرداخت…",
     ok: "پرداخت دریافت شد", okSub: "اشتراک شما در حال فعال‌سازی است…", okDone: "اشتراک شما تمدید شد ✓", fail: "پرداخت انجام نشد", failSub: "مبلغی کسر نشده است؛ دوباره امتحان کنید.",
-    hist: "پرداخت‌های اخیر", st: { pending: "در انتظار", paid: "پرداخت‌شده", failed: "ناموفق", expired: "منقضی" }, trader_up: "این بخش در اشتراک «صراف حرفه‌ای» نیست.", sarraf_up: "جدول ارزها در اشتراک «معامله‌گر طلا» نیست.", up: "ارتقای اشتراک", groups: { trader: "برای معامله‌گران طلا", sarraf: "برای صرافان و فعالان طلا", all: "همه‌چیز در یک اشتراک" } },
-  en: { t: "Subscriptions", sub: "Secure online payment with HesabPay (HesabPay wallet, AfPay or card). Your subscription renews automatically after payment.", mon: "mo", afn: "AFN", pay: "Pay & activate", pop: "Recommended",
+    hist: "پرداخت‌های اخیر", st: { pending: "در انتظار درگاه", review: "⏳ در انتظار تأیید مدیر", paid: "✅ پرداخت‌شده", failed: "ناموفق", expired: "منقضی", rejected: "✖ تأیید نشد" }, trader_up: "این بخش در اشتراک «صراف حرفه‌ای» نیست.", sarraf_up: "جدول ارزها در اشتراک «معامله‌گر طلا» نیست.", up: "ارتقای اشتراک", groups: { trader: "برای معامله‌گران طلا", sarraf: "برای صرافان و فعالان طلا", all: "همه‌چیز در یک اشتراک" } },
+  en: { t: "Subscriptions", sub: "Two ways to pay: HesabPay (online, renews automatically) or Binance USDT (after admin verification). No payment shows as successful before it is verified.", mon: "mo", afn: "AFN", pay: "Pay & activate", pop: "Recommended",
     cur: "Current plan", legacy: "Full access", days: "days left", trader: "Gold Trader", sarraf: "Money Changer Pro", vip: "Full VIP", renew: "💳 Renew or upgrade",
     off: "Online payment isn't active yet. Message the teacher to renew.", err: "Couldn't reach the payment gateway. Try again shortly.", wait: "Opening the payment page…",
     ok: "Payment received", okSub: "Activating your subscription…", okDone: "Subscription renewed ✓", fail: "Payment not completed", failSub: "Nothing was charged; please try again.",
-    hist: "Recent payments", st: { pending: "Pending", paid: "Paid", failed: "Failed", expired: "Expired" }, trader_up: "This section isn't in the Money Changer plan.", sarraf_up: "The currency table isn't in the Gold Trader plan.", up: "Upgrade", groups: { trader: "For gold traders", sarraf: "For money changers", all: "Everything in one plan" } } };
+    hist: "Recent payments", st: { pending: "Awaiting gateway", review: "⏳ Awaiting admin review", paid: "✅ Paid", failed: "Failed", expired: "Expired", rejected: "✖ Not approved" }, trader_up: "This section isn't in the Money Changer plan.", sarraf_up: "The currency table isn't in the Gold Trader plan.", up: "Upgrade", groups: { trader: "For gold traders", sarraf: "For money changers", all: "Everything in one plan" } } };
 PL.ps = Object.assign({}, PL.fa, { t: "ګډونونه", pay: "تادیه او فعالول", renew: "💳 ګډون نوی یا لوړ کړئ" });
+const BNL = { fa: { how: "روش پرداخت را انتخاب کنید", hp: "HesabPay · آنلاین", hpS: "کیف پول هساب‌پی، AfPay یا کارت — فعال‌سازی خودکار", bn: "Binance · USDT", bnS: "پرداخت دستی؛ پس از بررسی و تأیید مدیر فعال می‌شود", off: "این روش هنوز توسط مدیر فعال نشده است.",
+    step1: "۱. این مبلغ را از اپ بایننس بفرستید", approx: "معادل تقریبی به نرخ امروز کابل", payId: "Binance Pay ID", addr: "آدرس کیف پول", net: "شبکه", open: "باز کردن لینک پرداخت", copy: "کپی", copied: "کپی شد",
+    step2: "۲. مشخصات پرداخت را بفرستید", ref: "شناسه تراکنش / Order ID (الزامی)", amt: "مبلغ ارسال‌شده (USDT)", proof: "عکس رسید (اختیاری ولی توصیه می‌شود)", note: "یادداشت (اختیاری)", send: "ارسال برای بررسی",
+    sent: "ارسال شد ✓", sentS: "پرداخت شما «در انتظار تأیید مدیر» است. تا مدیر دریافت آن را در بایننس تأیید نکند، اشتراک فعال نمی‌شود. نتیجه را در 🔔 اعلان‌ها می‌بینید.", err: "ارسال نشد", dup: "این شناسه تراکنش قبلاً ثبت شده است.", many: "شما ۳ پرداخت در انتظار بررسی دارید؛ لطفاً منتظر نتیجه بمانید.", back: "بازگشت", why: "دلیل" },
+  en: { how: "Choose a payment method", hp: "HesabPay · online", hpS: "HesabPay wallet, AfPay or card — activates automatically", bn: "Binance · USDT", bnS: "Manual; activates after the admin verifies it", off: "This method isn't enabled by the admin yet.",
+    step1: "1. Send this amount from the Binance app", approx: "Approximate at today's Kabul rate", payId: "Binance Pay ID", addr: "Wallet address", net: "Network", open: "Open payment link", copy: "Copy", copied: "Copied",
+    step2: "2. Submit your payment details", ref: "Transaction / Order ID (required)", amt: "Amount sent (USDT)", proof: "Receipt screenshot (recommended)", note: "Note (optional)", send: "Submit for review",
+    sent: "Submitted ✓", sentS: "Your payment is awaiting admin review. Your plan activates only after the admin confirms receipt in Binance. You'll see the result in 🔔 notifications.", err: "Not submitted", dup: "This transaction ID was already submitted.", many: "You already have 3 payments under review.", back: "Back", why: "Reason" } };
+BNL.ps = Object.assign({}, BNL.fa, { how: "د تادیې لاره وټاکئ", send: "د کتنې لپاره ولېږئ", back: "شاته" });
+const BT = () => BNL[lang] || BNL.fa;
 const PT = () => PL[lang] || PL.fa;
 const planName = c => !c ? PT().legacy : PT()[c] || c;
 const planHas = f => !me?.plan || me.plan === "vip" || me.plan === f;
@@ -2297,7 +2340,12 @@ async function openPlans(){
       <div class="plh"><b>${esc(nm(p))}</b><span class="plp"><b class="ltr">${Number(p.price_afn).toLocaleString("en-US")}</b> ${L.afn}<small> / ${p.months} ${L.mon}</small></span></div>
       <ul>${(p.features || []).map(f => `<li>${esc(f)}</li>`).join("")}</ul><button class="cta press" data-plan="${p.id}">${L.pay}</button></div>`).join("")}`).join("")}
     <div class="plerr" id="plerr"></div>
-    ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}</span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
+    ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}<small>${x.provider === "binance" ? "Binance" : "HesabPay"}${x.reject_reason ? ` · ${BT().why}: ${esc(x.reject_reason)}` : ""}</small></span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
+  const { data: bnS } = await sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(); const BN = bnS?.value || {};
+  $("plbody").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if (!b || b.dataset.via) return; e.stopImmediatePropagation();
+    const pl = (plans || []).find(p => p.id === Number(b.dataset.plan)); if (!pl) return; const B = BT();
+    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp"><b>💳 ${B.hp}</b><small>${B.hpS}</small></button><button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
+      if (m === "hp") { b.dataset.via = "hp"; b.click(); delete b.dataset.via; } else if (m === "bn") binancePay(pl, BN); }); }, true);
   $("plbody").onclick = async e => {
     const b = e.target.closest("[data-plan]"); if (!b) return; const er = $("plerr"); er.textContent = "";
     b.disabled = true; const old = b.innerHTML; b.innerHTML = `<span class="spin"></span> ${L.wait}`;
@@ -2322,6 +2370,37 @@ async function handlePayReturn(){
     const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle();
     const { data: p } = await sb.from("payments").select("status").eq("id", q.get("p")).maybeSingle();
     if (p?.status === "paid" && data) { me = data; store.set("cache_me", me); banner("✅", L.okDone, ""); sfx("celebration", .5); setTimeout(() => location.reload(), 2500); return; } }
+}
+
+function actionSheetHTML(html){ return new Promise(res => { const v = document.createElement("div"); v.className = "asheet"; v.innerHTML = `<div class="asb pmb">${html}</div>`;
+  document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
+  const done = r => { v.classList.remove("show"); setTimeout(() => v.remove(), 300); res(r); };
+  v.onclick = e => { const b = e.target.closest("[data-m]"); if (b && !b.disabled) return done(b.dataset.m); if (e.target === v) done(null); }; }); }
+async function binancePay(pl, BN){
+  const B = BT(), L = PT(), body = $("plbody"); if (!body) return; const rate = usdAfn(), usd = rate ? Math.ceil(Number(pl.price_afn) / rate * 2) / 2 : null;
+  const nm = (lang === "ps" ? pl.name_ps : lang === "en" ? pl.name_en : pl.name_fa) || pl.name_fa;
+  const cp = (v, k) => v ? `<div class="bnrow"><span>${k}</span><b class="ltr">${esc(v)}</b><button type="button" class="bncp" data-cp="${esc(v)}">${B.copy}</button></div>` : "";
+  body.innerHTML = `<button class="jback" id="bnbk">→ ${B.back}</button>
+    <div class="plc"><div class="plh"><b>${esc(nm)}</b><span class="plp"><b class="ltr">${Number(pl.price_afn).toLocaleString("en-US")}</b> ${L.afn}<small> / ${pl.months} ${L.mon}</small></span></div>
+      <h4 class="plg">${B.step1}</h4>${usd ? `<div class="bnamt"><b class="ltr">≈ ${usd.toLocaleString("en-US")} USDT</b><small>${B.approx} (1 USD = ${nf(rate)} AFN)</small></div>` : ""}
+      ${cp(BN.pay_id, B.payId)}${BN.name ? `<div class="bnrow"><span>👤</span><b>${esc(BN.name)}</b></div>` : ""}${cp(BN.address, B.addr)}${BN.address && BN.network ? `<div class="bnrow"><span>${B.net}</span><b class="ltr">${esc(BN.network)}</b></div>` : ""}
+      ${BN.link && /^https:\/\//.test(BN.link) ? `<a class="cta press bnlink" href="${esc(BN.link)}" target="_blank" rel="noopener">${B.open} ↗</a>` : ""}${BN.note ? `<p class="nphint">${esc(BN.note)}</p>` : ""}</div>
+    <form class="plc jform" id="bnf"><h4 class="plg">${B.step2}</h4><div class="fgrid">
+      <label style="grid-column:1/-1">${B.ref}<input class="inp ltr" id="bn_ref" maxlength="120" required autocomplete="off"></label>
+      <label>${B.amt}<input class="inp ltr" id="bn_amt" inputmode="decimal" value="${usd ?? ""}"></label><label>${B.note}<input class="inp" id="bn_note" maxlength="300"></label></div>
+      <label class="jip" style="margin-top:10px"><span>${B.proof}</span><img id="bn_img" alt="" hidden><i>📷 ${B.proof}</i><input type="file" accept="image/*" hidden id="bn_file"></label>
+      <button class="cta press" id="bn_send" style="margin-top:12px">${B.send}</button><div class="cmerr" id="bn_err"></div></form>`;
+  $("plpanel").scrollTop = 0; let file = null;
+  $("bnbk").onclick = () => { history.back(); setTimeout(openPlans, 450); };
+  body.querySelectorAll("[data-cp]").forEach(x => x.onclick = async () => { try { await navigator.clipboard.writeText(x.dataset.cp); x.textContent = B.copied; setTimeout(() => x.textContent = B.copy, 1500); } catch {} });
+  $("bn_file").onchange = e => { file = e.target.files[0] || null; const im = $("bn_img"); if (file) { im.src = URL.createObjectURL(file); im.hidden = false; } };
+  $("bnf").onsubmit = async e => { e.preventDefault(); const ref = $("bn_ref").value.trim(); if (!ref) return $("bn_ref").focus(); const btn = $("bn_send"); btn.disabled = true; $("bn_err").textContent = "";
+    let proof = null;
+    try { if (file) { const blob = await compressImage(file, 1600); proof = `${me.id}/${Date.now()}.jpg`; const up = await sb.storage.from("payproof").upload(proof, blob, { contentType: "image/jpeg" }); if (up.error) throw up.error; }
+      const { error } = await sb.rpc("submit_binance_payment", { p_plan: pl.id, p_ref: ref, p_amount_usd: num($("bn_amt").value), p_proof: proof, p_note: $("bn_note").value.trim() || null });
+      if (error) throw error;
+      body.innerHTML = `<div class="plc" style="text-align:center"><div style="font-size:44px">⏳</div><h3>${B.sent}</h3><p class="nphint">${B.sentS}</p></div>`; sfx("button", .4);
+    } catch (err) { btn.disabled = false; const m = String(err.message || err); $("bn_err").textContent = /duplicate|unique/i.test(m) ? B.dup : /too many/i.test(m) ? B.many : B.err + ": " + m; } };
 }
 window.openPlans = (...a) => openPlans(...a);
 
@@ -2847,6 +2926,38 @@ function drawCal(){
   });
   box.innerHTML = html + `<div class="src">${T.calSrc}</div>`;
 }
+
+/* ===== تحلیل‌های تخصصی، علاقه‌مندی‌ها، تقویم افغانستان ===== */
+const CTLL = { fa: { all: "همه", favs: "ذخیره‌شده‌ها", noFav: "هنوز تحلیلی را ذخیره نکرده‌اید؛ روی ☆ بزنید.", anT: "تحلیل‌ها و آموزش‌های تخصصی", src: "منبع", more: "ادامه‌ی متن ▾", less: "بستن ▴",
+    afCal: "تقویم اقتصادی افغانستان", afNone: "فعلاً رویدادی از منابع رسمی ثبت نشده است.", afNote: "فقط رویدادهایی که از منابع رسمی (د افغانستان بانک، وزارت مالیه، اداره ملی احصائیه و…) اعلام شده‌اند؛ منبع هر رویداد نوشته شده است.", past: "رویدادهای گذشته",
+    evst: { upcoming: "⏳ پیش رو", released: "✅ منتشر شد", postponed: "⏸ به تعویق افتاد", cancelled: "✖ لغو شد" }, by: "تحلیل‌گر", file: "دانلود فایل پیوست", saved: "ذخیره شد ⭐", unsaved: "از ذخیره‌شده‌ها حذف شد" },
+  en: { all: "All", favs: "Saved", noFav: "You haven't saved any analysis yet; tap ☆.", anT: "Expert analysis & lessons", src: "Source", more: "Read more ▾", less: "Less ▴",
+    afCal: "Afghanistan economic calendar", afNone: "No events from official sources yet.", afNote: "Only events announced by official sources (Da Afghanistan Bank, Ministry of Finance, NSIA…); each event lists its source.", past: "Past events",
+    evst: { upcoming: "⏳ Upcoming", released: "✅ Released", postponed: "⏸ Postponed", cancelled: "✖ Cancelled" }, by: "Analyst", file: "Download attachment", saved: "Saved ⭐", unsaved: "Removed from saved" } };
+CTLL.ps = Object.assign({}, CTLL.fa, { all: "ټول", favs: "خوندي شوي", afCal: "د افغانستان اقتصادي جنتري", src: "سرچینه", more: "نور ▾" });
+const CTL = () => CTLL[lang] || CTLL.fa;
+let newsCat = "all", anCat = "all", favs = new Set(store.get("favs", [])); const mUrl = {};
+async function mediaUrl(path){ if (!path) return ""; if (mUrl[path]) return mUrl[path]; const { data } = await sb.storage.from("media").createSignedUrl(path, 3600); return mUrl[path] = data?.signedUrl || ""; }
+async function loadFavs(){ const { data } = await sb.from("post_favorites").select("post_id"); if (data) { const n = new Set(data.map(r => r.post_id)), ch = n.size !== favs.size || [...n].some(i => !favs.has(i)); favs = n; store.set("favs", [...favs]); if (ch && page === "acad") drawAcademy(); } }
+async function toggleFav(id){ const on = !favs.has(id); on ? favs.add(id) : favs.delete(id); store.set("favs", [...favs]); sfx(on ? "toggle_on" : "toggle_off", .35); if (page === "acad") drawAcademy();
+  const r = on ? await sb.from("post_favorites").insert({ post_id: id }) : await sb.from("post_favorites").delete().eq("post_id", id).eq("user_id", me.id);
+  if (r.error && !/duplicate/i.test(r.error.message)) { on ? favs.delete(id) : favs.add(id); if (page === "acad") drawAcademy(); } else banner(on ? "⭐" : "☆", on ? CTL().saved : CTL().unsaved, ""); }
+async function openAnalysis(p){
+  if (!p || $("anpanel")) return; const C = CTL(); const v = document.createElement("div"); v.className = "npanel anp"; v.id = "anpanel";
+  v.innerHTML = `<div class="nphd"><b>${p.kind === "video" ? "🎬" : "🧠"} ${esc(p.category || C.anT)}</b><button class="ib" id="anx" aria-label="close">${I.x}</button></div>
+    ${p.cover_path && p.kind !== "video" ? `<img class="ancov" data-mpath="${esc(p.cover_path)}" alt="">` : ""}${p.kind === "video" && p.file_path ? `<video controls playsinline preload="metadata" class="anvid" data-vp="${esc(p.file_path)}" ${p.cover_path ? `data-poster="${esc(p.cover_path)}"` : ""}></video>` : ""}
+    <h2 class="anh">${esc(p.title)}</h2><div class="anm">${p.author ? `<span>✍️ ${C.by}: <b>${esc(p.author)}</b></span>` : ""}<span>🗓 ${fmtFull(p.created_at)}</span>${p.category ? `<span class="tag2">${esc(p.category)}</span>` : ""}</div>
+    <button type="button" class="anfav2 ${favs.has(p.id) ? "on" : ""}" id="anfv">${favs.has(p.id) ? "⭐ " + C.favs : "☆ " + C.favs}</button>
+    ${p.body ? `<div class="anbody">${esc(p.body).replace(/\n/g, "<br>")}</div>` : ""}
+    ${p.attachment_path ? `<a class="cta press anatt" id="anatt" target="_blank" rel="noopener">📎 ${C.file}${p.attachment_name ? " · " + esc(p.attachment_name) : ""}</a>` : ""}`;
+  document.body.appendChild(v); lockBody();
+  overlayPush(() => { v.querySelector("video")?.pause(); v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); });
+  requestAnimationFrame(() => v.classList.add("show")); $("anx").onclick = () => history.back();
+  v.querySelectorAll("img[data-mpath]").forEach(async im => { im.src = await mediaUrl(im.dataset.mpath); });
+  const vid = v.querySelector("video[data-vp]"); if (vid) { vid.src = await mediaUrl(vid.dataset.vp); if (vid.dataset.poster) vid.poster = await mediaUrl(vid.dataset.poster); }
+  if ($("anatt")) $("anatt").href = await mediaUrl(p.attachment_path);
+  $("anfv").onclick = async () => { await toggleFav(p.id); const on = favs.has(p.id); $("anfv").classList.toggle("on", on); $("anfv").textContent = (on ? "⭐ " : "☆ ") + C.favs; };
+}
 async function loadAcademy(){
   const [{ data: a }, { data: ps }, { data: pl }] = await Promise.all([
     sb.from("settings").select("value").eq("key", "academy").maybeSingle(),
@@ -2854,7 +2965,7 @@ async function loadAcademy(){
     sb.from("polls").select("*").eq("active", true).order("created_at", { ascending: false }).limit(1)]);
   if (a) { academy = a.value || {}; store.set("cache_academy", academy); }
   if (ps) { posts = ps; store.set("cache_posts", posts); }
-  poll = pl?.[0] || null;
+  poll = pl?.[0] || null; loadFavs();
   if (poll) { const [{ data: r }, { data: v }] = await Promise.all([sb.rpc("poll_results", { p_poll: poll.id }), sb.from("poll_votes").select("choice").eq("poll_id", poll.id).eq("user_id", me.id).maybeSingle()]);
     pollRes = r || {}; myVote = v ? v.choice : null; }
   if (page === "acad") drawAcademy();
@@ -2864,7 +2975,14 @@ function drawAcademy(){
   const el = $("pg"); if (!el || page !== "acad") return;
   const A = academy || {}, tn = teacher.name || T.teacher;
   const wa = A.whatsapp ? "https://wa.me/" + toEn(A.whatsapp).replace(/[^0-9]/g, "") : "", tg = A.telegram ? "https://t.me/" + String(A.telegram).replace(/^@|https?:\/\/t\.me\//g, "") : "";
-  const news = posts.filter(p => p.kind === "news" || p.kind === "event"), arts = posts.filter(p => p.kind === "article"), vids = posts.filter(p => p.kind === "video");
+  const news = posts.filter(p => (p.kind === "news" || (p.kind === "event" && p.country !== "af")) && p.status !== "draft"), afEv = posts.filter(p => p.kind === "event" && p.country === "af"),
+    anal = posts.filter(p => (p.kind === "article" || p.kind === "video") && p.status !== "draft"), C = CTL();
+  const nCats = [...new Set(news.map(p => p.category).filter(Boolean))], aCats = [...new Set(anal.map(p => p.category).filter(Boolean))];
+  const newsV = news.filter(p => newsCat === "all" || p.category === newsCat), analV = anal.filter(p => anCat === "all" || (anCat === "fav" ? favs.has(p.id) : p.category === anCat));
+  const t0 = Date.now() - 864e5, afUp = afEv.filter(e => !e.event_at || new Date(e.event_at) >= t0).sort((a, b) => new Date(a.event_at || 0) - new Date(b.event_at || 0)), afPast = afEv.filter(e => e.event_at && new Date(e.event_at) < t0).sort((a, b) => new Date(b.event_at) - new Date(a.event_at)).slice(0, 6);
+  const afItem = e => `<div class="afe ${e.event_status || "upcoming"}"><div class="afd"><b>${e.event_at ? fmtFull(e.event_at).split(" · ")[0] : "—"}</b><small>${e.event_at ? (fmtFull(e.event_at).split(" · ")[1] || "") : ""}</small></div>
+      <div class="afb"><b>${esc(e.title)}</b><div class="tags"><span class="tag2 st-${e.event_status || "upcoming"}">${C.evst[e.event_status || "upcoming"]}</span><span class="tag2 lvl-${e.importance || "low"}">● ${T.imp[e.importance || "low"]}</span>${e.previous ? `<span class="tag2">${T.prevV}: <bdi class="ltr">${esc(e.previous)}</bdi></span>` : ""}${e.forecast ? `<span class="tag2">${T.fcV}: <bdi class="ltr">${esc(e.forecast)}</bdi></span>` : ""}${e.actual ? `<span class="tag2">${T.actV}: <bdi class="ltr">${esc(e.actual)}</bdi></span>` : ""}</div>
+      ${e.body ? `<p>${esc(e.body)}</p>` : ""}<div class="nsrc">${C.src}: ${e.source_url ? `<a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(e.source || e.source_url)} ↗</a>` : esc(e.source || "—")}</div></div></div>`;
   const tot = Object.values(pollRes).reduce((a, b) => a + Number(b), 0);
   el.innerHTML = `
     <div class="acard glass glow rise" style="--bd:9s"><div class="top2">${teacher.photo ? `<img class="pp2" src="${esc(teacher.photo)}" alt="">` : `<span class="pp2">${esc([...tn.replace("استاد", "").trim()][0] || "م")}</span>`}
@@ -2881,17 +2999,29 @@ function drawAcademy(){
       ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}
     <div class="sec2"><h3>🗓 ${T.calT}</h3></div>
     <div class="acard glass rise cal" id="calbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
+    <div class="sec2"><h3>🇦🇫 ${C.afCal}</h3></div>
+    <div class="acard glass rise afcal" style="--i:3">${afUp.length || afPast.length ? afUp.map(afItem).join("") + (afPast.length ? `<details class="afpast"><summary>${C.past} (${afPast.length})</summary>${afPast.map(afItem).join("")}</details>` : "") : `<div class="upd">${C.afNone}</div>`}
+      <div class="src">${C.afNote}</div></div>
     <div class="sec2"><h3>📰 ${T.afNews} <span class="ldot" style="display:inline-block;margin-inline-start:6px"></span></h3></div>
     <div class="acard glass rise news" id="newsbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
     <div class="sec2"><h3>📌 ${T.newsT}</h3></div>
-    <div class="acard glass rise news" style="--i:3">${news.length ? news.map(p => `<div class="nitem"><b>${esc(p.title)}</b>
+    ${nCats.length ? `<div class="qchips acats" data-cg="news">${[["all", C.all], ...nCats.map(c => [c, c])].map(([k, t]) => `<button data-c="${esc(k)}" class="${k === newsCat ? "on" : ""}">${esc(t)}</button>`).join("")}</div>` : ""}
+    <div class="acard glass rise news" style="--i:3">${newsV.length ? newsV.map(p => `<div class="nitem">${p.cover_path ? `<img class="ncov" data-mpath="${esc(p.cover_path)}" alt="">` : ""}<b>${esc(p.title)}</b>
+      <div class="nmeta">${p.category ? `<span class="tag2">${esc(p.category)}</span>` : ""}${p.source ? `<span>${C.src}: ${p.source_url ? `<a href="${esc(p.source_url)}" target="_blank" rel="noopener">${esc(p.source)} ↗</a>` : esc(p.source)}</span>` : ""}</div>
       ${p.kind === "event" ? `<div class="tags"><span class="tag2 lvl-${p.importance || "low"}">● ${T.imp[p.importance || "low"]}</span>${p.event_at ? `<span class="tag2">${fmtFull(p.event_at)}</span>` : ""}${p.previous ? `<span class="tag2">${T.prevV}: ${esc(p.previous)}</span>` : ""}${p.forecast ? `<span class="tag2">${T.fcV}: ${esc(p.forecast)}</span>` : ""}${p.actual ? `<span class="tag2">${T.actV}: ${esc(p.actual)}</span>` : ""}</div>` : `<div class="upd" style="text-align:start;margin:2px 0">${fmtFull(p.created_at)}</div>`}
-      ${p.body ? `<p>${esc(p.body)}</p>` : ""}${impHTML(p.impact)}</div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
-    <div class="sec2"><h3>🎬 ${T.videosT}</h3></div>
-    <div class="acard glass rise vid" style="--i:4">${vids.length ? vids.map(p => `<div class="nitem news"><b>${esc(p.title)}</b>${p.body ? `<p style="color:var(--muted);font-size:13px">${esc(p.body)}</p>` : ""}<video controls preload="none" playsinline data-vpath="${esc(p.file_path || "")}"></video></div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
-    <div class="sec2"><h3>🎓 ${T.articlesT}</h3></div>
-    <div class="acard glass rise news" style="--i:5">${arts.length ? arts.map(p => `<details class="nitem"><summary style="cursor:pointer;list-style:none"><b>${esc(p.title)}</b></summary><p>${esc(p.body || "")}</p></details>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>`;
+      ${p.body ? (p.body.length > 320 ? `<p class="nclip">${esc(p.body)}</p><button type="button" class="nmore">${C.more}</button>` : `<p>${esc(p.body)}</p>`) : ""}${impHTML(p.impact)}</div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
+    <div class="sec2"><h3>🧠 ${C.anT}</h3></div>
+    <div class="qchips acats" data-cg="an">${[["all", C.all], ["fav", "⭐ " + C.favs], ...aCats.map(c => [c, c])].map(([k, t]) => `<button data-c="${esc(k)}" class="${k === anCat ? "on" : ""}">${esc(t)}</button>`).join("")}</div>
+    <div class="angrid rise" style="--i:4">${analV.length ? analV.map(p => `<div class="ancard" data-an="${p.id}">${p.cover_path ? `<img data-mpath="${esc(p.cover_path)}" alt="">` : `<span class="anph">${p.kind === "video" ? "🎬" : "🧠"}</span>`}
+      <button type="button" class="anfav ${favs.has(p.id) ? "on" : ""}" data-fav="${p.id}" aria-label="favorite">${favs.has(p.id) ? "⭐" : "☆"}</button>${p.kind === "video" ? `<span class="anplay">▶</span>` : ""}
+      <div class="anb"><b>${esc(p.title)}</b><small>${[p.category, p.author, fmtFull(p.created_at).split(" · ")[0]].filter(Boolean).map(esc).join(" · ")}</small></div></div>`).join("") : `<div class="upd">${anCat === "fav" ? C.noFav : T.noContent}</div>`}</div>
+`;
   drawCal(); loadCalendar(); drawNews(); loadNews();
+  el.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
+  el.querySelectorAll(".acats").forEach(g => g.onclick = e => { const b = e.target.closest("[data-c]"); if (!b) return; if (g.dataset.cg === "news") newsCat = b.dataset.c; else anCat = b.dataset.c; drawAcademy(); });
+  el.querySelectorAll(".nmore").forEach(b => b.onclick = () => { const p = b.previousElementSibling; p.classList.toggle("nclip"); b.textContent = p.classList.contains("nclip") ? C.more : C.less; });
+  el.querySelector(".angrid").onclick = async e => { const f = e.target.closest("[data-fav]"); if (f) { e.stopPropagation(); return toggleFav(Number(f.dataset.fav)); }
+    const c = e.target.closest("[data-an]"); if (c) openAnalysis(posts.find(p => p.id === Number(c.dataset.an))); };
   el.querySelectorAll("video[data-vpath]").forEach(async v => { if (!v.dataset.vpath) return; const { data } = await sb.storage.from("media").createSignedUrl(v.dataset.vpath, 3600); if (data?.signedUrl) v.src = data.signedUrl; });
   el.querySelectorAll("[data-vote]").forEach(b => b.onclick = async () => {
     const i = Number(b.dataset.vote); myVote = i; pollRes[i] = Number(pollRes[i] || 0) + 1; drawAcademy();
