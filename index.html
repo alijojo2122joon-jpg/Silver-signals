@@ -1136,6 +1136,18 @@
   }
   @media (min-width:1000px) and (display-mode:standalone){ .top{padding-top:8px} }
   @media (display-mode:window-controls-overlay){ .top{padding-top:calc(env(titlebar-area-height,0px) + 6px);-webkit-app-region:drag} .top button,.top a{-webkit-app-region:no-drag} }
+
+  .fxc{display:grid;gap:3px;justify-items:center;padding:0!important;background:none!important}
+  .fxc i{font-style:normal;padding:3px 6px;border-radius:9px;font:800 10.5px/1.2 Montserrat,Arial,sans-serif;white-space:nowrap}
+  .fxc i.up{color:var(--buy);background:var(--buy-bg)} .fxc i.dn{color:var(--sell);background:var(--sell-bg)} .fxc i.eq{color:var(--muted);background:color-mix(in srgb,var(--text) 6%,transparent)}
+  .fxcl{display:flex;align-items:center;gap:3px} .fxcl small{font-size:8.5px;font-weight:800;color:var(--muted)}
+  .fxu{display:none}
+  @media (min-width:700px){
+    .fxhead,.fxrow{grid-template-columns:minmax(0,1.6fr) minmax(0,.8fr) minmax(0,.8fr) minmax(0,.9fr) minmax(0,.8fr)}
+    .fxu{display:grid;justify-items:center;text-align:center;font-size:11px}
+    .fxu b{font-weight:800} .fxu small{font:700 12px Montserrat,Arial,sans-serif;color:var(--muted)}
+    .fxn .fxfull{display:none}
+  }
 </style>
 </head>
 <body>
@@ -1147,7 +1159,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081230";
+const BUILD = "202611081240";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1828,20 +1840,21 @@ async function loadFx(force){
   drawFx(); refreshDashData();
   if (!fxCh) fxCh = sb.channel("fxr").on("postgres_changes", { event: "*", schema: "public", table: "currency_rates" }, () => { clearTimeout(loadFx.t); loadFx.t = setTimeout(() => loadFx(true), 800); }).subscribe();
 }
+function fxDelta(v, p, d){ if (v == null || p == null) return `<i class="eq">—</i>`; const x = Number(v) - Number(p);
+  const c = Math.abs(x) < 1e-9 ? "eq" : x > 0 ? "up" : "dn"; return `<i class="${c}"><bdi class="ltr">${c === "up" ? "▲ +" : c === "dn" ? "▼ −" : "■ "}${fxNum(Math.abs(x), d)}</bdi></i>`; }
 function fxRowHTML(r){
   const L = fxT(), d = r.digits ?? 2, has = r.buy != null || r.sell != null || r.mid != null;
-  const [, v, p] = fxMain(r), diff = v != null && p != null ? Number(v) - Number(p) : null;
-  const cls = diff == null || Math.abs(diff) < 1e-9 ? "eq" : diff > 0 ? "up" : "dn";
-  const chg = diff == null ? "—" : (cls === "up" ? "▲ +" : cls === "dn" ? "▼ −" : "■ ") + fxNum(Math.abs(diff), d);
-  const approx = fxAfn(r);
-  const mid = r.mid != null && r.buy == null && r.sell == null;
+  const approx = fxAfn(r), mid = r.mid != null && r.buy == null && r.sell == null;
+  const when = has ? `${fmtFull(r.rate_at)}` : L.noRate;
+  const chg = mid ? fxDelta(r.mid, r.prev_mid, d) : `<span class="fxcl"><small>${L.buyL}</small>${fxDelta(r.buy, r.prev_buy, d)}</span><span class="fxcl"><small>${L.sellL}</small>${fxDelta(r.sell, r.prev_sell, d)}</span>`;
   return `<div class="fxr ${has ? "" : "nil"} ${fxOpen === r.code ? "open" : ""}" data-fx="${esc(r.code)}">
     <button class="fxrow" type="button">
       <span class="fxn"><i>${r.flag || "💱"}</i><span><b>${esc(fxName(r))}</b><small><bdi class="ltr">${esc(r.sym)}</bdi>${r.note_fa && lang !== "en" ? " · " + esc(r.note_fa) : ""}</small>
-        <small class="fxt">${has ? `${agoTxt(r.rate_at)}${r.kind === "manual" ? ` · <em class="fxman">${L.manual}</em>` : ""}` : L.noRate}</small></span></span>
+        <small class="fxt">${has ? `<span data-ts="${r.rate_at}">${agoTxt(r.rate_at)}</span>${r.kind === "manual" ? ` · <em class="fxman">${L.manual}</em>` : ""}<span class="fxfull"><br>${when}</span>` : L.noRate}</small></span></span>
       ${mid ? `<span class="fxv fxmid"><small>${L.ref}</small><bdi class="ltr">${fxNum(r.mid, d)}</bdi>${approx ? `<small>${L.approx}: <bdi class="ltr">${fxNum(approx, approx < 1 ? 4 : 2)}</bdi></small>` : ""}</span>`
         : `<span class="fxv b"><bdi class="ltr">${fxNum(r.buy, d)}</bdi></span><span class="fxv s"><bdi class="ltr">${fxNum(r.sell, d)}</bdi></span>`}
-      <span class="fxc ${cls}"><bdi class="ltr">${chg}</bdi></span>
+      <span class="fxc">${chg}</span>
+      <span class="fxu">${has ? `<b>${fmtFull(r.rate_at).split(" · ")[0]}</b><small>${new Date(r.rate_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</small>${r.kind === "manual" ? `<em class="fxman">${L.manual}</em>` : ""}` : "—"}</span>
     </button>
     ${fxOpen === r.code ? `<div class="fxd" id="fxd"></div>` : ""}
   </div>`;
@@ -1857,7 +1870,7 @@ function drawFx(){
   if (!el.firstChild) el.innerHTML = `<div class="fxb glass rise"><div class="fxh"><h3>💱 ${L.title}</h3><small>${L.srcLine}</small></div>
     <label class="fxs">${I.search || "🔍"}<input id="fxq" type="search" placeholder="${L.search}" autocomplete="off" value="${esc(fxQ)}"></label>
     <div class="fxsort" id="fxsort">${[["pop", L.sPop], ["name", L.sName], ["up", L.sUp], ["dn", L.sDn]].map(([k, t]) => `<button type="button" data-fs="${k}" class="${k === fxSort ? "on" : ""}">${t}</button>`).join("")}</div>
-    <div class="fxhead"><span>${L.cur}</span><span>${L.buy}</span><span>${L.sell}</span><span>${L.chg}</span></div><div id="fxlist"></div></div>`;
+    <div class="fxhead"><span>${L.cur}</span><span>${L.buy}</span><span>${L.sell}</span><span>${L.chg}</span><span class="fxu">${L.updated}</span></div><div id="fxlist"></div></div>`;
   $("fxlist").innerHTML = rows.length ? rows.map(fxRowHTML).join("") : !planHas("sarraf") ? `<div class="upd">🔒 ${PT().sarraf_up} <button class="ghost2" onclick="openPlans()">${PT().up}</button></div>` : `<div class="upd">${L.none}</div>`;
   if (fxOpen) fxHist();
   if (el.dataset.wired) return; el.dataset.wired = 1;
