@@ -1214,6 +1214,55 @@
   .cmerr{font-size:12px;font-weight:700;color:var(--sell);padding:4px 6px}
 
   #tstat{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+  /* ===== مرحله ۳: تبدیل‌گر، هشدار، ژورنال ===== */
+  .cvamt{font:900 22px Montserrat,Arial,sans-serif!important;height:54px!important}
+  .cvswap{display:block;margin:-4px auto 0;width:44px;height:44px;border:0;border-radius:50%;font-size:20px;font-weight:900;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy));box-shadow:0 10px 18px -8px rgba(17,22,44,.55);cursor:pointer;transition:transform .35s}
+  .cvswap:active{transform:rotate(180deg)}
+  .cvout{margin-top:10px;padding:14px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in);display:grid;gap:4px;text-align:center}
+  .cvout b{font:900 26px Montserrat,Arial,sans-serif} .cvout b small{font-size:13px;opacity:.7} .cvout span{font-size:11.5px;color:var(--muted);font-weight:700}
+  .ahd{margin:12px 0 4px;font-size:12.5px;font-weight:900}
+  .arow{flex-wrap:wrap} .arow>span:first-child{flex:1;min-width:0} .arow small{display:block;font-size:10.5px;color:var(--muted);font-weight:600} .arow.on{outline:2px solid var(--glowc)} .arow.done{opacity:.8}
+  .afa{display:flex;gap:8px} .afa .btn2{flex:1} .ghost2{background:var(--field)!important;color:var(--text)!important;box-shadow:var(--raise)!important}
+  .aperm{margin:8px 0;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,#d97706 12%,transparent);font-size:12px;font-weight:700} .aperm button{border:0;border-radius:999px;padding:4px 12px;margin-inline-start:6px;background:#d97706;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+  .jlaunch{padding:16px} .jlh{display:flex;gap:12px;align-items:center} .jlh b{display:block;font-size:15px} .jlh small{font-size:11.5px;color:var(--muted)}
+  .jlb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px} .jlb button{height:46px;border:0;border-radius:16px;background:var(--tile);box-shadow:var(--raise);font:inherit;font-size:13px;font-weight:800;color:var(--text);cursor:pointer}
+  .jp .jtabs{margin:6px 0 0} .jtop{display:flex;gap:8px;margin:6px 0 10px} .jtop .inp{flex:1;margin:0} .jtop .btn2{flex:none;width:auto;margin:0;padding:0 14px;white-space:nowrap}
+  .jcats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-bottom:10px} .jcats::-webkit-scrollbar{display:none} .jcats button{flex:none} .jcats button.on{background:var(--navy);color:var(--onNavy)}
+  .jcard{padding:12px 14px;border-radius:20px;background:var(--tile);box-shadow:var(--raise);margin-bottom:10px;cursor:pointer}
+  .jc1{display:flex;align-items:center;gap:8px} .jc1 .jp{margin-inline-start:auto;font:900 15px Montserrat,Arial,sans-serif} .jq{font-size:12px;color:var(--muted);font-weight:700}
+  .jside{font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px} .jside.buy{color:var(--buy);background:var(--buy-bg,#16a34a1a)} .jside.sell{color:var(--sell);background:var(--sell-bg)}
+  .jc2{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-size:11.5px;color:var(--muted);font-weight:700}
+  .jc3{margin-top:6px;font-size:12.5px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word} .jst{color:#e2a400;font-size:13px;margin-top:4px}
+  .jtag{margin-inline-start:auto;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--field)}
+  .jimgs{display:flex;gap:6px;margin-top:8px} .jimgs img{flex:1;min-width:0;max-height:140px;object-fit:cover;border-radius:14px;background:var(--field)}
+  .jcard .pos,.jstat .pos{color:var(--buy)} .jcard .neg,.jstat .neg{color:var(--sell)}
+  .jback{border:0;background:none;font:inherit;font-weight:800;color:var(--muted);padding:6px 0;cursor:pointer}
+  .jform textarea.inp{height:auto;padding:10px 12px;line-height:1.8;resize:vertical}
+  .jrate{display:flex;gap:2px;height:46px;align-items:center} .jrate button{border:0;background:none;font-size:24px;color:#e2a400;cursor:pointer;padding:0 2px}
+  .jpin{flex-direction:row!important;align-items:center;gap:8px!important;align-self:end;height:46px}
+  .jimgpick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .jip{display:grid;gap:6px;padding:10px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);font-size:11.5px;font-weight:800;color:var(--muted);cursor:pointer;text-align:center}
+  .jip img{width:100%;max-height:160px;object-fit:cover;border-radius:12px} .jip i{font-style:normal}
+  .jfa{display:flex;gap:8px;margin-top:12px} .jfa .btn2{flex:1;margin:0} .btn2.red{background:var(--sell-bg)!important;color:var(--sell)!important;box-shadow:none!important}
+  .jstat{padding:14px;border-radius:20px;background:var(--tile);box-shadow:var(--raise);margin-top:12px} .jstat h4{margin:0 0 10px;font-size:13.5px}
+  .jsg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px} .jsg div{padding:8px 6px;border-radius:14px;background:var(--field);box-shadow:var(--sh-in);text-align:center;min-width:0}
+  .jsg small{display:block;font-size:10px;color:var(--muted);font-weight:700} .jsg b{font:800 13px Montserrat,Arial,sans-serif;overflow-wrap:anywhere}
+  .jbars{display:flex;align-items:flex-end;gap:4px;height:150px;padding-top:16px;direction:ltr}
+  .jb{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px}
+  .jb i{width:70%;border-radius:6px 6px 2px 2px} .jb i.p{background:linear-gradient(180deg,#34d399,#0a8b5c)} .jb i.n{background:linear-gradient(180deg,#fb7185,#b92c32)}
+  .jb b{font-size:9px;font-weight:800;color:var(--muted)} .jb small{font-size:8.5px;color:var(--muted);white-space:nowrap;overflow:hidden;max-width:100%}
+  .jct{display:flex;align-items:center;gap:10px} .jcm{flex:1;min-width:0;display:grid} .jcm small{font-size:11.5px;color:var(--muted)}
+  .jca{display:flex;gap:6px} .jca a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--field);box-shadow:var(--raise);text-decoration:none;font-size:18px}
+  .empty2{text-align:center;padding:40px 10px;color:var(--muted);font-weight:700;line-height:2;font-size:13px}
+  @media (min-width:900px){ .jsg{grid-template-columns:repeat(8,minmax(0,1fr))} .jp{max-width:none} }
+
+  .jp{overflow-x:hidden} .jform .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))} .jform .fgrid>label{min-width:0} .jform .inp{min-width:0;width:100%;box-sizing:border-box}
+  .jform input[type=datetime-local],.jform input[type=date]{font-size:12.5px;padding:0 8px}
+  .jtabs,#jper{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important} .jtabs button,#jper button{font-size:12px!important;padding:0 4px!important;white-space:nowrap}
+  .jbars{justify-content:center} .jb{max-width:52px}
+
+  .jform label[hidden]{display:none!important} .jtabs,#jper{padding:5px!important;height:auto!important} .jtabs button,#jper button{height:38px!important;border-radius:999px}
 </style>
 </head>
 <body>
@@ -1225,7 +1274,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081401";
+const BUILD = "202611081410";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -2053,6 +2102,8 @@ const CONTRACTS = {
   EURUSD: { n: "EUR/USD", c: 100000, t: 0.00001, min: 0.01, step: 0.01 },
   GBPUSD: { n: "GBP/USD", c: 100000, t: 0.00001, min: 0.01, step: 0.01 },
   USDJPY: { n: "USD/JPY", c: 100000, t: 0.001, min: 0.01, step: 0.01, jpy: true },
+  USDAFN: { n: "دالر/افغانی · هر لات ۱,۰۰۰ دالر", c: 1000, t: 0.01, min: 0.1, step: 0.1, afn: true, mk: "usd" },
+  BTCUSD: { n: "Bitcoin", c: 1, t: 0.01, min: 0.01, step: 0.01 },
   CUSTOM: { n: "", c: 1, t: 0.01, min: 0.01, step: 0.01 } };
 const num = v => { if (v == null) return null; const x = Number(toEn(String(v)).replace(/,/g, '').trim()); return String(v).trim() === '' || !isFinite(x) ? null : x; };
 let rk = Object.assign({ sym: "XAUUSD", acc: "USD", bal: 1000, pct: 1, side: "buy", entry: "", sl: "", tp: "", comm: 7, slip: 2 }, store.get("risk", {}));
@@ -2094,7 +2145,7 @@ function riskCalc(){
   const L = DT(), C = rk.sym === "CUSTOM" ? { c: +rk.c || 1, t: +rk.t || .01, min: +rk.min || .01, step: +rk.step || .01 } : CONTRACTS[rk.sym];
   const entry = num(String(rk.entry)), sl = num(String(rk.sl)), tp = num(String(rk.tp));
   const usdRate = rk.acc === "AFN" ? usdAfn() : 1;
-  let tvUsd = C.c * C.t; if (C.jpy && entry) tvUsd = C.c * C.t / entry;
+  let tvUsd = C.c * C.t; if (C.jpy && entry) tvUsd = C.c * C.t / entry; if (C.afn) tvUsd = C.c * C.t / (usdAfn() || 65);
   if (rk.sym === "CUSTOM" && rk.tv) tvUsd = +rk.tv / (usdRate || 1);
   const tv = tvUsd * (usdRate || 1), out = { tv, C };
   if (!entry || !sl) return { ...out, msg: L.fill };
@@ -2141,15 +2192,7 @@ function drawDash(){
     <p class="dnote">🔒 ${L.engNote}</p></section>
 
   <section class="dcard glass rise" style="--i:2"><h3>🧮 ${L.risk}</h3>
-    <form id="rkf" onsubmit="return false">
-      <div class="rk2"><label>${L.inst}<select id="rk_sym">${opts}</select></label><label>${L.accCcy}<select id="rk_acc"><option value="USD" ${rk.acc === "USD" ? "selected" : ""}>USD $</option><option value="AFN" ${rk.acc === "AFN" ? "selected" : ""}>AFN ؋</option></select></label></div>
-      <div class="rkspec" id="rkspec"></div>
-      ${openSig.length ? `<label class="rk1">${L.fromSig}<select id="rk_sig"><option value="">—</option>${openSig.map(s => `<option value="${s.id}">#${s.id} · ${(s.market || "xag").toUpperCase()} · ${s.type === "buy" ? L.buy : L.sell}</option>`).join("")}</select></label>` : ""}
-      <div class="rkside"><button type="button" data-side="buy" class="${rk.side === "buy" ? "on b" : ""}">${L.buy}</button><button type="button" data-side="sell" class="${rk.side === "sell" ? "on s" : ""}">${L.sell}</button></div>
-      <div class="rk2"><label>${L.bal}<input id="rk_bal" inputmode="decimal" dir="ltr" value="${esc(rk.bal)}"></label><label>${L.riskPct}<input id="rk_pct" inputmode="decimal" dir="ltr" value="${esc(rk.pct)}"></label></div>
-      <div class="rk3"><label>${L.entry}<input id="rk_entry" inputmode="decimal" dir="ltr" value="${esc(rk.entry)}"></label><label>${L.sl}<input id="rk_sl" inputmode="decimal" dir="ltr" value="${esc(rk.sl)}"></label><label>${L.tp}<input id="rk_tp" inputmode="decimal" dir="ltr" value="${esc(rk.tp)}"></label></div>
-      <div class="rk2"><label>${L.comm}<input id="rk_comm" inputmode="decimal" dir="ltr" value="${esc(rk.comm)}"></label><label>${L.slip}<input id="rk_slip" inputmode="decimal" dir="ltr" value="${esc(rk.slip)}"></label></div>
-    </form><div id="rkout" class="rkout"></div></section>
+    ${riskFormHTML(L, opts, openSig)}</section>
 
   <section class="dcard glass rise" style="--i:3"><h3>📈 ${L.perf}</h3>
     ${P.rows.length ? `<div class="pstats"><div><small>${L.net}</small><b class="ltr ${P.cum >= 0 ? "pos" : "neg"}">${P.cum >= 0 ? "+" : ""}${m2(P.cum)}R</b></div><div><small>${L.pf}</small><b class="ltr">${P.pf === Infinity ? "∞" : m2(P.pf)}</b></div>
@@ -2161,6 +2204,16 @@ function drawDash(){
     : `<div class="poff"><b>🔒 ${L.perfOff}</b><p>${L.perfWhy}</p></div>`}</section></div>`;
   wireRisk(); if (keepFocus && $(keepFocus)) { const i = $(keepFocus); i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch {} }
 }
+function riskFormHTML(L, opts, openSig){ return `
+    <form id="rkf" onsubmit="return false">
+      <div class="rk2"><label>${L.inst}<select id="rk_sym">${opts}</select></label><label>${L.accCcy}<select id="rk_acc"><option value="USD" ${rk.acc === "USD" ? "selected" : ""}>USD $</option><option value="AFN" ${rk.acc === "AFN" ? "selected" : ""}>AFN ؋</option></select></label></div>
+      <div class="rkspec" id="rkspec"></div>
+      ${openSig.length ? `<label class="rk1">${L.fromSig}<select id="rk_sig"><option value="">—</option>${openSig.map(s => `<option value="${s.id}">#${s.id} · ${(s.market || "xag").toUpperCase()} · ${s.type === "buy" ? L.buy : L.sell}</option>`).join("")}</select></label>` : ""}
+      <div class="rkside"><button type="button" data-side="buy" class="${rk.side === "buy" ? "on b" : ""}">${L.buy}</button><button type="button" data-side="sell" class="${rk.side === "sell" ? "on s" : ""}">${L.sell}</button></div>
+      <div class="rk2"><label>${L.bal}<input id="rk_bal" inputmode="decimal" dir="ltr" value="${esc(rk.bal)}"></label><label>${L.riskPct}<input id="rk_pct" inputmode="decimal" dir="ltr" value="${esc(rk.pct)}"></label></div>
+      <div class="rk3"><label>${L.entry}<input id="rk_entry" inputmode="decimal" dir="ltr" value="${esc(rk.entry)}"></label><label>${L.sl}<input id="rk_sl" inputmode="decimal" dir="ltr" value="${esc(rk.sl)}"></label><label>${L.tp}<input id="rk_tp" inputmode="decimal" dir="ltr" value="${esc(rk.tp)}"></label></div>
+      <div class="rk2"><label>${L.comm}<input id="rk_comm" inputmode="decimal" dir="ltr" value="${esc(rk.comm)}"></label><label>${L.slip}<input id="rk_slip" inputmode="decimal" dir="ltr" value="${esc(rk.slip)}"></label></div>
+    </form><div id="rkout" class="rkout"></div>`; }
 function curveSVG(rows){
   const W = 320, H = 120, pts = [0, ...rows.map(r => r.cum)], lo = Math.min(0, ...pts), hi = Math.max(0, ...pts), sp = hi - lo || 1;
   const X = i => 6 + i / Math.max(1, pts.length - 1) * (W - 12), Y = v => 8 + (1 - (v - lo) / sp) * (H - 16);
@@ -2175,7 +2228,7 @@ function wireRisk(){
   spec(); drawRiskOut();
   const save = () => store.set("risk", rk);
   f.oninput = f.onchange = e => { const id = e.target.id; if (!id?.startsWith("rk_")) return; const k = id.slice(3);
-    if (k === "sig") { const s = dashSigs.find(x => String(x.id) === e.target.value); if (s) { rk.side = s.type; rk.entry = s.entry_price ?? (s.entry_to != null ? (Number(s.entry_from) + Number(s.entry_to)) / 2 : s.entry_from); rk.sl = s.sl ?? ""; rk.tp = s.tp1 ?? ""; rk.sym = s.market === "xau" ? "XAUUSD" : s.market === "xag" ? "XAGUSD" : rk.sym; save(); return drawDash(); } return; }
+    if (k === "sig") { const s = dashSigs.find(x => String(x.id) === e.target.value); if (s) { rk.side = s.type; rk.entry = s.entry_price ?? (s.entry_to != null ? (Number(s.entry_from) + Number(s.entry_to)) / 2 : s.entry_from); rk.sl = s.sl ?? ""; rk.tp = s.tp1 ?? ""; rk.sym = s.market === "xau" ? "XAUUSD" : s.market === "xag" ? "XAGUSD" : s.market === "usd" ? "USDAFN" : rk.sym; save(); return page === "dash" ? drawDash() : drawTools(); } return; }
     rk[k] = e.target.value; save(); if (k === "sym" || k === "acc") { spec(); } drawRiskOut(); };
   f.onclick = e => { const b = e.target.closest("[data-side]"); if (!b) return; rk.side = b.dataset.side; save(); f.querySelectorAll("[data-side]").forEach(x => x.className = x.dataset.side === rk.side ? "on " + (rk.side === "buy" ? "b" : "s") : ""); drawRiskOut(); };
 }
@@ -2342,6 +2395,229 @@ async function openComments(sid){
     t.value = ""; t.style.height = "44px"; setRep(null); editId = null; sfx("button", .35); await load(); const l = $("cml"); l.scrollTop = l.scrollHeight;
     if (socMap[sid]) socMap[sid].comments = rows.filter(x => !x.deleted).length; };
 }
+
+/* ===== ژورنال حرفه‌ای معاملات (خصوصی برای هر عضو) ===== */
+const JL = { fa: { title: "ژورنال حرفه‌ای", tabs: ["معاملات", "یادداشت‌ها", "آمار", "دفترچه تلفن"], priv: "🔒 فقط خودتان این اطلاعات را می‌بینید.",
+    add: "＋ معامله‌ی جدید", addN: "＋ یادداشت جدید", addC: "＋ مخاطب جدید", back: "بازگشت", save: "ذخیره", del: "حذف", edit: "ویرایش", delQ: "حذف شود؟", search: "جستجو…",
+    sym: "نماد / بازار", other: "نماد دیگر", side: "نوع", buy: "خرید", sell: "فروش", qty: "حجم / مقدار (لات یا واحد)", entry: "قیمت ورود", exit: "قیمت خروج", sl: "حد ضرر", tp: "حد سود",
+    fees: "کمیسیون و هزینه", pnl: "سود / زیان واقعی", pnlH: "اگر خالی بماند: (خروج − ورود) × مقدار − هزینه", openT: "زمان ورود", closeT: "زمان خروج", tf: "تایم‌فریم",
+    strat: "استراتژی", reason: "دلیل ورود", emo: "حالت روانی", emos: ["آرام", "مطمئن", "هیجان‌زده", "ترسیده", "طمع", "خسته", "انتقام‌جو"], mist: "اشتباهات", rate: "امتیاز اجرای معامله",
+    imgB: "تصویر قبل از ورود", imgA: "تصویر بعد از خروج", pick: "انتخاب تصویر", note: "یادداشت", open: "باز", noTr: "هنوز معامله‌ای ثبت نکرده‌اید.", noN: "یادداشتی نیست.", noC: "مخاطبی ثبت نشده است.",
+    ntitle: "عنوان", nbody: "متن یادداشت", ncat: "دسته", cats: { general: "عمومی", analysis: "تحلیل", lesson: "درس‌ها", strategy: "استراتژی", psych: "روانشناسی", kabul: "بازار سرای شهزاده" }, all: "همه", pin: "سنجاق",
+    cname: "نام", phone: "شماره تماس", wa: "واتساپ", city: "شهر", shop: "دکان / شرکت", kind: "نوع", kinds: { sarraf: "صراف", gold: "زرگر", customer: "مشتری", partner: "همکار", other: "دیگر" }, fav: "مهم",
+    per: { d: "روزانه", w: "هفته‌وار", m: "ماهانه", y: "سالانه" }, trades: "معاملات", wins: "سودده", losses: "زیان‌ده", wr: "نرخ برد", net: "سود خالص", avg: "میانگین هر معامله", best: "بهترین", worst: "بدترین", pf: "فاکتور سود",
+    bySym: "به تفکیک نماد", chart: "نمودار سود/زیان", noStat: "برای آمار، معاملات بسته‌شده (با قیمت خروج یا سود/زیان) ثبت کنید.", err: "ذخیره نشد", saved: "ذخیره شد ✓", up: "در حال بارگذاری تصویر…" },
+  en: { title: "Pro trading journal", tabs: ["Trades", "Notes", "Stats", "Contacts"], priv: "🔒 Only you can see this.", add: "＋ New trade", addN: "＋ New note", addC: "＋ New contact", back: "Back", save: "Save", del: "Delete", edit: "Edit", delQ: "Delete?", search: "Search…",
+    sym: "Symbol / market", other: "Other symbol", side: "Side", buy: "Buy", sell: "Sell", qty: "Size (lots or units)", entry: "Entry price", exit: "Exit price", sl: "Stop loss", tp: "Take profit", fees: "Fees & commission", pnl: "Actual P/L", pnlH: "If empty: (exit − entry) × size − fees",
+    openT: "Open time", closeT: "Close time", tf: "Timeframe", strat: "Strategy", reason: "Reason for entry", emo: "Emotion", emos: ["Calm", "Confident", "Excited", "Fearful", "Greedy", "Tired", "Revenge"], mist: "Mistakes", rate: "Execution rating",
+    imgB: "Before-entry image", imgA: "After-exit image", pick: "Pick image", note: "Note", open: "Open", noTr: "No trades yet.", noN: "No notes.", noC: "No contacts yet.", ntitle: "Title", nbody: "Note", ncat: "Category",
+    cats: { general: "General", analysis: "Analysis", lesson: "Lessons", strategy: "Strategy", psych: "Psychology", kabul: "Sarai Shahzada market" }, all: "All", pin: "Pin",
+    cname: "Name", phone: "Phone", wa: "WhatsApp", city: "City", shop: "Shop / company", kind: "Type", kinds: { sarraf: "Money changer", gold: "Gold dealer", customer: "Customer", partner: "Partner", other: "Other" }, fav: "Important",
+    per: { d: "Daily", w: "Weekly", m: "Monthly", y: "Yearly" }, trades: "Trades", wins: "Winners", losses: "Losers", wr: "Win rate", net: "Net P/L", avg: "Avg per trade", best: "Best", worst: "Worst", pf: "Profit factor",
+    bySym: "By symbol", chart: "P/L chart", noStat: "Record closed trades (with exit price or P/L) to see stats.", err: "Not saved", saved: "Saved ✓", up: "Uploading image…" } };
+JL.ps = Object.assign({}, JL.fa, { title: "مسلکي ژورنال", tabs: ["معاملې", "یادښتونه", "احصایه", "د تلیفون کتابچه"], priv: "🔒 یوازې تاسو دا معلومات وینئ.", save: "خوندي", del: "ړنګول", back: "شاته", buy: "پېرل", sell: "پلورل" });
+const JT = () => JL[lang] || JL.fa;
+const JSYM = ["XAUUSD", "XAGUSD", "USDAFN", "EURUSD", "GBPUSD", "USDJPY", "USOIL", "UKOIL", "BTCUSD"];
+let jTab = 0, jTrades = [], jNotes = [], jContacts = [], jUrl = {}, jPer = "m", jCat = "all", jQ = "", jKind = "all";
+const jPnl = j => j.pnl != null ? Number(j.pnl) : j.close_price == null ? null : (Number(j.close_price) - Number(j.open_price)) * (j.side === "buy" ? 1 : -1) * Number(j.qty || 1) - Number(j.fees || 0);
+const jLabel = a => ({ xau: "XAUUSD", xag: "XAGUSD", usd: "USDAFN", other: "—" })[a] || a;
+async function jImg(path){ if (!path) return ""; if (jUrl[path]) return jUrl[path]; const { data } = await sb.storage.from("journal").createSignedUrl(path, 3600); return jUrl[path] = data?.signedUrl || ""; }
+async function jHydrate(root){ for (const im of root.querySelectorAll("img[data-jp]")) { const u = await jImg(im.dataset.jp); if (u) im.src = u; } }
+async function jUpload(file){ const blob = await compressImage(file, 1600), path = `${me.id}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.jpg`;
+  const { error } = await sb.storage.from("journal").upload(path, blob, { contentType: "image/jpeg" }); if (error) throw error; jUrl[path] = URL.createObjectURL(blob); return path; }
+async function jLoad(){
+  const [a, b, c] = await Promise.all([sb.from("journal").select("*").order("trade_date", { ascending: false }).order("id", { ascending: false }).limit(1000),
+    sb.from("journal_notes").select("*").order("pinned", { ascending: false }).order("created_at", { ascending: false }).limit(500), sb.from("contacts").select("*").order("favorite", { ascending: false }).order("name").limit(1000)]);
+  jTrades = a.data || []; jNotes = b.data || []; jContacts = c.data || []; journal = jTrades; }
+function openJournal(tab){
+  if ($("jpanel")) return; const L = JT(); if (tab != null) jTab = tab;
+  const v = document.createElement("div"); v.className = "npanel jp"; v.id = "jpanel";
+  v.innerHTML = `<div class="nphd"><b>📒 ${L.title}</b><button class="ib" id="jx" aria-label="close">${I.x}</button></div><div class="seg2 jtabs" id="jtabs">${L.tabs.map((t, i) => `<button data-jt="${i}" class="${i === jTab ? "on" : ""}">${t}</button>`).join("")}</div><div class="upd" style="margin:4px 0 10px">${L.priv}</div><div id="jbody"><span class="spin"></span></div>`;
+  document.body.appendChild(v); lockBody();
+  overlayPush(() => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); });
+  requestAnimationFrame(() => v.classList.add("show")); $("jx").onclick = () => history.back();
+  $("jtabs").onclick = e => { const b = e.target.closest("[data-jt]"); if (!b) return; jTab = +b.dataset.jt; $("jtabs").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); jDraw(); };
+  jLoad().then(jDraw);
+}
+function jDraw(){ const el = $("jbody"); if (!el) return; [jDrawTrades, jDrawNotes, jDrawStats, jDrawContacts][jTab](el); }
+function jDrawTrades(el){
+  const L = JT(), q = jQ.toLowerCase(), rows = jTrades.filter(j => !q || [jLabel(j.asset), j.strategy, j.note, j.reason, j.mistakes].join(" ").toLowerCase().includes(q));
+  el.innerHTML = `<div class="jtop"><input class="inp" id="jq2" placeholder="${L.search}" value="${esc(jQ)}"><button class="btn2" id="jnew">${L.add}</button></div>
+    ${rows.length ? rows.map(j => { const p = jPnl(j); return `<div class="jcard" data-jid="${j.id}"><div class="jc1"><b class="ltr">${esc(jLabel(j.asset))}</b><span class="jside ${j.side}">${j.side === "buy" ? L.buy : L.sell}</span><span class="ltr jq">× ${nf(j.qty, 3)}</span>
+      <b class="ltr jp ${p == null ? "" : p >= 0 ? "pos" : "neg"}">${p == null ? L.open : (p >= 0 ? "+" : "") + nf(p)}</b></div>
+      <div class="jc2"><span class="ltr">${nf(j.open_price, 5)} → ${j.close_price != null ? nf(j.close_price, 5) : "…"}</span><span>${j.trade_date}${j.timeframe ? " · " + esc(j.timeframe) : ""}${j.strategy ? " · " + esc(j.strategy) : ""}</span></div>
+      ${j.img_before || j.img_after ? `<div class="jimgs">${[j.img_before, j.img_after].filter(Boolean).map(pth => `<img data-jp="${esc(pth)}" alt="">`).join("")}</div>` : ""}
+      ${j.note || j.reason ? `<div class="jc3">${esc(j.reason || "")}${j.reason && j.note ? " — " : ""}${esc(j.note || "")}</div>` : ""}${j.rating ? `<div class="jst">${"★".repeat(j.rating)}${"☆".repeat(5 - j.rating)}</div>` : ""}</div>`; }).join("")
+      : `<div class="empty2">📒<br>${L.noTr}</div>`}`;
+  jHydrate(el);
+  $("jq2").oninput = e => { jQ = e.target.value; const pos = e.target.selectionStart; jDrawTrades(el); const i = $("jq2"); i.focus(); i.setSelectionRange(pos, pos); };
+  $("jnew").onclick = () => jTradeForm(el, null);
+  el.onclick = e => { const c = e.target.closest("[data-jid]"); if (c && !e.target.closest("input,button")) jTradeForm(el, jTrades.find(x => x.id === +c.dataset.jid)); };
+}
+function jTradeForm(el, j){
+  const L = JT(), x = j || { trade_date: new Date().toISOString().slice(0, 10), asset: "XAUUSD", side: "buy", qty: 1 }, sym = jLabel(x.asset), known = JSYM.includes(sym);
+  const dt = v => v ? new Date(new Date(v) - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 16) : "";
+  let imgs = { img_before: x.img_before || null, img_after: x.img_after || null }, rating = x.rating || 0;
+  el.onclick = null;
+  el.innerHTML = `<button class="jback" id="jbk">→ ${L.back}</button><form id="jtf" class="jform">
+    <div class="fgrid"><label>${T.date}<input class="inp" id="f_date" type="date" value="${x.trade_date}"></label>
+      <label>${L.sym}<select class="inp" id="f_sym">${JSYM.map(s => `<option ${s === sym ? "selected" : ""}>${s}</option>`).join("")}<option value="__o" ${known ? "" : "selected"}>${L.other}</option></select></label>
+      <label id="f_ol" ${known ? "hidden" : ""} style="grid-column:1/-1">${L.other}<input class="inp ltr" id="f_other" maxlength="24" value="${known ? "" : esc(sym)}"></label>
+      <label>${L.side}<select class="inp" id="f_side"><option value="buy" ${x.side === "buy" ? "selected" : ""}>${L.buy}</option><option value="sell" ${x.side === "sell" ? "selected" : ""}>${L.sell}</option></select></label>
+      <label>${L.qty}<input class="inp ltr" id="f_qty" inputmode="decimal" value="${x.qty ?? ""}"></label>
+      <label>${L.entry}<input class="inp ltr" id="f_open" inputmode="decimal" value="${x.open_price ?? ""}" required></label><label>${L.exit}<input class="inp ltr" id="f_close" inputmode="decimal" value="${x.close_price ?? ""}"></label>
+      <label>${L.sl}<input class="inp ltr" id="f_sl" inputmode="decimal" value="${x.sl ?? ""}"></label><label>${L.tp}<input class="inp ltr" id="f_tp" inputmode="decimal" value="${x.tp ?? ""}"></label>
+      <label>${L.fees}<input class="inp ltr" id="f_fees" inputmode="decimal" value="${x.fees ?? 0}"></label><label>${L.pnl}<input class="inp ltr" id="f_pnl" inputmode="decimal" value="${x.pnl ?? ""}" placeholder="auto"></label>
+      <div class="upd" style="grid-column:1/-1;text-align:start;margin:-4px 0 0">${L.pnlH} · <b id="f_calc"></b></div>
+      <label>${L.openT}<input class="inp" id="f_ot" type="datetime-local" value="${dt(x.open_time)}"></label><label>${L.closeT}<input class="inp" id="f_ct" type="datetime-local" value="${dt(x.close_time)}"></label>
+      <label>${L.tf}<select class="inp" id="f_tf"><option value="">—</option>${["M1","M5","M15","M30","H1","H4","D1","W1"].map(t => `<option ${t === x.timeframe ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+      <label>${L.strat}<input class="inp" id="f_strat" maxlength="80" value="${esc(x.strategy || "")}"></label>
+      <label style="grid-column:1/-1">${L.reason}<textarea class="inp" id="f_reason" rows="2" maxlength="1000">${esc(x.reason || "")}</textarea></label>
+      <label>${L.emo}<select class="inp" id="f_emo"><option value="">—</option>${L.emos.map(t => `<option ${t === x.emotion ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+      <label>${L.rate}<div class="jrate" id="f_rate">${[1,2,3,4,5].map(i => `<button type="button" data-r="${i}">${i <= rating ? "★" : "☆"}</button>`).join("")}</div></label>
+      <label style="grid-column:1/-1">${L.mist}<textarea class="inp" id="f_mist" rows="2" maxlength="1000">${esc(x.mistakes || "")}</textarea></label>
+      <label style="grid-column:1/-1">${L.note}<textarea class="inp" id="f_note" rows="3" maxlength="3000">${esc(x.note || "")}</textarea></label></div>
+    <div class="jimgpick">${[["img_before", L.imgB], ["img_after", L.imgA]].map(([k, t]) => `<label class="jip" data-k="${k}"><span>${t}</span><img data-jp="${esc(imgs[k] || "")}" alt="" ${imgs[k] ? "" : "hidden"}><i>📷 ${L.pick}</i><input type="file" accept="image/*" hidden></label>`).join("")}</div>
+    <div class="jfa"><button class="btn2" id="f_save">${L.save}</button>${j ? `<button type="button" class="btn2 red" id="f_del">${L.del}</button>` : ""}</div><div class="cmerr" id="f_err"></div></form>`;
+  jHydrate(el); el.scrollIntoView?.({ block: "start" }); $("jpanel").scrollTop = 0;
+  const n = id => num($(id).value);
+  const calc = () => { const o = n("f_open"), c = n("f_close"); $("f_calc").textContent = o != null && c != null ? nf((c - o) * ($("f_side").value === "buy" ? 1 : -1) * (n("f_qty") ?? 1) - (n("f_fees") || 0)) : "—"; };
+  $("jtf").oninput = calc; calc();
+  $("f_sym").onchange = e => { $("f_ol").hidden = e.target.value !== "__o"; };
+  $("f_rate").onclick = e => { const b = e.target.closest("[data-r]"); if (!b) return; rating = +b.dataset.r === rating ? 0 : +b.dataset.r; $("f_rate").querySelectorAll("button").forEach(z => z.textContent = +z.dataset.r <= rating ? "★" : "☆"); };
+  el.querySelectorAll(".jip input").forEach(inp => inp.onchange = async e => { const f = e.target.files[0]; if (!f) return; const lab = e.target.closest(".jip"), k = lab.dataset.k;
+    lab.querySelector("i").textContent = "⏳ " + L.up; try { imgs[k] = await jUpload(f); const im = lab.querySelector("img"); im.hidden = false; im.src = jUrl[imgs[k]]; lab.querySelector("i").textContent = "📷 " + L.pick; }
+    catch (err) { lab.querySelector("i").textContent = "⚠️ " + (err.message || L.err); } });
+  $("jbk").onclick = () => jDrawTrades(el);
+  if (j) $("f_del").onclick = async () => { if (!confirm(L.delQ)) return; await sb.from("journal").delete().eq("id", j.id); const rm = [j.img_before, j.img_after].filter(Boolean); if (rm.length) sb.storage.from("journal").remove(rm); await jLoad(); jDrawTrades(el); };
+  $("jtf").onsubmit = async e => { e.preventDefault(); const o = n("f_open"); if (o == null) return $("f_open").focus();
+    const symv = $("f_sym").value === "__o" ? ($("f_other").value.trim().toUpperCase() || "OTHER") : $("f_sym").value;
+    const iso = id => $(id).value ? new Date($(id).value).toISOString() : null;
+    const row = { trade_date: $("f_date").value || new Date().toISOString().slice(0, 10), asset: symv, side: $("f_side").value, qty: n("f_qty") ?? 1, open_price: o, close_price: n("f_close"), sl: n("f_sl"), tp: n("f_tp"), fees: n("f_fees") || 0, pnl: n("f_pnl"),
+      open_time: iso("f_ot"), close_time: iso("f_ct"), timeframe: $("f_tf").value || null, strategy: $("f_strat").value.trim() || null, reason: $("f_reason").value.trim() || null, emotion: $("f_emo").value || null,
+      mistakes: $("f_mist").value.trim() || null, note: $("f_note").value.trim() || null, rating: rating || null, img_before: imgs.img_before, img_after: imgs.img_after, updated_at: new Date().toISOString() };
+    $("f_save").disabled = true;
+    const r = j ? await sb.from("journal").update(row).eq("id", j.id) : await sb.from("journal").insert({ ...row, user_id: me.id });
+    $("f_save").disabled = false; if (r.error) return $("f_err").textContent = L.err + ": " + r.error.message;
+    sfx("button", .35); await jLoad(); jDrawTrades(el); };
+}
+function jDrawNotes(el){
+  const L = JT(), q = jQ.toLowerCase(), rows = jNotes.filter(x => (jCat === "all" || x.category === jCat) && (!q || ((x.title || "") + " " + (x.body || "")).toLowerCase().includes(q)));
+  el.innerHTML = `<div class="jtop"><input class="inp" id="jq2" placeholder="${L.search}" value="${esc(jQ)}"><button class="btn2" id="jnew">${L.addN}</button></div>
+    <div class="qchips jcats">${[["all", L.all], ...Object.entries(L.cats)].map(([k, t]) => `<button data-c="${k}" class="${k === jCat ? "on" : ""}">${t}</button>`).join("")}</div>
+    ${rows.length ? rows.map(x => `<div class="jcard jn" data-nid="${x.id}"><div class="jc1"><b>${x.pinned ? "📌 " : ""}${esc(x.title || (x.body || "").slice(0, 40) || "—")}</b><span class="jtag">${L.cats[x.category] || esc(x.category)}</span></div>
+      ${x.image_path ? `<div class="jimgs"><img data-jp="${esc(x.image_path)}" alt=""></div>` : ""}<div class="jc3">${esc(x.body || "").slice(0, 280)}</div><div class="jc2"><span></span><span>${fmtFull(x.created_at)}</span></div></div>`).join("")
+      : `<div class="empty2">🗒<br>${L.noN}</div>`}`;
+  jHydrate(el);
+  $("jq2").oninput = e => { jQ = e.target.value; const pos = e.target.selectionStart; jDrawNotes(el); const i = $("jq2"); i.focus(); i.setSelectionRange(pos, pos); };
+  el.querySelector(".jcats").onclick = e => { const b = e.target.closest("[data-c]"); if (b) { jCat = b.dataset.c; jDrawNotes(el); } };
+  $("jnew").onclick = () => jNoteForm(el, null);
+  el.onclick = e => { const c = e.target.closest("[data-nid]"); if (c) jNoteForm(el, jNotes.find(x => x.id === +c.dataset.nid)); };
+}
+function jNoteForm(el, x){
+  const L = JT(); let img = x?.image_path || null; el.onclick = null;
+  el.innerHTML = `<button class="jback" id="jbk">→ ${L.back}</button><form id="jnf" class="jform"><div class="fgrid">
+    <label style="grid-column:1/-1">${L.ntitle}<input class="inp" id="n_t" maxlength="200" value="${esc(x?.title || "")}"></label>
+    <label>${L.ncat}<select class="inp" id="n_c">${Object.entries(L.cats).map(([k, t]) => `<option value="${k}" ${k === (x?.category || (jCat !== "all" ? jCat : "general")) ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    <label class="jpin"><input type="checkbox" id="n_p" ${x?.pinned ? "checked" : ""}> 📌 ${L.pin}</label>
+    <label style="grid-column:1/-1">${L.nbody}<textarea class="inp" id="n_b" rows="8" maxlength="10000">${esc(x?.body || "")}</textarea></label></div>
+    <div class="jimgpick"><label class="jip" style="grid-column:1/-1"><span>${L.pick}</span><img data-jp="${esc(img || "")}" alt="" ${img ? "" : "hidden"}><i>📷 ${L.pick}</i><input type="file" accept="image/*" hidden></label></div>
+    ${x ? `<div class="upd" style="text-align:start">${fmtFull(x.created_at)}</div>` : ""}
+    <div class="jfa"><button class="btn2" id="n_s">${L.save}</button>${x ? `<button type="button" class="btn2 red" id="n_d">${L.del}</button>` : ""}</div><div class="cmerr" id="n_e"></div></form>`;
+  jHydrate(el); $("jpanel").scrollTop = 0;
+  el.querySelector(".jip input").onchange = async e => { const f = e.target.files[0]; if (!f) return; const lab = e.target.closest(".jip"); lab.querySelector("i").textContent = "⏳ " + L.up;
+    try { img = await jUpload(f); const im = lab.querySelector("img"); im.hidden = false; im.src = jUrl[img]; lab.querySelector("i").textContent = "📷 " + L.pick; } catch (err) { lab.querySelector("i").textContent = "⚠️ " + err.message; } };
+  $("jbk").onclick = () => jDrawNotes(el);
+  if (x) $("n_d").onclick = async () => { if (!confirm(L.delQ)) return; await sb.from("journal_notes").delete().eq("id", x.id); if (x.image_path) sb.storage.from("journal").remove([x.image_path]); await jLoad(); jDrawNotes(el); };
+  $("jnf").onsubmit = async e => { e.preventDefault(); const row = { title: $("n_t").value.trim() || null, body: $("n_b").value.trim() || null, category: $("n_c").value, pinned: $("n_p").checked, image_path: img, updated_at: new Date().toISOString() };
+    if (!row.title && !row.body && !img) return $("n_b").focus();
+    const r = x ? await sb.from("journal_notes").update(row).eq("id", x.id) : await sb.from("journal_notes").insert(row);
+    if (r.error) return $("n_e").textContent = L.err + ": " + r.error.message; sfx("button", .35); await jLoad(); jDrawNotes(el); };
+}
+function jDrawStats(el){
+  const L = JT(), closed = jTrades.filter(j => jPnl(j) != null).map(j => ({ j, p: jPnl(j), d: new Date(j.trade_date + "T12:00:00") }));
+  const key = d => jPer === "d" ? d.toISOString().slice(0, 10) : jPer === "m" ? d.toISOString().slice(0, 7) : jPer === "y" ? String(d.getFullYear()) : (() => { const t = new Date(d); t.setDate(t.getDate() - ((t.getDay() + 1) % 7)); return t.toISOString().slice(0, 10); })();
+  const now = new Date(), curK = key(now), cur = closed.filter(x => key(x.d) === curK);
+  const st = a => { const w = a.filter(x => x.p > 0), l = a.filter(x => x.p < 0), gw = w.reduce((s, x) => s + x.p, 0), gl = -l.reduce((s, x) => s + x.p, 0), net = gw - gl;
+    return { n: a.length, w: w.length, l: l.length, wr: a.length ? w.length / a.length * 100 : 0, net, avg: a.length ? net / a.length : 0, best: a.length ? Math.max(...a.map(x => x.p)) : 0, worst: a.length ? Math.min(...a.map(x => x.p)) : 0, pf: gl ? gw / gl : gw ? Infinity : 0 }; };
+  const S = st(cur), A = st(closed);
+  const buckets = {}; closed.forEach(x => { const k = key(x.d); buckets[k] = (buckets[k] || 0) + x.p; });
+  const ks = Object.keys(buckets).sort().slice(-12), vals = ks.map(k => buckets[k]), mx = Math.max(1e-9, ...vals.map(Math.abs));
+  const bySym = {}; closed.forEach(x => { const s = jLabel(x.j.asset); (bySym[s] = bySym[s] || []).push(x); });
+  const card = (t, s) => `<div class="jstat"><h4>${t}</h4><div class="jsg"><div><small>${L.trades}</small><b>${s.n}</b></div><div><small>${L.wr}</small><b>${nf(s.wr, 0)}%</b></div><div><small>${L.net}</small><b class="ltr ${s.net >= 0 ? "pos" : "neg"}">${s.net >= 0 ? "+" : ""}${nf(s.net)}</b></div>
+    <div><small>${L.wins} / ${L.losses}</small><b class="ltr">${s.w} / ${s.l}</b></div><div><small>${L.avg}</small><b class="ltr">${nf(s.avg)}</b></div><div><small>${L.pf}</small><b class="ltr">${s.pf === Infinity ? "∞" : nf(s.pf)}</b></div>
+    <div><small>${L.best}</small><b class="ltr pos">${nf(s.best)}</b></div><div><small>${L.worst}</small><b class="ltr neg">${nf(s.worst)}</b></div></div></div>`;
+  el.onclick = null;
+  el.innerHTML = `<div class="seg2" id="jper">${Object.entries(L.per).map(([k, t]) => `<button data-p="${k}" class="${k === jPer ? "on" : ""}">${t}</button>`).join("")}</div>
+    ${closed.length ? `${card(L.per[jPer] + " · " + curK, S)}
+      <div class="jstat"><h4>${L.chart} · ${L.per[jPer]}</h4><div class="jbars">${ks.map((k, i) => `<div class="jb"><i class="${vals[i] >= 0 ? "p" : "n"}" style="height:${Math.max(3, Math.abs(vals[i]) / mx * 100)}%"></i><b class="ltr">${nf(vals[i], 0)}</b><small class="ltr">${jPer === "d" || jPer === "w" ? k.slice(5) : k}</small></div>`).join("")}</div></div>
+      ${card("Σ " + L.all, A)}
+      <div class="jstat"><h4>${L.bySym}</h4>${Object.entries(bySym).map(([s, a]) => { const t = st(a); return `<div class="lrow"><b class="ltr">${esc(s)}</b><span>${t.n} · ${nf(t.wr, 0)}%</span><b class="ltr ${t.net >= 0 ? "pos" : "neg"}">${t.net >= 0 ? "+" : ""}${nf(t.net)}</b></div>`; }).join("")}</div>`
+    : `<div class="empty2">📊<br>${L.noStat}</div>`}`;
+  $("jper").onclick = e => { const b = e.target.closest("[data-p]"); if (b) { jPer = b.dataset.p; jDrawStats(el); } };
+}
+function jDrawContacts(el){
+  const L = JT(), q = jQ.toLowerCase(), rows = jContacts.filter(c => (jKind === "all" || c.kind === jKind) && (!q || [c.name, c.phone, c.whatsapp, c.city, c.shop, c.note].join(" ").toLowerCase().includes(q)));
+  const wa = v => "https://wa.me/" + toEn(String(v)).replace(/[^0-9]/g, "").replace(/^0/, "93");
+  el.innerHTML = `<div class="jtop"><input class="inp" id="jq2" placeholder="${L.search}" value="${esc(jQ)}"><button class="btn2" id="jnew">${L.addC}</button></div>
+    <div class="qchips jcats">${[["all", L.all], ...Object.entries(L.kinds)].map(([k, t]) => `<button data-k="${k}" class="${k === jKind ? "on" : ""}">${t}</button>`).join("")}</div>
+    ${rows.length ? rows.map(c => `<div class="jcard jct" data-cid="${c.id}"><span class="cav"><b>${initial(c.name)}</b></span><div class="jcm"><b>${c.favorite ? "⭐ " : ""}${esc(c.name)}</b><small>${[L.kinds[c.kind], c.shop, c.city].filter(Boolean).map(esc).join(" · ")}</small>${c.phone ? `<small class="ltr">${esc(c.phone)}</small>` : ""}</div>
+      <div class="jca">${c.phone ? `<a href="tel:${esc(toEn(c.phone))}" aria-label="call">📞</a>` : ""}${c.whatsapp || c.phone ? `<a href="${wa(c.whatsapp || c.phone)}" target="_blank" rel="noopener" aria-label="whatsapp">💬</a>` : ""}</div></div>`).join("")
+      : `<div class="empty2">☎️<br>${L.noC}</div>`}`;
+  $("jq2").oninput = e => { jQ = e.target.value; const pos = e.target.selectionStart; jDrawContacts(el); const i = $("jq2"); i.focus(); i.setSelectionRange(pos, pos); };
+  el.querySelector(".jcats").onclick = e => { const b = e.target.closest("[data-k]"); if (b) { jKind = b.dataset.k; jDrawContacts(el); } };
+  $("jnew").onclick = () => jContactForm(el, null);
+  el.onclick = e => { if (e.target.closest("a")) return; const c = e.target.closest("[data-cid]"); if (c) jContactForm(el, jContacts.find(x => x.id === +c.dataset.cid)); };
+}
+function jContactForm(el, c){
+  const L = JT(); el.onclick = null;
+  el.innerHTML = `<button class="jback" id="jbk">→ ${L.back}</button><form id="jcf" class="jform"><div class="fgrid">
+    <label style="grid-column:1/-1">${L.cname}<input class="inp" id="c_n" maxlength="120" required value="${esc(c?.name || "")}"></label>
+    <label>${L.phone}<input class="inp ltr" id="c_p" type="tel" maxlength="40" value="${esc(c?.phone || "")}"></label><label>${L.wa}<input class="inp ltr" id="c_w" type="tel" maxlength="40" value="${esc(c?.whatsapp || "")}"></label>
+    <label>${L.city}<input class="inp" id="c_c" maxlength="60" value="${esc(c?.city || "")}"></label><label>${L.shop}<input class="inp" id="c_s" maxlength="120" value="${esc(c?.shop || "")}"></label>
+    <label>${L.kind}<select class="inp" id="c_k">${Object.entries(L.kinds).map(([k, t]) => `<option value="${k}" ${k === (c?.kind || "sarraf") ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+    <label class="jpin"><input type="checkbox" id="c_f" ${c?.favorite ? "checked" : ""}> ⭐ ${L.fav}</label>
+    <label style="grid-column:1/-1">${L.note}<textarea class="inp" id="c_o" rows="3" maxlength="1000">${esc(c?.note || "")}</textarea></label></div>
+    <div class="jfa"><button class="btn2" id="c_sv">${L.save}</button>${c ? `<button type="button" class="btn2 red" id="c_d">${L.del}</button>` : ""}</div><div class="cmerr" id="c_e"></div></form>`;
+  $("jpanel").scrollTop = 0; $("jbk").onclick = () => jDrawContacts(el);
+  if (c) $("c_d").onclick = async () => { if (!confirm(L.delQ)) return; await sb.from("contacts").delete().eq("id", c.id); await jLoad(); jDrawContacts(el); };
+  $("jcf").onsubmit = async e => { e.preventDefault(); const v = id => $(id).value.trim() || null;
+    const row = { name: $("c_n").value.trim(), phone: v("c_p"), whatsapp: v("c_w"), city: v("c_c"), shop: v("c_s"), kind: $("c_k").value, favorite: $("c_f").checked, note: v("c_o") };
+    if (!row.name) return $("c_n").focus();
+    const r = c ? await sb.from("contacts").update(row).eq("id", c.id) : await sb.from("contacts").insert(row);
+    if (r.error) return $("c_e").textContent = L.err + ": " + r.error.message; sfx("button", .35); await jLoad(); jDrawContacts(el); };
+}
+
+/* ===== تبدیل‌گر ارز (همه‌ی ارزهای سایت) ===== */
+const CVL = { fa: { t: "تبدیل‌گر ارز", s: "تبدیل بین همه‌ی ارزهای سایت با نرخ بازار کابل", amt: "مقدار", from: "از", to: "به", rate: "نرخ", upd: "به‌روزرسانی", none: "برای این جفت ارز نرخ معتبر منتشر نشده است.", note: "محاسبه بر پایه‌ی میانگین خرید و فروش منتشرشده (کابل) است؛ معامله‌ی واقعی با نرخ صراف انجام می‌شود.", afn: "افغانی", gold: "طلا (اونس)", silver: "نقره (اونس)" },
+  en: { t: "Currency converter", s: "Convert between all site currencies at Kabul market rates", amt: "Amount", from: "From", to: "To", rate: "Rate", upd: "Updated", none: "No valid published rate for this pair.", note: "Uses the mid of published buy/sell (Kabul). Real deals use your money changer's rate.", afn: "Afghani", gold: "Gold (oz)", silver: "Silver (oz)" } };
+CVL.ps = Object.assign({}, CVL.fa, { t: "د اسعارو بدلوونکی", amt: "اندازه", from: "له", to: "ته", afn: "افغانۍ" });
+const CV = () => CVL[lang] || CVL.fa;
+let cv = Object.assign({ a: 100, f: "USD", t: "AFN" }, store.get("conv", {}));
+function fxAfnMap(){ // AFN value of 1 unit of each currency, derived only from published rates
+  const m = { AFN: { v: 1, at: null } }, rows = fxRows.filter(r => r.base && r.quote);
+  const price = r => r.buy != null && r.sell != null ? (Number(r.buy) + Number(r.sell)) / 2 : r.mid ?? r.sell ?? r.buy;
+  for (let pass = 0; pass < 4; pass++) rows.forEach(r => { const p = price(r); if (p == null || !Number(p)) return; const per = Number(p) / Number(r.base_unit || 1);
+    if (m[r.quote] && !m[r.base]) m[r.base] = { v: per * m[r.quote].v, at: r.rate_at, code: r.code };
+    else if (m[r.base] && !m[r.quote] && r.base === "USD") m[r.quote] = { v: m[r.base].v / per, at: r.rate_at, code: r.code }; });
+  if (!m.USD && usdAfn()) m.USD = { v: usdAfn(), at: prices?.at };
+  if (m.USD && prices?.xau?.price) m.XAU = { v: prices.xau.price * m.USD.v, at: prices.at };
+  if (m.USD && prices?.xag?.price) m.XAG = { v: prices.xag.price * m.USD.v, at: prices.at };
+  return m; }
+function convHTML(){ const L = CV(), M = fxAfnMap(), codes = Object.keys(M);
+  const nm = c => c === "AFN" ? "🇦🇫 " + L.afn : c === "XAU" ? "🥇 " + L.gold : c === "XAG" ? "🥈 " + L.silver : (() => { const r = fxRows.find(x => x.base === c && (x.quote === "AFN" || x.quote === "USD")) || fxRows.find(x => x.base === c || x.code === c); return r ? `${r.flag || ""} ${fxName(r).replace(/\s*\(.*\)$/, "")}` : c; })();
+  if (!codes.includes(cv.f)) cv.f = "USD"; if (!codes.includes(cv.t)) cv.t = "AFN";
+  const opts = s => codes.map(c => `<option value="${c}" ${c === s ? "selected" : ""}>${nm(c)} · ${c}</option>`).join("");
+  return `<div class="fgrid"><label style="grid-column:1/-1">${L.amt}<input class="inp ltr cvamt" id="cva" inputmode="decimal" value="${esc(cv.a)}"></label>
+    <label>${L.from}<select class="inp" id="cvf">${opts(cv.f)}</select></label><label>${L.to}<select class="inp" id="cvt">${opts(cv.t)}</select></label></div>
+    <button type="button" class="cvswap" id="cvs" aria-label="swap">⇅</button><div class="cvout" id="cvo"></div><div class="upd" style="text-align:start;margin:8px 0 0">${L.note}</div>`; }
+function convCalc(){ const el = $("cvo"); if (!el) return; const L = CV(), M = fxAfnMap(), a = num(String($("cva").value)) ?? 0, F = M[cv.f], Tt = M[cv.t];
+  if (!F || !Tt) { el.innerHTML = `<div class="upd">${L.none}</div>`; return; }
+  const r = F.v / Tt.v, res = a * r, d = x => Math.abs(x) >= 100 ? 2 : Math.abs(x) >= 1 ? 4 : 6, at = [F.at, Tt.at].filter(Boolean).sort()[0];
+  el.innerHTML = `<b class="ltr">${nf(res, d(res))} <small>${cv.t}</small></b><span class="ltr">${L.rate}: 1 ${cv.f} = ${nf(r, d(r))} ${cv.t} · 1 ${cv.t} = ${nf(1 / r, d(1 / r))} ${cv.f}</span>${at ? `<span>${L.upd}: <bdi data-ts="${at}">${agoTxt(at)}</bdi> · ${fmtFull(at)}</span>` : ""}`; }
+function wireConv(){ if (!$("cva")) return; const sv = () => store.set("conv", cv);
+  $("cva").oninput = e => { cv.a = e.target.value; sv(); convCalc(); }; $("cvf").onchange = e => { cv.f = e.target.value; sv(); convCalc(); }; $("cvt").onchange = e => { cv.t = e.target.value; sv(); convCalc(); };
+  $("cvs").onclick = () => { [cv.f, cv.t] = [cv.t, cv.f]; $("cvf").value = cv.f; $("cvt").value = cv.t; sv(); sfx("tap_01", .3); convCalc(); }; convCalc(); }
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
   const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
@@ -2382,7 +2658,16 @@ function drawPrices(){
 
 /* ----- هشدار قیمت ----- */
 let alerts = [];   // server-side price alerts (public.price_alerts); checked every 20 s on the server
-const curPrice = a => a === "xau" ? prices?.xau?.price : a === "xag" ? prices?.xag?.price : a === "dxy" ? prices?.dxy?.price : usdAfn();
+const curPrice = a => a === "xau" ? prices?.xau?.price : a === "xag" ? prices?.xag?.price : a === "dxy" ? prices?.dxy?.price : a?.startsWith?.("fx:") ? (() => { const r = fxRows.find(x => x.code === a.slice(3)); return r ? fxMain(r)[1] : null; })() : usdAfn();
+const alertName = a => a === "dxy" ? "DXY" : a?.startsWith?.("fx:") ? (() => { const r = fxRows.find(x => x.code === a.slice(3)); return r ? `${r.flag || ""} ${fxName(r)}` : a.slice(3); })() : T.m[a];
+const ALL = { fa: { act: "هشدارهای فعال", hist: "تاریخچه‌ی هشدارها", edit: "ویرایش", save: "ذخیره‌ی تغییر", cancel: "لغو", note: "یادداشت (اختیاری)", hit: "رسید به", now: "اکنون", none: "هنوز هشداری فعال نشده است.", perm: "🔔 اعلان مرورگر را فعال کنید تا هشدارها حتی در پس‌زمینه برسند.", permB: "فعال‌سازی" },
+  en: { act: "Active alerts", hist: "Alert history", edit: "Edit", save: "Save changes", cancel: "Cancel", note: "Note (optional)", hit: "Hit", now: "Now", none: "No alert has triggered yet.", perm: "🔔 Enable browser notifications to receive alerts in the background.", permB: "Enable" } };
+ALL.ps = Object.assign({}, ALL.fa, { act: "فعالې خبرتیاوې", hist: "د خبرتیاوو تاریخچه", edit: "سمول" });
+const AT = () => ALL[lang] || ALL.fa;
+let aEdit = null;
+const aDig = a => a === "xag" ? 3 : a?.startsWith?.("fx:") ? (fxRows.find(x => x.code === a.slice(3))?.digits ?? 4) : 2;
+const alertOpts = () => `<optgroup label="${T.m.xau} · ${T.m.xag}"><option value="xau">${T.m.xau}</option><option value="xag">${T.m.xag}</option><option value="dxy">DXY</option></optgroup>
+  <optgroup label="💱"><option value="usd">${T.m.usd} (AFN)</option>${fxRows.filter(r => r.code !== "USD" && fxMain(r)[1] != null).map(r => `<option value="fx:${esc(r.code)}">${r.flag || ""} ${esc(fxName(r))}</option>`).join("")}</optgroup>`;
 function checkAlerts(){ /* evaluated on the server (pg_cron) — results arrive as notifications */ }
 async function loadAlerts(){
   if (!me || me.role === "admin") return;
@@ -2392,22 +2677,21 @@ async function loadAlerts(){
   alerts = (data || []).map(a => ({ ...a, value: Number(a.value), done: !a.active })); if (page === "tool") drawAlerts();
 }
 function drawAlerts(){
-  const el = $("alist"); if (!el) return;
-  el.innerHTML = alerts.length ? alerts.map((a, i) => `<div class="lrow"><span>${a.done ? "✅" : "⏳"}</span><span>${a.asset === "dxy" ? "DXY" : T.m[a.asset]} ${a.cond === "ge" ? "≥" : "≤"} <b class="ltr">${nf(a.value)}</b></span><span class="tag2">${T.lastUpd.split(" ")[0] ? nf(curPrice(a.asset)) : ""}</span><button class="x2" data-ad="${i}">✕</button></div>`).join("") : `<div class="lrow" style="color:var(--muted)">${T.noAlerts}</div>`;
+  const el = $("alist"); if (!el) return; const L = AT(), act = alerts.filter(a => !a.done), hist = alerts.filter(a => a.done);
+  const perm = window.Notification && Notification.permission === "default" ? `<div class="aperm">${L.perm} <button type="button" id="aperm">${L.permB}</button></div>` : "";
+  el.innerHTML = perm + `<div class="ahd">⏳ ${L.act} <b>${act.length}</b></div>` + (act.length ? act.map(a => `<div class="lrow arow ${aEdit === a.id ? "on" : ""}"><span>${alertName(a.asset)} ${a.cond === "ge" ? "≥" : "≤"} <b class="ltr">${nf(a.value, aDig(a.asset))}</b>${a.note ? `<small>${esc(a.note)}</small>` : ""}</span><span class="tag2 ltr">${L.now}: ${nf(curPrice(a.asset), aDig(a.asset))}</span><button class="x2" data-ae="${a.id}" aria-label="edit">✎</button><button class="x2" data-ad="${a.id}" aria-label="delete">✕</button></div>`).join("") : `<div class="lrow" style="color:var(--muted)">${T.noAlerts}</div>`)
+    + `<div class="ahd">✅ ${L.hist}</div>` + (hist.length ? hist.map(a => `<div class="lrow arow done"><span>${alertName(a.asset)} ${a.cond === "ge" ? "≥" : "≤"} <b class="ltr">${nf(a.value, aDig(a.asset))}</b><small>${a.triggered_at ? `${L.hit} <bdi class="ltr">${nf(a.triggered_price, aDig(a.asset))}</bdi> · ${fmtFull(a.triggered_at)}` : ""}</small></span><button class="x2" data-ae="${a.id}" aria-label="reuse">↻</button><button class="x2" data-ad="${a.id}" aria-label="delete">✕</button></div>`).join("") : `<div class="lrow" style="color:var(--muted)">${L.none}</div>`);
+  if ($("aperm")) $("aperm").onclick = async () => { try { await Notification.requestPermission(); } catch {} drawAlerts(); };
 }
 
 /* ----- دفترچه ----- */
 let journal = [];
 async function loadJournal(){ const { data } = await sb.from("journal").select("*").order("trade_date", { ascending: false }).limit(200); journal = data || []; drawJournal(); }
 function drawJournal(){
-  const el = $("jlist"); if (!el) return;
-  const now = new Date(), mon = journal.filter(j => { const d = new Date(j.trade_date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
-  const pl = j => j.close_price == null ? 0 : (j.side === "buy" ? j.close_price - j.open_price : j.open_price - j.close_price) * j.qty;
-  const tot = mon.reduce((a, j) => a + pl(j), 0);
-  $("jsum").innerHTML = `${T.monthPnl}: <b class="${tot >= 0 ? "pos" : "neg"} ltr" style="color:${tot >= 0 ? "var(--buy)" : "var(--sell)"}">${tot >= 0 ? "+" : ""}${nf(tot)}</b>`;
-  el.innerHTML = journal.length ? journal.map(j => `<div class="jrow"><div class="j1"><b>${j.asset === "other" ? "—" : T.m[j.asset]} · ${j.side === "buy" ? T.buy : T.sell}</b><span class="ltr">× ${nf(j.qty, 3)}</span><span class="tag2 ltr">${j.trade_date}</span><button class="x2" data-jd="${j.id}">✕</button></div>
-      <div class="j2"><span><bdi class="ltr">${nf(j.open_price)}</bdi> ← <bdi class="ltr">${j.close_price != null ? nf(j.close_price) : ""}</bdi>${j.close_price == null ? T.open : ""}</span><b class="ltr" style="color:${pl(j) >= 0 ? "var(--buy)" : "var(--sell)"}">${j.close_price != null ? (pl(j) >= 0 ? "+" : "") + nf(pl(j)) : ""}</b></div>${j.note ? `<div class="j3">${esc(j.note)}</div>` : ""}</div>`).join("")
-    : `<div class="lrow" style="color:var(--muted)">${T.noTrades}</div>`;
+  const el = $("jsum"); if (!el) return; const now = new Date(), L = JT();
+  const mon = journal.filter(j => { const d = new Date(j.trade_date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
+  const pl = mon.map(jPnl).filter(v => v != null), tot = pl.reduce((a, v) => a + v, 0), w = pl.filter(v => v > 0).length;
+  el.innerHTML = `<span>${T.monthPnl}: <b class="ltr" style="color:${tot >= 0 ? "var(--buy)" : "var(--sell)"}">${tot >= 0 ? "+" : ""}${nf(tot)}</b></span><span>${L.trades}: <b>${mon.length}</b></span><span>${L.wr}: <b>${pl.length ? nf(w / pl.length * 100, 0) : 0}%</b></span>`;
 }
 
 function drawTools(){
@@ -2428,23 +2712,19 @@ function drawTools(){
     <div class="livebar"><span class="ldot"></span><span id="csrc"></span><button type="button" id="clive" hidden>🔄 ${T.backLive}</button></div>
     <div class="rrows" id="cres"></div>
     <div style="margin-top:12px;font-weight:800;font-size:13px">${T.quick}</div><table class="qtab" id="qtab"></table></div></details>
-  <details class="tool glass rise" style="--i:1"><summary><span class="ti">🛡</span><div>${T.riskT}<small>${T.riskS}</small></div></summary><div class="tb">
-    <div class="fgrid"><label>${T.balance}<input class="inp" id="rb" inputmode="decimal"></label><label>${T.riskPct}<input class="inp" id="rp" inputmode="decimal" value="2"></label>
-      <label>${T.entryP}<input class="inp" id="re" inputmode="decimal"></label><label>${T.stopP}<input class="inp" id="rs" inputmode="decimal"></label></div>
-    <div class="res2" id="rres"></div></div></details>
+  <details class="tool glass rise" style="--i:1" id="cvtool"><summary><span class="ti">💱</span><div>${CV().t}<small>${CV().s}</small></div></summary><div class="tb">${convHTML()}</div></details>
+  <details class="tool glass rise" style="--i:1"><summary><span class="ti">🛡</span><div>${T.riskT}<small>${DT().risk}</small></div></summary><div class="tb">
+    ${(() => { const L = DT(), src = dashSigs.length ? dashSigs : all, openSig = src.filter(s => s.status === "active" || /^tp[12]$/.test(s.status)).slice(0, 12);
+      const opts = Object.entries(CONTRACTS).map(([k, v]) => `<option value="${k}" ${k === rk.sym ? "selected" : ""}>${k === "CUSTOM" ? L.custom : k + " · " + v.n}</option>`).join("");
+      return riskFormHTML(L, opts, openSig); })()}</div></details>
   <details class="tool glass rise" style="--i:2"><summary><span class="ti">⏰</span><div>${T.alertT}<small>${T.alertS}</small></div></summary><div class="tb">
-    <div class="fgrid"><label>${T.asset}<select class="inp" id="aa"><option value="usd">${T.m.usd} (AFN)</option><option value="xau">${T.m.xau}</option><option value="xag">${T.m.xag}</option><option value="dxy">DXY</option></select></label>
+    <div class="fgrid"><label>${T.asset}<select class="inp" id="aa">${alertOpts()}</select></label>
       <label>${T.cond}<select class="inp" id="ac"><option value="ge">${T.above}</option><option value="le">${T.below}</option></select></label>
-      <label style="grid-column:1/-1">${T.target}<input class="inp" id="av" inputmode="decimal"></label></div>
-    <button class="btn2" id="aadd">${T.add}</button><div class="upd" style="text-align:start;margin:8px 0 0">${T.alertNote}</div><div id="alist" style="margin-top:6px"></div></div></details>
-  <details class="tool glass rise" style="--i:3"><summary><span class="ti">📒</span><div>${T.jT}<small>${T.jS}</small></div></summary><div class="tb">
-    <div class="fgrid"><label>${T.date}<input class="inp" id="jd" type="date" value="${new Date().toISOString().slice(0, 10)}"></label>
-      <label>${T.asset}<select class="inp" id="ja"><option value="usd">${T.m.usd}</option><option value="xau">${T.m.xau}</option><option value="xag">${T.m.xag}</option><option value="other">—</option></select></label>
-      <label>${T.side}<select class="inp" id="js"><option value="buy">${T.buy}</option><option value="sell">${T.sell}</option></select></label>
-      <label>${T.qty}<input class="inp" id="jq" inputmode="decimal" value="1"></label>
-      <label>${T.openP}<input class="inp" id="jo" inputmode="decimal"></label><label>${T.closeP}<input class="inp" id="jc" inputmode="decimal"></label>
-      <label style="grid-column:1/-1">${T.note2}<input class="inp" id="jn" maxlength="500"></label></div>
-    <button class="btn2" id="jadd">${T.save}</button><div class="res2" id="jsum" style="margin-top:10px"></div><div id="jlist" style="margin-top:6px"></div></div></details>
+      <label>${T.target}<input class="inp ltr" id="av" inputmode="decimal"></label><label>${AT().note}<input class="inp" id="anote" maxlength="200"></label></div>
+    <div class="upd" id="anow" style="text-align:start;margin:4px 0 0"></div>
+    <div class="afa"><button class="btn2" id="aadd">${T.add}</button><button class="btn2 ghost2" id="acx" hidden>${AT().cancel}</button></div><div class="upd" style="text-align:start;margin:8px 0 0">${T.alertNote}</div><div id="alist" style="margin-top:6px"></div></div></details>
+  <section class="tool glass rise jlaunch" style="--i:3"><div class="jlh"><span class="ti">📒</span><div><b>${JT().title}</b><small>${JT().tabs.join(" · ")}</small></div></div>
+    <div class="jlb">${JT().tabs.map((t, i) => `<button type="button" data-jo="${i}">${["📈","🗒","📊","☎️"][i]} ${t}</button>`).join("")}</div><div class="res2" id="jsum" style="margin-top:10px"></div><div id="jlist" hidden></div></section>
   <details class="tool glass rise" style="--i:4"><summary><span class="ti">📖</span><div>${T.dictT}<small>${T.dictS}</small></div></summary><div class="tb">
     <input class="inp" id="dq" placeholder="${T.search}"><div class="dict" id="dlist" style="margin-top:8px"></div></div></details>`;
   const n = v => { v = toEn(String(v || "")).replace(/[٫,،]/g, ".").replace(/[^0-9.\-]/g, ""); return v === "" ? NaN : Number(v); };
@@ -2493,21 +2773,22 @@ function drawTools(){
     el.querySelectorAll(".cw").forEach(x => x.hidden = cmode !== "w"); el.querySelectorAll(".cmn").forEach(x => x.hidden = cmode !== "m"); calc(); };
   $("qch").onclick = e => { const b = e.target.closest("[data-q]"); if (!b) return; const [q, u] = b.dataset.q.split(":"); $("cw").value = q; $("cu").value = u; calc(); };
   fillCalcLive();
-  const risk = () => { const b = n($("rb").value), p = n($("rp").value), e = n($("re").value), s = n($("rs").value);
-    const loss = b * p / 100, size = Math.abs(e - s) ? loss / Math.abs(e - s) : NaN;
-    $("rres").innerHTML = isNaN(loss) ? "—" : `<span>${T.maxLoss}: <b>${nf(loss)}</b></span>${isNaN(size) ? "" : `<span>${T.posSize}: <b>${nf(size, 3)}</b></span>`}`; };
-  ["rb","rp","re","rs"].forEach(id => $(id).oninput = risk); risk();
-  $("aadd").onclick = async () => { const v = n($("av").value); if (isNaN(v)) return $("av").focus();
-    const { error } = await sb.from("price_alerts").insert({ asset: $("aa").value, cond: $("ac").value, value: v });
-    if (error) return banner("⚠️", T.sendFail2 || "Error", esc(error.message)); $("av").value = ""; sfx("toggle_on", .4); loadAlerts(); };
-  $("alist").onclick = async e => { const b = e.target.closest("[data-ad]"); if (!b) return; const a = alerts[Number(b.dataset.ad)]; if (!a) return; b.disabled = true;
-    await sb.from("price_alerts").delete().eq("id", a.id); loadAlerts(); };
+  wireRisk(); wireConv();
+  if (!fxAt || Date.now() - fxAt > 60000) loadFx(true).then(() => { if (page === "tool" && $("cvtool")) { $("cvtool").querySelector(".tb").innerHTML = convHTML(); wireConv(); const sel = $("aa"), v = sel.value; sel.innerHTML = alertOpts(); sel.value = v; drawAlerts(); } });
+  const anow = () => { const p = curPrice($("aa").value); $("anow").textContent = p != null ? `${AT().now}: ${nf(p, aDig($("aa").value))}` : ""; };
+  $("aa").onchange = anow; anow();
+  const aReset = () => { aEdit = null; $("av").value = ""; $("anote").value = ""; $("aadd").textContent = T.add; $("acx").hidden = true; drawAlerts(); };
+  $("acx").onclick = aReset;
+  $("aadd").onclick = async () => { const v = n($("av").value); if (isNaN(v) || v <= 0) return $("av").focus();
+    const row = { asset: $("aa").value, cond: $("ac").value, value: v, note: $("anote").value.trim() || null };
+    const { error } = aEdit ? await sb.from("price_alerts").update({ ...row, active: true, triggered_at: null, triggered_price: null }).eq("id", aEdit) : await sb.from("price_alerts").insert(row);
+    if (error) return banner("⚠️", T.sendFail2 || "Error", esc(error.message)); sfx("toggle_on", .4); aReset(); loadAlerts();
+    try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} };
+  $("alist").onclick = async e => { const ed = e.target.closest("[data-ae]"), b = e.target.closest("[data-ad]");
+    if (ed) { const a = alerts.find(x => x.id === +ed.dataset.ae); if (!a) return; aEdit = a.id; $("aa").value = a.asset; $("ac").value = a.cond; $("av").value = a.value; $("anote").value = a.note || ""; $("aadd").textContent = AT().save; $("acx").hidden = false; anow(); drawAlerts(); $("av").focus(); return; }
+    if (!b) return; b.disabled = true; await sb.from("price_alerts").delete().eq("id", +b.dataset.ad); if (aEdit === +b.dataset.ad) aReset(); loadAlerts(); };
   drawAlerts(); loadAlerts();
-  $("jadd").onclick = async () => { const o = n($("jo").value); if (isNaN(o)) return $("jo").focus();
-    const c = n($("jc").value), q = n($("jq").value);
-    const { error } = await sb.from("journal").insert({ user_id: me.id, trade_date: $("jd").value, asset: $("ja").value, side: $("js").value, qty: isNaN(q) ? 1 : q, open_price: o, close_price: isNaN(c) ? null : c, note: $("jn").value.trim() || null });
-    if (error) return banner("⚠️", T.sendFail2, ""); ["jo","jc","jn"].forEach(id => $(id).value = ""); loadJournal(); };
-  $("jlist").onclick = async e => { const b = e.target.closest("[data-jd]"); if (!b) return; await sb.from("journal").delete().eq("id", b.dataset.jd); loadJournal(); };
+  el.querySelector(".jlb").onclick = e => { const b = e.target.closest("[data-jo]"); if (b) openJournal(+b.dataset.jo); };
   loadJournal();
   const dict = () => { const q = $("dq").value.trim().toLowerCase(); $("dlist").innerHTML = DICT.filter(d => !q || (d[0] + d[1]).toLowerCase().includes(q)).map(d => `<div><b>${d[0]}</b><br>${d[1]}</div>`).join(""); };
   $("dq").oninput = dict; dict();
