@@ -1168,6 +1168,52 @@
   .pfl input,.pfl select{height:44px}
   .pf2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .pform .cta{margin-top:12px;width:100%}
+
+  /* ===== پیام‌رسان ===== */
+  .csbar[hidden]{display:none} .csbar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--line)}
+  .csbar input{flex:1;height:40px;border:0;border-radius:999px;padding:0 14px;background:var(--field);box-shadow:var(--sh-in);font:inherit;color:var(--text);outline:0}
+  .csbar small{font-size:11px;color:var(--muted);white-space:nowrap}
+  .cday{text-align:center;margin:10px 0 4px} .cday span{display:inline-block;padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;color:var(--muted);background:var(--field);box-shadow:var(--sh-in)}
+  .bub .tk{font-style:normal;margin-inline-start:5px;font-size:11px;opacity:.8} .bub .tk.seen{color:#3d8bff;opacity:1}
+  .bub.me[data-id]{cursor:pointer}
+  .bub.gone{opacity:.65} .cdel{font-style:italic;font-size:12.5px}
+  .bub mark{background:#ffd54a;color:#111;border-radius:3px;padding:0 1px}
+  .emoji[hidden]{display:none} .emoji{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;padding:8px;border-top:1px solid var(--line);background:var(--bg);max-height:170px;overflow:auto}
+  .emoji button{border:0;background:none;font-size:22px;padding:6px 0;border-radius:10px;cursor:pointer} .emoji button:active{background:var(--field)}
+  .asheet{position:fixed;inset:0;z-index:120;background:rgba(10,14,28,.35);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .25s}
+  .asheet.show{opacity:1}
+  .asb{width:min(460px,100%);padding:10px 12px calc(14px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:var(--bg);display:grid;gap:8px;transform:translateY(30px);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .asheet.show .asb{transform:none}
+  .asb button{height:50px;border:0;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);font:inherit;font-size:14.5px;font-weight:800;color:var(--text);cursor:pointer}
+  .asb button.ac{color:var(--sell)}
+
+  /* ===== تعامل زیر سیگنال ===== */
+  .soc{display:flex;gap:6px;margin:10px 0 2px;padding:6px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in)}
+  .soc button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:38px;border:0;border-radius:999px;background:none;font:inherit;font-size:13px;font-weight:800;color:var(--text);cursor:pointer}
+  .soc button b{font-family:Montserrat,Arial,sans-serif;font-size:12.5px}
+  .soc button.on{background:color-mix(in srgb,#ff3b5c 12%,transparent);color:#e11d48}
+  .soc button .hrt{display:inline-block;transition:transform .35s cubic-bezier(.3,1.6,.5,1)} .soc button.on .hrt{transform:scale(1.18)}
+  .cmp{display:flex;flex-direction:column;padding-bottom:0!important}
+  .cml{flex:1;overflow-y:auto;padding:8px 10px 10px;display:grid;align-content:start;gap:12px}
+  .cmc{display:flex;gap:10px;align-items:flex-start} .cmc.sub{margin-inline-start:42px}
+  .cav{flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--tile);box-shadow:var(--raise);font-weight:900}
+  .cmc.sub .cav{width:28px;height:28px;font-size:12px} .cav img{width:100%;height:100%;object-fit:cover}
+  .cmb{flex:1;min-width:0}
+  .cmh{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap} .cmh b{font-size:13px} .cmh small{font-size:10.5px;color:var(--muted)}
+  .tch{font-style:normal;font-size:10.5px;font-weight:800;color:#1f6bf0;background:color-mix(in srgb,#1f6bf0 12%,transparent);padding:1px 7px;border-radius:999px}
+  .cmx{font-size:13.5px;line-height:1.85;margin-top:2px;word-wrap:break-word}
+  .cma{display:flex;gap:14px;margin-top:4px} .cma button{border:0;background:none;padding:2px 0;font:inherit;font-size:11.5px;font-weight:800;color:var(--muted);cursor:pointer} .cma button.on{color:#e11d48}
+  .cmin{position:sticky;bottom:0;background:var(--bg);padding:8px 0 calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+  .cmemo{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:2px 4px 6px} .cmemo::-webkit-scrollbar{display:none} .cmemo button{flex:1 0 34px;border:0;background:none;font-size:20px;cursor:pointer}
+  .cmrep{font-size:12px;color:var(--muted);padding:4px 8px} .cmrep button{border:0;background:none;color:var(--sell);cursor:pointer}
+  #cmf{display:flex;align-items:flex-end;gap:8px}
+  .cmme{flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--tile)} .cmme img{width:100%;height:100%;object-fit:cover}
+  #cmt{flex:1;height:44px;max-height:120px;padding:11px 14px;border:0;border-radius:22px;background:var(--field);box-shadow:var(--sh-in);font:inherit;font-size:14px;color:var(--text);outline:0;resize:none}
+  #cmf .send{flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;color:var(--onNavy);background:linear-gradient(180deg,var(--navy2),var(--navy));cursor:pointer}
+  #cmf .send svg{width:20px;height:20px}
+  .cmerr{font-size:12px;font-weight:700;color:var(--sell);padding:4px 6px}
+
+  #tstat{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 </style>
 </head>
 <body>
@@ -1179,7 +1225,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081351";
+const BUILD = "202611081401";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -2134,6 +2180,7 @@ function wireRisk(){
   f.onclick = e => { const b = e.target.closest("[data-side]"); if (!b) return; rk.side = b.dataset.side; save(); f.querySelectorAll("[data-side]").forEach(x => x.className = x.dataset.side === rk.side ? "on " + (rk.side === "buy" ? "b" : "s") : ""); drawRiskOut(); };
 }
 
+function webNotify(title, body){ try { if (document.hidden && window.Notification && Notification.permission === "granted") navigator.serviceWorker?.ready.then(r => r.showNotification(title, { body, icon: "img/app/icon-192.png", dir: "rtl", lang: "fa" })).catch(() => new Notification(title, { body })); } catch {} }
 /* ===== اعلان‌ها (هشدار قیمت سمت سرور + رویدادهای سیگنال) ===== */
 let notifs = [], notifCh = null;
 const NL = { fa: { t: "اعلان‌ها", none: "هنوز اعلانی نیست.", hint: "هشدارهای قیمت را در «ابزارها» بسازید؛ سرور هر ۲۰ ثانیه بررسی می‌کند، حتی وقتی برنامه بسته است، و نتیجه اینجا می‌آید." },
@@ -2224,6 +2271,77 @@ async function handlePayReturn(){
     if (p?.status === "paid" && data) { me = data; store.set("cache_me", me); banner("✅", L.okDone, ""); sfx("celebration", .5); setTimeout(() => location.reload(), 2500); return; } }
 }
 window.openPlans = (...a) => openPlans(...a);
+
+/* ===== تعامل اجتماعی زیر سیگنال‌ها (لایک، نظر، اشتراک) ===== */
+const socMap = {}; let socAt = 0;
+const SCL = { fa: { t: "نظرات", ph: "نظر، تحلیل یا سؤال خود را بنویسید…", reply: "پاسخ", replying: "در پاسخ به", like: "پسند", edit: "ویرایش", del: "حذف", report: "گزارش", reported: "گزارش شد؛ مدیر بررسی می‌کند", deleted: "این نظر حذف شد", edited: "ویرایش‌شده", none: "اولین نظر را شما بنویسید 👇", off: "نظردهی برای این سیگنال بسته است.", muted: "امکان نظر دادن برای شما محدود شده است.", teacher: "استاد", send: "ارسال", share: "اشتراک", copied: "متن سیگنال کپی شد", save: "ذخیره", reason: "دلیل گزارش (اختیاری):", delQ: "این نظر حذف شود؟" },
+  ps: { t: "نظرونه", ph: "خپل نظر، تحلیل یا پوښتنه ولیکئ…", reply: "ځواب", replying: "د ځواب په توګه", like: "خوښ", edit: "سمول", del: "ړنګول", report: "راپور", reported: "راپور ورکړل شو", deleted: "دا نظر ړنګ شو", edited: "سم شوی", none: "لومړی نظر تاسو ولیکئ 👇", off: "د دې سیګنال لپاره نظرونه بند دي.", muted: "ستاسو نظر ورکول محدود شوي.", teacher: "استاد", send: "ولېږه", share: "شریکول", copied: "کاپي شو", save: "خوندي", reason: "د راپور دلیل:", delQ: "دا نظر ړنګ شي؟" },
+  en: { t: "Comments", ph: "Write your comment, analysis or question…", reply: "Reply", replying: "Replying to", like: "Like", edit: "Edit", del: "Delete", report: "Report", reported: "Reported — the admin will review it", deleted: "This comment was deleted", edited: "edited", none: "Be the first to comment 👇", off: "Comments are closed for this signal.", muted: "You can't comment right now.", teacher: "Teacher", send: "Send", share: "Share", copied: "Signal copied", save: "Save", reason: "Reason (optional):", delQ: "Delete this comment?" } };
+const SC = () => SCL[lang] || SCL.fa;
+function socHTML(s){ if (!me) return ""; const x = socMap[s.id] || {};
+  return `<div class="soc" data-soc="${s.id}"><button type="button" class="${x.my_like ? "on" : ""}" data-sl="1"><span class="hrt">${x.my_like ? "❤️" : "🤍"}</span><b>${x.likes ?? ""}</b></button>
+    <button type="button" data-sc="1">💬 <b>${x.comments ?? ""}</b></button><button type="button" data-ss="1">↗️ <span>${SC().share}</span></button></div>`; }
+function paintSoc(){ document.querySelectorAll(".soc[data-soc]").forEach(el => { const x = socMap[el.dataset.soc]; if (!x) return;
+  const l = el.querySelector("[data-sl]"); l.classList.toggle("on", !!x.my_like); l.querySelector(".hrt").textContent = x.my_like ? "❤️" : "🤍"; l.querySelector("b").textContent = x.likes || "";
+  el.querySelector("[data-sc] b").textContent = x.comments || ""; }); }
+async function loadSocial(force){
+  const ids = [...new Set([...document.querySelectorAll(".soc[data-soc]")].map(e => Number(e.dataset.soc)))]; if (!ids.length) return;
+  if (!force && Date.now() - socAt < 15000 && ids.every(i => socMap[i])) return paintSoc(); socAt = Date.now();
+  const { data } = await sb.rpc("signal_social", { p_ids: ids }); (data || []).forEach(r => socMap[r.signal_id] = r); paintSoc(); }
+document.addEventListener("click", async e => {
+  const bar = e.target.closest(".soc[data-soc]"); if (!bar) return; const id = Number(bar.dataset.soc), x = socMap[id] || (socMap[id] = { likes: 0, comments: 0, my_like: false });
+  if (e.target.closest("[data-sl]")) { x.my_like = !x.my_like; x.likes = (x.likes || 0) + (x.my_like ? 1 : -1); paintSoc(); sfx(x.my_like ? "tap_03" : "tap_01", .4);
+    const r = x.my_like ? await sb.from("signal_likes").insert({ signal_id: id }) : await sb.from("signal_likes").delete().eq("signal_id", id).eq("user_id", me.id);
+    if (r.error && !/duplicate/i.test(r.error.message)) { x.my_like = !x.my_like; x.likes += x.my_like ? 1 : -1; paintSoc(); } return; }
+  if (e.target.closest("[data-sc]")) return openComments(id);
+  if (e.target.closest("[data-ss]")) { const s = all.find(z => z.id === id) || dashSigs?.find?.(z => z.id === id); if (!s) return;
+    const txt = `📊 ${T.m?.[s.market || "xag"] || ""} · ${s.type === "buy" ? "خرید" : "فروش"}\nورود: ${s.entry_from}${s.entry_to ? " – " + s.entry_to : ""}\nحد ضرر: ${s.sl ?? "—"} · تارگت ۱: ${s.tp1 ?? "—"}\n— Market Analysts`;
+    try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(txt); banner("📋", SC().copied, ""); } } catch {} }
+});
+async function openComments(sid){
+  if ($("cmpanel")) return; const L = SC(); let rows = [], replyTo = null, editId = null, ch = null;
+  const v = document.createElement("div"); v.className = "npanel cmp"; v.id = "cmpanel";
+  v.innerHTML = `<div class="nphd"><b>💬 ${L.t} <span id="cmn"></span></b><button class="ib" id="cmx" aria-label="close">${I.x}</button></div>
+    <div class="cml" id="cml"><span class="spin"></span></div>
+    <div class="cmin"><div class="cmrep" id="cmrep" hidden></div><div class="cmemo">${["❤️","🔥","👏","👍","😂","🙏","📈","📉","💯","🤔"].map(e => `<button type="button">${e}</button>`).join("")}</div>
+      <form id="cmf"><span class="cmme">${myAvatarHTML()}</span><textarea id="cmt" rows="1" maxlength="1000" placeholder="${L.ph}"></textarea><button class="send" id="cms">${I.send || "➤"}</button></form><div class="cmerr" id="cmerr"></div></div>`;
+  document.body.appendChild(v); lockBody();
+  const close = () => { if (ch) sb.removeChannel(ch); v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); loadSocial(true); };
+  overlayPush(close); requestAnimationFrame(() => v.classList.add("show")); $("cmx").onclick = () => history.back();
+  const st = socMap[sid]; if (st && st.enabled === false) { $("cmf").hidden = true; $("cmerr").textContent = L.off; }
+  if (me.comments_muted) { $("cmf").hidden = true; $("cmerr").textContent = L.muted; }
+  const item = c => { const t = fmtFull(c.created_at);
+    return `<div class="cmc ${c.parent_id ? "sub" : ""}" data-cid="${c.id}"><span class="cav">${c.avatar ? `<img src="${esc(c.avatar)}" alt="">` : `<b>${initial(c.name || "?")}</b>`}</span>
+      <div class="cmb"><div class="cmh"><b>${esc(c.name || "—")}</b>${c.is_teacher ? `<i class="tch">✔ ${L.teacher}</i>` : ""}<small>${t}${c.edited_at ? " · " + L.edited : ""}</small></div>
+        <div class="cmx">${c.deleted ? `<i class="cdel">${L.deleted}</i>` : esc(c.body).replace(/\n/g, "<br>")}</div>
+        ${c.deleted ? "" : `<div class="cma"><button data-ca="like" class="${c.my_like ? "on" : ""}">${c.my_like ? "❤️" : "🤍"} ${c.likes || ""}</button><button data-ca="reply">${L.reply}</button>
+          ${c.mine ? `<button data-ca="edit">${L.edit}</button><button data-ca="del">${L.del}</button>` : `<button data-ca="rep">${L.report}</button>`}</div>`}</div></div>`; };
+  const draw = () => { const top = rows.filter(r => !r.parent_id), kids = id => rows.filter(r => r.parent_id === id);
+    $("cmn").textContent = rows.filter(r => !r.deleted).length || "";
+    $("cml").innerHTML = rows.length ? top.map(c => item(c) + kids(c.id).map(item).join("")).join("") : `<div class="upd">${L.none}</div>`; };
+  const load = async () => { const { data } = await sb.rpc("get_comments", { p_signal: sid }); rows = data || []; draw(); };
+  await load();
+  ch = sb.channel("cm" + sid).on("postgres_changes", { event: "*", schema: "public", table: "signal_comments", filter: `signal_id=eq.${sid}` }, () => load()).subscribe();
+  v.querySelector(".cmemo").onclick = e => { const b = e.target.closest("button"); if (!b) return; const t = $("cmt"); t.value += b.textContent; t.focus(); };
+  $("cmt").oninput = e => { e.target.style.height = "44px"; e.target.style.height = Math.min(120, e.target.scrollHeight) + "px"; };
+  const setRep = c => { replyTo = c ? (c.parent_id || c.id) : null; editId = null; const r = $("cmrep"); r.hidden = !c; if (c) r.innerHTML = `${L.replying} <b>${esc(c.name)}</b> <button type="button" id="cmrx">✕</button>`; if ($("cmrx")) $("cmrx").onclick = () => setRep(null); };
+  $("cml").onclick = async e => { const b = e.target.closest("[data-ca]"); if (!b) return; const id = Number(b.closest("[data-cid]").dataset.cid), c = rows.find(r => r.id === id); if (!c) return;
+    const a = b.dataset.ca;
+    if (a === "like") { c.my_like = !c.my_like; c.likes += c.my_like ? 1 : -1; draw(); sfx("tap_03", .35);
+      const r = c.my_like ? await sb.from("comment_likes").insert({ comment_id: id }) : await sb.from("comment_likes").delete().eq("comment_id", id).eq("user_id", me.id); if (r.error && !/duplicate/i.test(r.error.message)) load(); }
+    if (a === "reply") { setRep(c); $("cmt").focus(); }
+    if (a === "edit") { editId = id; replyTo = null; $("cmt").value = c.body; $("cmt").focus(); const r = $("cmrep"); r.hidden = false; r.innerHTML = `✏️ ${L.edit} <button type="button" id="cmrx">✕</button>`; $("cmrx").onclick = () => { editId = null; $("cmt").value = ""; r.hidden = true; }; }
+    if (a === "del") { if (!confirm(L.delQ)) return; await sb.rpc("delete_my_comment", { p_id: id }); load(); }
+    if (a === "rep") { const why = prompt(L.reason) ; if (why === null) return; const { error } = await sb.from("comment_reports").insert({ comment_id: id, reason: why.slice(0, 300) || null }); banner("🚩", L.reported, error && !/duplicate/i.test(error.message) ? esc(error.message) : ""); }
+  };
+  $("cmf").onsubmit = async e => { e.preventDefault(); const t = $("cmt"), body = t.value.trim(); if (!body) return; $("cms").disabled = true; $("cmerr").textContent = "";
+    const r = editId ? await sb.from("signal_comments").update({ body, edited_at: new Date().toISOString() }).eq("id", editId)
+      : await sb.from("signal_comments").insert({ signal_id: sid, body, parent_id: replyTo });
+    $("cms").disabled = false;
+    if (r.error) { $("cmerr").textContent = /row-level|policy/i.test(r.error.message) ? L.off : r.error.message; return; }
+    t.value = ""; t.style.height = "44px"; setRep(null); editId = null; sfx("button", .35); await load(); const l = $("cml"); l.scrollTop = l.scrollHeight;
+    if (socMap[sid]) socMap[sid].comments = rows.filter(x => !x.deleted).length; };
+}
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
   const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
@@ -2526,7 +2644,7 @@ function drawPage(){
     $("sl2").querySelector(".lv2").onclick = () => loadFeed();
     $("perc").onclick = e => { const b = e.target.closest("[data-per]"); if (!b) return; per = b.dataset.per; store.set("per", per); $("perc").querySelectorAll("[data-per]").forEach(x => x.classList.toggle("on", x === b)); drawFeed(); };
     $("sortS").onchange = e => { sortBy = e.target.value; store.set("sort", sortBy); drawFeed(); };
-    $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt")) return; const it = e.target.closest(".it"); if (!it) return; const was = it.classList.contains("open");
+    $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt,.soc")) return; const it = e.target.closest(".it"); if (!it) return; const was = it.classList.contains("open");
       $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); if (!was) sfx("tap_04", .26); };
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
@@ -2688,7 +2806,7 @@ function hero(s){
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
     ${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
-    <div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div>`;
+    <div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}${socHTML(s)}</div>`;
 }
 function item(s, i){
   const b = s.type === "buy";
@@ -2697,7 +2815,7 @@ function item(s, i){
       <div><div class="t">${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
         <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div></div>
       <div class="e"><span class="chip ${chipCls(s)}">${stLabel(s)}</span><br>${fmtDate(s.created_at)}</div></div>
-    <div class="more"><div>${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div></div>`;
+    <div class="more"><div>${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div>${socHTML(s)}</div>`;
 }
 function drawFeed(){
   const el = $("feed"); if (!el) return;
@@ -2710,7 +2828,7 @@ function drawFeed(){
   else if (sortBy === "new") { const [first, ...rest] = list;
     h += statsHTML(st) + `<h3>${T.latest}</h3>${hero(first)}` + (rest.length ? `<h3>${T.previous}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${rest.map(item).join("")}</div>` : ""); }
   else h += statsHTML(st) + `<h3>${T.sort[sortBy]}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${list.map(item).join("")}</div>`;
-  el.innerHTML = h; if ($("upg")) $("upg").onclick = openPlans;
+  el.innerHTML = h; if ($("upg")) $("upg").onclick = openPlans; loadSocial();
   const sb2 = $("shareSt"); if (sb2) sb2.onclick = e => { e.stopPropagation(); shareStats(st); };
   el.querySelectorAll(".stars[data-sid]").forEach(paintStars);
   open.forEach(id => el.querySelector(`.it[data-id="${id}"]`)?.classList.add("open"));
@@ -2961,16 +3079,26 @@ function refreshChatTexts(){
   const draft = $("cin")?.value || "";
   const tn = teacher.name || T.teacher;
   c.innerHTML = `<div class="chead">${teacher.photo ? `<img class="pp" src="${esc(teacher.photo)}" alt="">` : `<span class="pp">${esc([...tn].find(ch => /\S/.test(ch) && !"استاد ".includes(ch)) || "م")}</span>`}
-      <div><b>${esc(tn)}</b><small>${tt(T.chatTo, {n: esc(tn)})}</small></div><button class="ib x" id="cx">${I.x}</button></div>
+      <div style="flex:1;min-width:0"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(tn)}</b><small id="tstat">${tt(T.chatTo, {n: esc(tn)})}</small></div>
+      <button type="button" class="ib" id="csrch" aria-label="search">🔍</button><button type="button" class="ib" id="cmenu" aria-label="menu">⋮</button><button class="ib x" id="cx">${I.x}</button></div>
+    <div class="csbar" id="csbar" hidden><input id="csq" placeholder="${CL().search}" autocomplete="off"><small id="csn"></small></div>
     <div class="cbody" id="cbody"></div>
+    <div class="emoji" id="emoji" hidden>${EMOJI.map(e => `<button type="button">${e}</button>`).join("")}</div>
     <form class="cfoot" id="cform">
       <label class="ctool" aria-label="${T.photo}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><input type="file" accept="image/*" id="cimgf"></label>
       <button type="button" class="ctool" id="cmic" aria-label="${T.voice}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <button type="button" class="ctool" id="cemo" aria-label="emoji">😊</button>
       <textarea id="cin" rows="1" placeholder="${T.typeMsg}" maxlength="2000"></textarea>
       <div class="recbar"><i></i><span>${T.recording}</span><span class="num" id="rtime">0:00</span><button type="button" class="rx" id="rcancel">${T.cancel}</button></div>
       <button class="send" id="csend">${I.send}</button></form>`;
   $("cin").value = draft;
   $("cx").onclick = closeChat;
+  $("cemo").onclick = () => { $("emoji").hidden = !$("emoji").hidden; };
+  $("emoji").onclick = e => { const b = e.target.closest("button"); if (!b) return; const i = $("cin"), p = i.selectionStart ?? i.value.length; i.value = i.value.slice(0, p) + b.textContent + i.value.slice(i.selectionEnd ?? p); i.focus(); i.selectionStart = i.selectionEnd = p + b.textContent.length; };
+  $("csrch").onclick = () => { const bar = $("csbar"); bar.hidden = !bar.hidden; chatQ = ""; if (!bar.hidden) { $("csq").value = ""; $("csq").focus(); } drawChat(); };
+  $("csq").oninput = e => { chatQ = e.target.value.trim(); drawChat(true); };
+  $("cmenu").onclick = chatMenu;
+  $("cbody").onclick = e => { const bb = e.target.closest(".bub.me[data-id]"); if (!bb || e.target.closest(".cimg,.vp,audio,button.vplay")) return; msgMenu(Number(bb.dataset.id)); };
   $("cin").oninput = e => { e.target.style.height = "46px"; e.target.style.height = Math.min(120, e.target.scrollHeight) + "px"; };
   $("cin").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && innerWidth > 700) { e.preventDefault(); $("cform").requestSubmit(); } };
   $("cform").onsubmit = sendMsg;
@@ -2996,22 +3124,48 @@ async function sendMedia(kind, blob, ext){
   if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   loadChat();
 }
-function openChat(){ if (chatOpen) return; chatOpen = true; sfx("select", .32); overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
+function openChat(){ if (chatOpen) return; chatOpen = true; teacherStatus(); try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} sfx("select", .32); overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
 function closeChatNow(){ if (!chatOpen) return; chatOpen = false;  unlockBody(); try { rec?.cancel?.(); $("cform")?.classList.remove("recording"); } catch {} $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); document.activeElement?.blur?.(); drawChat(); }
 function closeChat(){ if (overlays.length && overlays[overlays.length - 1] === closeChatNow) history.back(); else closeChatNow(); }
-function drawChat(){
-  const b = $("cbody");
-  const unread = msgs.filter(m => m.sender === "admin" && !m.seen_at).length, bd = $("fbadge");
+function drawChat(keepScroll){
+  const b = $("cbody"), L = CL();
+  const vis = msgs.filter(m => !m.hidden_for_member);
+  const unread = vis.filter(m => m.sender === "admin" && !m.seen_at && !m.deleted_at).length, bd = $("fbadge");
   if (bd) { bd.textContent = unread; bd.classList.toggle("show", unread > 0 && !chatOpen); }
   const hb = $("hbadge"); if (hb) { hb.textContent = unread; hb.classList.toggle("show", unread > 0 && !chatOpen); }
   if (!b) return;
-  if (!msgs.length) { b.innerHTML = `<div class="cempty">${T.chatEmpty}</div>`; return; }
-  b.innerHTML = msgs.map(m => `<div class="bub ${m.sender==="member"?"me":"him"} ${m._up?"upl":""}">${m._up ? `<span class="cload"></span> ${T.uploading}` : mediaHTML(m)}${m.story_id ? `<span class="strep">↩ ${T.storyReply}</span>` : ""}${m.body ? esc(m.body) : ""}<small class="num">${fmtFull(m.created_at)}</small></div>`).join("");
+  const q = chatQ.toLowerCase(), list = q ? vis.filter(m => (m.body || "").toLowerCase().includes(q)) : vis;
+  if ($("csn")) $("csn").textContent = q ? `${list.length} ${L.found}` : "";
+  if (!list.length) { b.innerHTML = `<div class="cempty">${q ? L.noFound : T.chatEmpty}</div>`; return; }
+  let lastDay = "";
+  b.innerHTML = list.map(m => { const day = fmtDate(m.created_at), sep = day !== lastDay ? `<div class="cday"><span>${day}</span></div>` : ""; lastDay = day;
+    const t = new Date(m.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+    const tick = m.sender === "member" && !m._up ? (m.seen_at ? `<i class="tk seen">✓✓</i>` : String(m.id).startsWith("t") ? `<i class="tk">🕓</i>` : `<i class="tk">✓</i>`) : "";
+    const body = m.deleted_at ? `<span class="cdel">🚫 ${m.deleted_by === "admin" ? L.delByAdmin : L.deleted}</span>`
+      : (m._up ? `<span class="cload"></span> ${T.uploading}` : mediaHTML(m)) + (m.story_id ? `<span class="strep">↩ ${T.storyReply}</span>` : "") + (m.body ? hl(esc(m.body), q) : "");
+    return sep + `<div class="bub ${m.sender === "member" ? "me" : "him"} ${m._up ? "upl" : ""} ${m.deleted_at ? "gone" : ""}" ${m.sender === "member" && !m.deleted_at && !String(m.id).startsWith("t") ? `data-id="${m.id}"` : ""}>${body}<small class="num">${t}${tick}</small></div>`; }).join("");
   hydrateImages(b);
-  const last = msgs[msgs.length - 1];
-  if (last.sender === "member") b.insertAdjacentHTML("beforeend", `<div class="cstate ${last.seen_at?"seen":"wait"}">${last.seen_at ? "✓✓ " + T.seen : "⏳ " + T.waiting}</div>`);
-  b.scrollTop = b.scrollHeight;
+  if (!keepScroll) b.scrollTop = b.scrollHeight;
 }
+const hl = (h, q) => q ? h.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), x => `<mark>${x}</mark>`) : h;
+let chatQ = "";
+const EMOJI = ["😀","😂","😊","😍","🙏","👍","👎","👏","🔥","💯","❤️","💔","😢","😮","🤔","😎","🎉","✅","❌","⚠️","📈","📉","💰","💵","🥇","🥈","⏳","🚀","💎","🤝","👌","🙌","😅","😡","🌹","☺️","🌙","⭐","📊","🔔"];
+const CLL = { fa: { search: "جست‌وجو در پیام‌ها…", found: "پیام پیدا شد", noFound: "پیامی پیدا نشد", deleted: "این پیام حذف شد", delByAdmin: "این پیام توسط مدیر حذف شد", del: "🗑 حذف پیام", copy: "📋 کپی متن", clear: "🧹 پاک کردن گفتگو از گوشی من", clearQ: "همه‌ی پیام‌های این گفتگو از صفحه‌ی شما پاک شود؟ (استاد همچنان آن‌ها را دارد)", online: "🟢 آنلاین", lastSeen: "آخرین بازدید", copied: "کپی شد", cancel: "انصراف" },
+  ps: { search: "په پیغامونو کې لټون…", found: "پیغام وموندل شو", noFound: "پیغام ونه موندل شو", deleted: "دا پیغام ړنګ شو", delByAdmin: "دا پیغام د مدیر لخوا ړنګ شو", del: "🗑 پیغام ړنګول", copy: "📋 کاپي", clear: "🧹 خبرې اترې پاکول", clearQ: "ټول پیغامونه ستاسو له پاڼې پاک شي؟", online: "🟢 آنلاین", lastSeen: "وروستی ځل", copied: "کاپي شو", cancel: "لغوه" },
+  en: { search: "Search messages…", found: "found", noFound: "No messages found", deleted: "This message was deleted", delByAdmin: "Deleted by the admin", del: "🗑 Delete message", copy: "📋 Copy text", clear: "🧹 Clear this chat on my device", clearQ: "Clear all messages from your view? (the teacher keeps them)", online: "🟢 Online", lastSeen: "Last seen", copied: "Copied", cancel: "Cancel" } };
+const CL = () => CLL[lang] || CLL.fa;
+function actionSheet(items){ return new Promise(res => { const v = document.createElement("div"); v.className = "asheet"; v.innerHTML = `<div class="asb">${items.map((t, i) => `<button data-i="${i}">${t}</button>`).join("")}<button data-i="-1" class="ac">${CL().cancel}</button></div>`;
+  document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
+  v.onclick = e => { const b = e.target.closest("[data-i]"); if (!b && e.target !== v) return; v.classList.remove("show"); setTimeout(() => v.remove(), 300); res(b ? Number(b.dataset.i) : -1); }; }); }
+async function msgMenu(id){ const m = msgs.find(x => x.id === id); if (!m) return; const L = CL();
+  const items = [L.del]; if (m.body) items.push(L.copy);
+  const k = await actionSheet(items);
+  if (k === 0) { const { error } = await sb.rpc("delete_my_message", { p_id: id }); if (!error) { if (m.file_path) sb.storage.from("chat").remove([m.file_path]); m.deleted_at = new Date().toISOString(); m.deleted_by = "member"; m.body = null; drawChat(true); } }
+  if (k === 1) { try { await navigator.clipboard.writeText(m.body); banner("📋", L.copied, ""); } catch {} } }
+async function chatMenu(){ const L = CL(); const k = await actionSheet([L.clear]); if (k !== 0) return; if (!confirm(L.clearQ)) return;
+  await sb.rpc("clear_my_chat"); msgs.forEach(m => m.hidden_for_member = true); drawChat(); }
+async function teacherStatus(){ const el = $("tstat"); if (!el) return; const { data } = await sb.rpc("teacher_status"); const L = CL();
+  el.textContent = data && Date.now() - new Date(data) < 3 * 60000 ? L.online : data ? `${L.lastSeen}: ${agoTxt(data)}` : el.textContent; }
 async function loadTeacher(){
   const { data } = await sb.from("settings").select("value").eq("key", "teacher").maybeSingle();
   const v = data?.value || {}; const changed = v.name !== teacher.name || v.photo !== teacher.photo;
@@ -3025,16 +3179,16 @@ async function loadChat(){
   const { data, error } = await sb.from("messages").select("*").eq("member_id", me.id).order("created_at", {ascending:true});
   if (error) return;
   const known = new Set(msgs.map(m => m.id));
-  const fresh = (data || []).filter(m => m.sender === "admin" && !m.seen_at && !known.has(m.id));
+  const fresh = (data || []).filter(m => m.sender === "admin" && !m.seen_at && !m.deleted_at && !known.has(m.id));
   const first = !msgsLoaded; msgsLoaded = true;
   const keep = new Set((data || []).map(m => m.file_path).filter(Boolean));
   const gone = msgs.filter(m => m.file_path && !keep.has(m.file_path) && !String(m.id).startsWith("t")).map(m => m.file_path);
   if (!first && gone.length) sb.storage.from("chat").remove(gone);
-  const sg = (data || []).map(m => m.id + ":" + (m.seen_at ? 1 : 0)).join("|");
+  const sg = (data || []).map(m => m.id + ":" + (m.seen_at ? 1 : 0) + (m.deleted_at ? "d" : "") + (m.hidden_for_member ? "h" : "")).join("|");
   msgs = data || []; store.set("cache_msgs", msgs);
   if (sg !== chatSig) { chatSig = sg; drawChat(); }
   if (chatOpen) markSeen();
-  else if (!first && fresh.length) { const f = fresh[fresh.length - 1]; banner("💬", T.newMsg, f.kind === "image" ? "🖼 " + T.photo : f.kind === "voice" ? "🎙 " + T.voice : esc(f.body).slice(0, 80), openChat); }
+  else if (!first && fresh.length) { const f = fresh[fresh.length - 1]; webNotify(T.newMsg, f.kind === "image" ? "🖼 " + T.photo : f.kind === "voice" ? "🎙 " + T.voice : (f.body || "").slice(0, 80)); banner("💬", T.newMsg, f.kind === "image" ? "🖼 " + T.photo : f.kind === "voice" ? "🎙 " + T.voice : esc(f.body).slice(0, 80), openChat); }
 }
 async function markSeen(){
   if (!msgs.some(m => m.sender === "admin" && !m.seen_at)) return;

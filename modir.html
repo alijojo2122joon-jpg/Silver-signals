@@ -693,6 +693,16 @@
   .mact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
   .mact div{padding:8px;border-radius:14px;background:var(--field);box-shadow:var(--sh-in);text-align:center}
   .mact small{display:block;font-size:10.5px;color:var(--muted);font-weight:700} .mact b{font-size:11.5px}
+
+  .ond{display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-inline-end:6px;box-shadow:0 0 0 3px #16a34a22}
+  .cadm{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px} .cadm .in{flex:1 1 100%;margin:0} .cadm .ghost{flex:1 1 0;margin:0;width:auto;padding:0 10px;font-size:13px}
+  .bub.gone{opacity:.6;font-style:italic} .bub .gtx{display:block;font-size:11px;opacity:.7;text-decoration:line-through;margin-top:3px}
+  .bub[data-mid]{cursor:pointer} .cday{text-align:center;margin:10px 0} .cday span{font-size:11px;padding:3px 10px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);color:var(--muted)}
+  .cmsum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0} .cmsum div{background:var(--field);box-shadow:var(--sh-in);border-radius:14px;padding:8px;text-align:center} .cmsum small{display:block;font-size:10.5px;color:var(--muted)} .cmsum b{font-family:Montserrat,Arial,sans-serif}
+  .cmr.gone{opacity:.55} .cmr.hid{opacity:.75;outline:1px dashed var(--muted)}
+  .cmrh{display:flex;gap:6px;align-items:center;flex-wrap:wrap} .cmrh small{margin-inline-start:auto;font-size:10.5px;color:var(--muted)}
+  .cmrb{font-size:13.5px;line-height:1.8;margin:4px 0;white-space:pre-wrap;word-wrap:break-word}
+  .cmra{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px} .cmra button{border:0;border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;font-weight:800;background:var(--field);box-shadow:var(--raise);color:var(--text);cursor:pointer} .cmra button.red{color:var(--sell)}
 </style>
 </head>
 <body>
@@ -707,7 +717,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081351";
+const BUILD = "202611081401";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -907,6 +917,7 @@ function renderLogin(note = ""){
 }
 
 /* پنل */
+let msq = "", cmReported = 0;
 let tab = new URLSearchParams(location.search).get("tab") === "msgs" ? "msgs" : "signals", signals = [], members = [], channel = null, q = "";
 
 function renderPanel(){
@@ -933,9 +944,9 @@ function renderPanel(){
   channel = sb.channel("admin").on("postgres_changes", {event:"*", schema:"public", table:"signals"}, loadSignals)
     .on("postgres_changes", {event:"*", schema:"public", table:"messages"}, () => loadMsgs())
     .on("postgres_changes", {event:"*", schema:"public", table:"contact_requests"}, () => loadReqs()).subscribe();
-  loadMsgs();
+  loadMsgs(); loadCmReported();
   clearInterval(window._poll);
-  window._poll = setInterval(() => { if (!document.hidden && !$("sheet").classList.contains("show")) { loadSignals(); loadMembers(); } loadMsgs(); }, 10000);
+  window._poll = setInterval(() => { if (!document.hidden && !$("sheet").classList.contains("show")) { loadSignals(); loadMembers(); } loadMsgs(); sb.rpc("touch_seen").then(() => {}); }, 10000); sb.rpc("touch_seen").then(() => {});
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden && $("s1")) { loadSignals(); loadMembers(); } });
 
@@ -955,7 +966,11 @@ function drawStats(){
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
   $("np").style.transform = `translateX(${-["signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
-  if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div id="list"></div>`; return drawList(); }
+  if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div>
+    <div class="fxab rise"><button class="press" id="cmadm">💬 مدیریت نظرات${cmReported ? ` <b class="fxnb">${cmReported}</b>` : ""}</button></div>
+    <input class="in" id="msq" placeholder="🔎 جستجو در گفتگوها (نام یا متن پیام)" value="${esc(msq)}" style="margin:0 0 14px">
+    <div id="list"></div>`;
+    $("cmadm").onclick = () => sheetComments(); $("msq").oninput = e => { msq = e.target.value.trim(); drawList(); }; return drawList(); }
   if (tab === "content") return drawContent();
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
       <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>`; loadFxAdmin(); return; }
@@ -974,14 +989,14 @@ function drawList(){
   if (tab === "content") return;
   if (tab === "msgs") {
     const conv = members.map(m => { const ms = allMsgs.filter(x => x.member_id === m.id); return { m, last: ms[ms.length - 1], unread: ms.filter(x => x.sender === "member" && !x.seen_at).length }; })
-      .filter(c => c.last).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
+      .filter(c => c.last).filter(c => !msq || (c.m.name || "").includes(msq) || allMsgs.some(x => x.member_id === c.m.id && !x.deleted_at && (x.body || "").includes(msq))).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
     const reqs = contactReqs.filter(r => !r.done);
     el.innerHTML = (reqs.length ? `<div class="sec"><h3>پیام از افراد بدون حساب</h3></div><div class="list glass rise" style="margin-bottom:18px">${reqs.map(r => `<div class="it" data-req="${r.id}" style="grid-template-columns:auto 1fr auto">
         <span class="av" style="background:#d8911c22;color:#d8911c">${r.seen_at ? "✉" : "🆕"}</span>
         <div><div class="t">${esc(r.name)} <span class="s ltr">${esc(r.contact)}</span></div><div class="s">${esc(r.body).slice(0, 70)}</div></div>
         <span class="s">${fmtFull(r.created_at).split(" · ")[0]}</span></div>`).join("")}</div>` : "")
       + `<div class="list glass rise" style="--i:1">${conv.length ? conv.map(c => `<div class="it" data-chat="${c.m.id}">${avatar(c.m)}
-        <div><div class="t">${esc(c.m.name)}${c.m.deleted_at ? ' <span class="chip off" style="font-size:10px">حذف‌شده</span>' : c.m.disabled ? ' <span class="chip off" style="font-size:10px">غیرفعال</span>' : ""}</div><div class="s">${c.last.sender === "admin" ? "شما: " : ""}${c.last.kind === "image" ? "🖼 عکس" : c.last.kind === "voice" ? "🎙 پیام صوتی" : esc(c.last.body).slice(0, 60)}</div></div>
+        <div><div class="t">${isOnline(c.m) ? '<i class="ond"></i>' : ""}${esc(c.m.name)}${c.m.chat_muted ? ' <span class="chip off" style="font-size:10px">🔇 بی‌صدا</span>' : ""}${c.m.deleted_at ? ' <span class="chip off" style="font-size:10px">حذف‌شده</span>' : c.m.disabled ? ' <span class="chip off" style="font-size:10px">غیرفعال</span>' : ""}</div><div class="s">${c.last.deleted_at ? "🚫 پیام حذف شد" : (c.last.sender === "admin" ? "شما: " : "") + (c.last.kind === "image" ? "🖼 عکس" : c.last.kind === "voice" ? "🎙 پیام صوتی" : esc(c.last.body).slice(0, 60))}</div></div>
         ${c.unread ? `<span class="ub">${c.unread}</span>` : `<span class="s">${fmtFull(c.last.created_at).split(" · ")[1] || ""}</span>`}</div>`).join("")
       : `<div class="empty"><div class="big">💬</div>هنوز پیامی از اعضا نرسیده است.</div>`}</div>`;
     return;
@@ -1845,21 +1860,39 @@ async function markSeenAdmin(id){
 function drawChatSheet(){
   const b = $("cbody"); if (!b) return;
   const ms = allMsgs.filter(x => x.member_id === openChatId);
-  b.innerHTML = ms.length ? ms.map(x => `<div class="bub ${x.sender === "member" ? "mem" : "adm"} ${x._up ? "upl" : ""}">${x._up ? '<span class="cload"></span> در حال ارسال…' : mediaHTML(x)}${x.story_id ? '<span class="strep">↩ پاسخ به استوری شما</span>' : ""}${x.body ? esc(x.body) : ""}<small>${fmtFull(x.created_at)}</small></div>`).join("") : `<div class="empty">پیامی نیست.</div>`;
+  const vis = chatQ ? ms.filter(x => (x.body || "").includes(chatQ)) : ms;
+  let lastDay = "";
+  b.innerHTML = vis.length ? vis.map(x => { const dy = fmtFull(x.created_at).split(" · ")[0], sep = dy !== lastDay ? `<div class="cday"><span>${dy}</span></div>` : ""; lastDay = dy;
+    if (x.deleted_at) return sep + `<div class="bub ${x.sender === "member" ? "mem" : "adm"} gone">🚫 ${x.deleted_by === "admin" ? "توسط مدیر حذف شد" : "این پیام را فرستنده حذف کرد"}${x.body ? `<span class="gtx">${esc(x.body)}</span>` : ""}<small>${fmtFull(x.created_at)}</small></div>`;
+    return sep + `<div class="bub ${x.sender === "member" ? "mem" : "adm"} ${x._up ? "upl" : ""}" data-mid="${x.id}">${x._up ? '<span class="cload"></span> در حال ارسال…' : mediaHTML(x)}${x.story_id ? '<span class="strep">↩ پاسخ به استوری شما</span>' : ""}${x.body ? esc(x.body) : ""}<small>${fmtFull(x.created_at)}</small></div>`; }).join("") : `<div class="empty">${chatQ ? "چیزی پیدا نشد." : "پیامی نیست."}</div>`;
   hydrateImages(b);
   const last = ms[ms.length - 1];
   if (last && last.sender === "admin") b.insertAdjacentHTML("beforeend", `<div class="cst ${last.seen_at ? "seen" : "wait"}">${last.seen_at ? "✓✓ دیده شد" : "⏳ هنوز دیده نشده"}</div>`);
-  b.scrollTop = b.scrollHeight;
+  if (!chatQ) b.scrollTop = b.scrollHeight;
 }
+let chatQ = "";
+const isOnline = m => m.last_seen && Date.now() - new Date(m.last_seen) < 120000;
+const seenTxt = m => isOnline(m) ? "🟢 آنلاین" : m.last_seen ? "آخرین بازدید " + fmtFull(m.last_seen) : "هنوز آنلاین نشده";
 function sheetChat(id){
   const m = members.find(x => x.id === id); if (!m) return;
-  openChatId = id;
-  openSheet(`<div class="head">${avatar(m)}<div><h2>${esc(m.name)}</h2><div class="hint">فقط 10 پیام آخر نگه داشته می‌شود</div></div></div>
+  openChatId = id; chatQ = "";
+  openSheet(`<div class="head">${avatar(m)}<div style="flex:1"><h2>${esc(m.name)}</h2><div class="hint" id="cseen">${seenTxt(m)}</div></div></div>
+    <div class="cadm"><input class="in" id="cq" placeholder="🔎 جستجو در این گفتگو"><button type="button" class="ghost" id="cmute">${m.chat_muted ? "🔊 رفع بی‌صدا" : "🔇 بی‌صدا کردن"}</button><button type="button" class="ghost red" id="cclr">🗑 حذف گفتگو</button></div>
     <div class="cbody" id="cbody"></div>
     <form class="crow" id="cf"><label class="ctool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><input type="file" accept="image/*" id="cimgf"></label><button type="button" class="ctool" id="cmic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
       <textarea id="cin" placeholder="پاسخ خود را بنویسید…" maxlength="2000"></textarea>
       <div class="recbar"><i></i><span>در حال ضبط</span><span id="rtime">0:00</span><button type="button" class="rx" id="rcancel">لغو</button></div><button>${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.5 21 3l-6.5 18-3-7.5z"/></svg>'}</button></form>`);
   lastChatSig = ""; drawChatSheet(); markSeenAdmin(id);
+  $("cq").oninput = e => { chatQ = e.target.value.trim(); drawChatSheet(); };
+  $("cmute").onclick = async () => { const v = !m.chat_muted; const { error } = await sb.from("profiles").update({ chat_muted: v }).eq("id", id);
+    if (error) return toast("انجام نشد: " + error.message, true); m.chat_muted = v; $("cmute").textContent = v ? "🔊 رفع بی‌صدا" : "🔇 بی‌صدا کردن"; toast(v ? "این عضو دیگر نمی‌تواند پیام بفرستد" : "عضو دوباره می‌تواند پیام بفرستد"); drawList(); };
+  $("cclr").onclick = async () => { if (!confirm(`تمام پیام‌های گفتگو با ${m.name} حذف شود؟`)) return;
+    const { error } = await sb.from("messages").update({ deleted_at: new Date().toISOString(), deleted_by: "admin" }).eq("member_id", id).is("deleted_at", null);
+    if (error) return toast("انجام نشد: " + error.message, true); toast("گفتگو حذف شد"); loadMsgs(); };
+  $("cbody").onclick = async e => { const bb = e.target.closest(".bub[data-mid]"); if (!bb || e.target.closest("audio,button,a,img")) return;
+    const mid = Number(bb.dataset.mid); if (!mid || !confirm("این پیام برای هر دو طرف حذف شود؟")) return;
+    const { error } = await sb.from("messages").update({ deleted_at: new Date().toISOString(), deleted_by: "admin" }).eq("id", mid);
+    if (error) return toast("حذف نشد: " + error.message, true); const x = allMsgs.find(z => z.id === mid); if (x) { x.deleted_at = new Date().toISOString(); x.deleted_by = "admin"; } lastChatSig = ""; drawChatSheet(); };
   const rec = makeRecorder(t => { const el = $("rtime"); if (el) el.textContent = mmss(Math.min(t, 480)) + " / 8:00"; }, 480);
   rec.onAuto = async raw => { $("cf")?.classList.remove("recording"); if (!raw || raw.size < 800) return; let w = raw; try { w = await toWav(raw); } catch {} sendMedia("voice", w, w.type === "audio/wav" ? "wav" : "webm"); };
   const sendMedia = async (kind, blob, ext) => {
@@ -1888,6 +1921,35 @@ function sheetChat(id){
     loadMsgs();
   };
 }
+
+/* مدیریت نظرات */
+async function loadCmReported(){ const { data } = await sb.rpc("admin_comments", { p_only_reported: true }); cmReported = (data || []).length; const b = $("cmadm"); if (b) b.innerHTML = `💬 مدیریت نظرات${cmReported ? ` <b class="fxnb">${cmReported}</b>` : ""}`; }
+async function sheetComments(sigId){
+  let only = false, rows = [];
+  openSheet(`<h2>💬 مدیریت نظرات</h2><p class="hint">${sigId ? "نظرات یک سیگنال" : "همه‌ی نظرات زیر سیگنال‌ها"} — حذف، پنهان، بی‌صدا کردن عضو و بررسی گزارش‌ها.</p>
+    <div class="chips" id="cmf"><button type="button" data-o="0" class="on">همه</button><button type="button" data-o="1">🚩 گزارش‌شده</button></div>
+    <div class="cmsum" id="cmsum"></div><div id="cmlist"><span class="spin"></span></div>`);
+  const sigName = id => { const g = signals.find(x => x.id === id); return g ? `${(MARKETS[g.market] || MARKETS.xag).name} · ${g.type === "buy" ? "خرید" : "فروش"} ${range(g)}` : "سیگنال #" + id; };
+  const draw = () => { const v = sigId ? rows.filter(r => r.signal_id === sigId) : rows;
+    const live = v.filter(r => !r.deleted);
+    $("cmsum").innerHTML = `<div><small>نظر</small><b>${live.length}</b></div><div><small>پسند نظرات</small><b>${live.reduce((a, r) => a + r.likes, 0)}</b></div><div><small>گزارش باز</small><b>${v.reduce((a, r) => a + r.reports, 0)}</b></div><div><small>نویسنده</small><b>${new Set(live.map(r => r.user_id)).size}</b></div>`;
+    $("cmlist").innerHTML = v.length ? v.map(r => `<div class="box cmr ${r.deleted ? "gone" : r.hidden ? "hid" : ""}" data-c="${r.id}">
+      <div class="cmrh"><b>${esc(r.name || "—")}</b>${r.muted ? '<span class="chip off" style="font-size:10px">🔇 بی‌صدا</span>' : ""}${r.reports ? `<span class="chip off" style="font-size:10px">🚩 ${r.reports}</span>` : ""}<small>${fmtFull(r.created_at)}</small></div>
+      ${sigId ? "" : `<div class="hint" style="margin:2px 0 4px">↳ ${esc(sigName(r.signal_id))}</div>`}
+      <div class="cmrb">${r.deleted ? "🚫 حذف‌شده — " : r.hidden ? "👁‍🗨 پنهان — " : ""}${esc(r.body)}</div><div class="hint">❤️ ${r.likes}</div>
+      ${r.deleted ? "" : `<div class="cmra"><button type="button" data-a="hide">${r.hidden ? "نمایش" : "پنهان"}</button><button type="button" data-a="del" class="red">حذف</button><button type="button" data-a="mute">${r.muted ? "رفع بی‌صدا" : "بی‌صدا کردن عضو"}</button>${r.reports ? `<button type="button" data-a="ok">گزارش بی‌مورد است</button>` : ""}</div>`}</div>`).join("")
+      : `<div class="empty"><div class="big">💬</div>${only ? "گزارشی نیست." : "هنوز نظری ثبت نشده است."}</div>`; };
+  const load = async () => { const { data, error } = await sb.rpc("admin_comments", { p_only_reported: only }); if (error) return toast(error.message, true); rows = data || []; draw(); loadCmReported(); };
+  $("cmf").onclick = e => { const b = e.target.closest("[data-o]"); if (!b) return; $("cmf").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); only = b.dataset.o === "1"; load(); };
+  $("cmlist").onclick = async e => { const b = e.target.closest("[data-a]"); if (!b) return; const r = rows.find(x => x.id === Number(b.closest("[data-c]").dataset.c)); if (!r) return; let res;
+    if (b.dataset.a === "hide") res = await sb.from("signal_comments").update({ hidden: !r.hidden }).eq("id", r.id);
+    if (b.dataset.a === "del") { if (!confirm("این نظر حذف شود؟")) return; res = await sb.from("signal_comments").update({ deleted_at: new Date().toISOString(), deleted_by: "admin" }).eq("id", r.id);
+      if (!res.error) await sb.from("comment_reports").update({ status: "done" }).eq("comment_id", r.id); }
+    if (b.dataset.a === "mute") res = await sb.from("profiles").update({ comments_muted: !r.muted }).eq("id", r.user_id);
+    if (b.dataset.a === "ok") res = await sb.from("comment_reports").update({ status: "dismissed" }).eq("comment_id", r.id).eq("status", "open");
+    if (res?.error) return toast("انجام نشد: " + res.error.message, true); toast("انجام شد ✓"); load(); };
+  load();
+}
 /* مدیریت سیگنال */
 function sheetSignal(s){
   if (!s) return;
@@ -1910,8 +1972,15 @@ function sheetSignal(s){
         ${s.result_price != null ? `<div><span>قیمت نتیجه</span><b class="num">${fa(s.result_price)}</b></div>` : ""}
         ${s.expires_at ? `<div><span>اعتبار تا</span><b>${fmtFull(s.expires_at)}</b></div>` : ""}
       </div></div>
+    <div class="box cmbox"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><b>💬 نظرات این سیگنال</b>
+      <label class="tog"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
+      <div class="hint" id="cmst" style="margin-top:6px">در حال بارگذاری…</div><button type="button" class="ghost" id="cmview" style="margin-top:8px">مشاهده و مدیریت نظرات</button></div>
     ${(!s.auto || (s.phase === "waiting" && Date.now() - new Date(s.created_at) < 15 * 60000)) ? `<button class="ghost red" id="del">حذف این سیگنال</button><p class="hint" style="text-align:center">حذف فقط تا ۱۵ دقیقه بعد از انتشار و قبل از فعال شدن ممکن است.</p>` : `<p class="hint" style="text-align:center">🔒 این سیگنال قفل است و قابل حذف یا تغییر نیست.</p>`}`);
   applyNoteLang($("sheet"));
+  sb.rpc("signal_social", { p_ids: [s.id] }).then(({ data }) => { const x = data?.[0]; const el = $("cmst"); if (el) el.textContent = x ? `❤️ ${x.likes} پسند · 💬 ${x.comments} نظر` : "—"; });
+  $("cmon").onchange = async e => { const v = e.target.checked; const { error } = await sb.from("signals").update({ comments_enabled: v }).eq("id", s.id);
+    if (error) { e.target.checked = !v; return toast("انجام نشد: " + error.message, true); } s.comments_enabled = v; toast(v ? "نظردهی باز شد" : "نظردهی بسته شد"); };
+  $("cmview").onclick = () => sheetComments(s.id);
   $("sheet").onclick = async e => {
     if (e.target.closest("#del") && confirm("این سیگنال حذف شود؟")) {
       const { data, error } = await sb.from("signals").delete().eq("id", s.id).select("id");
