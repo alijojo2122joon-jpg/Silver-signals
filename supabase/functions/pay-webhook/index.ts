@@ -11,9 +11,12 @@ Deno.serve(async (req) => {
   let ev: any; try { ev = await req.json(); } catch { return json({ success: false, error: "bad_json" }, 400); }
   if (ev?.type === "webhook.validation") return json({ success: true });     // portal reachability test
 
-  const key = Deno.env.get("HESABPAY_API_KEY");
+  const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const { data: cfg } = await admin.rpc("gateway_config");   // admin-managed key; env secrets are a fallback
+  const key = cfg?.key || Deno.env.get("HESABPAY_API_KEY");
   if (!key) return json({ success: false, error: "not_configured" }, 503);
-  const base = (Deno.env.get("HESABPAY_ENV") ?? "sandbox") === "production" ? "https://api.hesab.com" : "https://api-sandbox.hesab.com";
+  const env = cfg?.key ? cfg.env : (Deno.env.get("HESABPAY_ENV") ?? "sandbox");
+  const base = env === "production" ? "https://api.hesab.com" : "https://api-sandbox.hesab.com";
 
   // 1) verify the signature with HesabPay
   let valid = false;
@@ -25,7 +28,6 @@ Deno.serve(async (req) => {
   } catch { valid = false; }
   if (!valid) return json({ success: false, error: "invalid_signature" }, 401);   // HesabPay retries; nothing was changed
 
-  const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
   const payId = String(ev?.user_id ?? "");
   if (!/^[0-9a-f-]{36}$/i.test(payId)) return json({ success: true, ignored: "unknown_reference" });
   const raw = { ...ev, signature: undefined };

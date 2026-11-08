@@ -706,7 +706,17 @@
 
   .brev{border:1.5px solid #d9770655} .bkv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:8px 0;font-size:12.5px} .bkv span{color:var(--muted)} .bkv b{overflow-wrap:anywhere}
   .bproof{display:block;width:100%;max-height:320px;object-fit:contain;border-radius:14px;background:var(--field);margin:6px 0;cursor:zoom-in}
-  .fxabtn button.red{color:var(--sell)} .tgl2{display:flex;gap:8px;align-items:center;font-weight:800;font-size:13px;margin-bottom:6px}
+  .fxabtn button.red{color:var(--sell)} .tgl2{display:flex;gap:10px;align-items:center;font-weight:800;font-size:13px;margin-bottom:8px} .tgl2 .tog{flex:none}
+
+  .hpst{font-size:12.5px;font-weight:700;margin-bottom:8px;line-height:1.9} .hpwh{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:14px;background:var(--field)}
+  .hpwh code{flex:1;min-width:0;font-size:11px;overflow-wrap:anywhere} .hpwh button{flex:none;border:0;border-radius:999px;padding:5px 12px;background:var(--navy);color:var(--onNavy);font:inherit;font-weight:800;font-size:11.5px;cursor:pointer}
+
+  .sw{position:relative;display:inline-block;flex:none;width:52px;height:30px;cursor:pointer}
+  .sw input{position:absolute;opacity:0;width:0;height:0}
+  .sw i{position:absolute;inset:0;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);transition:background .3s}
+  .sw i::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fff,#e6e9ef);box-shadow:0 3px 8px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+  .sw input:checked+i{background:linear-gradient(180deg,#2fd08c,#12a46b)} .sw input:checked+i::after{transform:translateX(-22px)}
+  .sw input:focus-visible+i{outline:2px solid var(--glowc)}
 </style>
 </head>
 <body>
@@ -721,7 +731,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081442";
+const BUILD = "202611081450";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1472,7 +1482,7 @@ async function sheetFxMsgs(filter = "all"){
 /* ===== اشتراک‌ها و پرداخت‌ها ===== */
 let billF = "all";
 async function sheetBilling(){
-  openSheet(`<h2>💳 اشتراک‌ها و پرداخت‌ها</h2><p class="hint">دو روش: <b>HesabPay</b> (آنلاین؛ تأیید خودکار با امضای درگاه) و <b>Binance</b> (دستی؛ تا شما در حساب بایننس خود دریافت را بررسی و «تأیید» نکنید، هیچ پرداختی موفق نشان داده نمی‌شود و اشتراکی فعال نمی‌شود).</p><div id="bill"><span class="spin"></span></div>`);
+  openSheet(`<h2>💳 اشتراک‌ها و پرداخت‌ها</h2><p class="hint">دو روش: <b>HesabPay</b> (آنلاین؛ تأیید خودکار با امضای درگاه — کلیدش را پایین همین صفحه وارد کنید) و <b>Binance</b> (دستی؛ تا شما در حساب بایننس خود دریافت را بررسی و «تأیید» نکنید، هیچ پرداختی موفق نشان داده نمی‌شود و اشتراکی فعال نمی‌شود).</p><div id="bill"><span class="spin"></span></div>`);
   const [{ data: plans }, { data: pays }, { data: profs }, { data: bset }] = await Promise.all([
     sb.from("plans").select("*").order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(200), sb.from("profiles").select("id,name,email,plan,expires_at").eq("role", "member"),
     sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle()]);
@@ -1494,8 +1504,19 @@ async function sheetBilling(){
       ${x.proof_path ? `<img class="bproof" data-proof="${esc(x.proof_path)}" alt="رسید">` : `<p class="hint">رسید تصویری ارسال نشده.</p>`}
       <p class="hint">پیش از تأیید، در اپ بایننس خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
       <div class="fxabtn"><button data-rv="ok">✅ تأیید و فعال‌سازی</button><button data-rv="no" class="red">✖ رد</button></div></div>`).join("") : `<p class="hint">پرداختی منتظر تأیید نیست.</p>`}
+    <h3 class="bh">⚙️ تنظیمات درگاه HesabPay</h3>
+    <div class="bplan" id="hpset"><div class="hpst" id="hpst"><span class="spin"></span></div>
+      <div class="tgl2"><label class="sw"><input type="checkbox" id="hp_on"><i></i></label><span>فعال باشد (اعضا گزینه‌ی HesabPay را ببینند و پرداخت کنند)</span></div>
+      <label class="l">حالت</label><div class="tfc" id="hp_env"><button type="button" data-v="sandbox">🧪 آزمایشی (Sandbox)</button><button type="button" data-v="production">💰 واقعی (Production)</button></div>
+      <label class="l">کلید API (از پنل HesabPay → Developer → API Keys)</label>
+      <input class="in ltr" id="hp_key" type="password" autocomplete="new-password" spellcheck="false" maxlength="500" placeholder="برای تغییر، کلید جدید را اینجا بچسبانید">
+      <p class="hint">🔒 کلید فقط روی سرور ذخیره می‌شود؛ نه اعضا و نه این صفحه آن را دوباره نشان نمی‌دهند — فقط ۴ رقم آخرش. برای نگه‌داشتن کلید فعلی، این خانه را خالی بگذارید.</p>
+      <label class="l">آدرس وبهوک (در پنل HesabPay → Webhooks ثبت کنید؛ رویدادهای payment_success و payment_failure)</label>
+      <div class="hpwh"><code class="ltr" id="hp_wh">${SUPABASE_URL}/functions/v1/pay-webhook</code><button type="button" id="hp_cp">کپی</button></div>
+      <div class="fxabtn"><button id="hp_save">ذخیره</button><button id="hp_test">🔌 آزمایش اتصال</button><button id="hp_del" class="red">حذف کلید</button></div>
+      <div class="hint" id="hp_res"></div></div>
     <h3 class="bh">⚙️ تنظیمات پرداخت بایننس</h3>
-    <div class="bplan" id="bnset"><label class="tgl2"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}> فعال باشد (اعضا گزینه‌ی Binance را ببینند)</label>
+    <div class="bplan" id="bnset"><div class="tgl2"><label class="sw"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (اعضا گزینه‌ی Binance را ببینند)</span></div>
       <div class="two"><div><label class="l">Binance Pay ID</label><input class="in ltr" id="bn_id" maxlength="40" value="${esc(BN.pay_id || "")}"></div><div><label class="l">نام حساب</label><input class="in" id="bn_name" maxlength="80" value="${esc(BN.name || "")}"></div></div>
       <label class="l">آدرس کیف پول USDT (اختیاری)</label><input class="in ltr" id="bn_addr" maxlength="120" value="${esc(BN.address || "")}">
       <div class="two"><div><label class="l">شبکه</label><input class="in ltr" id="bn_net" maxlength="30" value="${esc(BN.network || "TRC20")}"></div><div><label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="bn_link" maxlength="300" value="${esc(BN.link || "")}" placeholder="https://"></div></div>
@@ -1511,6 +1532,26 @@ async function sheetBilling(){
     ${(pays || []).filter(x => billF === "all" || x.status === billF).length ? pays.filter(x => billF === "all" || x.status === billF).map(x => `<div class="fxhr"><div><b>${esc(nm[x.user_id] || "—")}</b><small>${fmtFull(x.created_at)} · ${PV[x.provider] || esc(x.provider || "")} · ${esc(x.plan_code || "")} · ${x.months} ماه${x.transaction_id ? " · TX " + esc(x.transaction_id) : x.payer_ref ? " · REF " + esc(x.payer_ref) : ""}${x.reject_reason ? " · دلیل رد: " + esc(x.reject_reason) : ""}</small></div>
       <div class="v"><b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div><span class="chip ${ST[x.status]?.[0] || "mute"}">${ST[x.status]?.[1] || x.status}</span></div>`).join("") : `<p class="hint">هنوز پرداختی ثبت نشده است.</p>`}`;
   el.querySelectorAll("img[data-proof]").forEach(async im => { const { data } = await sb.storage.from("payproof").createSignedUrl(im.dataset.proof, 3600); if (data?.signedUrl) { im.src = data.signedUrl; im.onclick = () => window.open(data.signedUrl, "_blank"); } });
+  let hpEnv = "sandbox";
+  const hpPaint = st => { hpEnv = st.env || "sandbox"; $("hp_on").checked = !!st.enabled; $("hp_env").querySelectorAll("button").forEach(z => z.classList.toggle("on", z.dataset.v === hpEnv));
+    $("hpst").innerHTML = st.has_key ? `<span class="chip ${st.enabled ? "on" : "mute"}">${st.enabled ? "فعال" : "غیرفعال"}</span> کلید ثبت شده ✓ <b class="ltr">••••${esc(st.last4 || "")}</b> · ${st.env === "production" ? "💰 واقعی" : "🧪 آزمایشی"}${st.key_updated_at ? " · " + fmtFull(st.key_updated_at) : ""}`
+      : `<span class="chip warn">تنظیم نشده</span> هنوز کلیدی ثبت نشده؛ پرداخت HesabPay برای اعضا غیرفعال است.`; $("hp_del").hidden = !st.has_key; };
+  sb.rpc("admin_gateway_status").then(({ data, error }) => error ? ($("hpst").textContent = "خطا: " + error.message) : hpPaint(data || {}));
+  $("hp_env").onclick = e => { const b = e.target.closest("[data-v]"); if (!b) return; hpEnv = b.dataset.v; $("hp_env").querySelectorAll("button").forEach(z => z.classList.toggle("on", z === b)); };
+  $("hp_cp").onclick = async () => { try { await navigator.clipboard.writeText($("hp_wh").textContent); toast("کپی شد ✓"); } catch {} };
+  $("hp_save").onclick = async () => { const k = $("hp_key").value.trim();
+    if (hpEnv === "production" && !confirm("حالت «واقعی» پول واقعی از اعضا می‌گیرد. مطمئن هستید؟")) return;
+    const b = $("hp_save"); b.disabled = true; const { data, error } = await sb.rpc("admin_set_gateway", { p_key: k || null, p_env: hpEnv, p_enabled: $("hp_on").checked }); b.disabled = false;
+    if (error) return toast("خطا: " + (/length/.test(error.message) ? "کلید درست نیست" : error.message), true);
+    $("hp_key").value = ""; hpPaint(data || {}); toast("تنظیمات HesabPay ذخیره شد ✓"); };
+  $("hp_del").onclick = async () => { if (!confirm("کلید HesabPay حذف و پرداخت آنلاین غیرفعال شود؟")) return; const { data, error } = await sb.rpc("admin_clear_gateway_key"); if (error) return toast("خطا: " + error.message, true); hpPaint(data || {}); toast("کلید حذف شد"); };
+  $("hp_test").onclick = async () => { const b = $("hp_test"), r = $("hp_res"); b.disabled = true; r.innerHTML = `<span class="spin"></span> در حال آزمایش…`;
+    try { const { data, error } = await sb.functions.invoke("pay-checkout", { body: { action: "test" } });
+      let d = data; if (error) { try { d = await error.context.json(); } catch { d = { error: error.message }; } }
+      r.innerHTML = d?.ok ? `✅ اتصال برقرار است (${d.env === "production" ? "واقعی" : "آزمایشی"} · ${d.ms} ms). یک جلسه‌ی آزمایشی ساخته شد که پرداخت نمی‌شود و خودش منقضی می‌شود.`
+        : d?.error === "gateway_not_configured" ? "⚠️ اول کلید API را ذخیره کنید."
+        : `❌ اتصال ناموفق${d?.http ? " (HTTP " + d.http + ")" : ""}${d?.message ? ": " + esc(String(d.message)) : ""}. کلید یا حالت (آزمایشی/واقعی) را بررسی کنید — کلید Sandbox فقط در حالت آزمایشی کار می‌کند.`;
+    } catch (e) { r.textContent = "خطا: " + e.message; } b.disabled = false; };
   $("bn_save").onclick = async () => { const v = { enabled: $("bn_on").checked, pay_id: $("bn_id").value.trim(), name: $("bn_name").value.trim(), address: $("bn_addr").value.trim(), network: $("bn_net").value.trim(), link: $("bn_link").value.trim(), note: $("bn_note").value.trim() };
     if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
     if (v.enabled && !v.pay_id && !v.address) return toast("حداقل Pay ID یا آدرس کیف پول لازم است", true);
@@ -2034,7 +2075,7 @@ function sheetSignal(s){
         ${s.expires_at ? `<div><span>اعتبار تا</span><b>${fmtFull(s.expires_at)}</b></div>` : ""}
       </div></div>
     <div class="box cmbox"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><b>💬 نظرات این سیگنال</b>
-      <label class="tog"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
+      <label class="sw"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
       <div class="hint" id="cmst" style="margin-top:6px">در حال بارگذاری…</div><button type="button" class="ghost" id="cmview" style="margin-top:8px">مشاهده و مدیریت نظرات</button></div>
     ${(!s.auto || (s.phase === "waiting" && Date.now() - new Date(s.created_at) < 15 * 60000)) ? `<button class="ghost red" id="del">حذف این سیگنال</button><p class="hint" style="text-align:center">حذف فقط تا ۱۵ دقیقه بعد از انتشار و قبل از فعال شدن ممکن است.</p>` : `<p class="hint" style="text-align:center">🔒 این سیگنال قفل است و قابل حذف یا تغییر نیست.</p>`}`);
   applyNoteLang($("sheet"));

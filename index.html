@@ -1307,7 +1307,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081442";
+const BUILD = "202611081450";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -2341,10 +2341,10 @@ async function openPlans(){
       <ul>${(p.features || []).map(f => `<li>${esc(f)}</li>`).join("")}</ul><button class="cta press" data-plan="${p.id}">${L.pay}</button></div>`).join("")}`).join("")}
     <div class="plerr" id="plerr"></div>
     ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}<small>${x.provider === "binance" ? "Binance" : "HesabPay"}${x.reject_reason ? ` · ${BT().why}: ${esc(x.reject_reason)}` : ""}</small></span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
-  const { data: bnS } = await sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(); const BN = bnS?.value || {};
+  const [{ data: bnS }, { data: hpOn }] = await Promise.all([sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(), sb.rpc("gateway_enabled")]); const BN = bnS?.value || {};
   $("plbody").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if (!b || b.dataset.via) return; e.stopImmediatePropagation();
     const pl = (plans || []).find(p => p.id === Number(b.dataset.plan)); if (!pl) return; const B = BT();
-    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp"><b>💳 ${B.hp}</b><small>${B.hpS}</small></button><button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
+    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp" ${hpOn ? "" : "disabled"}><b>💳 ${B.hp}</b><small>${hpOn ? B.hpS : B.off}</small></button><button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
       if (m === "hp") { b.dataset.via = "hp"; b.click(); delete b.dataset.via; } else if (m === "bn") binancePay(pl, BN); }); }, true);
   $("plbody").onclick = async e => {
     const b = e.target.closest("[data-plan]"); if (!b) return; const er = $("plerr"); er.textContent = "";

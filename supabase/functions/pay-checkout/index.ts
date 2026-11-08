@@ -2,7 +2,9 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 // Creates a HesabPay hosted-checkout session for a subscription plan.
-// Secrets: HESABPAY_API_KEY (required), HESABPAY_ENV = "sandbox" | "production" (default sandbox), SITE_URL (return pages).
+// Gateway config is set by the admin in the panel (stored in private.app_secrets, read via gateway_config() with the
+// service role). Env secrets HESABPAY_API_KEY / HESABPAY_ENV are a fallback. SITE_URL sets the return pages.
+// POST {action:"test"} (admin only) creates an unpaid test session to verify the key.
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
@@ -14,14 +16,28 @@ Deno.serve(async (req) => {
   const { data: u } = await admin.auth.getUser(token);
   if (!u?.user) return json({ error: "unauthorized" }, 401);
   const { data: prof } = await admin.from("profiles").select("role,disabled,deleted_at,email").eq("id", u.user.id).maybeSingle();
-  if (!prof || prof.role !== "member" || prof.deleted_at) return json({ error: "forbidden" }, 403);
+  let body: any = {}; try { body = await req.json(); } catch { /* */ }
+  const isTest = body?.action === "test";
+  if (!prof || prof.deleted_at || (isTest ? prof.role !== "admin" : prof.role !== "member")) return json({ error: "forbidden" }, 403);
 
-  const key = Deno.env.get("HESABPAY_API_KEY");
-  if (!key) return json({ error: "gateway_not_configured" }, 503);
-  const base = (Deno.env.get("HESABPAY_ENV") ?? "sandbox") === "production" ? "https://api.hesab.com" : "https://api-sandbox.hesab.com";
+  const { data: cfg } = await admin.rpc("gateway_config");
+  const key = cfg?.key || Deno.env.get("HESABPAY_API_KEY");
+  const enabled = cfg?.key ? cfg.enabled === true : !!Deno.env.get("HESABPAY_API_KEY");
+  if (!key || (!enabled && !isTest)) return json({ error: "gateway_not_configured" }, 503);
+  const env = cfg?.key ? cfg.env : (Deno.env.get("HESABPAY_ENV") ?? "sandbox");
+  const base = env === "production" ? "https://api.hesab.com" : "https://api-sandbox.hesab.com";
   const site = (Deno.env.get("SITE_URL") ?? "https://alijojo2122joon-jpg.github.io/Silver-signals").replace(/\/+$/, "");
 
-  let body: any = {}; try { body = await req.json(); } catch { /* */ }
+  if (isTest) {
+    const { data: pl } = await admin.from("plans").select("code,name_fa,price_afn").eq("active", true).order("price_afn").limit(1).maybeSingle();
+    const t0 = Date.now();
+    const r = await fetch(base + "/api/v1/payment/create-session", { method: "POST", headers: { "Authorization": "API-KEY " + key, "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ email: u.user.email || undefined, user_id: "connection-test", items: [{ id: "test", name: "Connection test (not charged)", price: Number(pl?.price_afn ?? 100) }],
+        redirect_success_url: `${site}/modir.html`, redirect_failure_url: `${site}/modir.html` }), signal: AbortSignal.timeout(20000) })
+      .catch(e => ({ ok: false, status: 0, json: async () => ({ message: String(e) }) } as any));
+    const j: any = await r.json().catch(() => ({}));
+    return json({ ok: !!(r.ok && j?.url), env, http: r.status, message: j?.message ?? j?.error ?? null, ms: Date.now() - t0 });
+  }
   const { data: plan } = await admin.from("plans").select("*").eq("id", Number(body.plan_id)).eq("active", true).maybeSingle();
   if (!plan) return json({ error: "plan_not_found" }, 404);
 
