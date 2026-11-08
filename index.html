@@ -345,7 +345,7 @@
   html.app body{overscroll-behavior:none}
 
   /* ===== ناوبری پایین ===== */
-  .bnav{position:fixed;z-index:45;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100% - 20px));display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border-radius:24px;background:var(--tile);border:1px solid var(--stroke);box-shadow:0 18px 40px -14px rgba(0,0,0,.4)}
+  .bnav{position:fixed;z-index:45;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100% - 20px));display:grid;grid-template-columns:repeat(5,1fr);padding:6px;border-radius:24px;background:var(--tile);border:1px solid var(--stroke);box-shadow:0 18px 40px -14px rgba(0,0,0,.4)}
   .bnav button{position:relative;border:0;background:none;cursor:pointer;font-family:inherit;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border-radius:18px;font-size:11px;font-weight:800;transition:color .3s,background .4s}
   .bnav button span{font-size:19px;line-height:1;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
   .bnav button.on{color:var(--aText);background:linear-gradient(180deg,var(--a1),var(--a2) 60%,var(--a3))}
@@ -1026,6 +1026,116 @@
   .fxlog small{color:var(--muted)}
   .fxlog span{font:800 12px Montserrat,Arial,sans-serif;display:flex;gap:10px}
   @media (min-width:700px){ .fxn b{font-size:14px} .fxv{font-size:15px} }
+
+  /* ===== داشبورد ===== */
+  .dash{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+  .dcard{min-width:0}
+  .dcard{padding:18px 16px;border-radius:30px}
+  .dcard h3{margin:0 0 12px;font-size:16px;font-weight:900}
+  .dstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .dstats div{padding:10px 6px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);text-align:center}
+  .dstats .big{grid-column:span 3;display:flex;align-items:baseline;justify-content:center;gap:10px}
+  .dstats b{display:block;font:900 22px/1.1 Montserrat,Arial,sans-serif;color:var(--text)}
+  .dstats .big b{font-size:34px}
+  .dstats small{font-size:11px;font-weight:700;color:var(--muted)}
+  .dstats .w b{color:var(--buy)} .dstats .l b{color:var(--sell)}
+  .dmk,.dsplit{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:12px;font-weight:700;color:var(--muted)}
+  .dmk span{padding:6px 12px;border-radius:999px;background:var(--tile);box-shadow:var(--raise)}
+  .dmk b,.dsplit b{color:var(--text);font-family:Montserrat,Arial,sans-serif}
+  .dd{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px;vertical-align:1px;flex:none}
+  .dd.live{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)} .dd.delayed{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.18)}
+  .dd.closed{background:#64748b;box-shadow:0 0 0 3px rgba(100,116,139,.18)} .dd.down{background:#e5484d;box-shadow:0 0 0 3px rgba(229,72,77,.18)}
+  .dlist{display:grid;gap:6px}
+  .drow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .drow>span:first-child{display:flex;align-items:center;flex-wrap:wrap;min-width:0;font-size:12.5px}
+  .drow>span:first-child small{width:100%;padding-inline-start:15px;font-size:10.5px;color:var(--muted)}
+  .dst{text-align:end;font-size:12px;font-weight:900;white-space:nowrap}
+  .dst small{display:block;font-size:10.5px;font-weight:600;color:var(--muted)}
+  .dst.live{color:#16a34a} .dst.delayed{color:#d97706} .dst.closed{color:var(--muted)} .dst.down{color:var(--sell)}
+  .dnote{margin:10px 0 0;font-size:11.5px;line-height:1.8;color:var(--muted);font-weight:600}
+  #rkf label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;font-weight:800;color:var(--muted);min-width:0}
+  #rkf input,#rkf select{width:100%;height:46px;padding:0 12px;border:0;border-radius:14px;background:var(--field);box-shadow:var(--sh-in);font:700 15px Montserrat,inherit;color:var(--text);outline:0;-webkit-appearance:none;appearance:none}
+  #rkf select{font-family:inherit;font-size:13px}
+  .rk1,.rk2,.rk3{margin-top:10px}
+  .rk2{display:grid;grid-template-columns:1fr 1fr;gap:8px} .rk3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .rkspec{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+  .rkspec>div{padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--text) 4%,transparent)}
+  .rkspec small{display:block;font-size:10.5px;color:var(--muted);font-weight:700}
+  .rkspec b{font:800 13px Montserrat,Arial,sans-serif}
+  .rkside{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding:5px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in)}
+  .rkside button{height:40px;border:0;border-radius:999px;background:none;font:inherit;font-weight:900;color:var(--muted);cursor:pointer}
+  .rkside button.on.b{color:#fff;background:radial-gradient(120% 140% at 30% 15%,#6ef3bd,#14b87a 50%,#0a8b5c);box-shadow:0 8px 16px -6px rgba(10,139,92,.6)}
+  .rkside button.on.s{color:#fff;background:radial-gradient(120% 140% at 30% 15%,#ff9a9d,#ee4b51 50%,#b92c32);box-shadow:0 8px 16px -6px rgba(185,44,50,.6)}
+  .rkout{margin-top:14px}
+  .rkbig{display:flex;align-items:baseline;justify-content:center;gap:8px;padding:14px;border-radius:22px;background:linear-gradient(180deg,var(--navy2),var(--navy));color:var(--onNavy);box-shadow:0 14px 26px -12px rgba(17,22,44,.55)}
+  .rkbig small{font-size:12px;font-weight:800;opacity:.8} .rkbig b{font:900 30px Montserrat,Arial,sans-serif} .rkbig span{font-weight:800;opacity:.8}
+  .rkbig.bad{background:linear-gradient(180deg,#c0392b,#8e2219)}
+  .rkwarn{margin-top:8px;padding:10px 12px;border-radius:14px;background:var(--sell-bg);color:var(--sell);font-size:12px;font-weight:800}
+  .rkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .rkgrid div{padding:10px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .rkgrid small{display:block;font-size:10.5px;font-weight:700;color:var(--muted)}
+  .rkgrid b{font:800 13.5px Montserrat,Arial,sans-serif}
+  .pos{color:var(--buy)!important} .neg{color:var(--sell)!important}
+  .pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .pstats div{padding:10px 6px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);text-align:center}
+  .pstats small{display:block;font-size:10.5px;font-weight:700;color:var(--muted)} .pstats b{font:900 16px Montserrat,Arial,sans-serif}
+  .pcurve{margin-top:12px}
+  .pcurve small{font-size:11px;font-weight:800;color:var(--muted)}
+  .pc{display:block;width:100%;height:130px;margin-top:6px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .pc .z{stroke:var(--line);stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+  .pc .l{fill:none;stroke:#ff7a3d;stroke-width:2.4;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+  .pc .a{fill:color-mix(in srgb,#ff7a3d 14%,transparent)}
+  .ptable{margin-top:12px;overflow-x:auto;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .ptable table{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap}
+  .ptable th{padding:8px 6px;color:var(--muted);font-weight:800;text-align:center;border-bottom:1px solid var(--line)}
+  .ptable td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--line);font-weight:700}
+  .poff{padding:18px 14px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in);text-align:center}
+  .poff b{font-size:13.5px} .poff p{margin:8px 0 0;font-size:12px;line-height:1.9;color:var(--muted)}
+  .bnav button{font-size:10.5px!important}
+
+  /* ===== اعلان‌ها ===== */
+  .bell{position:relative;font-size:17px}
+  .bell .bdg{position:absolute;top:-3px;inset-inline-end:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--sell);color:#fff;font:800 10.5px/18px Montserrat,Arial,sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg)}
+  .npanel{position:fixed;inset:0;z-index:90;background:var(--bg);padding:calc(14px + env(safe-area-inset-top)) 16px 20px;overflow-y:auto;transform:translateY(100%);transition:transform .55s cubic-bezier(.22,1,.36,1)}
+  .npanel.show{transform:none}
+  .nphd{display:flex;justify-content:space-between;align-items:center}
+  .nphd b{font-size:17px;font-weight:900}
+  .nphint{font-size:12px;line-height:1.9;color:var(--muted);margin:10px 0 14px}
+  .nplist{display:grid;gap:8px}
+  .npi{padding:12px 14px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in)}
+  .npi.new{box-shadow:var(--sh-in),inset 3px 0 0 #ff7a3d}
+  .npi b{font-size:13.5px;font-weight:800} .npi p{margin:4px 0 0;font-size:12.5px;color:var(--text)} .npi small{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
+
+  @media (max-width:420px){ .top .icons{gap:5px} .top .ib{width:38px!important;height:38px!important} .top .wm b{font-size:13px} .top .wm small{font-size:7px;letter-spacing:.18em} .top .lgo{width:38px!important;height:38px!important} }
+  @media (max-width:360px){ .top .wm{display:none} }
+
+  /* ===== اشتراک‌ها ===== */
+  .plcur{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px;border-radius:22px;background:linear-gradient(180deg,var(--navy2),var(--navy));color:var(--onNavy)}
+  .plcur span{font-size:12px;opacity:.75} .plcur b{font-size:15px;font-weight:900} .plcur small{margin-inline-start:auto;font-size:12px}
+  .plg{margin:18px 4px 8px;font-size:13px;font-weight:900;color:var(--muted)}
+  .plc{position:relative;padding:16px;margin-bottom:10px;border-radius:24px;background:var(--gl);box-shadow:var(--sh)}
+  .plc.plstar{box-shadow:var(--sh),0 0 0 2px #ff9d3c;margin-top:16px}
+  .plpop{position:absolute;top:-10px;inset-inline-start:16px;padding:3px 10px;border-radius:999px;background:linear-gradient(180deg,#ffb23f,#ff7a3d);color:#fff;font-size:11px;font-weight:900}
+  .plh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .plh>b{font-size:15px;font-weight:900}
+  .plp{font-size:12px;font-weight:700;color:var(--muted)} .plp b{font:900 20px Montserrat,Arial,sans-serif;color:var(--text)}
+  .plc ul{margin:10px 0 12px;padding-inline-start:18px;font-size:12.5px;line-height:1.9}
+  .plerr{margin-top:8px;font-size:13px;font-weight:700;color:var(--sell);line-height:1.9}
+  .plh2{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;margin-bottom:6px;border-radius:14px;background:var(--field);font-size:11.5px}
+  .pst{font-weight:800} .pst.paid{color:var(--buy)} .pst.failed,.pst.expired{color:var(--sell)} .pst.pending{color:#d97706}
+
+  /* ===== نسخه‌ی کامپیوتر ===== */
+  .instbtn{display:none!important;margin:8px auto 0} html.can-install .instbtn{display:inline-flex!important}
+  @media (min-width:1000px){
+    html[data-pg="dash"] .app{max-width:1180px} html[data-pg="prc"] .app{max-width:900px}
+    .dash{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start}
+    .dash .dcard:nth-child(4){grid-column:1/-1}
+    #fxboard .fxb{max-width:none}
+    .bnav{width:min(620px,calc(100% - 20px))}
+    .feedwrap,.list{max-width:none}
+  }
+  @media (min-width:1000px) and (display-mode:standalone){ .top{padding-top:8px} }
+  @media (display-mode:window-controls-overlay){ .top{padding-top:calc(env(titlebar-area-height,0px) + 6px);-webkit-app-region:drag} .top button,.top a{-webkit-app-region:no-drag} }
 </style>
 </head>
 <body>
@@ -1037,7 +1147,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611072131";
+const BUILD = "202611081230";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1319,11 +1429,13 @@ function openProfile(){
         <label class="bigav" id="pav">${pick ? `<img src="${URL.createObjectURL(pick)}" alt="">` : myAvatarHTML()}<span class="cam">📷 ${T.changePhoto}</span>
           <input type="file" accept="image/*" id="pfile" hidden></label>
         <h2>${esc(me.name || "")}</h2><div class="pmail ltr">${esc(me.email || "")}</div>
-        ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })}</div>` : ""}
+        <button class="ghost2 instbtn" onclick="installApp()">🖥 ${lang === "en" ? "Install on this computer/phone" : lang === "ps" ? "په کمپیوټر/موبایل نصب کړئ" : "نصب برنامه روی همین کامپیوتر/گوشی"}</button>
+        ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })} · ${planName(me.plan)}</div><button class="cta" id="prenew" style="margin-top:10px">${PT().renew}</button>` : ""}
         ${pick ? `<button class="cta" id="psave">${T.savePhoto}</button>` : ""}
         ${me.avatar && !pick ? `<button class="ghost2" id="pdel">${T.removePhoto}</button>` : ""}
         <div class="err" id="perr"></div></div>`;
     $("px").onclick = () => history.back();
+    if ($("prenew")) $("prenew").onclick = () => { history.back(); setTimeout(openPlans, 450); };
     $("pfile").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { pick = await squareJpeg(f); draw(); } catch { $("perr").textContent = T.badPhoto; } };
     if ($("psave")) $("psave").onclick = async () => {
       const b = $("psave"); b.disabled = true; b.innerHTML = '<span class="spin"></span>';
@@ -1349,6 +1461,7 @@ function topbar(){
   return `<div class="top rise">
     <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div></div>
     <div class="icons">
+      ${me && me.role !== "admin" ? `<button class="ib bell" id="bell" aria-label="notifications">🔔<b class="bdg" id="bdg" hidden></b></button>` : ""}
       ${me ? `<button class="ib meav" id="meav" aria-label="${T.myProfile}">${myAvatarHTML()}</button>` : ""}
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
@@ -1358,6 +1471,7 @@ function topbar(){
 }
 function bindTop(){
   if ($("meav")) $("meav").onclick = openProfile;
+  if ($("bell")) { $("bell").onclick = openNotifs; paintBell(); }
   $("out").onclick = () => { store.set("cache_me", null); store.set("cache_msgs", []); sb.auth.signOut(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
@@ -1404,11 +1518,13 @@ function renderLogin(){
 function renderMsg(icon, title, text, chat = false){
   view = "msg"; stopLive(); removeChat();
   $app.innerHTML = topbar() + `<div class="msg glass glow rise" style="margin-top:30px"><div class="big">${icon}</div><h2>${title}</h2><div>${text}</div>
+    ${chat && title === T.expired ? `<button class="cta" id="mrenew" style="margin-top:16px">${PT().renew}</button>` : ""}
     ${chat ? `<p style="margin:14px 0 4px;font-size:13px">${T.chatHint}</p><button class="cta" id="mchat" style="margin-top:12px">💬 ${T.msgBtn}</button>` : ""}</div>`;
   bindTop();
   if (chat && me) {
     setupChat();
     $("mchat").onclick = () => openChat();
+    if ($("mrenew")) $("mrenew").onclick = openPlans;
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden && !chatOpen) loadChat(); }, 8000);
   }
 }
@@ -1416,7 +1532,7 @@ function renderMsg(icon, title, text, chat = false){
 
 /* ================= بخش‌های جدید برنامه ================= */
 const L2 = {
-  fa: { nav:{sig:"سیگنال‌ها", prc:"قیمت‌ها", tool:"ابزارها", acad:"آکادمی"}, tp3:"تارگت 3",
+  fa: { nav:{sig:"سیگنال‌ها", dash:"داشبورد", prc:"قیمت‌ها", tool:"ابزارها", acad:"آکادمی"}, tp3:"تارگت 3",
     tf:{m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسانی 4 ساعته", d1:"روزانه", w1:"هفتگی"},
     per:{all:"همه", day:"امروز", week:"این هفته", month:"این ماه", year:"امسال"},
     sort:{new:"جدیدترین", old:"قدیمی‌ترین", win:"موفق‌ترین", loss:"ناموفق‌ترین"},
@@ -1427,14 +1543,14 @@ const L2 = {
     dxy:"شاخص دالر (DXY)", dxySub:"قدرت دالر جهانی؛ روی طلا و نقره اثر مستقیم دارد", lastUpd:"آخرین به‌روزرسانی", noRate:"نرخ هنوز ثبت نشده",
     calcT:"ماشین‌حساب طلا و نقره", calcS:"قیمت مثقال و گرم به افغانی", metal:"فلز", gold:"طلا", silver:"نقره", karat:"عیار", weight:"وزن", unitL:"واحد", ozPrice:"قیمت انس (دالر)", usdAfn:"نرخ دالر (افغانی)", result:"نتیجه",
     riskT:"مدیریت ریسک", riskS:"حجم مجاز معامله با حداکثر 2٪ ریسک", balance:"موجودی", riskPct:"درصد ریسک", entryP:"قیمت ورود", stopP:"حد ضرر", maxLoss:"حداکثر ضرر مجاز", posSize:"حجم معامله",
-    alertT:"هشدار قیمت", alertS:"وقتی قیمت به نرخ هدف رسید خبرتان می‌کنیم", asset:"دارایی", cond:"شرط", above:"بالاتر یا مساوی", below:"پایین‌تر یا مساوی", target:"نرخ هدف", add:"افزودن", alertHit:"هشدار قیمت", alertNote:"هشدار فقط وقتی برنامه باز است کار می‌کند.", noAlerts:"هشداری ثبت نشده.",
+    alertT:"هشدار قیمت", alertS:"وقتی قیمت به نرخ هدف رسید خبرتان می‌کنیم", asset:"دارایی", cond:"شرط", above:"بالاتر یا مساوی", below:"پایین‌تر یا مساوی", target:"نرخ هدف", add:"افزودن", alertHit:"هشدار قیمت", alertNote:"سرور هر ۲۰ ثانیه قیمت را بررسی می‌کند؛ حتی وقتی برنامه بسته است. نتیجه در 🔔 اعلان‌ها می‌آید.", noAlerts:"هشداری ثبت نشده.",
     jT:"دفترچه‌ی معاملات", jS:"ثبت معاملات و سود و ضرر ماهانه", date:"تاریخ", side:"نوع", qty:"مقدار", openP:"نرخ خرید/ورود", closeP:"نرخ فروش/خروج", note2:"یادداشت", save:"ثبت", monthPnl:"سود/ضرر این ماه", noTrades:"هنوز معامله‌ای ثبت نکرده‌اید.", open:"باز",
     dictT:"دیکشنری اصطلاحات", dictS:"معادل دری اصطلاحات بازار", search:"جستجو…",
     about:"درباره‌ی آکادمی", teacherT:"استاد", founded:"تأسیس", licenses:"مجوزها", services:"خدمات", years:"سابقه", specialty:"تخصص", certs:"گواهینامه‌ها",
     whatsapp:"واتس‌اپ", telegram:"تلگرام", pollT:"نبض بازار", voted:"رأی شما ثبت شد", newsT:"خبرها و تحلیل‌های استاد", articlesT:"آموزش‌ها", videosT:"ویدیوهای تحلیل روزانه",
     impact:"تأثیر", upI:"صعودی", dnI:"نزولی", neuI:"خنثی", prevV:"قبلی", fcV:"پیش‌بینی", actV:"واقعی", imp:{high:"مهم", medium:"متوسط", low:"کم"}, noContent:"هنوز چیزی منتشر نشده.",
     disc2:"تمام تحلیل‌ها و سیگنال‌های طلا، نقره و دالر جنبه‌ی آموزشی دارند و مسئولیت تصمیم‌گیری نهایی و ریسک معاملات بر عهده‌ی خود معامله‌گر است.", shareTxt:"{p}٪ موفقیت در {m} {per}" },
-  ps: { nav:{sig:"سیګنالونه", prc:"بیې", tool:"وسایل", acad:"اکاډمي"}, tp3:"هدف 3",
+  ps: { nav:{sig:"سیګنالونه", dash:"ډشبورډ", prc:"بیې", tool:"وسایل", acad:"اکاډمي"}, tp3:"هدف 3",
     tf:{m15:"سکالپ 15 دقیقې", h1:"1 ساعته", h4:"4 ساعته", d1:"ورځنی", w1:"اونیز"},
     per:{all:"ټول", day:"نن", week:"دا اونۍ", month:"دا میاشت", year:"سږ کال"},
     sort:{new:"نوي", old:"زاړه", win:"بریالي", loss:"ناکام"},
@@ -1445,14 +1561,14 @@ const L2 = {
     dxy:"د ډالر شاخص (DXY)", dxySub:"د نړیوال ډالر ځواک؛ پر سرو او سپینو زرو مستقیم اغېز لري", lastUpd:"وروستی تازه کېدل", noRate:"نرخ لا نه دی ثبت شوی",
     calcT:"د سرو او سپینو زرو حساب", calcS:"د مثقال او ګرام بیه په افغانیو", metal:"فلز", gold:"سره زر", silver:"سپین زر", karat:"عیار", weight:"وزن", unitL:"واحد", ozPrice:"د اونس بیه (ډالر)", usdAfn:"د ډالر نرخ (افغانۍ)", result:"پایله",
     riskT:"د خطر مدیریت", riskS:"د اعظمي 2٪ خطر سره د معاملې اندازه", balance:"شتمني", riskPct:"د خطر سلنه", entryP:"د ننوتلو بیه", stopP:"د تاوان حد", maxLoss:"اعظمي مجاز تاوان", posSize:"د معاملې اندازه",
-    alertT:"د بیې خبرتیا", alertS:"کله چې بیه هدف ته ورسېږي خبر به شئ", asset:"شتمني", cond:"شرط", above:"لوړه یا مساوي", below:"ټیټه یا مساوي", target:"هدف نرخ", add:"زیاتول", alertHit:"د بیې خبرتیا", alertNote:"خبرتیا یوازې هغه وخت کار کوي چې برنامه خلاصه وي.", noAlerts:"خبرتیا نشته.",
+    alertT:"د بیې خبرتیا", alertS:"کله چې بیه هدف ته ورسېږي خبر به شئ", asset:"شتمني", cond:"شرط", above:"لوړه یا مساوي", below:"ټیټه یا مساوي", target:"هدف نرخ", add:"زیاتول", alertHit:"د بیې خبرتیا", alertNote:"سرور هر ۲۰ ثانیې بیه ګوري، حتی کله چې اپ بند وي. پایله په 🔔 خبرتیاوو کې راځي.", noAlerts:"خبرتیا نشته.",
     jT:"د معاملو کتابچه", jS:"د معاملو ثبت او میاشتنۍ ګټه/تاوان", date:"نېټه", side:"ډول", qty:"اندازه", openP:"د پېرود/ننوتلو نرخ", closeP:"د پلور/وتلو نرخ", note2:"یادښت", save:"ثبت", monthPnl:"د دې میاشتې ګټه/تاوان", noTrades:"لا مو معامله نه ده ثبت کړې.", open:"خلاص",
     dictT:"د اصطلاحاتو قاموس", dictS:"د بازار د اصطلاحاتو معنا", search:"لټون…",
     about:"د اکاډمۍ په اړه", teacherT:"استاد", founded:"تأسیس", licenses:"جوازونه", services:"خدمتونه", years:"تجربه", specialty:"تخصص", certs:"سندونه",
     whatsapp:"واټساپ", telegram:"ټلګرام", pollT:"د بازار نبض", voted:"ستاسو رایه ثبت شوه", newsT:"د استاد خبرونه او تحلیلونه", articlesT:"زده‌کړې", videosT:"د ورځني تحلیل ویډیوګانې",
     impact:"اغېز", upI:"لوړېدونکی", dnI:"ټیټېدونکی", neuI:"بې‌طرفه", prevV:"مخکنی", fcV:"وړاندوینه", actV:"واقعي", imp:{high:"مهم", medium:"منځنی", low:"کم"}, noContent:"لا څه نه دي خپاره شوي.",
     disc2:"د سرو زرو، سپینو زرو او ډالرو ټول تحلیلونه او سیګنالونه زده‌کړیز اړخ لري او د وروستۍ پرېکړې او خطر مسؤلیت پخپله د معامله‌ګر دی.", shareTxt:"په {m} کې {p}٪ بریا ({per})" },
-  en: { nav:{sig:"Signals", prc:"Prices", tool:"Tools", acad:"Academy"}, tp3:"Target 3",
+  en: { nav:{sig:"Signals", dash:"Dashboard", prc:"Prices", tool:"Tools", acad:"Academy"}, tp3:"Target 3",
     tf:{m15:"Scalp 15m", h1:"1 hour", h4:"Swing 4h", d1:"Daily", w1:"Weekly"},
     per:{all:"All", day:"Today", week:"This week", month:"This month", year:"This year"},
     sort:{new:"Newest", old:"Oldest", win:"Winners", loss:"Losers"},
@@ -1463,7 +1579,7 @@ const L2 = {
     dxy:"Dollar Index (DXY)", dxySub:"Global dollar strength; directly affects gold and silver", lastUpd:"Last update", noRate:"Rate not posted yet",
     calcT:"Gold & silver calculator", calcS:"Mithqal and gram price in AFN", metal:"Metal", gold:"Gold", silver:"Silver", karat:"Karat", weight:"Weight", unitL:"Unit", ozPrice:"Ounce price (USD)", usdAfn:"USD rate (AFN)", result:"Result",
     riskT:"Risk manager", riskS:"Position size with max 2% risk", balance:"Balance", riskPct:"Risk %", entryP:"Entry price", stopP:"Stop loss", maxLoss:"Max allowed loss", posSize:"Position size",
-    alertT:"Price alerts", alertS:"We'll alert you when the price hits your target", asset:"Asset", cond:"Condition", above:"At or above", below:"At or below", target:"Target", add:"Add", alertHit:"Price alert", alertNote:"Alerts work while the app is open.", noAlerts:"No alerts yet.",
+    alertT:"Price alerts", alertS:"We'll alert you when the price hits your target", asset:"Asset", cond:"Condition", above:"At or above", below:"At or below", target:"Target", add:"Add", alertHit:"Price alert", alertNote:"The server checks prices every 20 s, even when the app is closed. Results appear under 🔔.", noAlerts:"No alerts yet.",
     jT:"Trade journal", jS:"Log trades and monthly P/L", date:"Date", side:"Side", qty:"Qty", openP:"Open price", closeP:"Close price", note2:"Note", save:"Save", monthPnl:"This month's P/L", noTrades:"No trades logged yet.", open:"Open",
     dictT:"Glossary", dictS:"Market terms explained", search:"Search…",
     about:"About the academy", teacherT:"Instructor", founded:"Founded", licenses:"Licenses", services:"Services", years:"Experience", specialty:"Specialty", certs:"Certificates",
@@ -1543,7 +1659,7 @@ if (EMBED && parent !== window) { let lastH = 0;
   const sendH = () => { const a = document.querySelector(".app") || document.body; const h = Math.ceil(a.getBoundingClientRect().height) + 8;
     if (Math.abs(h - lastH) > 2) { lastH = h; parent.postMessage({ maEmbedH: h }, "*"); } };
   addEventListener("load", () => { new ResizeObserver(sendH).observe(document.body); sendH(); }); setInterval(sendH, 1500); }
-let page = EMBED === "prc" ? "prc" : store.get("page", "sig"); if (!["sig","prc","tool","acad"].includes(page)) page = "sig";
+let page = EMBED === "prc" || EMBED === "dash" ? EMBED : (new URLSearchParams(location.search).get("pg") || store.get("page", "sig")); if (!["sig","dash","prc","tool","acad"].includes(page)) page = "sig"; document.documentElement.dataset.pg = page;
 let per = store.get("per", "all"), sortBy = store.get("sort", "new");
 let prices = store.get("cache_prices", null), rates = store.get("cache_rates", []), pricesAt = 0;
 let myRatings = {}, academy = store.get("cache_academy", {}), posts = store.get("cache_posts", []), poll = null, pollRes = {}, myVote = null;
@@ -1633,7 +1749,7 @@ document.addEventListener("click", async e => {
 
 /* ----- قیمت‌ها ----- */
 async function loadPrices(force){
-  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" ? 5000 : 55000)) return;
+  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" || page === "dash" ? 5000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   if (Date.now() - newsAt > 120000) loadNews();
@@ -1643,6 +1759,7 @@ async function loadPrices(force){
   if (data) { rates = data; store.set("cache_rates", rates); }
   checkAlerts();
   if (page === "prc") { drawPrices(); loadFx(); }
+  if (page === "dash") refreshDashData();
   if (page === "tool") fillCalcLive();
 }
 const okRate = v => v == null || (Number(v) > 30 && Number(v) < 200);
@@ -1661,7 +1778,8 @@ const agoTxt = iso => { if (!iso) return "—"; const s = Math.max(0, Math.round
 /* شمارنده‌ی «چند ثانیه پیش» و به‌روزرسانی هر ۵ ثانیه در صفحه‌ی قیمت و ابزار */
 setInterval(() => {
   document.querySelectorAll("[data-ago]").forEach(el => { el.textContent = agoTxt(prices?.at); });
-  if (!document.hidden && view === "feed" && (page === "prc" || page === "tool")) loadPrices();
+  document.querySelectorAll("[data-ts]").forEach(el => { if (el.dataset.ts) el.textContent = agoTxt(el.dataset.ts); });
+  if (!document.hidden && view === "feed" && (page === "prc" || page === "tool" || page === "dash")) loadPrices();
   if (!document.hidden && view === "feed" && page === "acad") { if (Date.now() - newsAt > 60000) loadNews(); if (Date.now() - calAt > 5 * 60000) loadCalendar(); }
 }, 1000);
 function tvWidget(){
@@ -1707,7 +1825,7 @@ async function loadFx(force){
   fxBusy = true;
   try { const { data, error } = await sb.from("currency_board").select("*").order("sort"); if (!error && data) { fxRows = data.filter(r => r.visible !== false); fxAt = Date.now(); store.set("cache_fx", fxRows); } }
   catch {} finally { fxBusy = false; }
-  drawFx();
+  drawFx(); refreshDashData();
   if (!fxCh) fxCh = sb.channel("fxr").on("postgres_changes", { event: "*", schema: "public", table: "currency_rates" }, () => { clearTimeout(loadFx.t); loadFx.t = setTimeout(() => loadFx(true), 800); }).subscribe();
 }
 function fxRowHTML(r){
@@ -1740,7 +1858,7 @@ function drawFx(){
     <label class="fxs">${I.search || "🔍"}<input id="fxq" type="search" placeholder="${L.search}" autocomplete="off" value="${esc(fxQ)}"></label>
     <div class="fxsort" id="fxsort">${[["pop", L.sPop], ["name", L.sName], ["up", L.sUp], ["dn", L.sDn]].map(([k, t]) => `<button type="button" data-fs="${k}" class="${k === fxSort ? "on" : ""}">${t}</button>`).join("")}</div>
     <div class="fxhead"><span>${L.cur}</span><span>${L.buy}</span><span>${L.sell}</span><span>${L.chg}</span></div><div id="fxlist"></div></div>`;
-  $("fxlist").innerHTML = rows.length ? rows.map(fxRowHTML).join("") : `<div class="upd">${L.none}</div>`;
+  $("fxlist").innerHTML = rows.length ? rows.map(fxRowHTML).join("") : !planHas("sarraf") ? `<div class="upd">🔒 ${PT().sarraf_up} <button class="ghost2" onclick="openPlans()">${PT().up}</button></div>` : `<div class="upd">${L.none}</div>`;
   if (fxOpen) fxHist();
   if (el.dataset.wired) return; el.dataset.wired = 1;
   el.addEventListener("input", e => { if (e.target.id === "fxq") { fxQ = e.target.value; drawFx(); } });
@@ -1774,6 +1892,258 @@ async function fxHist(){
     <div class="fxleg">${ser.map(([, c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join("")}<span class="n">${h.length} · ${L.hist}</span></div>
     <div class="fxlog">${h.slice(-12).reverse().map(x => `<div><small>${fmtFull(x.posted_at)}${x.kind === "manual" ? ` · <em class="fxman">${L.manual}</em>` : ""}</small><span>${ser.map(([k, c]) => x[k] != null ? `<bdi class="ltr" style="color:${c}">${fxNum(x[k], d)}</bdi>` : "").join(" ")}</span></div>`).join("")}</div>`;
 }
+
+/* ===== داشبورد: سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد ===== */
+const DL = {
+  fa: { title: "داشبورد", sig: "سیگنال‌ها", total: "کل سیگنال‌ها", d30: "۳۰ روز اخیر", open: "باز (وارد شده)", wait: "در انتظار ورود", win: "موفق", loss: "ناموفق", exp: "منقضی/بسته", autoS: "داوری خودکار با دیتای زنده", manS: "ثبت قدیمی/دستی",
+    data: "وضعیت داده", live: "زنده", delayed: "تأخیری", closed: "بازار بسته", down: "قطع/نامعلوم", src: "منبع", upd: "آخرین به‌روزرسانی",
+    sXau: "انس طلا (جهانی)", sXag: "انس نقره", sUsd: "دالر کابل (تلگرام)", sFx: "جدول ارزها", sLocal: "نرخ طلای کابل (آفاق)", sNews: "اخبار", sCal: "تقویم اقتصادی", sEng: "موتور داوری سیگنال‌ها",
+    engNote: "نتیجه‌ی هر سیگنال فقط با قیمت زنده و توسط سرور ثبت می‌شود؛ مدیر نمی‌تواند آن را تغییر دهد.",
+    risk: "ماشین حساب مدیریت ریسک", inst: "نماد / قرارداد", custom: "سفارشی", contract: "اندازه‌ی قرارداد (واحد در هر لات)", tick: "اندازه‌ی تیک", tickVal: "ارزش هر تیک برای ۱ لات", accCcy: "ارز حساب",
+    minLot: "حداقل لات", lotStep: "گام لات", bal: "موجودی حساب", riskPct: "ریسک هر معامله (%)", entry: "قیمت ورود", sl: "حد ضرر", tp: "حد سود (اختیاری)", comm: "کارمزد رفت‌وبرگشت هر لات", slip: "لغزش احتمالی (تیک)",
+    fromSig: "پر کردن از سیگنال", lots: "حجم مجاز", riskAmt: "مبلغ ریسک", realRisk: "ریسک واقعی با کارمزد و لغزش", perLot: "زیان هر لات تا حد ضرر", ticks: "فاصله تا حد ضرر", rr: "نسبت سود به ریسک (خالص)", profit: "سود در حد سود",
+    tooBig: "حتی با حداقل لات، ریسک از حد تعیین‌شده بیشتر است.", fill: "ورود و حد ضرر را وارد کنید.", side: "جهت", buy: "خرید", sell: "فروش", wrongSide: "حد ضرر باید در خلاف جهت معامله باشد.",
+    perf: "گزارش عملکرد", perfOff: "این بخش بعد از ثبت اولین معامله‌ی معتبر فعال می‌شود.", perfWhy: "معامله‌ی معتبر = سیگنالی که سرور با قیمت زنده ورود و نتیجه‌ی آن را ثبت کرده است. سیگنال‌های قدیمی و دستی حساب نمی‌شوند.",
+    net: "سود خالص", pf: "ضریب سودآوری", dd: "بیشترین افت سرمایه", wr: "درصد موفقیت", trades: "معاملات", avgR: "میانگین هر معامله", curve: "روند سود خالص (بر حسب R)", rNote: "R = یک واحد ریسک (فاصله‌ی ورود تا حد ضرر). اگر در هر معامله ۱٪ ریسک کنید، هر R برابر ۱٪ حساب است.",
+    tDate: "تاریخ", tMk: "بازار", tSide: "جهت", tIn: "ورود", tOut: "خروج", tRes: "نتیجه", tR: "R", none: "—" },
+  en: { title: "Dashboard", sig: "Signals", total: "Total signals", d30: "Last 30 days", open: "Open (entered)", wait: "Waiting for entry", win: "Won", loss: "Lost", exp: "Expired/closed", autoS: "Auto-judged on live data", manS: "Legacy/manual",
+    data: "Data status", live: "Live", delayed: "Delayed", closed: "Market closed", down: "Down/unknown", src: "Source", upd: "Updated",
+    sXau: "Gold ounce (world)", sXag: "Silver ounce", sUsd: "Kabul USD (Telegram)", sFx: "Currency table", sLocal: "Kabul gold (Afaaq)", sNews: "News", sCal: "Economic calendar", sEng: "Signal judge engine",
+    engNote: "Each signal's result is recorded by the server from live prices only; the admin cannot change it.",
+    risk: "Risk management calculator", inst: "Symbol / contract", custom: "Custom", contract: "Contract size (units per lot)", tick: "Tick size", tickVal: "Tick value per 1 lot", accCcy: "Account currency",
+    minLot: "Min lot", lotStep: "Lot step", bal: "Account balance", riskPct: "Risk per trade (%)", entry: "Entry price", sl: "Stop loss", tp: "Take profit (optional)", comm: "Round-turn commission per lot", slip: "Expected slippage (ticks)",
+    fromSig: "Fill from signal", lots: "Position size", riskAmt: "Risk amount", realRisk: "Real risk incl. costs", perLot: "Loss per lot at stop", ticks: "Distance to stop", rr: "Net reward/risk", profit: "Profit at target",
+    tooBig: "Even the minimum lot risks more than your limit.", fill: "Enter entry and stop loss.", side: "Side", buy: "Buy", sell: "Sell", wrongSide: "Stop loss must be on the losing side of the trade.",
+    perf: "Performance report", perfOff: "Activates after the first valid trade is recorded.", perfWhy: "Valid trade = a signal whose entry and result were recorded by the server from live prices. Legacy/manual signals are excluded.",
+    net: "Net profit", pf: "Profit factor", dd: "Max drawdown", wr: "Win rate", trades: "Trades", avgR: "Average per trade", curve: "Net profit curve (in R)", rNote: "R = one unit of risk (entry to stop). Risking 1% per trade, 1R = 1% of the account.",
+    tDate: "Date", tMk: "Market", tSide: "Side", tIn: "Entry", tOut: "Exit", tRes: "Result", tR: "R", none: "—" } };
+DL.ps = Object.assign({}, DL.fa, { title: "ډشبورډ", sig: "سیګنالونه", total: "ټول سیګنالونه", data: "د معلوماتو حالت", live: "ژوندی", risk: "د خطر مدیریت حساب ماشین", perf: "د فعالیت راپور", buy: "پېرل", sell: "پلورل" });
+const DT = () => DL[lang] || DL.fa;
+const CONTRACTS = {
+  XAUUSD: { n: "XAU/USD طلا", c: 100, t: 0.01, min: 0.01, step: 0.01, mk: "xau" },
+  XAGUSD: { n: "XAG/USD نقره", c: 5000, t: 0.001, min: 0.01, step: 0.01, mk: "xag" },
+  USOIL: { n: "WTI تیل خام آمریکا", c: 1000, t: 0.01, min: 0.01, step: 0.01 },
+  UKOIL: { n: "Brent تیل برنت", c: 1000, t: 0.01, min: 0.01, step: 0.01 },
+  EURUSD: { n: "EUR/USD", c: 100000, t: 0.00001, min: 0.01, step: 0.01 },
+  GBPUSD: { n: "GBP/USD", c: 100000, t: 0.00001, min: 0.01, step: 0.01 },
+  USDJPY: { n: "USD/JPY", c: 100000, t: 0.001, min: 0.01, step: 0.01, jpy: true },
+  CUSTOM: { n: "", c: 1, t: 0.01, min: 0.01, step: 0.01 } };
+const num = v => { if (v == null) return null; const x = Number(toEn(String(v)).replace(/,/g, '').trim()); return String(v).trim() === '' || !isFinite(x) ? null : x; };
+let rk = Object.assign({ sym: "XAUUSD", acc: "USD", bal: 1000, pct: 1, side: "buy", entry: "", sl: "", tp: "", comm: 7, slip: 2 }, store.get("risk", {}));
+let dashSigs = [], dashAt = 0;
+async function loadDash(){
+  if (Date.now() - dashAt > 30000) { dashAt = Date.now();
+    const { data } = await sb.from("signals").select("id,market,type,status,auto,phase,created_at,entered_at,result_at,entry_price,result_price,sl,tp1,tp2,tp3,entry_from,entry_to,checked_at,timeframe").order("created_at", { ascending: true }).limit(2000);
+    if (data) dashSigs = data; }
+  drawDash();
+}
+const dDot = s => `<i class="dd ${s}"></i>`;
+function dataRows(){
+  const L = DT(), now = Date.now(), age = t => t ? (now - new Date(t)) / 60000 : 1e9, p = prices || {};
+  const st = (m, liveMin, delayMin, closedOk) => m <= liveMin ? "live" : closedOk && p.closed ? "closed" : m <= delayMin ? "delayed" : "down";
+  const usd = fxRows.find(x => x.code === "USD");
+  const engT = dashSigs.filter(s => s.auto).map(s => s.checked_at).filter(Boolean).sort().at(-1);
+  const anyOpen = dashSigs.some(s => s.auto && s.phase !== "done");
+  return [
+    [L.sXau, "gold-api.com", p.xau?.quoteAt || p.at, st(age(p.xau?.quoteAt || p.at), 2, 30, true)],
+    [L.sXag, p.xag?.src?.startsWith("tg") ? "Telegram NoghreLahzeyi" : "gold-api.com", p.xag?.quoteAt, st(age(p.xag?.quoteAt), 15, 120, true)],
+    [L.sUsd, "kabul_dalarr_Toman", usd?.rate_at || tgc?.afn?.at, st(age(usd?.rate_at || tgc?.afn?.at), 240, 24 * 60, false)],
+    [L.sFx, "kabul_dalarr_Toman", fxRows.map(r => r.rate_at).filter(Boolean).sort().at(-1), st(age(fxRows.map(r => r.rate_at).filter(Boolean).sort().at(-1)), 240, 24 * 60, false)],
+    [L.sLocal, "afaaq.af", local?.at, st(age(local?.at), 120, 26 * 60, false)],
+    [L.sNews, news?.src === "multi" ? "Afaaq · Ariana · Google News" : "afaaq.af", news?.at, st(age(news?.at), 10, 60, false)],
+    [L.sCal, "Forex Factory", cal?.at, st(age(cal?.at), 60, 6 * 60, false)],
+    [L.sEng, "signal-engine · 20s", engT, anyOpen ? st(age(engT), 2, 10, false) : (engT ? "live" : "delayed")]];
+}
+function refreshDashData(){ const el = $("dlist"); if (!el || page !== "dash") return; const L = DT();
+  el.innerHTML = dataRows().map(([n, src, at, s]) => `<div class="drow"><span>${dDot(s)}<b>${n}</b><small>${esc(src)}</small></span><span class="dst ${s}">${L[s]}<small data-ts="${at || ""}">${at ? agoTxt(at) : "—"}</small></span></div>`).join(""); drawRiskOut(); }
+function perfData(){
+  const tr = dashSigs.filter(s => s.auto && s.phase === "done" && s.entry_price != null && s.result_price != null && s.sl != null && /^(tp[123]|sl|closed)$/.test(s.status));
+  let cum = 0, peak = 0, dd = 0, gw = 0, gl = 0, wins = 0;
+  const rows = tr.map(s => { const dir = s.type === "buy" ? 1 : -1, risk = Math.abs(Number(s.entry_price) - Number(s.sl)) || 1e-9;
+    const r = (Number(s.result_price) - Number(s.entry_price)) * dir / risk; cum += r; peak = Math.max(peak, cum); dd = Math.max(dd, peak - cum);
+    if (r > 0) { gw += r; wins++; } else gl += -r; return { s, r, cum }; });
+  return { rows, cum, dd, pf: gl ? gw / gl : gw ? Infinity : 0, wr: rows.length ? wins / rows.length * 100 : 0 };
+}
+function riskCalc(){
+  const L = DT(), C = rk.sym === "CUSTOM" ? { c: +rk.c || 1, t: +rk.t || .01, min: +rk.min || .01, step: +rk.step || .01 } : CONTRACTS[rk.sym];
+  const entry = num(String(rk.entry)), sl = num(String(rk.sl)), tp = num(String(rk.tp));
+  const usdRate = rk.acc === "AFN" ? usdAfn() : 1;
+  let tvUsd = C.c * C.t; if (C.jpy && entry) tvUsd = C.c * C.t / entry;
+  if (rk.sym === "CUSTOM" && rk.tv) tvUsd = +rk.tv / (usdRate || 1);
+  const tv = tvUsd * (usdRate || 1), out = { tv, C };
+  if (!entry || !sl) return { ...out, msg: L.fill };
+  const dir = rk.side === "buy" ? 1 : -1;
+  if ((entry - sl) * dir <= 0) return { ...out, msg: L.wrongSide };
+  const ticks = Math.abs(entry - sl) / C.t, comm = +rk.comm || 0, slip = +rk.slip || 0;
+  const perLot = (ticks + slip) * tv + comm, riskAmt = (+rk.bal || 0) * (+rk.pct || 0) / 100;
+  let lots = Math.floor(riskAmt / perLot / C.step + 1e-9) * C.step; lots = Math.round(lots / C.step) * C.step;
+  const tooBig = lots < C.min; if (tooBig) lots = C.min;
+  const real = lots * perLot;
+  let rr = null, prof = null; if (tp && (tp - entry) * dir > 0) { const tt2 = Math.abs(tp - entry) / C.t; prof = lots * ((tt2 - slip) * tv - comm); rr = prof / real; }
+  return { ...out, ticks, perLot, riskAmt, lots, real, realPct: rk.bal ? real / rk.bal * 100 : 0, rr, prof, tooBig };
+}
+const m2 = (v, d = 2) => v == null || !isFinite(v) ? "—" : Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+function drawRiskOut(){
+  const L = DT(), R = riskCalc(), cur = rk.acc === "AFN" ? "AFN" : "$", el = $("rkout"); if (!el) return;
+  $("rktv").textContent = `${m2(R.tv, R.tv < 1 ? 4 : 2)} ${cur}`;
+  if (R.msg) { el.innerHTML = `<div class="upd">${R.msg}</div>`; return; }
+  el.innerHTML = `<div class="rkbig ${R.tooBig ? "bad" : ""}"><small>${L.lots}</small><b class="ltr">${m2(R.lots, R.C.step < .1 ? 2 : 1)}</b><span>lot</span></div>
+    ${R.tooBig ? `<div class="rkwarn">⚠️ ${L.tooBig}</div>` : ""}
+    <div class="rkgrid"><div><small>${L.riskAmt}</small><b class="ltr">${m2(R.riskAmt)} ${cur}</b></div><div><small>${L.realRisk}</small><b class="ltr ${R.realPct > rk.pct * 1.05 ? "neg" : ""}">${m2(R.real)} ${cur} · ${m2(R.realPct)}%</b></div>
+      <div><small>${L.ticks}</small><b class="ltr">${m2(R.ticks, 0)} tick</b></div><div><small>${L.perLot}</small><b class="ltr">${m2(R.perLot)} ${cur}</b></div>
+      ${R.rr != null ? `<div><small>${L.profit}</small><b class="ltr pos">${m2(R.prof)} ${cur}</b></div><div><small>${L.rr}</small><b class="ltr">1 : ${m2(R.rr)}</b></div>` : ""}</div>`;
+}
+function drawDash(){
+  const el = $("pg"); if (!el || page !== "dash") return;
+  const L = DT(), S = dashSigs, now = Date.now();
+  const cnt = f => S.filter(f).length;
+  const P = perfData(), rows = dataRows();
+  const opts = Object.entries(CONTRACTS).map(([k, v]) => `<option value="${k}" ${k === rk.sym ? "selected" : ""}>${k === "CUSTOM" ? L.custom : k + " · " + v.n}</option>`).join("");
+  const openSig = S.filter(s => s.status === "active" || /^tp[12]$/.test(s.status)).slice(-12).reverse();
+  const keepFocus = document.activeElement?.closest?.("#rkf") ? document.activeElement.id : null;
+  el.innerHTML = `<div class="dash">
+  <section class="dcard glass rise"><h3>📊 ${L.sig}</h3>
+    <div class="dstats"><div class="big"><b>${S.length}</b><small>${L.total}</small></div><div><b>${cnt(s => now - new Date(s.created_at) < 30 * 864e5)}</b><small>${L.d30}</small></div>
+      <div><b>${cnt(s => s.phase === "open" && !/^(sl|expired|closed|tp3)$/.test(s.status))}</b><small>${L.open}</small></div><div><b>${cnt(s => s.phase === "waiting")}</b><small>${L.wait}</small></div>
+      <div class="w"><b>${cnt(s => /^tp[123]$/.test(s.status))}</b><small>${L.win}</small></div><div class="l"><b>${cnt(s => s.status === "sl")}</b><small>${L.loss}</small></div>
+      <div><b>${cnt(s => /^(expired|closed)$/.test(s.status))}</b><small>${L.exp}</small></div></div>
+    <div class="dmk">${["xau", "xag", "usd"].map(m => `<span>${m === "xau" ? "🥇 XAU" : m === "xag" ? "🥈 XAG" : "💵 USD/AFN"} <b>${cnt(s => (s.market || "xag") === m)}</b></span>`).join("")}</div>
+    <div class="dsplit"><span>${dDot("live")} ${L.autoS}: <b>${cnt(s => s.auto)}</b></span><span>${dDot("delayed")} ${L.manS}: <b>${cnt(s => !s.auto)}</b></span></div></section>
+
+  <section class="dcard glass rise" style="--i:1"><h3>📡 ${L.data}</h3>
+    <div class="dlist" id="dlist">${rows.map(([n, src, at, s]) => `<div class="drow"><span>${dDot(s)}<b>${n}</b><small>${esc(src)}</small></span><span class="dst ${s}">${L[s]}<small data-ts="${at || ""}">${at ? agoTxt(at) : "—"}</small></span></div>`).join("")}</div>
+    <p class="dnote">🔒 ${L.engNote}</p></section>
+
+  <section class="dcard glass rise" style="--i:2"><h3>🧮 ${L.risk}</h3>
+    <form id="rkf" onsubmit="return false">
+      <div class="rk2"><label>${L.inst}<select id="rk_sym">${opts}</select></label><label>${L.accCcy}<select id="rk_acc"><option value="USD" ${rk.acc === "USD" ? "selected" : ""}>USD $</option><option value="AFN" ${rk.acc === "AFN" ? "selected" : ""}>AFN ؋</option></select></label></div>
+      <div class="rkspec" id="rkspec"></div>
+      ${openSig.length ? `<label class="rk1">${L.fromSig}<select id="rk_sig"><option value="">—</option>${openSig.map(s => `<option value="${s.id}">#${s.id} · ${(s.market || "xag").toUpperCase()} · ${s.type === "buy" ? L.buy : L.sell}</option>`).join("")}</select></label>` : ""}
+      <div class="rkside"><button type="button" data-side="buy" class="${rk.side === "buy" ? "on b" : ""}">${L.buy}</button><button type="button" data-side="sell" class="${rk.side === "sell" ? "on s" : ""}">${L.sell}</button></div>
+      <div class="rk2"><label>${L.bal}<input id="rk_bal" inputmode="decimal" dir="ltr" value="${esc(rk.bal)}"></label><label>${L.riskPct}<input id="rk_pct" inputmode="decimal" dir="ltr" value="${esc(rk.pct)}"></label></div>
+      <div class="rk3"><label>${L.entry}<input id="rk_entry" inputmode="decimal" dir="ltr" value="${esc(rk.entry)}"></label><label>${L.sl}<input id="rk_sl" inputmode="decimal" dir="ltr" value="${esc(rk.sl)}"></label><label>${L.tp}<input id="rk_tp" inputmode="decimal" dir="ltr" value="${esc(rk.tp)}"></label></div>
+      <div class="rk2"><label>${L.comm}<input id="rk_comm" inputmode="decimal" dir="ltr" value="${esc(rk.comm)}"></label><label>${L.slip}<input id="rk_slip" inputmode="decimal" dir="ltr" value="${esc(rk.slip)}"></label></div>
+    </form><div id="rkout" class="rkout"></div></section>
+
+  <section class="dcard glass rise" style="--i:3"><h3>📈 ${L.perf}</h3>
+    ${P.rows.length ? `<div class="pstats"><div><small>${L.net}</small><b class="ltr ${P.cum >= 0 ? "pos" : "neg"}">${P.cum >= 0 ? "+" : ""}${m2(P.cum)}R</b></div><div><small>${L.pf}</small><b class="ltr">${P.pf === Infinity ? "∞" : m2(P.pf)}</b></div>
+        <div><small>${L.dd}</small><b class="ltr neg">−${m2(P.dd)}R</b></div><div><small>${L.wr}</small><b class="ltr">${m2(P.wr, 0)}%</b></div><div><small>${L.trades}</small><b class="ltr">${P.rows.length}</b></div><div><small>${L.avgR}</small><b class="ltr">${m2(P.cum / P.rows.length)}R</b></div></div>
+      <div class="pcurve"><small>${L.curve}</small>${curveSVG(P.rows)}</div><p class="dnote">${L.rNote}</p>
+      <div class="ptable"><table><thead><tr><th>${L.tDate}</th><th>${L.tMk}</th><th>${L.tSide}</th><th>${L.tIn}</th><th>${L.tOut}</th><th>${L.tRes}</th><th>${L.tR}</th></tr></thead><tbody>
+        ${P.rows.slice().reverse().map(({ s, r }) => `<tr><td>${fmtFull(s.result_at || s.created_at).split("·")[0]}</td><td>${(s.market || "xag").toUpperCase()}</td><td class="${s.type === "buy" ? "pos" : "neg"}">${s.type === "buy" ? L.buy : L.sell}</td><td class="ltr">${s.entry_price}</td><td class="ltr">${s.result_price}</td><td>${T.st?.[s.status] || s.status}</td><td class="ltr ${r >= 0 ? "pos" : "neg"}">${r >= 0 ? "+" : ""}${m2(r)}</td></tr>`).join("")}
+      </tbody></table></div>`
+    : `<div class="poff"><b>🔒 ${L.perfOff}</b><p>${L.perfWhy}</p></div>`}</section></div>`;
+  wireRisk(); if (keepFocus && $(keepFocus)) { const i = $(keepFocus); i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch {} }
+}
+function curveSVG(rows){
+  const W = 320, H = 120, pts = [0, ...rows.map(r => r.cum)], lo = Math.min(0, ...pts), hi = Math.max(0, ...pts), sp = hi - lo || 1;
+  const X = i => 6 + i / Math.max(1, pts.length - 1) * (W - 12), Y = v => 8 + (1 - (v - lo) / sp) * (H - 16);
+  const d = pts.map((v, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="pc"><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" class="z"/><path d="${d} L${X(pts.length - 1)} ${Y(0)} L${X(0)} ${Y(0)}Z" class="a"/><path d="${d}" class="l"/></svg>`;
+}
+function wireRisk(){
+  const f = $("rkf"); if (!f) return;
+  const spec = () => { const L = DT(), C = rk.sym === "CUSTOM" ? null : CONTRACTS[rk.sym];
+    $("rkspec").innerHTML = C ? `<div><small>${L.contract}</small><b class="ltr">${C.c.toLocaleString("en-US")}</b></div><div><small>${L.tick}</small><b class="ltr">${C.t}</b></div><div><small>${L.tickVal}</small><b class="ltr" id="rktv"></b></div><div><small>${L.minLot} / ${L.lotStep}</small><b class="ltr">${C.min} / ${C.step}</b></div>`
+      : `<label>${L.contract}<input id="rk_c" inputmode="decimal" dir="ltr" value="${esc(rk.c ?? 1)}"></label><label>${L.tick}<input id="rk_t" inputmode="decimal" dir="ltr" value="${esc(rk.t ?? .01)}"></label><label>${L.tickVal} (${rk.acc})<input id="rk_tv" inputmode="decimal" dir="ltr" value="${esc(rk.tv ?? "")}"></label><label>${L.minLot}<input id="rk_min" inputmode="decimal" dir="ltr" value="${esc(rk.min ?? .01)}"></label><label>${L.lotStep}<input id="rk_step" inputmode="decimal" dir="ltr" value="${esc(rk.step ?? .01)}"></label><div><small>${L.tickVal}</small><b class="ltr" id="rktv"></b></div>`; };
+  spec(); drawRiskOut();
+  const save = () => store.set("risk", rk);
+  f.oninput = f.onchange = e => { const id = e.target.id; if (!id?.startsWith("rk_")) return; const k = id.slice(3);
+    if (k === "sig") { const s = dashSigs.find(x => String(x.id) === e.target.value); if (s) { rk.side = s.type; rk.entry = s.entry_price ?? (s.entry_to != null ? (Number(s.entry_from) + Number(s.entry_to)) / 2 : s.entry_from); rk.sl = s.sl ?? ""; rk.tp = s.tp1 ?? ""; rk.sym = s.market === "xau" ? "XAUUSD" : s.market === "xag" ? "XAGUSD" : rk.sym; save(); return drawDash(); } return; }
+    rk[k] = e.target.value; save(); if (k === "sym" || k === "acc") { spec(); } drawRiskOut(); };
+  f.onclick = e => { const b = e.target.closest("[data-side]"); if (!b) return; rk.side = b.dataset.side; save(); f.querySelectorAll("[data-side]").forEach(x => x.className = x.dataset.side === rk.side ? "on " + (rk.side === "buy" ? "b" : "s") : ""); drawRiskOut(); };
+}
+
+/* ===== اعلان‌ها (هشدار قیمت سمت سرور + رویدادهای سیگنال) ===== */
+let notifs = [], notifCh = null;
+const NL = { fa: { t: "اعلان‌ها", none: "هنوز اعلانی نیست.", hint: "هشدارهای قیمت را در «ابزارها» بسازید؛ سرور هر ۲۰ ثانیه بررسی می‌کند، حتی وقتی برنامه بسته است، و نتیجه اینجا می‌آید." },
+  ps: { t: "خبرتیاوې", none: "تر اوسه خبرتیا نشته.", hint: "د بیې خبرتیاوې په «وسایل» کې جوړې کړئ؛ سرور هر ۲۰ ثانیې ګوري." },
+  en: { t: "Notifications", none: "No notifications yet.", hint: "Create price alerts in Tools; the server checks every 20 s, even when the app is closed, and results appear here." } };
+const NT = () => NL[lang] || NL.fa;
+const seenId = () => Number(store.get("notif_seen", 0));
+function paintBell(){ const b = $("bdg"); if (!b) return; const n = notifs.filter(x => x.id > seenId()).length; b.hidden = !n; b.textContent = n > 9 ? "9+" : n; }
+async function loadNotifs(){
+  if (!me || me.role === "admin") return;
+  const { data } = await sb.from("notifications").select("*").order("id", { ascending: false }).limit(50);
+  notifs = data || []; paintBell();
+  if (!notifCh) notifCh = sb.channel("notif").on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications" }, ev => {
+    const n = ev.new; if (!n || notifs.some(x => x.id === n.id)) return; notifs.unshift(n); paintBell();
+    if (n.kind === "price") { sfx("notification", .5); banner("🔔", esc(n.title), esc(n.body || ""), openNotifs); loadAlerts(); }
+    else if (n.kind === "signal" && !/^📢/.test(n.title)) { sfx("notification", .45); banner("📈", esc(n.title), esc(n.body || ""), () => setPage("sig")); }
+  }).subscribe();
+}
+function openNotifs(){
+  if ($("npanel")) return;
+  const L = NT(), seen = seenId();
+  const v = document.createElement("div"); v.className = "npanel"; v.id = "npanel";
+  v.innerHTML = `<div class="nphd"><b>🔔 ${L.t}</b><button class="ib" id="npx" aria-label="close">${I.x}</button></div><p class="nphint">${L.hint}</p>
+    <div class="nplist">${notifs.length ? notifs.map(n => `<div class="npi ${n.id > seen ? "new" : ""} k-${n.kind}"><b>${esc(n.title)}</b>${n.body ? `<p>${esc(n.body)}</p>` : ""}<small>${agoTxt(n.created_at)}</small></div>`).join("") : `<div class="upd">${L.none}</div>`}</div>`;
+  document.body.appendChild(v); lockBody();
+  const close = () => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); };
+  overlayPush(close); requestAnimationFrame(() => v.classList.add("show"));
+  $("npx").onclick = () => history.back();
+  if (notifs[0]) { store.set("notif_seen", notifs[0].id); paintBell(); sb.from("notifications").update({ read_at: new Date().toISOString() }).is("read_at", null).eq("user_id", me.id).then(() => {}); }
+}
+
+/* ===== اشتراک و پرداخت (HesabPay) ===== */
+const PL = {
+  fa: { t: "اشتراک‌ها", sub: "پرداخت امن آنلاین با HesabPay (حساب هساب‌پی، AfPay یا کارت). بعد از پرداخت، اشتراک شما خودکار تمدید می‌شود.", mon: "ماه", afn: "افغانی", pay: "پرداخت و فعال‌سازی", pop: "پیشنهاد ما",
+    cur: "اشتراک فعلی", legacy: "دسترسی کامل", days: "روز باقی‌مانده", trader: "معامله‌گر طلا", sarraf: "صراف حرفه‌ای", vip: "VIP کامل", renew: "💳 تمدید یا ارتقای اشتراک",
+    off: "پرداخت آنلاین هنوز فعال نشده است. برای تمدید با استاد پیام دهید.", err: "اتصال به درگاه پرداخت ممکن نشد. کمی بعد دوباره امتحان کنید.", wait: "در حال انتقال به صفحه‌ی پرداخت…",
+    ok: "پرداخت دریافت شد", okSub: "اشتراک شما در حال فعال‌سازی است…", okDone: "اشتراک شما تمدید شد ✓", fail: "پرداخت انجام نشد", failSub: "مبلغی کسر نشده است؛ دوباره امتحان کنید.",
+    hist: "پرداخت‌های اخیر", st: { pending: "در انتظار", paid: "پرداخت‌شده", failed: "ناموفق", expired: "منقضی" }, trader_up: "این بخش در اشتراک «صراف حرفه‌ای» نیست.", sarraf_up: "جدول ارزها در اشتراک «معامله‌گر طلا» نیست.", up: "ارتقای اشتراک", groups: { trader: "برای معامله‌گران طلا", sarraf: "برای صرافان و فعالان طلا", all: "همه‌چیز در یک اشتراک" } },
+  en: { t: "Subscriptions", sub: "Secure online payment with HesabPay (HesabPay wallet, AfPay or card). Your subscription renews automatically after payment.", mon: "mo", afn: "AFN", pay: "Pay & activate", pop: "Recommended",
+    cur: "Current plan", legacy: "Full access", days: "days left", trader: "Gold Trader", sarraf: "Money Changer Pro", vip: "Full VIP", renew: "💳 Renew or upgrade",
+    off: "Online payment isn't active yet. Message the teacher to renew.", err: "Couldn't reach the payment gateway. Try again shortly.", wait: "Opening the payment page…",
+    ok: "Payment received", okSub: "Activating your subscription…", okDone: "Subscription renewed ✓", fail: "Payment not completed", failSub: "Nothing was charged; please try again.",
+    hist: "Recent payments", st: { pending: "Pending", paid: "Paid", failed: "Failed", expired: "Expired" }, trader_up: "This section isn't in the Money Changer plan.", sarraf_up: "The currency table isn't in the Gold Trader plan.", up: "Upgrade", groups: { trader: "For gold traders", sarraf: "For money changers", all: "Everything in one plan" } } };
+PL.ps = Object.assign({}, PL.fa, { t: "ګډونونه", pay: "تادیه او فعالول", renew: "💳 ګډون نوی یا لوړ کړئ" });
+const PT = () => PL[lang] || PL.fa;
+const planName = c => !c ? PT().legacy : PT()[c] || c;
+const planHas = f => !me?.plan || me.plan === "vip" || me.plan === f;
+async function openPlans(){
+  if ($("plpanel")) return;
+  const L = PT(), v = document.createElement("div"); v.className = "npanel"; v.id = "plpanel";
+  v.innerHTML = `<div class="nphd"><b>💳 ${L.t}</b><button class="ib" id="plx" aria-label="close">${I.x}</button></div><p class="nphint">${L.sub}</p><div id="plbody"><span class="spin"></span></div>`;
+  document.body.appendChild(v); lockBody();
+  const close = () => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); };
+  overlayPush(close); requestAnimationFrame(() => v.classList.add("show")); $("plx").onclick = () => history.back();
+  const [{ data: plans }, { data: pays }] = await Promise.all([sb.from("plans").select("*").eq("active", true).order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(5)]);
+  const days = me.expires_at ? Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY)) : 0;
+  const nm = p => (lang === "ps" ? p.name_ps : lang === "en" ? p.name_en : p.name_fa) || p.name_fa;
+  const groups = ["trader", "sarraf", "all"].map(g => [g, (plans || []).filter(p => p.audience === g)]).filter(([, a]) => a.length);
+  $("plbody").innerHTML = `<div class="plcur"><span>${L.cur}</span><b>${planName(me.plan)}</b><small><b class="num">${days}</b> ${L.days}</small></div>
+    ${groups.map(([g, a]) => `<h4 class="plg">${L.groups[g]}</h4>${a.map(p => `<div class="plc ${p.popular ? "plstar" : ""}">${p.popular ? `<span class="plpop">⭐ ${L.pop}</span>` : ""}
+      <div class="plh"><b>${esc(nm(p))}</b><span class="plp"><b class="ltr">${Number(p.price_afn).toLocaleString("en-US")}</b> ${L.afn}<small> / ${p.months} ${L.mon}</small></span></div>
+      <ul>${(p.features || []).map(f => `<li>${esc(f)}</li>`).join("")}</ul><button class="cta press" data-plan="${p.id}">${L.pay}</button></div>`).join("")}`).join("")}
+    <div class="plerr" id="plerr"></div>
+    ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}</span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
+  $("plbody").onclick = async e => {
+    const b = e.target.closest("[data-plan]"); if (!b) return; const er = $("plerr"); er.textContent = "";
+    b.disabled = true; const old = b.innerHTML; b.innerHTML = `<span class="spin"></span> ${L.wait}`;
+    try {
+      const { data: ss } = await sb.auth.getSession();
+      const r = await fetch(SUPABASE_URL + "/functions/v1/pay-checkout", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ss.session.access_token, "apikey": SUPABASE_KEY }, body: JSON.stringify({ plan_id: Number(b.dataset.plan) }) });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.url) { store.set("pay_pending", j.payment_id); location.href = j.url; return; }
+      er.innerHTML = (j.error === "gateway_not_configured" ? L.off : L.err) + ` <button class="ghost2" id="plchat">💬 ${T.msgBtn}</button>`;
+      if ($("plchat")) $("plchat").onclick = () => { history.back(); setTimeout(() => openChat(), 400); };
+    } catch { er.textContent = L.err; }
+    b.disabled = false; b.innerHTML = old;
+  };
+}
+// return from HesabPay checkout
+async function handlePayReturn(){
+  const q = new URLSearchParams(location.search), st = q.get("pay"); if (!st) return;
+  history.replaceState(null, "", location.pathname); const L = PT();
+  if (st === "fail") { banner("⚠️", L.fail, L.failSub); return; }
+  banner("💳", L.ok, L.okSub);
+  for (let i = 0; i < 8; i++) { await new Promise(r => setTimeout(r, 4000));
+    const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle();
+    const { data: p } = await sb.from("payments").select("status").eq("id", q.get("p")).maybeSingle();
+    if (p?.status === "paid" && data) { me = data; store.set("cache_me", me); banner("✅", L.okDone, ""); sfx("celebration", .5); setTimeout(() => location.reload(), 2500); return; } }
+}
+window.openPlans = (...a) => openPlans(...a);
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
   const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
@@ -1813,20 +2183,15 @@ function drawPrices(){
 }
 
 /* ----- هشدار قیمت ----- */
-let alerts = store.get("alerts", []);
+let alerts = [];   // server-side price alerts (public.price_alerts); checked every 20 s on the server
 const curPrice = a => a === "xau" ? prices?.xau?.price : a === "xag" ? prices?.xag?.price : a === "dxy" ? prices?.dxy?.price : usdAfn();
-function checkAlerts(){
-  let hit = false;
-  alerts.forEach(al => {
-    if (al.done) return; const v = curPrice(al.asset); if (v == null) return;
-    if ((al.cond === "ge" && v >= al.value) || (al.cond === "le" && v <= al.value)) {
-      al.done = true; hit = true;
-      const name = al.asset === "dxy" ? "DXY" : T.m[al.asset];
-      banner("⏰", `${T.alertHit}: ${name} ${nf(v)}`, `${al.cond === "ge" ? "≥" : "≤"} ${nf(al.value)}`);
-      try { if (Notification?.permission === "granted") new Notification(`${T.alertHit}: ${name} ${nf(v)}`); } catch {}
-    }
-  });
-  if (hit) { store.set("alerts", alerts); if (page === "tool") drawAlerts(); }
+function checkAlerts(){ /* evaluated on the server (pg_cron) — results arrive as notifications */ }
+async function loadAlerts(){
+  if (!me || me.role === "admin") return;
+  const old = store.get("alerts", []).filter(a => !a.done);   // move old on-device alerts to the server once
+  if (old.length) { await sb.from("price_alerts").insert(old.map(a => ({ asset: a.asset, cond: a.cond, value: a.value }))); store.set("alerts", []); }
+  const { data } = await sb.from("price_alerts").select("*").order("created_at", { ascending: false }).limit(60);
+  alerts = (data || []).map(a => ({ ...a, value: Number(a.value), done: !a.active })); if (page === "tool") drawAlerts();
 }
 function drawAlerts(){
   const el = $("alist"); if (!el) return;
@@ -1934,11 +2299,12 @@ function drawTools(){
     const loss = b * p / 100, size = Math.abs(e - s) ? loss / Math.abs(e - s) : NaN;
     $("rres").innerHTML = isNaN(loss) ? "—" : `<span>${T.maxLoss}: <b>${nf(loss)}</b></span>${isNaN(size) ? "" : `<span>${T.posSize}: <b>${nf(size, 3)}</b></span>`}`; };
   ["rb","rp","re","rs"].forEach(id => $(id).oninput = risk); risk();
-  $("aadd").onclick = () => { const v = n($("av").value); if (isNaN(v)) return $("av").focus();
-    alerts.push({ asset: $("aa").value, cond: $("ac").value, value: v, done: false }); store.set("alerts", alerts); $("av").value = ""; drawAlerts();
-    try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} };
-  $("alist").onclick = e => { const b = e.target.closest("[data-ad]"); if (!b) return; alerts.splice(Number(b.dataset.ad), 1); store.set("alerts", alerts); drawAlerts(); };
-  drawAlerts();
+  $("aadd").onclick = async () => { const v = n($("av").value); if (isNaN(v)) return $("av").focus();
+    const { error } = await sb.from("price_alerts").insert({ asset: $("aa").value, cond: $("ac").value, value: v });
+    if (error) return banner("⚠️", T.sendFail2 || "Error", esc(error.message)); $("av").value = ""; sfx("toggle_on", .4); loadAlerts(); };
+  $("alist").onclick = async e => { const b = e.target.closest("[data-ad]"); if (!b) return; const a = alerts[Number(b.dataset.ad)]; if (!a) return; b.disabled = true;
+    await sb.from("price_alerts").delete().eq("id", a.id); loadAlerts(); };
+  drawAlerts(); loadAlerts();
   $("jadd").onclick = async () => { const o = n($("jo").value); if (isNaN(o)) return $("jo").focus();
     const c = n($("jc").value), q = n($("jq").value);
     const { error } = await sb.from("journal").insert({ user_id: me.id, trade_date: $("jd").value, asset: $("ja").value, side: $("js").value, qty: isNaN(q) ? 1 : q, open_price: o, close_price: isNaN(c) ? null : c, note: $("jn").value.trim() || null });
@@ -2055,14 +2421,14 @@ function drawAcademy(){
 }
 
 /* ----- پوسته و ناوبری ----- */
-function bnavHTML(){ return `<nav class="bnav" id="bnav">${[["sig","📈"],["prc","💹"],["tool","🧮"],["acad","🎓"]].map(([k, ic]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${T.nav[k]}</button>`).join("")}</nav>`; }
+function bnavHTML(){ return `<nav class="bnav" id="bnav">${[["sig","📈"],["dash","📊"],["prc","💹"],["tool","🧮"],["acad","🎓"]].map(([k, ic]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${T.nav[k]}</button>`).join("")}</nav>`; }
 let tabHist = false;
 function setPage(p, fromBack){
   if (EMBED) return;
   if (page === p) { scrollTo({ top: 0, behavior: "smooth" }); return; }
   if (p === "sig" && tabHist && !fromBack && overlays[overlays.length - 1]?._tab) { history.back(); return; }
   if (p !== "sig" && !tabHist) { tabHist = true; const f = () => { tabHist = false; if (view === "feed") setPage("sig", true); }; f._tab = true; overlayPush(f); }
-  page = p; if (!EMBED) store.set("page", p);
+  page = p; document.documentElement.dataset.pg = p; if (!EMBED) store.set("page", p);
   document.querySelectorAll("#bnav button").forEach(b => b.classList.toggle("on", b.dataset.pg === p));
   requestAnimationFrame(() => requestAnimationFrame(() => { if (page !== p) return; drawPage(); scrollTo({ top: 0 }); }));
 }
@@ -2086,6 +2452,7 @@ function drawPage(){
     if (offline) statusLine("off");
     drawStoryBar(); if (Date.now() - storyAt > 60000) loadStories();
   } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div><div id="fxboard"></div>`; tvWidget(); drawPrices(); loadPrices(true); loadFx(true); }
+  else if (page === "dash") { el.innerHTML = `<div class="sk"></div>`; drawDash(); loadDash(); loadPrices(true); loadFx(true); }
   else if (page === "tool") { drawTools(); loadPrices(); }
   else if (page === "acad") { el.innerHTML = `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
 }
@@ -2257,12 +2624,13 @@ function drawFeed(){
   const open = [...el.querySelectorAll(".it.open")].map(e => e.dataset.id);
   const mlist = all.filter(s => (s.market || "xag") === market), list = sortList(mlist.filter(inPeriod)), st = statsOf(list);
   let h = offline ? `<div class="offline glass glow" style="--bd:6s"><span class="oi">${I.wifi}</span><div><b>${T.offTitle}</b><span>${T.offText}</span></div></div>` : "";
-  if (!mlist.length) h += `<div class="empty glass glow rise"><img src="${MK[market].th}" alt=""><h2>${tt(T.empty, {m: T.m[market]})}</h2><div>${T.emptySub}</div></div>`;
+  if (!mlist.length && !planHas("trader")) h += `<div class="empty glass glow rise"><h2>🔒 ${PT().trader_up}</h2><button class="cta" id="upg">${PT().up}</button></div>`;
+  else if (!mlist.length) h += `<div class="empty glass glow rise"><img src="${MK[market].th}" alt=""><h2>${tt(T.empty, {m: T.m[market]})}</h2><div>${T.emptySub}</div></div>`;
   else if (!list.length) h += statsHTML(st) + `<div class="empty glass glow rise"><img src="${MK[market].th}" alt=""><h2>📅 ${T.per[per]}</h2><div>${T.emptyPer}</div></div>`;
   else if (sortBy === "new") { const [first, ...rest] = list;
     h += statsHTML(st) + `<h3>${T.latest}</h3>${hero(first)}` + (rest.length ? `<h3>${T.previous}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${rest.map(item).join("")}</div>` : ""); }
   else h += statsHTML(st) + `<h3>${T.sort[sortBy]}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${list.map(item).join("")}</div>`;
-  el.innerHTML = h;
+  el.innerHTML = h; if ($("upg")) $("upg").onclick = openPlans;
   const sb2 = $("shareSt"); if (sb2) sb2.onclick = e => { e.stopPropagation(); shareStats(st); };
   el.querySelectorAll(".stars[data-sid]").forEach(paintStars);
   open.forEach(id => el.querySelector(`.it[data-id="${id}"]`)?.classList.add("open"));
@@ -2394,9 +2762,9 @@ function renderFeed(){
       .on("postgres_changes", {event:"*", schema:"public", table:"posts"}, ev => { if (ev.eventType !== "INSERT") loadAcademy(); })
       .on("postgres_changes", {event:"*", schema:"public", table:"polls"}, () => loadAcademy())
       .on("postgres_changes", {event:"*", schema:"public", table:"stories"}, ev => { loadStories(); if (ev.eventType === "INSERT") banner("✨", T.newStory, esc(teacher.name || T.teacher) + " — " + T.tapView, () => { setPage("sig"); setTimeout(() => openStories(stories.length - 1), 900); }); }).subscribe();
-    clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); if (page === "prc") loadPrices(); else if (Date.now() - pricesAt > 120000 && alerts.some(a => !a.done)) loadPrices(); } }, 8000);
+    clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); if (page === "prc") loadPrices();  } }, 8000);
   }
-  loadFeed(); loadPrices(); loadMyRatings();
+  loadFeed(); loadPrices(); loadMyRatings(); loadNotifs(); loadAlerts();
   setupChat();
 }
 function rerender(){
@@ -2662,7 +3030,7 @@ async function route(session){
   }
   if (!all.length) all = store.get("cache_sig", []);
   if (!msgs.length) msgs = store.get("cache_msgs", []);
-  renderFeed();
+  renderFeed(); handlePayReturn();
 }
 let lastUid;
 sb.auth.onAuthStateChange((event, session) => {
@@ -2673,6 +3041,11 @@ sb.auth.onAuthStateChange((event, session) => {
   setTimeout(() => route(session), 0);
 });
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+/* نصب روی کامپیوتر / گوشی (PWA) */
+let installEvt = null;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; document.documentElement.classList.add("can-install"); });
+addEventListener("appinstalled", () => { installEvt = null; document.documentElement.classList.remove("can-install"); });
+window.installApp = async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch {} installEvt = null; document.documentElement.classList.remove("can-install"); };
 </script>
 </body>
 </html>

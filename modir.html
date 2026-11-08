@@ -656,6 +656,17 @@
   .fxmq span{padding:4px 9px;border-radius:999px;background:var(--buy-bg);color:var(--buy)}
   .fxmq.bad{color:var(--sell)}
   .fxdone{margin-top:8px}
+
+  .dashbtn{display:block;width:100%;margin:0 0 12px;padding:14px 16px;border:0;border-radius:22px;font:inherit;font-size:13px;font-weight:800;color:var(--text);text-align:start;cursor:pointer}
+
+  .bsum{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .bsum div{padding:10px 12px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in)}
+  .bsum small{display:block;font-size:11px;color:var(--muted);font-weight:700} .bsum b{font:900 17px Montserrat,Arial,sans-serif}
+  .bh{margin:18px 2px 8px;font-size:14px;font-weight:900}
+  .bplan{padding:12px;margin-bottom:10px;border-radius:20px;background:var(--field);box-shadow:var(--sh-in)}
+  .bph{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px} .bph b{font-size:14px}
+  .bplan textarea.in{min-height:80px}
+  .bplan .fxabtn{margin-top:8px}
 </style>
 </head>
 <body>
@@ -670,7 +681,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611072131";
+const BUILD = "202611081230";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -925,9 +936,11 @@ function drawPane(){
       <iframe class="prframe glass" src="index.html?embed=prc&theme=${document.documentElement.dataset.theme === "dark" ? "dark" : "light"}&t=${Date.now()}" title="prices"></iframe>`;
     $("pane").querySelector("[data-ct2]").onclick = () => { loadContent().then(sheetRates); }; loadFxAdmin(); return; }
   $("pane").innerHTML = tab === "signals"
-    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><div id="list"></div>`
-    : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div>
+    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="dashbtn">📊 داشبورد: آمار سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد</button><div id="list"></div>`
+    : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button>
        <label class="search glass rise" style="--i:1">${I.search}<input id="q" placeholder="جستجوی نام یا ایمیل…" value="${esc(q)}"></label><div id="list"></div>`;
+  if ($("billbtn")) $("billbtn").onclick = sheetBilling;
+  if ($("dashbtn")) $("dashbtn").onclick = () => openSheet(`<h2>📊 داشبورد</h2><p class="hint">همان داشبوردی که اعضا می‌بینند.</p><iframe class="prframe" src="index.html?embed=dash&theme=${document.documentElement.dataset.theme === "dark" ? "dark" : "light"}&t=${Date.now()}" title="dashboard"></iframe>`);
   if ($("q")) $("q").oninput = e => { q = e.target.value; drawList(); };
   drawList();
 }
@@ -1334,6 +1347,36 @@ async function sheetFxMsgs(filter = "all"){
   };
 }
 
+
+/* ===== اشتراک‌ها و پرداخت‌ها ===== */
+async function sheetBilling(){
+  openSheet(`<h2>💳 اشتراک‌ها و پرداخت‌ها</h2><p class="hint">پرداخت آنلاین با HesabPay. بعد از پرداخت موفق، اشتراک عضو خودکار تمدید می‌شود و نوع اشتراکش ثبت می‌شود. اعضای قدیمی (بدون نوع اشتراک) به همه‌چیز دسترسی دارند.</p><div id="bill"><span class="spin"></span></div>`);
+  const [{ data: plans }, { data: pays }, { data: profs }] = await Promise.all([
+    sb.from("plans").select("*").order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(80), sb.from("profiles").select("id,name,email,plan,expires_at").eq("role", "member")]);
+  const el = $("bill"); if (!el) return;
+  const nm = Object.fromEntries((profs || []).map(p => [p.id, p.name || p.email]));
+  const paid = (pays || []).filter(p => p.status === "paid"), m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+  const mon = paid.filter(p => new Date(p.paid_at) >= m0).reduce((a, p) => a + Number(p.amount_afn), 0), all = paid.reduce((a, p) => a + Number(p.amount_afn), 0);
+  const cnt = c => (profs || []).filter(p => (p.plan || "legacy") === c && new Date(p.expires_at) > Date.now()).length;
+  const ST = { pending: ["warn", "در انتظار"], paid: ["on", "پرداخت‌شده"], failed: ["off", "ناموفق"], expired: ["mute", "منقضی"] };
+  el.innerHTML = `<div class="bsum"><div><small>درآمد این ماه</small><b class="ltr">${mon.toLocaleString("en-US")} ؋</b></div><div><small>کل درآمد آنلاین</small><b class="ltr">${all.toLocaleString("en-US")} ؋</b></div>
+      <div><small>معامله‌گر</small><b>${cnt("trader")}</b></div><div><small>صراف</small><b>${cnt("sarraf")}</b></div><div><small>VIP</small><b>${cnt("vip")}</b></div><div><small>قدیمی (کامل)</small><b>${cnt("legacy")}</b></div></div>
+    <h3 class="bh">پلان‌ها و قیمت‌ها</h3>
+    ${(plans || []).map(p => `<div class="bplan" data-pid="${p.id}"><div class="bph"><b>${esc(p.name_fa)}</b><span class="chip ${p.active ? "on" : "mute"}">${p.active ? "فعال" : "غیرفعال"}</span></div>
+      <div class="two"><div><label class="l">قیمت (افغانی)</label><input class="in num" data-f="price_afn" inputmode="decimal" dir="ltr" value="${p.price_afn}"></div><div><label class="l">مدت (ماه)</label><input class="in num" data-f="months" inputmode="numeric" dir="ltr" value="${p.months}"></div></div>
+      <label class="l">امکانات (هر خط یک مورد)</label><textarea class="in" data-f="features" rows="3">${esc((p.features || []).join("\n"))}</textarea>
+      <div class="fxabtn"><button data-b="save">ذخیره</button><button data-b="act">${p.active ? "غیرفعال کن" : "فعال کن"}</button></div></div>`).join("")}
+    <h3 class="bh">پرداخت‌های اخیر</h3>
+    ${(pays || []).length ? pays.map(x => `<div class="fxhr"><div><b>${esc(nm[x.user_id] || "—")}</b><small>${fmtFull(x.created_at)} · ${esc(x.plan_code || "")} · ${x.months} ماه${x.transaction_id ? " · TX " + esc(x.transaction_id) : ""}</small></div>
+      <div class="v"><b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div><span class="chip ${ST[x.status]?.[0] || "mute"}">${ST[x.status]?.[1] || x.status}</span></div>`).join("") : `<p class="hint">هنوز پرداختی ثبت نشده است.</p>`}`;
+  el.onclick = async e => { const b = e.target.closest("[data-b]"); if (!b) return; const box = b.closest("[data-pid]"), id = Number(box.dataset.pid), pl = plans.find(x => x.id === id); b.disabled = true;
+    const patch = b.dataset.b === "act" ? { active: !pl.active } : { price_afn: num(box.querySelector('[data-f="price_afn"]').value), months: parseInt(box.querySelector('[data-f="months"]').value) || pl.months,
+      features: box.querySelector('[data-f="features"]').value.split("\n").map(x => x.trim()).filter(Boolean) };
+    if (patch.price_afn != null && !(patch.price_afn > 0)) { b.disabled = false; return toast("قیمت درست نیست", true); }
+    const { error } = await sb.from("plans").update(patch).eq("id", id); b.disabled = false;
+    if (error) return toast("خطا: " + error.message, true); toast("ذخیره شد ✓"); sheetBilling(); };
+}
+
 /* انتخاب فایل فارسی به‌جای «Choose File / No file chosen» */
 function fileUI(inp){
   if (inp.dataset.ui) return; inp.dataset.ui = 1;
@@ -1412,6 +1455,17 @@ function sheetNewSignal(){
     e.preventDefault(); const b = $("pub");
     if (rec.recording()) return toast("اول ضبط را تمام کنید", true);
     if (num($("ef").value) == null) { $("ef").focus(); return toast("قیمت ورود را درست وارد کنید", true); }
+    // اعتبار سیگنال: حد ضرر و حداقل یک تارگت لازم است، جهت‌ها درست باشد، نسبت سود به ریسک بررسی شود
+    { const ef = num($("ef").value), et = num($("et").value), sl = num($("sl").value), t1 = num($("tp1").value), t2 = num($("tp2").value), t3 = num($("tp3").value);
+      const dir = side === "buy" ? 1 : -1, lo = et != null ? Math.min(ef, et) : ef, hi = et != null ? Math.max(ef, et) : ef, mid = (lo + hi) / 2;
+      if (sl == null) { $("sl").focus(); return toast("بدون حد ضرر سیگنال معتبر نیست؛ حد ضرر را وارد کنید", true); }
+      if (t1 == null) { $("tp1").focus(); return toast("حداقل تارگت ۱ را وارد کنید", true); }
+      if ((dir === 1 ? sl >= lo : sl <= hi)) { $("sl").focus(); return toast(side === "buy" ? "در خرید، حد ضرر باید پایین‌تر از ناحیه‌ی ورود باشد" : "در فروش، حد ضرر باید بالاتر از ناحیه‌ی ورود باشد", true); }
+      const tps = [t1, t2, t3].filter(v => v != null);
+      if (tps.some(t => (dir === 1 ? t <= hi : t >= lo))) return toast(side === "buy" ? "در خرید، تارگت‌ها باید بالاتر از ناحیه‌ی ورود باشند" : "در فروش، تارگت‌ها باید پایین‌تر از ناحیه‌ی ورود باشند", true);
+      if (tps.some((t, i) => i && (t - tps[i - 1]) * dir <= 0)) return toast("تارگت‌ها باید به ترتیب دورتر شوند (تارگت ۲ دورتر از ۱)", true);
+      const rr = Math.abs(t1 - mid) / Math.abs(mid - sl);
+      if (rr < 1 && b.dataset.rrok !== "1") { b.dataset.rrok = "1"; return toast(`نسبت سود به ریسک تارگت ۱ فقط 1:${rr.toFixed(2)} است. اگر مطمئن هستید دوباره بکشید.`, true); } }
     busy(b, true);
     let voice_path = null;
     const blob = rec.blob();

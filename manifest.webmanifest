@@ -4,7 +4,6 @@
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
- "orientation": "portrait",
  "background_color": "#eef2f0",
  "theme_color": "#eef2f0",
  "dir": "rtl",
@@ -25,6 +24,39 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "maskable"
+  }
+ ],
+ "id": "./",
+ "description": "سیگنال طلا و نقره، نرخ زنده‌ی ارزها و طلای کابل، داشبورد و مدیریت ریسک",
+ "display_override": [
+  "window-controls-overlay",
+  "standalone"
+ ],
+ "categories": [
+  "finance",
+  "business",
+  "education"
+ ],
+ "shortcuts": [
+  {
+   "name": "داشبورد",
+   "url": "./?pg=dash",
+   "icons": [
+    {
+     "src": "img/app/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "قیمت‌ها",
+   "url": "./?pg=prc",
+   "icons": [
+    {
+     "src": "img/app/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
   }
  ]
 }

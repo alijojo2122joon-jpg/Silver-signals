@@ -4,7 +4,6 @@
  "start_url": "./modir.html",
  "scope": "./",
  "display": "standalone",
- "orientation": "portrait",
  "background_color": "#eef2f0",
  "theme_color": "#eef2f0",
  "dir": "rtl",
@@ -27,5 +26,15 @@
    "purpose": "maskable"
   }
  ],
- "id": "./modir.html"
+ "id": "./modir.html",
+ "description": "سیگنال طلا و نقره، نرخ زنده‌ی ارزها و طلای کابل، داشبورد و مدیریت ریسک",
+ "display_override": [
+  "window-controls-overlay",
+  "standalone"
+ ],
+ "categories": [
+  "finance",
+  "business",
+  "education"
+ ]
 }
