@@ -717,6 +717,13 @@
   .sw i::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fff,#e6e9ef);box-shadow:0 3px 8px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
   .sw input:checked+i{background:linear-gradient(180deg,#2fd08c,#12a46b)} .sw input:checked+i::after{transform:translateX(-22px)}
   .sw input:focus-visible+i{outline:2px solid var(--glowc)}
+
+  .apush{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 14px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);font-size:12.5px;font-weight:700}
+  .apush span{flex:1;line-height:1.8} .apush button{flex:none;border:0;border-radius:999px;padding:7px 14px;background:var(--navy);color:var(--onNavy);font:inherit;font-weight:800;cursor:pointer}
+
+  .tcomp{margin:8px 0 12px;padding:12px;border-radius:18px;background:var(--tile);box-shadow:var(--raise)} .tcomp textarea{margin:0}
+  .tcrep{font-size:12px;color:var(--muted);margin-bottom:6px} .tcrep button{border:0;background:none;color:var(--sell);cursor:pointer}
+  .tcemo{display:flex;gap:2px;margin-top:4px;overflow-x:auto} .tcemo button{border:0;background:none;font-size:19px;cursor:pointer;padding:2px 4px}
 </style>
 </head>
 <body>
@@ -731,7 +738,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081450";
+const BUILD = "202611081518";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -903,7 +910,10 @@ const busy = (b, on, label) => { b.disabled = on; b.innerHTML = on ? '<span clas
 
 async function callFn(body){
   const { data, error } = await sb.functions.invoke("manage-members", { body });
-  if (error) { let code = error.message; try { code = (await error.context.json()).error || code; } catch {} throw new Error(code); }
+  if (error) { let code = error.message; try { code = (await error.context.json()).error || code; } catch {}
+    if (code === "pwned_password") code = "این رمز در فهرست رمزهای لورفته‌ی اینترنت پیدا شد و امن نیست؛ یک رمز دیگر انتخاب کنید (ترکیب حرف، عدد و نشانه).";
+    if (code === "weak_password") code = "رمز باید حداقل 6 حرف باشد.";
+    throw new Error(code); }
   return data;
 }
 
@@ -947,7 +957,7 @@ function renderPanel(){
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
       <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">${I.coins}<span>قیمت‌ها</span></button><button data-t="content">${I.folder}<span>محتوا</span></button><button data-t="msgs">${I.chat}<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
-  $("out").onclick = () => sb.auth.signOut();
+  $("out").onclick = async () => { await pushTeardown(); sb.auth.signOut(); };
   $("prof").onclick = sheetProfile; loadTeacherSet();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
@@ -980,11 +990,11 @@ function drawStats(){
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
   $("np").style.transform = `translateX(${-["signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
-  if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div>
+  if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div class="apush rise" id="apush"></div>
     <div class="fxab rise"><button class="press" id="cmadm">💬 مدیریت نظرات${cmReported ? ` <b class="fxnb">${cmReported}</b>` : ""}</button></div>
     <input class="in" id="msq" placeholder="🔎 جستجو در گفتگوها (نام یا متن پیام)" value="${esc(msq)}" style="margin:0 0 14px">
     <div id="list"></div>`;
-    $("cmadm").onclick = () => sheetComments(); $("msq").oninput = e => { msq = e.target.value.trim(); drawList(); }; return drawList(); }
+    paintAdminPush(); $("cmadm").onclick = () => sheetComments(); $("msq").oninput = e => { msq = e.target.value.trim(); drawList(); }; return drawList(); }
   if (tab === "content") return drawContent();
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
       <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>`; loadFxAdmin(); return; }
@@ -1151,14 +1161,14 @@ async function loadContent(){
   if (tab === "content") drawContentList();
 }
 function drawContent(){
-  const tiles = [["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["rates","💱","نرخ‌های امروز","دالر سرای شهزاده، هرات، مزار، جلال‌آباد و مثقال"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
+  const tiles = [["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["prices","💱","نرخ ارزها و شهرها","به تب «قیمت‌ها» می‌رود — همه‌ی ارزها، شهرها، تاریخچه و ثبت دستی"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
     ["news","📰","خبر اقتصادی","دسته، منبع، تاریخ، متن کامل و تأثیر"],["event","🗓","رویداد تقویم جهانی","زمان، اهمیت، قبلی و پیش‌بینی"],["afevent","🇦🇫","رویداد تقویم اقتصادی افغانستان","فقط از منبع معتبر: عنوان، تاریخ، ساعت، منبع، وضعیت"],
     ["article","🧠","تحلیل تخصصی / آموزش","متن، کاور، دسته، تحلیل‌گر، فایل پیوست، پیش‌نویس"],["video","🎬","ویدیوی تحلیل","ویدیو با کاور، دسته و تحلیل‌گر"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
   $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت محتوا</h3></div>
     <div class="list glass rise" style="--i:1">${tiles.map(([k, ic, t, s]) => `<div class="it ctile" data-ct="${k}"><span class="av" style="background:var(--field)">${ic}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="s">${I.plus}</span></div>`).join("")}</div>
     <div id="stadm"></div><div id="clist"></div>`;
   $("pane").querySelectorAll("[data-ct]").forEach(el => el.onclick = () => { const k = el.dataset.ct;
-    k === "story" ? sheetStory() : k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
+    k === "story" ? sheetStory() : k === "prices" ? document.querySelector('.nav button[data-t="prices"]')?.click() : k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
   drawContentList(); loadContent();
 }
 function drawContentList(){
@@ -1167,8 +1177,7 @@ function drawContentList(){
   const lastR = p => cRates.find(r => r.place === p);
   const rateTxt = r => r ? [r.buy != null ? "خرید " + fa(r.buy) : "", r.sell != null ? "فروش " + fa(r.sell) : "", r.gold_mithqal != null ? "مثقال طلا " + fa(r.gold_mithqal) : ""].filter(Boolean).join(" · ") + " — " + fmtFull(r.created_at) : "ثبت نشده";
   const ap = cPolls.find(p => p.active);
-  el.innerHTML = `<div class="sec" style="margin-top:18px"><h3>آخرین نرخ‌ها</h3></div>
-    <div class="list glass">${Object.entries(PLACES).map(([k, v]) => `<div class="it" style="grid-template-columns:1fr;cursor:default"><div><div class="t">${v}</div><div class="s num">${rateTxt(lastR(k))}</div></div></div>`).join("")}</div>
+  el.innerHTML = `
     ${ap ? `<div class="sec" style="margin-top:18px"><h3>نظرسنجی فعال</h3></div><div class="list glass"><div class="it" style="cursor:default"><span class="av" style="background:var(--field)">📊</span><div><div class="t">${esc(ap.question)}</div><div class="s">${(ap.options || []).map(esc).join(" / ")}</div></div><button class="ghost" style="width:auto;height:36px;margin:0;padding:0 12px" data-endpoll="${ap.id}">پایان</button></div></div>` : ""}
     <div class="sec" style="margin-top:18px"><h3>منتشرشده‌ها</h3></div>
     <div class="chips" id="cpk">${[["all","همه"], ...Object.entries(KINDS)].map(([k, t]) => `<button type="button" data-pk="${k}" class="${k === cpKind ? "on" : ""}">${t}</button>`).join("")}</div>
@@ -2030,7 +2039,11 @@ async function sheetComments(sigId){
   let only = false, rows = [];
   openSheet(`<h2>💬 مدیریت نظرات</h2><p class="hint">${sigId ? "نظرات یک سیگنال" : "همه‌ی نظرات زیر سیگنال‌ها"} — حذف، پنهان، بی‌صدا کردن عضو و بررسی گزارش‌ها.</p>
     <div class="chips" id="cmf"><button type="button" data-o="0" class="on">همه</button><button type="button" data-o="1">🚩 گزارش‌شده</button></div>
-    <div class="cmsum" id="cmsum"></div><div id="cmlist"><span class="spin"></span></div>`);
+    <div class="cmsum" id="cmsum"></div>
+    <form class="tcomp" id="tcomp" ${sigId ? "" : "hidden"}><div class="tcrep" id="tcrep" hidden></div><textarea class="in" id="tcbody" rows="2" maxlength="1000" placeholder="✔ نظر یا پاسخ شما با نشان «استاد»…"></textarea>
+      <div class="tcemo">${["👍","🎯","📈","📉","⚠️","✅","🙏","💯"].map(e => `<button type="button">${e}</button>`).join("")}</div><button class="cta press" id="tcsend" style="margin-top:6px">ارسال به‌عنوان استاد</button></form>
+    <div id="cmlist"><span class="spin"></span></div>`);
+  let replyTo = null, targetSig = sigId || null;
   const sigName = id => { const g = signals.find(x => x.id === id); return g ? `${(MARKETS[g.market] || MARKETS.xag).name} · ${g.type === "buy" ? "خرید" : "فروش"} ${range(g)}` : "سیگنال #" + id; };
   const draw = () => { const v = sigId ? rows.filter(r => r.signal_id === sigId) : rows;
     const live = v.filter(r => !r.deleted);
@@ -2039,11 +2052,21 @@ async function sheetComments(sigId){
       <div class="cmrh"><b>${esc(r.name || "—")}</b>${r.muted ? '<span class="chip off" style="font-size:10px">🔇 بی‌صدا</span>' : ""}${r.reports ? `<span class="chip off" style="font-size:10px">🚩 ${r.reports}</span>` : ""}<small>${fmtFull(r.created_at)}</small></div>
       ${sigId ? "" : `<div class="hint" style="margin:2px 0 4px">↳ ${esc(sigName(r.signal_id))}</div>`}
       <div class="cmrb">${r.deleted ? "🚫 حذف‌شده — " : r.hidden ? "👁‍🗨 پنهان — " : ""}${esc(r.body)}</div><div class="hint">❤️ ${r.likes}</div>
-      ${r.deleted ? "" : `<div class="cmra"><button type="button" data-a="hide">${r.hidden ? "نمایش" : "پنهان"}</button><button type="button" data-a="del" class="red">حذف</button><button type="button" data-a="mute">${r.muted ? "رفع بی‌صدا" : "بی‌صدا کردن عضو"}</button>${r.reports ? `<button type="button" data-a="ok">گزارش بی‌مورد است</button>` : ""}</div>`}</div>`).join("")
+      ${r.deleted ? "" : `<div class="cmra"><button type="button" data-a="reply">↩ پاسخ استاد</button><button type="button" data-a="hide">${r.hidden ? "نمایش" : "پنهان"}</button><button type="button" data-a="del" class="red">حذف</button><button type="button" data-a="mute">${r.muted ? "رفع بی‌صدا" : "بی‌صدا کردن عضو"}</button>${r.reports ? `<button type="button" data-a="ok">گزارش بی‌مورد است</button>` : ""}</div>`}</div>`).join("")
       : `<div class="empty"><div class="big">💬</div>${only ? "گزارشی نیست." : "هنوز نظری ثبت نشده است."}</div>`; };
   const load = async () => { const { data, error } = await sb.rpc("admin_comments", { p_only_reported: only }); if (error) return toast(error.message, true); rows = data || []; draw(); loadCmReported(); };
+  $("tcomp").querySelector(".tcemo").onclick = e => { const b = e.target.closest("button"); if (b) { $("tcbody").value += b.textContent; $("tcbody").focus(); } };
+  $("tcomp").onsubmit = async e => { e.preventDefault(); const body = $("tcbody").value.trim(); if (!body || !targetSig) return $("tcbody").focus();
+    const btn = $("tcsend"); busy(btn, true);
+    const { error } = await sb.from("signal_comments").insert({ signal_id: targetSig, body, parent_id: replyTo });
+    busy(btn, false, "ارسال به‌عنوان استاد");
+    if (error) return toast(/row-level|policy/i.test(error.message) ? "نظردهی برای این سیگنال بسته است؛ اول آن را باز کنید." : "خطا: " + error.message, true);
+    $("tcbody").value = ""; replyTo = null; $("tcrep").hidden = true; if (!sigId) $("tcomp").hidden = true; toast("ارسال شد ✓"); load(); };
   $("cmf").onclick = e => { const b = e.target.closest("[data-o]"); if (!b) return; $("cmf").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); only = b.dataset.o === "1"; load(); };
   $("cmlist").onclick = async e => { const b = e.target.closest("[data-a]"); if (!b) return; const r = rows.find(x => x.id === Number(b.closest("[data-c]").dataset.c)); if (!r) return; let res;
+    if (b.dataset.a === "reply") { replyTo = r.id; targetSig = r.signal_id; const f = $("tcomp"); f.hidden = false; $("tcrep").hidden = false;
+      $("tcrep").innerHTML = `↩ پاسخ به <b>${esc(r.name || "")}</b>: ${esc(r.body.slice(0, 60))} <button type="button" id="tcx">✕</button>`; $("tcx").onclick = () => { replyTo = null; $("tcrep").hidden = true; if (!sigId) f.hidden = true; };
+      f.scrollIntoView({ behavior: "smooth", block: "center" }); $("tcbody").focus(); return; }
     if (b.dataset.a === "hide") res = await sb.from("signal_comments").update({ hidden: !r.hidden }).eq("id", r.id);
     if (b.dataset.a === "del") { if (!confirm("این نظر حذف شود؟")) return; res = await sb.from("signal_comments").update({ deleted_at: new Date().toISOString(), deleted_by: "admin" }).eq("id", r.id);
       if (!res.error) await sb.from("comment_reports").update({ status: "done" }).eq("comment_id", r.id); }
@@ -2203,6 +2226,59 @@ async function sheetMember(m){
   };
 }
 
+
+/* ===== اعلان روی گوشی (Web Push در مرورگر / بررسی پس‌زمینه در اپ اندروید) ===== */
+const VAPID_PUB = "BDxp04w534nPVugyIpzq83fhR6Txmn0JsUd8uoXCeHo6ZGLhx1golcu8dnCCvoVuX1gX4LRdUH-dFqsFtu35M6s";
+const IS_APP = !!(window.AndroidBridge && window.AndroidBridge.setDeviceToken);
+const lsg = k => { try { return localStorage.getItem(k); } catch { return null; } }, lss = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+const ub64k = s => { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+function pushInfo(){
+  if (IS_APP) { try { return Object.assign({ mode: "app" }, JSON.parse(window.AndroidBridge.pushState())); } catch { return { mode: "app" }; } }
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (!("serviceWorker" in navigator) || !("PushManager" in window) || !window.Notification) return { mode: ios && !standalone ? "ios" : "unsupported" };
+  return { mode: "web", perm: Notification.permission, on: Notification.permission === "granted" && !!lsg("push_ep") };
+}
+async function pushSetup(ask, uid){
+  if (!uid) return "none";
+  try {
+    if (IS_APP) {
+      if (!window.AndroidBridge.deviceToken() || lsg("dev_uid") !== uid) {
+        const { data } = await sb.rpc("register_device", { p_platform: "android" });
+        if (data) { window.AndroidBridge.setDeviceToken(data); lss("dev_uid", uid); }
+      }
+      return "app";
+    }
+    const pi = pushInfo(); if (pi.mode !== "web") return pi.mode;
+    if (Notification.permission === "denied") return "denied";
+    if (Notification.permission !== "granted") { if (!ask) return "off"; if (await Notification.requestPermission() !== "granted") return "denied"; }
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: ub64k(VAPID_PUB) });
+    const j = sub.toJSON(), mark = j.endpoint + "|" + uid;
+    if (lsg("push_ep") !== mark) {
+      const { error } = await sb.rpc("save_push_subscription", { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent });
+      if (error) return "error"; lss("push_ep", mark);
+    }
+    return "on";
+  } catch (e) { return "error"; }
+}
+async function pushTeardown(){
+  try {
+    if (IS_APP) { const t = window.AndroidBridge.deviceToken(); if (t) await sb.rpc("unregister_device", { p_token: t }); window.AndroidBridge.clearDevice(); lss("dev_uid", null); return; }
+    const reg = await navigator.serviceWorker?.getRegistration(); const sub = await reg?.pushManager?.getSubscription();
+    if (sub) { await sb.from("push_subscriptions").delete().eq("endpoint", sub.endpoint); await sub.unsubscribe(); }
+    lss("push_ep", null);
+  } catch {}
+}
+
+let adminUid = null;
+function paintAdminPush(){ const el = $("apush"); if (!el) return; const i = pushInfo();
+  if (i.mode === "app") { el.innerHTML = `<span>📲 اعلان پیام‌ها و پرداخت‌ها روی گوشی فعال است${i.perm === false ? " — ⚠️ اجازه‌ی اعلان را از تنظیمات گوشی بدهید" : ""}</span><label class="sw"><input type="checkbox" id="afast" ${i.fast !== false ? "checked" : ""}><i></i></label>`;
+    $("afast").onchange = e => { try { window.AndroidBridge.setFast(e.target.checked); } catch {} toast(e.target.checked ? "بررسی هر ۱ دقیقه" : "بررسی هر ۱۵ دقیقه"); }; return; }
+  if (i.mode !== "web") { el.innerHTML = `<span>📲 ${i.mode === "ios" ? "در آیفون اول «Add to Home Screen» کنید تا اعلان بگیرید." : "این مرورگر اعلان پس‌زمینه ندارد؛ از Chrome یا اپ مدیر استفاده کنید."}</span>`; return; }
+  if (i.on) { el.innerHTML = `<span>✅ اعلان پیام اعضا و پرداخت‌های بایننس روی این دستگاه فعال است.</span>`; return; }
+  el.innerHTML = i.perm === "denied" ? `<span>⚠️ اعلان در تنظیمات مرورگر مسدود است.</span>` : `<span>📲 اعلان پیام اعضا و پرداخت‌ها روی این دستگاه فعال نیست.</span><button type="button" id="apon">فعال‌سازی</button>`;
+  if ($("apon")) $("apon").onclick = async () => { const r = await pushSetup(true, adminUid); paintAdminPush(); toast(r === "on" ? "اعلان فعال شد ✓" : "فعال نشد", r !== "on"); }; }
 /* مسیر */
 let pendingNote = "";
 async function route(session){
@@ -2212,7 +2288,7 @@ async function route(session){
   if (!session) { const n = pendingNote; pendingNote = ""; return renderLogin(n); }
   const { data: me } = await sb.from("profiles").select("role,name").eq("id", session.user.id).maybeSingle();
   if (me?.role !== "admin") { pendingNote = "این صفحه فقط برای مدیر است."; await sb.auth.signOut(); return; }
-  renderPanel();
+  renderPanel(); adminUid = session.user.id; pushSetup(false, adminUid).then(paintAdminPush);
 }
 let lastUid;
 sb.auth.onAuthStateChange((event, session) => {

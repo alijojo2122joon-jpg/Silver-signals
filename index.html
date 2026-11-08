@@ -1296,6 +1296,11 @@
   @media (min-width:900px){ .angrid{grid-template-columns:repeat(3,minmax(0,1fr))} .anp{max-width:820px;margin:0 auto} }
 
   .afcal>.src{font-size:11px;line-height:1.8;color:var(--muted);font-weight:600;text-align:start;margin-top:4px}
+
+  .pcard{margin:4px 0 12px;padding:14px;border-radius:20px;background:var(--tile);box-shadow:var(--raise)} .pcard>b{font-size:14px} .pcard p{margin:6px 0 0;font-size:12.5px;line-height:1.9;color:var(--muted)}
+  .pcard.ok{outline:1.5px solid #16a34a55} .pcard .cta{margin-top:10px}
+  .pfast{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);cursor:pointer}
+  .pfast span{flex:1;display:grid;gap:2px} .pfast small{font-size:11px;color:var(--muted)} .pfast input{width:22px;height:22px;accent-color:#12a46b}
 </style>
 </head>
 <body>
@@ -1307,7 +1312,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081450";
+const BUILD = "202611081518";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1653,7 +1658,7 @@ function topbar(){
 function bindTop(){
   if ($("meav")) $("meav").onclick = openProfile;
   if ($("bell")) { $("bell").onclick = openNotifs; paintBell(); }
-  $("out").onclick = () => { store.set("cache_me", null); store.set("cache_msgs", []); sb.auth.signOut(); };
+  $("out").onclick = async () => { store.set("cache_me", null); store.set("cache_msgs", []); await pushTeardown(); sb.auth.signOut(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
@@ -2285,16 +2290,81 @@ async function loadNotifs(){
     else if (n.kind === "signal" && !/^📢/.test(n.title)) { sfx("notification", .45); banner("📈", esc(n.title), esc(n.body || ""), () => setPage("sig")); }
   }).subscribe();
 }
+
+/* ===== اعلان روی گوشی (Web Push در مرورگر / بررسی پس‌زمینه در اپ اندروید) ===== */
+const VAPID_PUB = "BDxp04w534nPVugyIpzq83fhR6Txmn0JsUd8uoXCeHo6ZGLhx1golcu8dnCCvoVuX1gX4LRdUH-dFqsFtu35M6s";
+const IS_APP = !!(window.AndroidBridge && window.AndroidBridge.setDeviceToken);
+const lsg = k => { try { return localStorage.getItem(k); } catch { return null; } }, lss = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+const ub64k = s => { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+function pushInfo(){
+  if (IS_APP) { try { return Object.assign({ mode: "app" }, JSON.parse(window.AndroidBridge.pushState())); } catch { return { mode: "app" }; } }
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (!("serviceWorker" in navigator) || !("PushManager" in window) || !window.Notification) return { mode: ios && !standalone ? "ios" : "unsupported" };
+  return { mode: "web", perm: Notification.permission, on: Notification.permission === "granted" && !!lsg("push_ep") };
+}
+async function pushSetup(ask, uid){
+  if (!uid) return "none";
+  try {
+    if (IS_APP) {
+      if (!window.AndroidBridge.deviceToken() || lsg("dev_uid") !== uid) {
+        const { data } = await sb.rpc("register_device", { p_platform: "android" });
+        if (data) { window.AndroidBridge.setDeviceToken(data); lss("dev_uid", uid); }
+      }
+      return "app";
+    }
+    const pi = pushInfo(); if (pi.mode !== "web") return pi.mode;
+    if (Notification.permission === "denied") return "denied";
+    if (Notification.permission !== "granted") { if (!ask) return "off"; if (await Notification.requestPermission() !== "granted") return "denied"; }
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: ub64k(VAPID_PUB) });
+    const j = sub.toJSON(), mark = j.endpoint + "|" + uid;
+    if (lsg("push_ep") !== mark) {
+      const { error } = await sb.rpc("save_push_subscription", { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent });
+      if (error) return "error"; lss("push_ep", mark);
+    }
+    return "on";
+  } catch (e) { return "error"; }
+}
+async function pushTeardown(){
+  try {
+    if (IS_APP) { const t = window.AndroidBridge.deviceToken(); if (t) await sb.rpc("unregister_device", { p_token: t }); window.AndroidBridge.clearDevice(); lss("dev_uid", null); return; }
+    const reg = await navigator.serviceWorker?.getRegistration(); const sub = await reg?.pushManager?.getSubscription();
+    if (sub) { await sb.from("push_subscriptions").delete().eq("endpoint", sub.endpoint); await sub.unsubscribe(); }
+    lss("push_ep", null);
+  } catch {}
+}
+
+const PUL = { fa: { t: "📲 اعلان روی گوشی", on: "فعال است ✓ — سیگنال‌ها، هشدار قیمت، پیام استاد و نتیجه‌ی پرداخت حتی وقتی برنامه بسته است می‌رسد.", off: "فعال نیست — وقتی سایت بسته است اعلانی نمی‌گیرید.", btn: "فعال‌سازی اعلان",
+    denied: "اعلان در تنظیمات مرورگر مسدود شده است. از تنظیمات سایت (🔒 کنار آدرس) «Notifications» را روی Allow بگذارید.", ios: "در آیفون: اول در Safari دکمه‌ی اشتراک ⬆️ ← «Add to Home Screen» را بزنید، برنامه را از صفحه‌ی اصلی باز کنید و دوباره اینجا «فعال‌سازی» را بزنید.",
+    unsupported: "این مرورگر اعلان پس‌زمینه ندارد؛ از Chrome یا اپ اندروید Market Analysts استفاده کنید.", error: "فعال‌سازی ناموفق بود؛ دوباره امتحان کنید.",
+    app: "اپ هر چند دقیقه در پس‌زمینه پیام‌های تازه را بررسی می‌کند.", fast: "اعلان فوری (بررسی هر ۱ دقیقه)", fastH: "یک اعلان کوچک ثابت در نوار گوشی می‌ماند؛ اگر خاموش شود، بررسی هر ۱۵ دقیقه است.", perm: "اجازه‌ی اعلان به اپ داده نشده؛ از تنظیمات گوشی ← برنامه‌ها ← Market Analysts ← اعلان‌ها روشن کنید." },
+  en: { t: "📲 Phone notifications", on: "On ✓ — signals, price alerts, teacher messages and payment results arrive even when the app is closed.", off: "Off — you won't get notifications while the site is closed.", btn: "Enable notifications",
+    denied: "Notifications are blocked in your browser settings. Allow them from the site settings (🔒 next to the address).", ios: "On iPhone: in Safari tap Share ⬆️ → “Add to Home Screen”, open the app from the home screen, then tap Enable here.",
+    unsupported: "This browser can't receive background notifications; use Chrome or the Market Analysts Android app.", error: "Couldn't enable; please try again.",
+    app: "The app checks for new messages in the background.", fast: "Instant alerts (check every minute)", fastH: "Keeps a small silent notification in the status bar; when off, checks every 15 minutes.", perm: "Notifications aren't allowed for the app; enable them in phone Settings → Apps → Market Analysts → Notifications." } };
+PUL.ps = Object.assign({}, PUL.fa, { t: "📲 په ګوشي خبرتیا", btn: "خبرتیا فعالول" });
+const PU = () => PUL[lang] || PUL.fa;
+function pushCardHTML(){ const L = PU(), i = pushInfo();
+  if (i.mode === "app") return `<div class="pcard"><b>${L.t}</b><p>${i.perm === false ? "⚠️ " + L.perm : "✅ " + L.app}</p>
+    <label class="pfast"><span><b>⚡ ${L.fast}</b><small>${L.fastH}</small></span><input type="checkbox" id="pfast" ${i.fast !== false ? "checked" : ""}></label></div>`;
+  if (i.mode === "web") return `<div class="pcard ${i.on ? "ok" : ""}"><b>${L.t}</b><p>${i.on ? L.on : i.perm === "denied" ? "⚠️ " + L.denied : L.off}</p>${i.on || i.perm === "denied" ? "" : `<button class="cta press" id="pon">${L.btn}</button>`}</div>`;
+  return `<div class="pcard"><b>${L.t}</b><p>${L[i.mode] || L.unsupported}</p>${i.mode === "ios" ? "" : ""}</div>`; }
+function wirePushCard(root){
+  const b = root.querySelector("#pon"); if (b) b.onclick = async () => { b.disabled = true; const r = await pushSetup(true, me?.id); const c = root.querySelector(".pcard");
+    if (c) { c.outerHTML = pushCardHTML(); wirePushCard(root); } if (r !== "on" && r !== "app") banner("⚠️", PU()[r] || PU().error, ""); else { sfx("toggle_on", .4); banner("🔔", PU().on.split(" — ")[0], ""); } };
+  const f = root.querySelector("#pfast"); if (f) f.onchange = () => { try { window.AndroidBridge.setFast(f.checked); } catch {} };
+}
 function openNotifs(){
   if ($("npanel")) return;
   const L = NT(), seen = seenId();
   const v = document.createElement("div"); v.className = "npanel"; v.id = "npanel";
-  v.innerHTML = `<div class="nphd"><b>🔔 ${L.t}</b><button class="ib" id="npx" aria-label="close">${I.x}</button></div><p class="nphint">${L.hint}</p>
+  v.innerHTML = `<div class="nphd"><b>🔔 ${L.t}</b><button class="ib" id="npx" aria-label="close">${I.x}</button></div>${pushCardHTML()}<p class="nphint">${L.hint}</p>
     <div class="nplist">${notifs.length ? notifs.map(n => `<div class="npi ${n.id > seen ? "new" : ""} k-${n.kind}"><b>${esc(n.title)}</b>${n.body ? `<p>${esc(n.body)}</p>` : ""}<small>${agoTxt(n.created_at)}</small></div>`).join("") : `<div class="upd">${L.none}</div>`}</div>`;
   document.body.appendChild(v); lockBody();
   const close = () => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); };
   overlayPush(close); requestAnimationFrame(() => v.classList.add("show"));
-  $("npx").onclick = () => history.back();
+  $("npx").onclick = () => history.back(); wirePushCard(v);
   if (notifs[0]) { store.set("notif_seen", notifs[0].id); paintBell(); sb.from("notifications").update({ read_at: new Date().toISOString() }).is("read_at", null).eq("user_id", me.id).then(() => {}); }
 }
 
@@ -2668,34 +2738,38 @@ function jContactForm(el, c){
 }
 
 /* ===== تبدیل‌گر ارز (همه‌ی ارزهای سایت) ===== */
-const CVL = { fa: { t: "تبدیل‌گر ارز", s: "تبدیل بین همه‌ی ارزهای سایت با نرخ بازار کابل", amt: "مقدار", from: "از", to: "به", rate: "نرخ", upd: "به‌روزرسانی", none: "برای این جفت ارز نرخ معتبر منتشر نشده است.", note: "محاسبه بر پایه‌ی میانگین خرید و فروش منتشرشده (کابل) است؛ معامله‌ی واقعی با نرخ صراف انجام می‌شود.", afn: "افغانی", gold: "طلا (اونس)", silver: "نقره (اونس)" },
-  en: { t: "Currency converter", s: "Convert between all site currencies at Kabul market rates", amt: "Amount", from: "From", to: "To", rate: "Rate", upd: "Updated", none: "No valid published rate for this pair.", note: "Uses the mid of published buy/sell (Kabul). Real deals use your money changer's rate.", afn: "Afghani", gold: "Gold (oz)", silver: "Silver (oz)" } };
+const CVL = { fa: { t: "تبدیل‌گر ارز", s: "تبدیل بین همه‌ی ارزهای سایت با نرخ بازار کابل", amt: "مقدار", from: "از", to: "به", rate: "نرخ", upd: "به‌روزرسانی", none: "برای این جفت ارز نرخ معتبر منتشر نشده است.", note: "محاسبه بر پایه‌ی میانگین خرید و فروش منتشرشده (کابل) است؛ معامله‌ی واقعی با نرخ صراف انجام می‌شود.", afn: "افغانی", gold: "طلا (اونس)", silver: "نقره (اونس)", city: "نرخ کدام شهر؟", fb: "نرخ بعضی ارزها در این شهر منتشر نشده؛ برای آن‌ها نرخ کابل استفاده شد.", noCity: "نرخ این شهر هنوز منتشر نشده" },
+  en: { t: "Currency converter", s: "Convert between all site currencies at Kabul market rates", amt: "Amount", from: "From", to: "To", rate: "Rate", upd: "Updated", none: "No valid published rate for this pair.", note: "Uses the mid of published buy/sell (Kabul). Real deals use your money changer's rate.", afn: "Afghani", gold: "Gold (oz)", silver: "Silver (oz)", city: "Which city's rates?", fb: "Some currencies have no rate published in this city; Kabul rates were used for them.", noCity: "no rate published for this city yet" } };
 CVL.ps = Object.assign({}, CVL.fa, { t: "د اسعارو بدلوونکی", amt: "اندازه", from: "له", to: "ته", afn: "افغانۍ" });
 const CV = () => CVL[lang] || CVL.fa;
-let cv = Object.assign({ a: 100, f: "USD", t: "AFN" }, store.get("conv", {}));
-function fxAfnMap(){ // AFN value of 1 unit of each currency, derived only from published rates
-  const m = { AFN: { v: 1, at: null } }, rows = fxRows.filter(r => r.base && r.quote);
+let cv = Object.assign({ a: 100, f: "USD", t: "AFN", city: "kabul" }, store.get("conv", {}));
+const cityOpts = sel => (fxCities.length ? fxCities : [{ code: "kabul", name_fa: "کابل" }]).map(c => `<option value="${esc(c.code)}" ${c.code === sel ? "selected" : ""}>${esc(cityName(c.code))}</option>`).join("");
+function fxAfnMap(city = "kabul"){ // AFN value of 1 unit of each currency, derived only from published rates (city rates when published)
+  const m = { AFN: { v: 1, at: null } }, rows = fxRows.filter(r => r.base && r.quote).map(r => { if (city === "kabul") return r;
+    const c = fxCityRows.find(x => (x.currency_id === r.id || x.code === r.code) && x.city === city && (x.buy != null || x.sell != null));
+    return c ? { ...r, buy: c.buy, sell: c.sell, mid: null, rate_at: c.rate_at, _city: true } : { ...r, _kabul: true }; });
   const price = r => r.buy != null && r.sell != null ? (Number(r.buy) + Number(r.sell)) / 2 : r.mid ?? r.sell ?? r.buy;
   for (let pass = 0; pass < 4; pass++) rows.forEach(r => { const p = price(r); if (p == null || !Number(p)) return; const per = Number(p) / Number(r.base_unit || 1);
-    if (m[r.quote] && !m[r.base]) m[r.base] = { v: per * m[r.quote].v, at: r.rate_at, code: r.code };
-    else if (m[r.base] && !m[r.quote] && r.base === "USD") m[r.quote] = { v: m[r.base].v / per, at: r.rate_at, code: r.code }; });
+    if (m[r.quote] && !m[r.base]) m[r.base] = { v: per * m[r.quote].v, at: r.rate_at, code: r.code, fb: !!r._kabul || !!m[r.quote].fb };
+    else if (m[r.base] && !m[r.quote] && r.base === "USD") m[r.quote] = { v: m[r.base].v / per, at: r.rate_at, code: r.code, fb: !!r._kabul || !!m[r.base].fb }; });
   if (!m.USD && usdAfn()) m.USD = { v: usdAfn(), at: prices?.at };
   if (m.USD && prices?.xau?.price) m.XAU = { v: prices.xau.price * m.USD.v, at: prices.at };
   if (m.USD && prices?.xag?.price) m.XAG = { v: prices.xag.price * m.USD.v, at: prices.at };
   return m; }
-function convHTML(){ const L = CV(), M = fxAfnMap(), codes = Object.keys(M);
+function convHTML(){ const L = CV(), M = fxAfnMap(cv.city), codes = Object.keys(M);
   const nm = c => c === "AFN" ? "🇦🇫 " + L.afn : c === "XAU" ? "🥇 " + L.gold : c === "XAG" ? "🥈 " + L.silver : (() => { const r = fxRows.find(x => x.base === c && (x.quote === "AFN" || x.quote === "USD")) || fxRows.find(x => x.base === c || x.code === c); return r ? `${r.flag || ""} ${fxName(r).replace(/\s*\(.*\)$/, "")}` : c; })();
   if (!codes.includes(cv.f)) cv.f = "USD"; if (!codes.includes(cv.t)) cv.t = "AFN";
   const opts = s => codes.map(c => `<option value="${c}" ${c === s ? "selected" : ""}>${nm(c)} · ${c}</option>`).join("");
-  return `<div class="fgrid"><label style="grid-column:1/-1">${L.amt}<input class="inp ltr cvamt" id="cva" inputmode="decimal" value="${esc(cv.a)}"></label>
+  return `<div class="fgrid"><label style="grid-column:1/-1">🏙 ${L.city}<select class="inp" id="cvc">${cityOpts(cv.city)}</select></label><label style="grid-column:1/-1">${L.amt}<input class="inp ltr cvamt" id="cva" inputmode="decimal" value="${esc(cv.a)}"></label>
     <label>${L.from}<select class="inp" id="cvf">${opts(cv.f)}</select></label><label>${L.to}<select class="inp" id="cvt">${opts(cv.t)}</select></label></div>
     <button type="button" class="cvswap" id="cvs" aria-label="swap">⇅</button><div class="cvout" id="cvo"></div><div class="upd" style="text-align:start;margin:8px 0 0">${L.note}</div>`; }
-function convCalc(){ const el = $("cvo"); if (!el) return; const L = CV(), M = fxAfnMap(), a = num(String($("cva").value)) ?? 0, F = M[cv.f], Tt = M[cv.t];
+function convCalc(){ const el = $("cvo"); if (!el) return; const L = CV(), M = fxAfnMap(cv.city), a = num(String($("cva").value)) ?? 0, F = M[cv.f], Tt = M[cv.t];
   if (!F || !Tt) { el.innerHTML = `<div class="upd">${L.none}</div>`; return; }
   const r = F.v / Tt.v, res = a * r, d = x => Math.abs(x) >= 100 ? 2 : Math.abs(x) >= 1 ? 4 : 6, at = [F.at, Tt.at].filter(Boolean).sort()[0];
-  el.innerHTML = `<b class="ltr">${nf(res, d(res))} <small>${cv.t}</small></b><span class="ltr">${L.rate}: 1 ${cv.f} = ${nf(r, d(r))} ${cv.t} · 1 ${cv.t} = ${nf(1 / r, d(1 / r))} ${cv.f}</span>${at ? `<span>${L.upd}: <bdi data-ts="${at}">${agoTxt(at)}</bdi> · ${fmtFull(at)}</span>` : ""}`; }
+  el.innerHTML = `<b class="ltr">${nf(res, d(res))} <small>${cv.t}</small></b><span class="ltr">${L.rate}: 1 ${cv.f} = ${nf(r, d(r))} ${cv.t} · 1 ${cv.t} = ${nf(1 / r, d(1 / r))} ${cv.f}</span>${at ? `<span>${L.upd}: <bdi data-ts="${at}">${agoTxt(at)}</bdi> · ${fmtFull(at)}</span>` : ""}${cv.city !== "kabul" ? `<span>🏙 ${cityName(cv.city)}${F.fb || Tt.fb ? " · ⚠️ " + L.fb : ""}</span>` : ""}`; }
 function wireConv(){ if (!$("cva")) return; const sv = () => store.set("conv", cv);
-  $("cva").oninput = e => { cv.a = e.target.value; sv(); convCalc(); }; $("cvf").onchange = e => { cv.f = e.target.value; sv(); convCalc(); }; $("cvt").onchange = e => { cv.t = e.target.value; sv(); convCalc(); };
+  $("cva").oninput = e => { cv.a = e.target.value; sv(); convCalc(); };
+  $("cvc").onchange = e => { cv.city = e.target.value; sv(); const t = $("cvtool").querySelector(".tb"); t.innerHTML = convHTML(); wireConv(); }; $("cvf").onchange = e => { cv.f = e.target.value; sv(); convCalc(); }; $("cvt").onchange = e => { cv.t = e.target.value; sv(); convCalc(); };
   $("cvs").onclick = () => { [cv.f, cv.t] = [cv.t, cv.f]; $("cvf").value = cv.f; $("cvt").value = cv.t; sv(); sfx("tap_01", .3); convCalc(); }; convCalc(); }
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
@@ -2737,14 +2811,18 @@ function drawPrices(){
 
 /* ----- هشدار قیمت ----- */
 let alerts = [];   // server-side price alerts (public.price_alerts); checked every 20 s on the server
-const curPrice = a => a === "xau" ? prices?.xau?.price : a === "xag" ? prices?.xag?.price : a === "dxy" ? prices?.dxy?.price : a?.startsWith?.("fx:") ? (() => { const r = fxRows.find(x => x.code === a.slice(3)); return r ? fxMain(r)[1] : null; })() : usdAfn();
-const alertName = a => a === "dxy" ? "DXY" : a?.startsWith?.("fx:") ? (() => { const r = fxRows.find(x => x.code === a.slice(3)); return r ? `${r.flag || ""} ${fxName(r)}` : a.slice(3); })() : T.m[a];
+const splitAsset = a => { const m = /^fx:([A-Z_]+)(?:@([a-z_]+))?$/.exec(a || ""); return m ? { code: m[1], city: m[2] || "kabul" } : null; };
+const curPrice = a => { const x = splitAsset(a);
+  if (x && x.city !== "kabul") { const c = fxCityRows.find(r => r.code === x.code && r.city === x.city); return c ? (c.sell ?? c.buy) : null; }
+  return a === "xau" ? prices?.xau?.price : a === "xag" ? prices?.xag?.price : a === "dxy" ? prices?.dxy?.price : x ? (() => { const r = fxRows.find(z => z.code === x.code); return r ? fxMain(r)[1] : null; })() : usdAfn(); };
+const alertName = a => { const x = splitAsset(a); if (a === "dxy") return "DXY"; if (!x) return T.m[a];
+  const r = fxRows.find(z => z.code === x.code); return `${r ? `${r.flag || ""} ${fxName(r)}` : x.code}${x.city !== "kabul" ? " · " + cityName(x.city) : ""}`; };
 const ALL = { fa: { act: "هشدارهای فعال", hist: "تاریخچه‌ی هشدارها", edit: "ویرایش", save: "ذخیره‌ی تغییر", cancel: "لغو", note: "یادداشت (اختیاری)", hit: "رسید به", now: "اکنون", none: "هنوز هشداری فعال نشده است.", perm: "🔔 اعلان مرورگر را فعال کنید تا هشدارها حتی در پس‌زمینه برسند.", permB: "فعال‌سازی" },
   en: { act: "Active alerts", hist: "Alert history", edit: "Edit", save: "Save changes", cancel: "Cancel", note: "Note (optional)", hit: "Hit", now: "Now", none: "No alert has triggered yet.", perm: "🔔 Enable browser notifications to receive alerts in the background.", permB: "Enable" } };
 ALL.ps = Object.assign({}, ALL.fa, { act: "فعالې خبرتیاوې", hist: "د خبرتیاوو تاریخچه", edit: "سمول" });
 const AT = () => ALL[lang] || ALL.fa;
 let aEdit = null;
-const aDig = a => a === "xag" ? 3 : a?.startsWith?.("fx:") ? (fxRows.find(x => x.code === a.slice(3))?.digits ?? 4) : 2;
+const aDig = a => a === "xag" ? 3 : splitAsset(a) ? (fxRows.find(x => x.code === splitAsset(a).code)?.digits ?? 4) : 2;
 const alertOpts = () => `<optgroup label="${T.m.xau} · ${T.m.xag}"><option value="xau">${T.m.xau}</option><option value="xag">${T.m.xag}</option><option value="dxy">DXY</option></optgroup>
   <optgroup label="💱"><option value="usd">${T.m.usd} (AFN)</option>${fxRows.filter(r => r.code !== "USD" && fxMain(r)[1] != null).map(r => `<option value="fx:${esc(r.code)}">${r.flag || ""} ${esc(fxName(r))}</option>`).join("")}</optgroup>`;
 function checkAlerts(){ /* evaluated on the server (pg_cron) — results arrive as notifications */ }
@@ -2757,10 +2835,10 @@ async function loadAlerts(){
 }
 function drawAlerts(){
   const el = $("alist"); if (!el) return; const L = AT(), act = alerts.filter(a => !a.done), hist = alerts.filter(a => a.done);
-  const perm = window.Notification && Notification.permission === "default" ? `<div class="aperm">${L.perm} <button type="button" id="aperm">${L.permB}</button></div>` : "";
+  const perm = !IS_APP && window.Notification && Notification.permission === "default" ? `<div class="aperm">${L.perm} <button type="button" id="aperm">${L.permB}</button></div>` : "";
   el.innerHTML = perm + `<div class="ahd">⏳ ${L.act} <b>${act.length}</b></div>` + (act.length ? act.map(a => `<div class="lrow arow ${aEdit === a.id ? "on" : ""}"><span>${alertName(a.asset)} ${a.cond === "ge" ? "≥" : "≤"} <b class="ltr">${nf(a.value, aDig(a.asset))}</b>${a.note ? `<small>${esc(a.note)}</small>` : ""}</span><span class="tag2 ltr">${L.now}: ${nf(curPrice(a.asset), aDig(a.asset))}</span><button class="x2" data-ae="${a.id}" aria-label="edit">✎</button><button class="x2" data-ad="${a.id}" aria-label="delete">✕</button></div>`).join("") : `<div class="lrow" style="color:var(--muted)">${T.noAlerts}</div>`)
     + `<div class="ahd">✅ ${L.hist}</div>` + (hist.length ? hist.map(a => `<div class="lrow arow done"><span>${alertName(a.asset)} ${a.cond === "ge" ? "≥" : "≤"} <b class="ltr">${nf(a.value, aDig(a.asset))}</b><small>${a.triggered_at ? `${L.hit} <bdi class="ltr">${nf(a.triggered_price, aDig(a.asset))}</bdi> · ${fmtFull(a.triggered_at)}` : ""}</small></span><button class="x2" data-ae="${a.id}" aria-label="reuse">↻</button><button class="x2" data-ad="${a.id}" aria-label="delete">✕</button></div>`).join("") : `<div class="lrow" style="color:var(--muted)">${L.none}</div>`);
-  if ($("aperm")) $("aperm").onclick = async () => { try { await Notification.requestPermission(); } catch {} drawAlerts(); };
+  if ($("aperm")) $("aperm").onclick = async () => { await pushSetup(true, me?.id); drawAlerts(); };
 }
 
 /* ----- دفترچه ----- */
@@ -2799,6 +2877,7 @@ function drawTools(){
   <details class="tool glass rise" style="--i:2"><summary><span class="ti">⏰</span><div>${T.alertT}<small>${T.alertS}</small></div></summary><div class="tb">
     <div class="fgrid"><label>${T.asset}<select class="inp" id="aa">${alertOpts()}</select></label>
       <label>${T.cond}<select class="inp" id="ac"><option value="ge">${T.above}</option><option value="le">${T.below}</option></select></label>
+      <label id="acityl" hidden style="grid-column:1/-1">🏙 ${CV().city}<select class="inp" id="acity">${cityOpts("kabul")}</select></label>
       <label>${T.target}<input class="inp ltr" id="av" inputmode="decimal"></label><label>${AT().note}<input class="inp" id="anote" maxlength="200"></label></div>
     <div class="upd" id="anow" style="text-align:start;margin:4px 0 0"></div>
     <div class="afa"><button class="btn2" id="aadd">${T.add}</button><button class="btn2 ghost2" id="acx" hidden>${AT().cancel}</button></div><div class="upd" style="text-align:start;margin:8px 0 0">${T.alertNote}</div><div id="alist" style="margin-top:6px"></div></div></details>
@@ -2853,18 +2932,19 @@ function drawTools(){
   $("qch").onclick = e => { const b = e.target.closest("[data-q]"); if (!b) return; const [q, u] = b.dataset.q.split(":"); $("cw").value = q; $("cu").value = u; calc(); };
   fillCalcLive();
   wireRisk(); wireConv();
-  if (!fxAt || Date.now() - fxAt > 60000) loadFx(true).then(() => { if (page === "tool" && $("cvtool")) { $("cvtool").querySelector(".tb").innerHTML = convHTML(); wireConv(); const sel = $("aa"), v = sel.value; sel.innerHTML = alertOpts(); sel.value = v; drawAlerts(); } });
-  const anow = () => { const p = curPrice($("aa").value); $("anow").textContent = p != null ? `${AT().now}: ${nf(p, aDig($("aa").value))}` : ""; };
-  $("aa").onchange = anow; anow();
+  if (!fxAt || Date.now() - fxAt > 60000) loadFx(true).then(() => { if (page === "tool" && $("cvtool")) { $("cvtool").querySelector(".tb").innerHTML = convHTML(); wireConv(); const sel = $("aa"), v = sel.value; sel.innerHTML = alertOpts(); sel.value = v; const cs = $("acity"), cvv = cs.value; cs.innerHTML = cityOpts(cvv); cs.value = cvv; drawAlerts(); } });
+  const aAsset = () => { const v = $("aa").value, c = $("acity").value; if (c === "kabul" || !(v === "usd" || v.startsWith("fx:"))) return v; return "fx:" + (v === "usd" ? "USD" : v.slice(3)) + "@" + c; };
+  const anow = () => { $("acityl").hidden = !($("aa").value === "usd" || $("aa").value.startsWith("fx:")); const p = curPrice(aAsset()); $("anow").textContent = p != null ? `${AT().now}: ${nf(p, aDig(aAsset()))}` : `${AT().now}: — (${CV().noCity})`; };
+  $("aa").onchange = anow; $("acity").onchange = anow; anow();
   const aReset = () => { aEdit = null; $("av").value = ""; $("anote").value = ""; $("aadd").textContent = T.add; $("acx").hidden = true; drawAlerts(); };
   $("acx").onclick = aReset;
   $("aadd").onclick = async () => { const v = n($("av").value); if (isNaN(v) || v <= 0) return $("av").focus();
-    const row = { asset: $("aa").value, cond: $("ac").value, value: v, note: $("anote").value.trim() || null };
+    const row = { asset: aAsset(), cond: $("ac").value, value: v, note: $("anote").value.trim() || null };
     const { error } = aEdit ? await sb.from("price_alerts").update({ ...row, active: true, triggered_at: null, triggered_price: null }).eq("id", aEdit) : await sb.from("price_alerts").insert(row);
     if (error) return banner("⚠️", T.sendFail2 || "Error", esc(error.message)); sfx("toggle_on", .4); aReset(); loadAlerts();
     try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} };
   $("alist").onclick = async e => { const ed = e.target.closest("[data-ae]"), b = e.target.closest("[data-ad]");
-    if (ed) { const a = alerts.find(x => x.id === +ed.dataset.ae); if (!a) return; aEdit = a.id; $("aa").value = a.asset; $("ac").value = a.cond; $("av").value = a.value; $("anote").value = a.note || ""; $("aadd").textContent = AT().save; $("acx").hidden = false; anow(); drawAlerts(); $("av").focus(); return; }
+    if (ed) { const a = alerts.find(x => x.id === +ed.dataset.ae); if (!a) return; aEdit = a.id; { const x = splitAsset(a.asset); $("aa").value = x ? (x.code === "USD" ? "usd" : "fx:" + x.code) : a.asset; $("acity").value = x ? x.city : "kabul"; } $("ac").value = a.cond; $("av").value = a.value; $("anote").value = a.note || ""; $("aadd").textContent = AT().save; $("acx").hidden = false; anow(); drawAlerts(); $("av").focus(); return; }
     if (!b) return; b.disabled = true; await sb.from("price_alerts").delete().eq("id", +b.dataset.ad); if (aEdit === +b.dataset.ad) aReset(); loadAlerts(); };
   drawAlerts(); loadAlerts();
   el.querySelector(".jlb").onclick = e => { const b = e.target.closest("[data-jo]"); if (b) openJournal(+b.dataset.jo); };
@@ -3374,6 +3454,9 @@ function renderFeed(){
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); sb.rpc("touch_seen").then(() => {}); if (page === "prc") loadPrices();  } }, 8000);
   }
   loadFeed(); loadPrices(); loadMyRatings(); loadNotifs(); loadAlerts(); sb.rpc("touch_seen").then(() => {});
+  pushSetup(false, me.id).then(r => { if (r === "off" && !store.get("push_asked", false)) { store.set("push_asked", true); setTimeout(() => banner("📲", PU().t, PU().btn + " ←", openNotifs), 4000); } });
+  { const q = new URLSearchParams(location.search); if (q.get("chat")) setTimeout(() => openChat(), 700); else if (q.get("notifs")) setTimeout(openNotifs, 700);
+    if (q.get("chat") || q.get("notifs")) history.replaceState(null, "", location.pathname + (q.get("pg") ? "?pg=" + q.get("pg") : "")); }
   setupChat();
 }
 function rerender(){

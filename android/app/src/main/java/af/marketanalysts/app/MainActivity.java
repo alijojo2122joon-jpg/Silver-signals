@@ -26,6 +26,40 @@ public class MainActivity extends Activity {
     private PermissionRequest pendingPerm;
 
     private class Bridge {
+        /** Called by the page after login: stores this device's private inbox token and starts background checks. */
+        @android.webkit.JavascriptInterface
+        public void setDeviceToken(String token) {
+            if (token == null || token.length() < 20) return;
+            android.content.SharedPreferences p = Notifier.prefs(MainActivity.this);
+            boolean fresh = !token.equals(p.getString("token", null));
+            android.content.SharedPreferences.Editor e = p.edit().putString("token", token);
+            if (fresh) e.putLong("after", 0);
+            if (!p.contains("fast")) e.putBoolean("fast", true);
+            e.apply();
+            runOnUiThread(() -> {
+                if (android.os.Build.VERSION.SDK_INT >= 33 && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED)
+                    requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 13);
+                Notifier.schedule(MainActivity.this);
+                applyFast();
+            });
+            new Thread(() -> Notifier.poll(MainActivity.this)).start();
+        }
+        @android.webkit.JavascriptInterface
+        public String deviceToken() { return Notifier.prefs(MainActivity.this).getString("token", ""); }
+        @android.webkit.JavascriptInterface
+        public void clearDevice() {
+            Notifier.prefs(MainActivity.this).edit().remove("token").remove("after").apply();
+            runOnUiThread(() -> { stopService(new Intent(MainActivity.this, FastService.class));
+                android.app.job.JobScheduler js = (android.app.job.JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE); if (js != null) js.cancel(Notifier.JOB_ID); });
+        }
+        @android.webkit.JavascriptInterface
+        public void setFast(boolean on) { Notifier.prefs(MainActivity.this).edit().putBoolean("fast", on).apply(); runOnUiThread(MainActivity.this::applyFast); }
+        @android.webkit.JavascriptInterface
+        public String pushState() {
+            android.content.SharedPreferences p = Notifier.prefs(MainActivity.this);
+            boolean perm = android.os.Build.VERSION.SDK_INT < 33 || checkSelfPermission("android.permission.POST_NOTIFICATIONS") == PackageManager.PERMISSION_GRANTED;
+            return "{\"token\":" + (p.getString("token", null) != null) + ",\"fast\":" + p.getBoolean("fast", true) + ",\"perm\":" + perm + "}";
+        }
         @android.webkit.JavascriptInterface
         public void shareImage(String b64, String text) {
             runOnUiThread(() -> {
@@ -51,6 +85,23 @@ public class MainActivity extends Activity {
                 try { startActivity(Intent.createChooser(send, null)); } catch (Exception ignored) {}
             });
         }
+    }
+
+    void applyFast() {
+        android.content.SharedPreferences p = Notifier.prefs(this);
+        Intent si = new Intent(this, FastService.class);
+        if (p.getBoolean("fast", true) && p.getString("token", null) != null) {
+            try { if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(si); else startService(si); } catch (Exception ignored) {}
+        } else stopService(si);
+    }
+    private String startUrl(Intent i) {
+        String path = i != null ? i.getStringExtra("path") : null;
+        return path != null && path.startsWith("?") ? BuildConfig.START_URL + path : BuildConfig.START_URL;
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null && intent.getStringExtra("path") != null && web != null) web.loadUrl(startUrl(intent));
     }
 
     @Override
@@ -132,7 +183,9 @@ public class MainActivity extends Activity {
 
         s.setAllowFileAccess(true);
         if (state != null) web.restoreState(state);
-        else web.loadUrl(BuildConfig.START_URL);
+        else web.loadUrl(startUrl(getIntent()));
+        Notifier.channels(this);
+        if (Notifier.prefs(this).getString("token", null) != null) { Notifier.schedule(this); applyFast(); }
         checkUpdate();
     }
 
