@@ -796,7 +796,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794222106";
+const BUILD = "1794222280";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1243,14 +1243,14 @@ async function loadContent(){
   if (tab === "content") drawContentList();
 }
 function drawContent(){
-  const tiles = [["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["prices","💱","نرخ ارزها و شهرها","به تب «قیمت‌ها» می‌رود — همه‌ی ارزها، شهرها، تاریخچه و ثبت دستی"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
+  const tiles = [["autonews","📡","اخبار خودکار (همان که اعضا می‌بینند)","آفاق، آریانا، بانک مرکزی، وزارت مالیه، بانک جهانی و بازار طلا — مشاهده و به‌روزرسانی فوری"],["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["prices","💱","نرخ ارزها و شهرها","به تب «قیمت‌ها» می‌رود — همه‌ی ارزها، شهرها، تاریخچه و ثبت دستی"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
     ["news","📰","خبر اقتصادی","دسته، منبع، تاریخ، متن کامل و تأثیر"],["event","🗓","رویداد تقویم جهانی","زمان، اهمیت، قبلی و پیش‌بینی"],["afevent","🇦🇫","رویداد تقویم اقتصادی افغانستان","فقط از منبع معتبر: عنوان، تاریخ، ساعت، منبع، وضعیت"],
     ["article","🧠","تحلیل تخصصی / آموزش","متن، کاور، دسته، تحلیل‌گر، فایل پیوست، پیش‌نویس"],["video","🎬","ویدیوی تحلیل","ویدیو با کاور، دسته و تحلیل‌گر"],["poll","📊","نظرسنجی نبض بازار","سوال روزانه برای اعضا"]];
   $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت محتوا</h3></div>
     <div class="list glass rise" style="--i:1">${tiles.map(([k, ic, t, s]) => `<div class="it ctile" data-ct="${k}"><span class="av" style="background:var(--field)">${ic}</span><div><div class="t">${t}</div><div class="s">${s}</div></div><span class="s">${I.plus}</span></div>`).join("")}</div>
     <div id="stadm"></div><div id="clist"></div>`;
   $("pane").querySelectorAll("[data-ct]").forEach(el => el.onclick = () => { const k = el.dataset.ct;
-    k === "story" ? sheetStory() : k === "prices" ? document.querySelector('.nav button[data-t="prices"]')?.click() : k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
+    k === "autonews" ? sheetAutoNews() : k === "story" ? sheetStory() : k === "prices" ? document.querySelector('.nav button[data-t="prices"]')?.click() : k === "rates" ? sheetRates() : k === "academy" ? sheetAcademy() : k === "poll" ? sheetPoll() : sheetPost(k); });
   drawContentList(); loadContent();
 }
 function drawContentList(){
@@ -2512,9 +2512,10 @@ function drawDash(soft){
       <a href="index.html?pg=dash&from=admin">📊 داشبورد معامله‌گر<small>ماشین‌حساب ریسک حرفه‌ای و گزارش عملکرد</small></a>
       <a href="index.html?pg=sig&from=admin">👁 صفحه‌ی سیگنال‌ها از نگاه اعضا<small>با نظرات و لایک‌ها</small></a></div>
       <p class="hint">مدیریت محتوای آکادمی، اخبار و تقویم از تب «محتوا» انجام می‌شود.</p></div>
+    <button class="dashbtn glass press" data-dgo="news">📡 اخبار خودکار منابع (همان که اعضا می‌بینند)</button>
     <button class="dashbtn glass press" data-dgo="sec">🛡 امنیت و دستگاه‌های فعال اعضا</button>`;
   $("dupd").textContent = "به‌روزرسانی خودکار · " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-  el.onclick = e => { if (e.target.closest("[data-dgo=bill]")) sheetBilling(); if (e.target.closest("[data-dgo=sec]")) sheetSecurity(); };
+  el.onclick = e => { if (e.target.closest("[data-dgo=bill]")) sheetBilling(); if (e.target.closest("[data-dgo=sec]")) sheetSecurity(); if (e.target.closest("[data-dgo=news]")) sheetAutoNews(); };
 }
 setInterval(() => { if (tab === "dash" && !document.hidden && $("dashv")) { dashX.at = 0; drawDash(true); } }, 30000);
 
@@ -2563,6 +2564,32 @@ async function sheetHealth(){
     const res = await Promise.all(fns.map(f => fnFetch(f).then(r => r.ok).catch(() => false)));
     busy(b, false, "🔄 به‌روزرسانی دستی همه‌ی منابع"); $("h_res").textContent = res.every(Boolean) ? "✅ همه‌ی منابع دوباره خوانده شدند." : `⚠️ ${res.filter(x => !x).length} منبع پاسخ نداد؛ چند دقیقه بعد دوباره امتحان کنید.`;
     dashX.at = 0; loadTicker(true); loadFxAdmin(); await draw(); };
+}
+
+/* ===== اخبار خودکار (همان فید بخش اعضا) ===== */
+async function sheetAutoNews(){
+  openSheet(`<h2>📡 اخبار خودکار</h2><p class="hint">همین اخبار در بخش «آکادمی › اخبار» برای اعضا نمایش داده می‌شود و هر چند دقیقه خودکار از منابع به‌روز می‌شود. خبرهای انگلیسی بعد از ترجمه به فارسی اضافه می‌شوند.</p>
+    <div class="chips" id="anf"></div><div id="anl" style="margin-top:10px"><p class="hint">در حال بارگذاری…</p></div>
+    <button class="ghost" id="anr">🔄 به‌روزرسانی فوری از منابع</button>`);
+  const SRC = { all: "همه", afaaq: "آفاق", ariana: "آریانا نیوز", dab: "بانک مرکزی", mof: "وزارت مالیه", wb: "بانک جهانی", gold: "بازار جهانی طلا" };
+  let f = "all", j = null, failed = false;
+  const draw = () => {
+    if (!$("anl")) return;
+    const items = (j?.items || []).filter(i => /^https?:\/\//.test(i.link || ""));
+    $("anf").innerHTML = Object.entries(SRC).filter(([k]) => k === "all" || items.some(i => i.org === k))
+      .map(([k, v]) => `<button type="button" data-o="${k}" class="${k === f ? "on" : ""}">${v} <small>${k === "all" ? items.length : items.filter(i => i.org === k).length}</small></button>`).join("");
+    const L = items.filter(i => f === "all" || i.org === f);
+    $("anl").innerHTML = L.length ? `<div class="list glass">${L.map(i => `<a class="it" href="${esc(i.link)}" target="_blank" rel="noopener noreferrer" style="grid-template-columns:auto 1fr;text-decoration:none;color:inherit">
+        <span class="av" style="background:var(--field)">${i.kind === "gold" ? "🥇" : i.kind === "fx" ? "💵" : "📰"}</span>
+        <div><div class="t">${esc(i.title)}</div><div class="s">${esc(i.src || "")}${i.at ? " · " + agoFa(i.at) : ""}</div>${i.desc ? `<div class="s">${esc(i.desc).slice(0, 160)}</div>` : ""}</div></a>`).join("")}</div>`
+      : `<p class="hint">${failed ? "اخبار بارگذاری نشد؛ اتصال اینترنت را بررسی کنید و دوباره امتحان کنید." : "فعلاً خبری از این منبع نیست."}</p>`;
+    $("anf").onclick = e => { const b = e.target.closest("[data-o]"); if (!b) return; f = b.dataset.o; draw(); };
+  };
+  const load = async force => { failed = false;
+    try { const r = await fnFetch("news" + (force ? "?force=1" : "")); if (r.ok) { j = await r.json(); dashX.news = { t: Date.now(), j }; } else failed = !j; } catch { failed = !j; }
+    draw(); };
+  $("anr").onclick = async () => { const b = $("anr"); busy(b, true); await load(true); if ($("anr")) busy(b, false, "🔄 به‌روزرسانی فوری از منابع"); toast(failed ? "به‌روزرسانی نشد" : "اخبار به‌روز شد", failed); };
+  await load(false);
 }
 
 /* ===== امنیت ===== */
