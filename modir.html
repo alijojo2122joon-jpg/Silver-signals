@@ -763,9 +763,10 @@
   .dkc small{display:block;font-size:11px;font-weight:700;color:var(--muted)} .dkc b{display:block;font:900 24px Montserrat,Arial,sans-serif;margin:2px 0} .dkc span{font-size:10.5px;color:var(--muted);font-weight:700}
   .dkc.w b{color:var(--buy)} .dkc.warn{outline:2px solid #f59e0b88;cursor:pointer} .dkc[data-dgo]{cursor:pointer}
   .dcard{padding:14px;border-radius:22px;background:var(--tile,var(--field));box-shadow:var(--raise);margin-bottom:12px;min-width:0} .dcard h4{margin:0 0 8px;font-size:14px}
+  .pl.newsg{background:var(--amber-bg);color:var(--amber)}
   .qrbox{display:grid;place-items:center;padding:12px;background:#fff;border-radius:18px;margin:8px auto;width:max-content} .qrbox img{width:190px;height:190px;display:block}
   .mcode{letter-spacing:8px;text-align:center;font-size:20px;font-weight:800} .okline{font-size:13px;font-weight:700;color:var(--buy);line-height:1.9;margin:0 0 8px}
-  #maxd .chip{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:800;padding:8px 14px;background:var(--field);color:var(--text)} #maxd .chip.on{background:var(--buy-bg);color:var(--buy)}
+  #maxd .chip,#sgopen .chip{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:800;padding:8px 14px;background:var(--field);color:var(--text)} #maxd .chip.on,#sgopen .chip.on{background:var(--buy-bg);color:var(--buy)}
   .sesg{padding:8px 0;border-top:1px solid rgba(120,130,160,.15)} .sesg:first-of-type{border-top:0} .sesh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
   .dst small{font-weight:500;color:var(--muted);font-size:11px} .warnc{box-shadow:var(--raise),inset 0 0 0 1.5px var(--sell-bg)}
   .ghost2{border:0;background:var(--field);color:var(--text);font:inherit;font-size:11.5px;font-weight:800;padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap} .ghost2.red{color:var(--sell);background:var(--sell-bg)}
@@ -796,7 +797,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794222280";
+const BUILD = "1794223919";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1124,15 +1125,15 @@ function drawList(){
       : `<div class="empty"><div class="big">📈</div>هنوز سیگنالی منتشر نکرده‌اید.<br>دکمه‌ی «سیگنال جدید» را بزنید.</div>`}</div>`;
   } else {
     const k = q.trim().toLowerCase();
-    const JF = [["all","همه"],["active","فعال"],["exp","اشتراک تمام‌شده"],["disabled","غیرفعال‌شده"],["d7","۷ روز اخیر"],["d30","۳۰ روز اخیر"],["d90","۳ ماه اخیر"],["y1","یک سال"],["soon","کمتر از ۷ روز مانده"],["online","آنلاین"]];
+    const JF = [["all","همه"],["new","🆕 ثبت‌نام آنلاین (منتظر پرداخت)"],["active","فعال"],["exp","اشتراک تمام‌شده"],["disabled","غیرفعال‌شده"],["d7","۷ روز اخیر"],["d30","۳۰ روز اخیر"],["d90","۳ ماه اخیر"],["y1","یک سال"],["soon","کمتر از ۷ روز مانده"],["online","آنلاین"]];
     const jok = m => { const age = Date.now() - new Date(m.created_at), left = new Date(m.expires_at) - Date.now();
-      return jfilter === "all" ? true : jfilter === "active" ? mState(m)[0] !== "off" : jfilter === "disabled" ? !!m.disabled : jfilter === "exp" ? left <= 0 : jfilter === "soon" ? left > 0 && left < 7 * DAY : jfilter === "online" ? m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000
+      return jfilter === "all" ? true : jfilter === "new" ? !!(m.self_signup && !m.plan && left <= 0) : jfilter === "active" ? mState(m)[0] !== "off" : jfilter === "disabled" ? !!m.disabled : jfilter === "exp" ? left <= 0 : jfilter === "soon" ? left > 0 && left < 7 * DAY : jfilter === "online" ? m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000
         : age < ({ d7: 7, d30: 30, d90: 90, y1: 365 })[jfilter] * DAY; };
     const match = m => (!k || [m.name, m.email, m.phone, m.whatsapp, m.telegram, m.city].filter(Boolean).join(" ").toLowerCase().includes(k)) && jok(m);
     const PLN = { trader: "معامله‌گر", sarraf: "صراف", vip: "VIP" };
     const rowHTML = m => { const [c, lab] = mState(m), on = m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000;
       return `<div class="it" data-mem="${m.id}"><span class="avw">${avatar(m)}${on ? `<i class="ondot"></i>` : ""}</span>
-        <div><div class="t">${esc(m.name)} ${m.plan ? `<small class="pl">${PLN[m.plan] || m.plan}</small>` : ""}${m.chat_muted ? " 🔇" : ""}</div><div class="s ltr" style="text-align:right">${esc(m.email)}${m.phone ? " · " + esc(m.phone) : ""}</div>
+        <div><div class="t">${esc(m.name)} ${m.plan ? `<small class="pl">${PLN[m.plan] || m.plan}</small>` : m.self_signup ? `<small class="pl newsg">🆕 ثبت‌نام آنلاین</small>` : ""}${m.chat_muted ? " 🔇" : ""}</div><div class="s ltr" style="text-align:right">${esc(m.email)}${m.phone ? " · " + esc(m.phone) : ""}</div>
         <div class="s">ثبت‌نام: ${fmtDate(m.created_at)} · پایان اشتراک: ${m.expires_at ? fmtDate(m.expires_at) : "—"}${m.city ? " · " + esc(m.city) : ""}</div></div>
         <span class="chip ${c}">${lab}</span></div>`; };
     const rows = members.filter(m => !m.deleted_at && match(m)), dels = members.filter(m => m.deleted_at && match(m));
@@ -2644,6 +2645,10 @@ async function sheetSecurity(){
             <button class="cta press" id="mfa_ok">تأیید و فعال‌سازی</button><button class="ghost" id="mfa_cancel">انصراف</button>`
         : `<p class="hint">پیشنهاد جدی: با فعال کردن این گزینه، برای ورود به پنل مدیر علاوه بر رمز، کدی لازم است که فقط گوشی شما می‌سازد.</p><button class="cta press" id="mfa_on">فعال‌سازی ورود دو مرحله‌ای</button>`}
       </div>
+      <div class="dcard"><h4>🆕 ثبت‌نام آنلاین</h4>
+        <p class="hint">افراد جدید از صفحه‌ی ورود خودشان حساب می‌سازند، پلن را پرداخت و رسید را می‌فرستند؛ حساب فقط بعد از تأیید رسید توسط شما فعال می‌شود. (هر IP حداکثر ۳ ثبت‌نام در ساعت.)</p>
+        <div class="chips" id="sgopen"><button type="button" class="chip ${st.data?.value?.signup_open === false ? "" : "on"}" data-so="1">باز</button><button type="button" class="chip ${st.data?.value?.signup_open === false ? "on" : ""}" data-so="0">بسته</button></div>
+      </div>
       <div class="dcard"><h4>📱 محدودیت دستگاه برای هر عضو</h4>
         <p class="hint">هر حساب حداکثر روی این تعداد دستگاه هم‌زمان باز می‌ماند. اگر عضو رمزش را به کس دیگری بدهد، با ورود دستگاه جدید، قدیمی‌ترین دستگاه خودکار خارج می‌شود؛ پس اشتراک‌گذاری حساب عملاً ممکن نیست.</p>
         <div class="chips" id="maxd">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip ${n === maxd ? "on" : ""}" data-n="${n}">${n} دستگاه</button>`).join("")}</div>
@@ -2671,6 +2676,10 @@ async function sheetSecurity(){
       if (t.closest("#mfa_off")) { if (!confirm("ورود دو مرحله‌ای غیرفعال شود؟ امنیت پنل مدیر کمتر می‌شود.")) return;
         const { error } = await sb.auth.mfa.unenroll({ factorId: on[0].id }); if (error) return toast("خطا: " + error.message, true);
         toast("غیرفعال شد"); return draw(); }
+      const so = t.closest("#sgopen [data-so]");
+      if (so) { const open = so.dataset.so === "1";
+        const { error } = await sb.from("settings").upsert({ key: "security", value: { ...(st.data?.value || {}), signup_open: open }, updated_at: new Date().toISOString() });
+        if (error) return toast("خطا: " + error.message, true); toast(open ? "ثبت‌نام آنلاین باز شد" : "ثبت‌نام آنلاین بسته شد"); return draw(); }
       const mb = t.closest("#maxd [data-n]");
       if (mb) { const n = Number(mb.dataset.n);
         const { error } = await sb.from("settings").upsert({ key: "security", value: { ...(st.data?.value || {}), max_devices: n }, updated_at: new Date().toISOString() });

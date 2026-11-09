@@ -1350,6 +1350,12 @@
   .hero .sbr{opacity:1} .mk button .sbr{display:none} .mk button.on .sbr{display:block;opacity:.85}
   .mk button.on .sbr b{width:300%}
   @media (prefers-reduced-motion:reduce){.sbr b{animation:none}}
+
+  /* ثبت‌نام */
+  .sgbtn{display:block;width:100%;margin:12px 0 0;padding:14px;font-size:14px;font-weight:800;border-radius:20px}
+  .signup .field{height:52px;margin-bottom:10px} .hp{position:absolute!important;top:0;inset-inline-start:0;width:1px!important;height:1px!important;padding:0!important;border:0!important;opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%)}
+  .wsteps{text-align:right;margin:12px 0 4px;padding-inline-start:20px;line-height:2;font-size:13.5px} .wsteps li{margin:2px 0}
+  .wst{margin:12px 0 0;padding:10px 12px;border-radius:16px;font-size:13px;font-weight:700;line-height:1.8} .wst.wait{background:var(--amber-bg,#fff3d6);color:var(--amber,#b7791f)} .wst.bad{background:var(--sell-bg);color:var(--sell)}
 </style>
 </head>
 <body>
@@ -1361,7 +1367,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794222280";
+const BUILD = "1794223919";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1741,6 +1747,7 @@ function renderLogin(){
       <button type="button" class="eye" id="eye">${I.eye}</button></label>
     <button class="cta rise" style="--i:6" id="go">${T.login}</button>
     <div class="err" id="er">${esc(loginNote)}</div>
+    <button type="button" class="ghost2 sgbtn rise" style="--i:7" id="signup">🆕 ${(SU[lang] || SU.fa).btn}</button>
     <button type="button" class="nolink rise" style="--i:7" id="noacc">${T.noAccQ} <b>${T.cTitle} 💬</b></button>
     <div class="foot rise" style="--i:7">${T.foot}</div>
   </form>`;
@@ -1748,6 +1755,7 @@ function renderLogin(){
   $("f").querySelector(".langs").onclick = e => { const b = e.target.closest("[data-lang]"); if (!b) return; setLang(b.dataset.lang); };
   $("eye").onclick = () => { const p = $("pw"); p.type = p.type === "password" ? "text" : "password"; };
   $("noacc").onclick = openContact;
+  $("signup").onclick = renderSignup;
   $("f").onsubmit = async e => {
     e.preventDefault();
     const go = $("go"), er = $("er"); er.textContent = ""; go.disabled = true; go.innerHTML = '<span class="spin"></span>';
@@ -3893,6 +3901,88 @@ function openContact(){
   };
 }
 
+
+/* ===== ثبت‌نام خودکار: ساخت حساب ← انتخاب پلن و پرداخت ← ارسال رسید ← تأیید مدیر ===== */
+const SU = {
+  fa: { btn: "ثبت‌نام و ساخت حساب جدید", t: "ثبت‌نام", sub: "حساب بسازید، پلن را انتخاب و پرداخت کنید؛ بعد از تأیید رسید توسط مدیر، اشتراک شما فعال می‌شود.",
+    name: "نام و نام خانوادگی *", email: "ایمیل *", pw: "رمز (حداقل ۸ حرف) *", pw2: "تکرار رمز *", phone: "شماره تماس *", wa: "واتساپ (اگر فرق دارد)", city: "شهر", tg: "آیدی تلگرام (اختیاری)",
+    go: "ساخت حساب", back: "← بازگشت به ورود", have: "حساب دارید؟ وارد شوید",
+    e: { name: "نام را کامل بنویسید.", email: "ایمیل درست نیست.", weak_password: "رمز باید حداقل ۸ حرف باشد.", pw2: "دو رمز یکی نیستند.", phone: "شماره تماس درست نیست.",
+      email_exists: "با این ایمیل قبلاً حساب ساخته شده؛ وارد شوید یا به استاد پیام بدهید.", pwned_password: "این رمز در نشت‌های اینترنتی دیده شده و امن نیست؛ رمز دیگری بگذارید.",
+      rate: "تعداد ثبت‌نام‌ها زیاد بوده؛ کمی بعد دوباره امتحان کنید.", closed: "ثبت‌نام آنلاین فعلاً بسته است؛ به استاد پیام بدهید.", net: "اتصال برقرار نشد؛ اینترنت را بررسی کنید.", x: "ساخت حساب ممکن نشد؛ دوباره امتحان کنید." },
+    hi: "خوش آمدید {n} 🎉", made: "حساب شما ساخته شد. برای فعال شدن اشتراک:",
+    s1: "پلن را انتخاب کنید و مبلغ را از راه بایننس یا حساب‌پی بپردازید.", s2: "شماره‌ی تراکنش و عکس رسید پرداخت را همان‌جا بفرستید.", s3: "بعد از تأیید مدیر، حساب شما خودکار فعال می‌شود و اعلان می‌گیرید.",
+    pay: "انتخاب پلن و پرداخت", q: "سؤالی دارید یا در پرداخت کمک می‌خواهید؟ همین‌جا به استاد پیام بدهید.", prof: "تکمیل اطلاعات من", review: "رسید شما رسیده و منتظر تأیید مدیر است.", rejected: "پرداخت قبلی تأیید نشد" },
+  ps: { btn: "نوم لیکنه او نوی حساب جوړول", t: "نوم لیکنه", sub: "حساب جوړ کړئ، پلان وټاکئ او پیسې ورکړئ؛ د مدیر له تایید وروسته ستاسو ګډون فعالېږي.",
+    name: "بشپړ نوم *", email: "برېښنالیک *", pw: "پټنوم (لږ تر لږه ۸ توري) *", pw2: "پټنوم بیا *", phone: "د اړیکې شمېره *", wa: "واټساپ (که توپیر لري)", city: "ښار", tg: "ټلګرام (اختیاري)",
+    go: "حساب جوړ کړئ", back: "← بېرته ننوتلو ته", have: "حساب لرئ؟ ننوځئ",
+    e: { name: "نوم بشپړ ولیکئ.", email: "برېښنالیک سم نه دی.", weak_password: "پټنوم باید لږ تر لږه ۸ توري وي.", pw2: "دواړه پټنومونه یو شان نه دي.", phone: "شمېره سمه نه ده.",
+      email_exists: "په دې برېښنالیک حساب شته؛ ننوځئ یا استاد ته پیغام ولیکئ.", pwned_password: "دا پټنوم خوندي نه دی؛ بل پټنوم وټاکئ.",
+      rate: "ډېرې هڅې شوې؛ لږ وروسته بیا هڅه وکړئ.", closed: "آنلاین نوم لیکنه اوس بنده ده؛ استاد ته پیغام ولیکئ.", net: "اړیکه ونه شوه؛ انټرنېټ وګورئ.", x: "حساب جوړ نه شو؛ بیا هڅه وکړئ." },
+    hi: "ښه راغلاست {n} 🎉", made: "ستاسو حساب جوړ شو. د ګډون د فعالولو لپاره:",
+    s1: "پلان وټاکئ او پیسې د بایننس یا حساب‌پې له لارې ورکړئ.", s2: "د راکړې ورکړې شمېره او د رسید انځور همدلته ولېږئ.", s3: "د مدیر له تایید وروسته ستاسو حساب پخپله فعالېږي.",
+    pay: "پلان او تادیه", q: "پوښتنه لرئ؟ همدلته استاد ته پیغام ولیکئ.", prof: "زما معلومات بشپړ کړئ", review: "ستاسو رسید رسېدلی او د مدیر تایید ته انتظار کوي.", rejected: "مخکینۍ تادیه تایید نه شوه" },
+  en: { btn: "Sign up — create a new account", t: "Sign up", sub: "Create an account, choose a plan and pay; your subscription starts once the admin approves your receipt.",
+    name: "Full name *", email: "Email *", pw: "Password (min 8 characters) *", pw2: "Repeat password *", phone: "Phone *", wa: "WhatsApp (if different)", city: "City", tg: "Telegram (optional)",
+    go: "Create account", back: "← Back to sign in", have: "Have an account? Sign in",
+    e: { name: "Please enter your full name.", email: "Email is not valid.", weak_password: "Password must be at least 8 characters.", pw2: "Passwords do not match.", phone: "Phone number is not valid.",
+      email_exists: "An account already uses this email. Sign in or message Ostad.", pwned_password: "This password appeared in data leaks; please choose another.",
+      rate: "Too many sign-ups right now; try again a bit later.", closed: "Online sign-up is closed for now; message Ostad.", net: "No connection; check your internet.", x: "Could not create the account; try again." },
+    hi: "Welcome {n} 🎉", made: "Your account is ready. To activate your subscription:",
+    s1: "Choose a plan and pay with Binance or HesabPay.", s2: "Send the transaction ID and a photo of the receipt right there.", s3: "Once the admin approves it, your account turns on automatically.",
+    pay: "Choose plan & pay", q: "Questions or need help paying? Message Ostad right here.", prof: "Complete my details", review: "Your receipt arrived and is waiting for the admin's approval.", rejected: "The previous payment was not approved" } };
+function renderSignup(){
+  view = "signup"; stopLive(); removeChat(); const S = SU[lang] || SU.fa;
+  const f = (id, ph, a = "") => `<label class="field glass rise">${id === "su_pw" || id === "su_pw2" ? I.lock : I.user}<input id="${id}" placeholder="${ph}" ${a}></label>`;
+  $app.innerHTML = `<form class="login signup" id="sf" novalidate>
+    <div class="logo glass rise"><img src="logo-mark.png" alt="Market Analysts"></div>
+    <h1 class="rise">${S.t}</h1><div class="tag rise">${S.sub}</div>
+    ${f("su_name", S.name, 'maxlength="80" autocomplete="name" required')}
+    ${f("su_email", S.email, 'type="email" dir="ltr" maxlength="120" autocomplete="email" required')}
+    ${f("su_pw", S.pw, 'type="password" dir="ltr" minlength="8" autocomplete="new-password" required')}
+    ${f("su_pw2", S.pw2, 'type="password" dir="ltr" minlength="8" autocomplete="new-password" required')}
+    ${f("su_phone", S.phone, 'type="tel" dir="ltr" inputmode="tel" maxlength="20" autocomplete="tel" required')}
+    ${f("su_wa", S.wa, 'type="tel" dir="ltr" inputmode="tel" maxlength="20"')}
+    ${f("su_city", S.city, 'maxlength="60" autocomplete="address-level2"')}
+    ${f("su_tg", S.tg, 'dir="ltr" maxlength="60"')}
+    <input id="su_web" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+    <button class="cta rise" id="sgo">${S.go}</button>
+    <div class="err" id="ser"></div>
+    <button type="button" class="nolink rise" id="sback">${S.have}</button>
+  </form>`;
+  $("sback").onclick = () => renderLogin();
+  $("sf").onsubmit = async e => {
+    e.preventDefault(); const er = $("ser"), go = $("sgo"), v = id => $(id).value.trim(); er.textContent = "";
+    const body = { name: v("su_name"), email: toEn(v("su_email")), password: $("su_pw").value, phone: toEn(v("su_phone")), whatsapp: toEn(v("su_wa")), city: v("su_city"), telegram: v("su_tg"), website: $("su_web").value };
+    const bad = k => { er.textContent = S.e[k] || S.e.x; const fm = $("sf"); fm.classList.remove("shake"); void fm.offsetWidth; fm.classList.add("shake"); };
+    if (body.name.length < 2) return bad("name"); if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(body.email)) return bad("email");
+    if (body.password.length < 8) return bad("weak_password"); if (body.password !== $("su_pw2").value) return bad("pw2");
+    if (body.phone.replace(/\D/g, "").length < 7) return bad("phone");
+    go.disabled = true; go.innerHTML = '<span class="spin"></span>';
+    let j = {};
+    try { const r = await fetch(SUPABASE_URL + "/functions/v1/register", { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY }, body: JSON.stringify(body) }); j = await r.json().catch(() => ({})); }
+    catch { go.disabled = false; go.textContent = S.go; return bad("net"); }
+    if (!j.ok) { go.disabled = false; go.textContent = S.go; return bad(j.error); }
+    const { error } = await sb.auth.signInWithPassword({ email: body.email, password: body.password });
+    if (error) { go.disabled = false; go.textContent = S.go; loginNote = ""; return renderLogin(); }
+    sfx("celebration", .45);
+  };
+}
+let welT = null;
+async function renderWelcome(){
+  const S = SU[lang] || SU.fa; let st = "";
+  try { const { data: p } = await sb.from("payments").select("status,reject_reason,created_at").order("created_at", { ascending: false }).limit(1).maybeSingle();
+    if (p?.status === "review") st = `<div class="wst wait">⏳ ${S.review}</div>`;
+    else if (p?.status === "rejected") st = `<div class="wst bad">❌ ${S.rejected}${p.reject_reason ? ": " + esc(p.reject_reason) : ""}</div>`; } catch {}
+  renderMsg("🎉", tt(S.hi, { n: esc(me.name || "") }), `${S.made}<ol class="wsteps"><li>${S.s1}</li><li>${S.s2}</li><li>${S.s3}</li></ol>${st}
+    <button class="cta" id="wplan" style="margin-top:14px">💳 ${S.pay}</button><button class="ghost2 sgbtn" id="wprof">👤 ${S.prof}</button>`, true);
+  $("wplan").onclick = openPlans; $("wprof").onclick = openProfile;
+  const hint = $app.querySelector(".msg p"); if (hint) hint.textContent = S.q;
+  clearInterval(welT);
+  welT = setInterval(async () => { if (document.hidden || view !== "msg" || !me) return clearInterval(view === "msg" ? null : welT);
+    const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle();
+    if (data?.expires_at && new Date(data.expires_at) > Date.now()) { clearInterval(welT); me = data; store.set("cache_me", data); sfx("celebration", .5); route((await sb.auth.getSession()).data.session); } }, 20000);
+}
 /* ===== مسیر ===== */
 async function boot(){ const { data: { session } } = await sb.auth.getSession(); return route(session); }
 async function route(session){
@@ -3909,6 +3999,7 @@ async function route(session){
   if (me.role !== "admin") {
     if (me.deleted_at) return renderMsg("🗂", T.removed, "", true);
     if (me.disabled) return renderMsg("⛔", T.disabled, "", true);
+    if (me.self_signup && !me.plan && (!me.expires_at || new Date(me.expires_at) <= Date.now())) return renderWelcome();
     if (!me.expires_at || new Date(me.expires_at) < Date.now())
       return renderMsg("⏳", T.expired, `${me.expires_at ? T.endDate + ": " + fmtDate(me.expires_at) + "<br>" : ""}${T.contact}`, true);
   }
