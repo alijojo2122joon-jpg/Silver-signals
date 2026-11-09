@@ -1312,7 +1312,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611091402";
+const BUILD = "202611091408";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1935,7 +1935,7 @@ document.addEventListener("click", async e => {
 
 /* ----- قیمت‌ها ----- */
 async function loadPrices(force){
-  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" || page === "dash" ? 5000 : 55000)) return;
+  if (!force && Date.now() - pricesAt < (page === "prc" ? 3000 : page === "tool" || page === "dash" ? 5000 : 55000)) return;
   pricesAt = Date.now();
   try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   if (Date.now() - newsAt > 120000) loadNews();
