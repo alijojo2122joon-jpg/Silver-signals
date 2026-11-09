@@ -714,12 +714,12 @@
   .hpst{font-size:12.5px;font-weight:700;margin-bottom:8px;line-height:1.9} .hpwh{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:14px;background:var(--field)}
   .hpwh code{flex:1;min-width:0;font-size:11px;overflow-wrap:anywhere} .hpwh button{flex:none;border:0;border-radius:999px;padding:5px 12px;background:var(--navy);color:var(--onNavy);font:inherit;font-weight:800;font-size:11.5px;cursor:pointer}
 
-  .sw{position:relative;display:inline-block;flex:none;width:52px;height:30px;cursor:pointer}
-  .sw input{position:absolute;opacity:0;width:0;height:0}
-  .sw i{position:absolute;inset:0;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);transition:background .3s}
-  .sw i::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fff,#e6e9ef);box-shadow:0 3px 8px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
-  .sw input:checked+i{background:linear-gradient(180deg,#2fd08c,#12a46b)} .sw input:checked+i::after{transform:translateX(-22px)}
-  .sw input:focus-visible+i{outline:2px solid var(--glowc)}
+  .swt{position:relative;display:inline-block;flex:none;width:52px;height:30px;cursor:pointer}
+  .swt input{position:absolute;opacity:0;width:0;height:0}
+  .swt i{position:absolute;inset:0;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);transition:background .3s}
+  .swt i::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fff,#e6e9ef);box-shadow:0 3px 8px rgba(0,0,0,.25);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+  .swt input:checked+i{background:linear-gradient(180deg,#2fd08c,#12a46b)} .swt input:checked+i::after{transform:translateX(-22px)}
+  .swt input:focus-visible+i{outline:2px solid var(--glowc)}
 
   .apush{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 14px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);font-size:12.5px;font-weight:700}
   .apush span{flex:1;line-height:1.8} .apush button{flex:none;border:0;border-radius:999px;padding:7px 14px;background:var(--navy);color:var(--onNavy);font:inherit;font-weight:800;cursor:pointer}
@@ -796,7 +796,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794220019";
+const BUILD = "1794222106";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1598,7 +1598,7 @@ async function sheetBilling(){
       <div class="fxabtn"><button data-rv="ok">✅ تأیید و فعال‌سازی</button><button data-rv="no" class="red">✖ رد</button></div></div>`).join("") : `<p class="hint">پرداختی منتظر تأیید نیست.</p>`}
     <h3 class="bh">⚙️ تنظیمات درگاه HesabPay</h3>
     <div class="bplan" id="hpset"><div class="hpst" id="hpst"><span class="spin"></span></div>
-      <div class="tgl2"><label class="sw"><input type="checkbox" id="hp_on"><i></i></label><span>فعال باشد (اعضا گزینه‌ی HesabPay را ببینند و پرداخت کنند)</span></div>
+      <div class="tgl2"><label class="swt"><input type="checkbox" id="hp_on"><i></i></label><span>فعال باشد (اعضا گزینه‌ی HesabPay را ببینند و پرداخت کنند)</span></div>
       <label class="l">حالت</label><div class="tfc" id="hp_env"><button type="button" data-v="sandbox">🧪 آزمایشی (Sandbox)</button><button type="button" data-v="production">💰 واقعی (Production)</button></div>
       <label class="l">کلید API (از پنل HesabPay → Developer → API Keys)</label>
       <input class="in ltr" id="hp_key" type="password" autocomplete="new-password" spellcheck="false" maxlength="500" placeholder="برای تغییر، کلید جدید را اینجا بچسبانید">
@@ -1608,13 +1608,13 @@ async function sheetBilling(){
       <div class="fxabtn"><button id="hp_save">ذخیره</button><button id="hp_test">🔌 آزمایش اتصال</button><button id="hp_del" class="red">حذف کلید</button></div>
       <div class="hint" id="hp_res"></div></div>
     <h3 class="bh">⚙️ HesabPay — انتقال دستی (بدون کلید API)</h3>
-    <div class="bplan" id="hmset"><div class="tgl2"><label class="sw"><input type="checkbox" id="hm_on" ${HM.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (عضو به حساب شما انتقال می‌دهد و شما تأیید می‌کنید)</span></div>
+    <div class="bplan" id="hmset"><div class="tgl2"><label class="swt"><input type="checkbox" id="hm_on" ${HM.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (عضو به حساب شما انتقال می‌دهد و شما تأیید می‌کنید)</span></div>
       <div class="two"><div><label class="l">شماره / شناسه حساب HesabPay</label><input class="in ltr" id="hm_acc" maxlength="60" value="${esc(HM.account || "")}"></div><div><label class="l">نام صاحب حساب</label><input class="in" id="hm_name" maxlength="80" value="${esc(HM.name || "")}"></div></div>
       <label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="hm_link" maxlength="300" value="${esc(HM.link || "")}" placeholder="https://">
       <label class="l">راهنما برای عضو</label><textarea class="in" id="hm_note" rows="2" maxlength="500">${esc(HM.note || "")}</textarea>
       <div class="fxabtn"><button id="hm_save">ذخیره تنظیمات HesabPay دستی</button></div></div>
     <h3 class="bh">⚙️ تنظیمات پرداخت بایننس</h3>
-    <div class="bplan" id="bnset"><div class="tgl2"><label class="sw"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (اعضا گزینه‌ی Binance را ببینند)</span></div>
+    <div class="bplan" id="bnset"><div class="tgl2"><label class="swt"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (اعضا گزینه‌ی Binance را ببینند)</span></div>
       <div class="two"><div><label class="l">Binance Pay ID</label><input class="in ltr" id="bn_id" maxlength="40" value="${esc(BN.pay_id || "")}"></div><div><label class="l">نام حساب</label><input class="in" id="bn_name" maxlength="80" value="${esc(BN.name || "")}"></div></div>
       <label class="l">آدرس کیف پول USDT (اختیاری)</label><input class="in ltr" id="bn_addr" maxlength="120" value="${esc(BN.address || "")}">
       <div class="two"><div><label class="l">شبکه</label><input class="in ltr" id="bn_net" maxlength="30" value="${esc(BN.network || "TRC20")}"></div><div><label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="bn_link" maxlength="300" value="${esc(BN.link || "")}" placeholder="https://"></div></div>
@@ -2195,7 +2195,7 @@ function sheetSignal(s){
         ${s.expires_at ? `<div><span>اعتبار تا</span><b>${fmtFull(s.expires_at)}</b></div>` : ""}
       </div></div>
     <div class="box cmbox"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><b>💬 نظرات این سیگنال</b>
-      <label class="sw"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
+      <label class="swt"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
       <div class="hint" id="cmst" style="margin-top:6px">در حال بارگذاری…</div><button type="button" class="ghost" id="cmview" style="margin-top:8px">مشاهده و مدیریت نظرات</button></div>
     ${(!s.auto || (s.phase === "waiting" && Date.now() - new Date(s.created_at) < 15 * 60000)) ? `<button class="ghost red" id="del">حذف این سیگنال</button><p class="hint" style="text-align:center">حذف فقط تا ۱۵ دقیقه بعد از انتشار و قبل از فعال شدن ممکن است.</p>` : `<p class="hint" style="text-align:center">🔒 این سیگنال قفل است و قابل حذف یا تغییر نیست.</p>`}`);
   applyNoteLang($("sheet"));
@@ -2370,7 +2370,7 @@ async function pushTeardown(){
 
 let adminUid = null;
 function paintAdminPush(){ const el = $("apush"); if (!el) return; const i = pushInfo();
-  if (i.mode === "app") { el.innerHTML = `<span>📲 اعلان پیام‌ها و پرداخت‌ها روی گوشی فعال است${i.perm === false ? " — ⚠️ اجازه‌ی اعلان را از تنظیمات گوشی بدهید" : ""}</span><label class="sw"><input type="checkbox" id="afast" ${i.fast !== false ? "checked" : ""}><i></i></label>`;
+  if (i.mode === "app") { el.innerHTML = `<span>📲 اعلان پیام‌ها و پرداخت‌ها روی گوشی فعال است${i.perm === false ? " — ⚠️ اجازه‌ی اعلان را از تنظیمات گوشی بدهید" : ""}</span><label class="swt"><input type="checkbox" id="afast" ${i.fast !== false ? "checked" : ""}><i></i></label>`;
     $("afast").onchange = e => { try { window.AndroidBridge.setFast(e.target.checked); } catch {} toast(e.target.checked ? "بررسی هر ۱ دقیقه" : "بررسی هر ۱۵ دقیقه"); }; return; }
   if (i.mode !== "web") { el.innerHTML = `<span>📲 ${i.mode === "ios" ? "در آیفون اول «Add to Home Screen» کنید تا اعلان بگیرید." : "این مرورگر اعلان پس‌زمینه ندارد؛ از Chrome یا اپ مدیر استفاده کنید."}</span>`; return; }
   if (i.on) { el.innerHTML = `<span>✅ اعلان پیام اعضا و پرداخت‌های بایننس روی این دستگاه فعال است.</span>`; return; }
@@ -2524,7 +2524,7 @@ async function sheetWorld(){
   const all = [...TKDEF, ...cfg.extra.map(x => [x.key, x.name, x.sym, x.digits ?? 2, true])];
   const draw = () => { $("wlist").innerHTML = all.map(([k, name, sym, dg, ex]) => { const q = tkQuote(tkData, k), ch = q?.prev ? (q.price - q.prev) / q.prev * 100 : null;
     return `<div class="fxhr"><div><b>${name} <small class="ltr">${sym}</small></b><small>${q?.price != null ? `<bdi class="ltr">${Number(q.price).toFixed(dg)}</bdi>${ch != null ? ` · <bdi class="ltr ${ch >= 0 ? "pos" : "neg"}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}%</bdi>` : ""} · ${q.at || q.quoteAt ? agoFa(q.at || q.quoteAt) : ""}` : "⚠️ داده‌ای دریافت نشده"}</small></div>
-      <label class="sw"><input type="checkbox" data-wk="${k}" ${cfg.hide.includes(k) ? "" : "checked"}><i></i></label>${ex ? `<button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-wdel="${k}">حذف</button>` : ""}</div>`; }).join(""); };
+      <label class="swt"><input type="checkbox" data-wk="${k}" ${cfg.hide.includes(k) ? "" : "checked"}><i></i></label>${ex ? `<button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-wdel="${k}">حذف</button>` : ""}</div>`; }).join(""); };
   openSheet(`<h2>🌐 بازار جهانی و نوار قیمت</h2><p class="hint">نمادهای روشن در نوار چرخشی بالای صفحه (برای مدیر و اعضا) نمایش داده می‌شوند. قیمت‌ها هر ۱۵ ثانیه از Yahoo Finance و طلا/نقره هر چند ثانیه به‌روز می‌شوند؛ نفت تا حدود ۱۰ دقیقه تأخیر دارد.</p>
     <div id="wlist"></div>
     <h3 class="bh">＋ افزودن نماد جدید</h3><div class="bplan"><div class="two"><div><label class="l">نام فارسی</label><input class="in" id="w_name" maxlength="30" placeholder="مثلاً: شاخص S&P 500"></div><div><label class="l">نماد Yahoo</label><input class="in ltr" id="w_y" maxlength="20" placeholder="^GSPC"></div></div>
