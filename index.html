@@ -1312,7 +1312,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081518";
+const BUILD = "202611091402";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -3543,14 +3543,18 @@ function setupChat(){
   const pos = store.get("fabpos", null);
   place(pos ? pos.x * innerWidth : (T.dir === "rtl" ? 14 : innerWidth - 76), pos ? pos.y * innerHeight : innerHeight - 150);
   let drag = null;
-  fab.addEventListener("pointerdown", e => { drag = { sx: e.clientX, sy: e.clientY, x: fab.offsetLeft, y: fab.offsetTop, moved: false }; fab.setPointerCapture(e.pointerId); });
-  fab.addEventListener("pointermove", e => { if (!drag) return; const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
-    if (!drag.moved && Math.hypot(dx, dy) > 6) { drag.moved = true; fab.classList.add("drag"); fab.style.transition = "transform .2s"; }
+  let lastTap = 0;
+  const tapOpen = () => { if (Date.now() - lastTap < 500) return; lastTap = Date.now(); if (isAdmin) location.href = "modir.html?tab=msgs"; else openChat(); };
+  fab.addEventListener("pointerdown", e => { drag = { sx: e.clientX, sy: e.clientY, x: fab.offsetLeft, y: fab.offsetTop, moved: false, t: Date.now() }; try { fab.setPointerCapture(e.pointerId); } catch {} });
+  fab.addEventListener("pointermove", e => { if (!drag) return; const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy, d = Math.hypot(dx, dy);
+    // a finger tap wobbles a few pixels: only treat it as a drag after a clear move, or a smaller move held for a moment
+    if (!drag.moved && (d > 22 || (d > 10 && Date.now() - drag.t > 220))) { drag.moved = true; fab.classList.add("drag"); fab.style.transition = "transform .2s"; }
     if (drag.moved) place(drag.x + dx, drag.y + dy); });
   fab.addEventListener("pointerup", () => { if (!drag) return; const moved = drag.moved; drag = null; fab.classList.remove("drag"); fab.style.transition = "";
-    if (moved) { const x = fab.offsetLeft + 31 < innerWidth / 2 ? 12 : innerWidth - 74; place(x, fab.offsetTop); store.set("fabpos", { x: x / innerWidth, y: fab.offsetTop / innerHeight }); }
-    else if (isAdmin) location.href = "modir.html?tab=msgs"; else openChat(); });
-  fab.addEventListener("pointercancel", () => { drag = null; fab.classList.remove("drag"); fab.style.transition = ""; });
+    if (moved) { lastTap = Date.now(); const x = fab.offsetLeft + 31 < innerWidth / 2 ? 12 : innerWidth - 74; place(x, fab.offsetTop); store.set("fabpos", { x: x / innerWidth, y: fab.offsetTop / innerHeight }); }
+    else tapOpen(); });
+  fab.addEventListener("pointercancel", () => { const d = drag; drag = null; fab.classList.remove("drag"); fab.style.transition = ""; if (d && !d.moved && Date.now() - d.t < 600) tapOpen(); });
+  fab.addEventListener("click", e => { if (!drag && !fab.classList.contains("drag") && Date.now() - lastTap > 500) tapOpen(); });
   veil.onclick = closeChat;
   const lab = document.createElement("div"); lab.id = "fablab"; lab.className = "fablab";
   lab.textContent = isAdmin ? T.inbox : T.msgTeacher; document.body.appendChild(lab);
@@ -3618,7 +3622,11 @@ async function sendMedia(kind, blob, ext){
   if (error) { msgs = msgs.filter(m => m !== temp); drawChat(); sb.storage.from("chat").remove([path]); return banner("⚠️", navigator.onLine ? T.sendFail2 : T.sendFail, ""); }
   loadChat();
 }
-function openChat(){ if (chatOpen) return; chatOpen = true; teacherStatus(); try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} sfx("select", .32); overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
+function openChat(){
+  if (!$("chat")) return;
+  if (chatOpen && $("chat").classList.contains("show")) return;   // already open
+  if (chatOpen) { const i = overlays.lastIndexOf(closeChatNow); if (i >= 0) overlays.splice(i, 1); chatOpen = false; unlockBody(); }   // heal a stuck state
+  chatOpen = true; teacherStatus(); try { if (window.Notification && Notification.permission === "default") Notification.requestPermission(); } catch {} sfx("select", .32); overlayPush(closeChatNow); lockBody(); $("cveil").classList.add("show"); $("chat").classList.add("show"); drawChat(); markSeen(); }
 function closeChatNow(){ if (!chatOpen) return; chatOpen = false;  unlockBody(); try { rec?.cancel?.(); $("cform")?.classList.remove("recording"); } catch {} $("cveil")?.classList.remove("show"); $("chat")?.classList.remove("show"); document.activeElement?.blur?.(); drawChat(); }
 function closeChat(){ if (overlays.length && overlays[overlays.length - 1] === closeChatNow) history.back(); else closeChatNow(); }
 function drawChat(keepScroll){

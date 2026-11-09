@@ -738,7 +738,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611081518";
+const BUILD = "202611091402";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1007,6 +1007,8 @@ function drawPane(){
   if ($("q")) $("q").oninput = e => { q = e.target.value; drawList(); };
   drawList();
 }
+// rebuild a list only when its HTML really changed, so taps aren't lost to the 10-second refresh
+Object.defineProperty(HTMLElement.prototype, "_set", { configurable: true, set(h){ if (this._lastH !== h) { this._lastH = h; this.innerHTML = h; } }, get(){ return this._lastH; } });
 function drawList(){
   const el = $("list"); if (!el) return;
   drawNavBadge();
@@ -1015,7 +1017,7 @@ function drawList(){
     const conv = members.map(m => { const ms = allMsgs.filter(x => x.member_id === m.id); return { m, last: ms[ms.length - 1], unread: ms.filter(x => x.sender === "member" && !x.seen_at).length }; })
       .filter(c => c.last).filter(c => !msq || (c.m.name || "").includes(msq) || allMsgs.some(x => x.member_id === c.m.id && !x.deleted_at && (x.body || "").includes(msq))).sort((a, b) => new Date(b.last.created_at) - new Date(a.last.created_at));
     const reqs = contactReqs.filter(r => !r.done);
-    el.innerHTML = (reqs.length ? `<div class="sec"><h3>پیام از افراد بدون حساب</h3></div><div class="list glass rise" style="margin-bottom:18px">${reqs.map(r => `<div class="it" data-req="${r.id}" style="grid-template-columns:auto 1fr auto">
+    el._set = (reqs.length ? `<div class="sec"><h3>پیام از افراد بدون حساب</h3></div><div class="list glass rise" style="margin-bottom:18px">${reqs.map(r => `<div class="it" data-req="${r.id}" style="grid-template-columns:auto 1fr auto">
         <span class="av" style="background:#d8911c22;color:#d8911c">${r.seen_at ? "✉" : "🆕"}</span>
         <div><div class="t">${esc(r.name)} <span class="s ltr">${esc(r.contact)}</span></div><div class="s">${esc(r.body).slice(0, 70)}</div></div>
         <span class="s">${fmtFull(r.created_at).split(" · ")[0]}</span></div>`).join("")}</div>` : "")
@@ -1038,7 +1040,7 @@ function drawList(){
     // total performance in R from server-recorded entry/result (auto signals only)
     const rs = shown.filter(x => x.auto && x.phase === "done" && x.entry_price != null && x.result_price != null && x.sl != null).map(x => (Number(x.result_price) - Number(x.entry_price)) * (x.type === "buy" ? 1 : -1) / (Math.abs(Number(x.entry_price) - Number(x.sl)) || 1e-9));
     const sumR = rs.reduce((a, b) => a + b, 0);
-    el.innerHTML = `<div class="mf mfp">${PER.map(([k, v]) => `<button data-pf="${k}" class="${k===pfilter?"on":""}">${v}</button>`).join("")}</div>
+    el._set = `<div class="mf mfp">${PER.map(([k, v]) => `<button data-pf="${k}" class="${k===pfilter?"on":""}">${v}</button>`).join("")}</div>
     ${pfilter === "custom" ? `<div class="pcust"><label>از<input type="date" id="pfrom" value="${esc(pfrom)}"></label><label>تا<input type="date" id="pto" value="${esc(pto)}"></label></div>` : ""}
     <div class="psum"><span>کل <b>${shown.length}</b></span><span class="w">موفق <b>${pw}</b></span><span class="l">ناموفق <b>${pl}</b></span><span>باز <b>${pa}</b></span><span class="r">درصد موفقیت <b>${pw + pl ? Math.round(pw / (pw + pl) * 100) : 0}%</b></span><span class="${sumR >= 0 ? "w" : "l"}">مجموع عملکرد <b class="ltr">${sumR >= 0 ? "+" : ""}${sumR.toFixed(2)}R</b></span></div>
     <div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
@@ -1063,7 +1065,7 @@ function drawList(){
         <div class="s">عضویت: ${fmtDate(m.created_at)}</div></div>
         <span class="chip ${c}">${lab}</span></div>`; };
     const rows = members.filter(m => !m.deleted_at && match(m)), dels = members.filter(m => m.deleted_at && match(m));
-    el.innerHTML = `<div class="mf mfp">${JF.map(([key, v]) => `<button data-jf="${key}" class="${key === jfilter ? "on" : ""}">${v}</button>`).join("")}</div>
+    el._set = `<div class="mf mfp">${JF.map(([key, v]) => `<button data-jf="${key}" class="${key === jfilter ? "on" : ""}">${v}</button>`).join("")}</div>
       <div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rows.length ? rows.map(rowHTML).join("")
       : `<div class="empty"><div class="big">👥</div>${members.length ? "نتیجه‌ای پیدا نشد." : "هنوز عضوی اضافه نکرده‌اید."}</div>`}</div>
       ${dels.length ? `<div class="sec" style="margin-top:18px"><h3>حذف‌شده‌ها</h3></div><div class="list glass rise" style="--i:3;opacity:.92">${dels.map(rowHTML).join("")}</div>` : ""}`;
