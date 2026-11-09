@@ -2,6 +2,9 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* clickjacking guard: never run inside a frame from another site */try{if(top!==self&&top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.display="none";top.location=self.location.href}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e8ebf0">
 <title>Market Analysts</title>
@@ -1347,7 +1350,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794218195";
+const BUILD = "1794218920";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1363,6 +1366,11 @@ const AFN_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
 /* ===================== */
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+/* data functions only answer signed-in members / admin: send the session token */
+async function fnFetch(name, opts = {}){
+  let t = null; try { t = (await sb.auth.getSession()).data?.session?.access_token || null; } catch {}
+  return fetch(SUPABASE_URL + "/functions/v1/" + name, { cache: "no-store", ...opts, headers: { ...(opts.headers || {}), apikey: SUPABASE_KEY, ...(t ? { Authorization: "Bearer " + t } : {}) } });
+}
 const $app = document.getElementById("app");
 /* پنجره‌ها با دکمه‌ی «برگشت» گوشی بسته می‌شوند */
 const overlays = [];
@@ -1698,7 +1706,7 @@ function bindTop(){
   tkSig = ""; loadTicker(true);
   if ($("meav")) $("meav").onclick = openProfile;
   if ($("bell")) { $("bell").onclick = openNotifs; paintBell(); }
-  $("out").onclick = async () => { store.set("cache_me", null); store.set("cache_msgs", []); await pushTeardown(); sb.auth.signOut(); };
+  $("out").onclick = async () => { store.set("cache_me", null); store.set("cache_msgs", []); await pushTeardown(); try { await sb.rpc("release_session"); } catch {} sb.auth.signOut(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
@@ -1986,10 +1994,10 @@ document.addEventListener("click", async e => {
 async function loadPrices(force){
   if (!force && Date.now() - pricesAt < (page === "prc" ? 3000 : page === "tool" || page === "dash" ? 5000 : 55000)) return;
   pricesAt = Date.now();
-  try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
+  try { const r = await fnFetch("prices"); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
   if (Date.now() - newsAt > 120000) loadNews();
   if (Date.now() - tgcAt > 30000) { tgcAt = Date.now(); const { data: t } = await sb.from("settings").select("value").eq("key", "tg_cache").maybeSingle(); if (t?.value) tgc = t.value; }
-  if (Date.now() - localAt > 120000 || force) { localAt = Date.now(); try { const r = await fetch(SUPABASE_URL + "/functions/v1/local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
+  if (Date.now() - localAt > 120000 || force) { localAt = Date.now(); try { const r = await fnFetch("local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
   const { data } = await sb.from("rates").select("*").order("created_at", { ascending: false }).limit(60);
   if (data) { rates = data; store.set("cache_rates", rates); }
   checkAlerts();
@@ -2865,7 +2873,7 @@ function paintTicker(){
 }
 async function loadTicker(force){
   if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
-  try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) tkData = await r.json(); } catch {}
+  try { const r = await fnFetch("prices"); if (r.ok) tkData = await r.json(); } catch {}
   if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
   paintTicker();
 }
@@ -3083,7 +3091,7 @@ function drawTools(){
 let news = store.get("cache_news", null), newsAt = 0;
 async function loadNews(){
   newsAt = Date.now();
-  try { const r = await fetch(SUPABASE_URL + "/functions/v1/news"); if (r.ok) { const n = await r.json();
+  try { const r = await fnFetch("news"); if (r.ok) { const n = await r.json();
     const was = news?.items?.find(i => i.kind === "news")?.link, now = n?.items?.find(i => i.kind === "news");
     news = n; store.set("cache_news", n);
     if (was && now && now.link !== was && view === "feed") banner("📰", esc(now.title), T.tapView, () => setPage("acad"));
@@ -3103,7 +3111,7 @@ let cal = store.get("cache_cal", null), calAt = 0;
 async function loadCalendar(){
   if (Date.now() - calAt < 5 * 60000 && cal) return drawCal();
   calAt = Date.now();
-  try { const r = await fetch(SUPABASE_URL + "/functions/v1/calendar"); if (r.ok) { cal = await r.json(); store.set("cache_cal", cal); } } catch {}
+  try { const r = await fnFetch("calendar"); if (r.ok) { cal = await r.json(); store.set("cache_cal", cal); } } catch {}
   drawCal();
 }
 const calTitle = e => {
@@ -3893,9 +3901,27 @@ async function route(session){
     if (!me.expires_at || new Date(me.expires_at) < Date.now())
       return renderMsg("⏳", T.expired, `${me.expires_at ? T.endDate + ": " + fmtDate(me.expires_at) + "<br>" : ""}${T.contact}`, true);
   }
+  clearInterval(sessTimer);
+  if (me.role === "member" && !offline) { if (!(await claimSession())) return; sessTimer = setInterval(claimSession, 60000); }
   if (!all.length) all = store.get("cache_sig", []);
   if (!msgs.length) msgs = store.get("cache_msgs", []);
   renderFeed(); handlePayReturn();
+}
+/* محدودیت دستگاه: هر حساب فقط روی چند دستگاه مجاز باز است؛ ورود روی دستگاه جدید، قدیمی‌ترین را خارج می‌کند */
+let sessTimer = null;
+const KICK = { fa: "این حساب روی دستگاه دیگری وارد شد یا مدیر آن را از این دستگاه خارج کرد. برای ادامه دوباره وارد شوید.",
+  ps: "دا حساب په بل وسیله کې ننوت یا مدیر له دې وسیلې وایست. د دوام لپاره بیا ننوځئ.",
+  en: "This account was signed in on another device, or the admin signed this device out. Please sign in again." };
+async function claimSession(){
+  try {
+    const { data, error } = await sb.rpc("claim_session", { p_ua: (navigator.userAgent || "").slice(0, 200) });
+    if (error || !data?.revoked) return true;
+  } catch { return true; }
+  clearInterval(sessTimer); store.set("cache_me", null); store.set("cache_msgs", []); store.set("cache_sig", []);
+  try { await pushTeardown(); } catch {}
+  loginNote = KICK[lang] || KICK.fa;
+  await sb.auth.signOut({ scope: "local" });
+  return false;
 }
 let lastUid;
 sb.auth.onAuthStateChange((event, session) => {

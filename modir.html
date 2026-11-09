@@ -2,6 +2,9 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>/* clickjacking guard: never run inside a frame from another site */try{if(top!==self&&top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.display="none";top.location=self.location.href}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#eef3ef">
@@ -760,6 +763,12 @@
   .dkc small{display:block;font-size:11px;font-weight:700;color:var(--muted)} .dkc b{display:block;font:900 24px Montserrat,Arial,sans-serif;margin:2px 0} .dkc span{font-size:10.5px;color:var(--muted);font-weight:700}
   .dkc.w b{color:var(--buy)} .dkc.warn{outline:2px solid #f59e0b88;cursor:pointer} .dkc[data-dgo]{cursor:pointer}
   .dcard{padding:14px;border-radius:22px;background:var(--tile,var(--field));box-shadow:var(--raise);margin-bottom:12px;min-width:0} .dcard h4{margin:0 0 8px;font-size:14px}
+  .qrbox{display:grid;place-items:center;padding:12px;background:#fff;border-radius:18px;margin:8px auto;width:max-content} .qrbox img{width:190px;height:190px;display:block}
+  .mcode{letter-spacing:8px;text-align:center;font-size:20px;font-weight:800} .okline{font-size:13px;font-weight:700;color:var(--buy);line-height:1.9;margin:0 0 8px}
+  #maxd .chip{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:800;padding:8px 14px;background:var(--field);color:var(--text)} #maxd .chip.on{background:var(--buy-bg);color:var(--buy)}
+  .sesg{padding:8px 0;border-top:1px solid rgba(120,130,160,.15)} .sesg:first-of-type{border-top:0} .sesh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+  .dst small{font-weight:500;color:var(--muted);font-size:11px} .warnc{box-shadow:var(--raise),inset 0 0 0 1.5px var(--sell-bg)}
+  .ghost2{border:0;background:var(--field);color:var(--text);font:inherit;font-size:11.5px;font-weight:800;padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap} .ghost2.red{color:var(--sell);background:var(--sell-bg)}
   .dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px} .dgrid .dcard{margin-bottom:12px}
   .dbars{width:100%;height:auto;display:block} .dbars text{font:700 9px Montserrat,Arial,sans-serif;fill:var(--muted)}
   .dleg{display:flex;gap:12px;justify-content:center;font-size:11px;font-weight:700} .dleg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-inline-end:4px;vertical-align:middle}
@@ -787,7 +796,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794218195";
+const BUILD = "1794218920";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -802,6 +811,11 @@ const MEMBER_URL   = "https://alijojo2122joon-jpg.github.io/Silver-signals/";
 /* ===================== */
 
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+/* data functions only answer signed-in members / admin: send the session token */
+async function fnFetch(name, opts = {}){
+  let t = null; try { t = (await sb.auth.getSession()).data?.session?.access_token || null; } catch {}
+  return fetch(SUPABASE_URL + "/functions/v1/" + name, { cache: "no-store", ...opts, headers: { ...(opts.headers || {}), apikey: SUPABASE_KEY, ...(t ? { Authorization: "Bearer " + t } : {}) } });
+}
 const $app = document.getElementById("app");
 const $ = id => document.getElementById(id);
 /* ===== صداگذاری (کیت SND02 Piano، مثل صفحه‌ی اعضا) ===== */
@@ -1056,9 +1070,10 @@ function drawPane(){
       <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>`; loadFxAdmin(); return; }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="dashbtn">📊 داشبورد: آمار سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد</button><div id="list"></div>`
-    : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button>
+    : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button><button class="dashbtn glass press rise" id="secbtn">🛡 امنیت: ورود دو مرحله‌ای مدیر، محدودیت دستگاه و دستگاه‌های فعال اعضا</button>
        <label class="search glass rise" style="--i:1">${I.search}<input id="q" placeholder="جستجوی نام، ایمیل، شماره، تلگرام یا شهر…" value="${esc(q)}"></label><div id="list"></div>`;
   if ($("billbtn")) $("billbtn").onclick = sheetBilling;
+  if ($("secbtn")) $("secbtn").onclick = sheetSecurity;
   if ($("dashbtn")) $("dashbtn").onclick = () => window.open("index.html?pg=dash", "_blank");
   if ($("q")) $("q").oninput = e => { q = e.target.value; drawList(); };
   drawList();
@@ -2386,7 +2401,7 @@ function paintTicker(){
 }
 async function loadTicker(force){
   if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
-  try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) tkData = await r.json(); } catch {}
+  try { const r = await fnFetch("prices"); if (r.ok) tkData = await r.json(); } catch {}
   if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
   paintTicker();
 }
@@ -2429,7 +2444,7 @@ async function loadDashExtra(){
   const [p, c, st] = await Promise.all([sb.from("payments").select("id,user_id,status,provider,amount_afn,created_at,paid_at").order("created_at", { ascending: false }).limit(200),
     sb.rpc("admin_comments", { p_only_reported: false }), sb.from("settings").select("key,value,updated_at").in("key", ["tg_cache", "xag_live", "market_cache"])]);
   dashX.pays = p.data || []; dashX.cms = c.data || []; dashX.set = Object.fromEntries((st.data || []).map(r => [r.key, r]));
-  if (!dashX.news || Date.now() - dashX.news.t > 300000) { try { const r = await fetch(SUPABASE_URL + "/functions/v1/news"); if (r.ok) dashX.news = { t: Date.now(), j: await r.json() }; } catch {} }
+  if (!dashX.news || Date.now() - dashX.news.t > 300000) { try { const r = await fnFetch("news"); if (r.ok) dashX.news = { t: Date.now(), j: await r.json() }; } catch {} }
   if (tab === "dash") drawDash(true);
 }
 function barsSVG(rows, keys, colors, h = 120){ // stacked bars
@@ -2496,9 +2511,10 @@ function drawDash(soft){
       <a href="index.html?pg=acad&from=admin">🎓 آکادمی، تقویم و اخبار<small>تقویم جهانی و افغانستان، اخبار جهان و افغانستان، سرای شهزاده</small></a>
       <a href="index.html?pg=dash&from=admin">📊 داشبورد معامله‌گر<small>ماشین‌حساب ریسک حرفه‌ای و گزارش عملکرد</small></a>
       <a href="index.html?pg=sig&from=admin">👁 صفحه‌ی سیگنال‌ها از نگاه اعضا<small>با نظرات و لایک‌ها</small></a></div>
-      <p class="hint">مدیریت محتوای آکادمی، اخبار و تقویم از تب «محتوا» انجام می‌شود.</p></div>`;
+      <p class="hint">مدیریت محتوای آکادمی، اخبار و تقویم از تب «محتوا» انجام می‌شود.</p></div>
+    <button class="dashbtn glass press" data-dgo="sec">🛡 امنیت و دستگاه‌های فعال اعضا</button>`;
   $("dupd").textContent = "به‌روزرسانی خودکار · " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-  el.onclick = e => { if (e.target.closest("[data-dgo=bill]")) sheetBilling(); };
+  el.onclick = e => { if (e.target.closest("[data-dgo=bill]")) sheetBilling(); if (e.target.closest("[data-dgo=sec]")) sheetSecurity(); };
 }
 setInterval(() => { if (tab === "dash" && !document.hidden && $("dashv")) { dashX.at = 0; drawDash(true); } }, 30000);
 
@@ -2544,9 +2560,102 @@ async function sheetHealth(){
   };
   await draw();
   $("h_run").onclick = async () => { const b = $("h_run"); busy(b, true); const fns = ["prices", "xag-live", "tg-rates", "fx-ingest", "signal-engine"];
-    const res = await Promise.all(fns.map(f => fetch(SUPABASE_URL + "/functions/v1/" + f, { cache: "no-store" }).then(r => r.ok).catch(() => false)));
+    const res = await Promise.all(fns.map(f => fnFetch(f).then(r => r.ok).catch(() => false)));
     busy(b, false, "🔄 به‌روزرسانی دستی همه‌ی منابع"); $("h_res").textContent = res.every(Boolean) ? "✅ همه‌ی منابع دوباره خوانده شدند." : `⚠️ ${res.filter(x => !x).length} منبع پاسخ نداد؛ چند دقیقه بعد دوباره امتحان کنید.`;
     dashX.at = 0; loadTicker(true); loadFxAdmin(); await draw(); };
+}
+
+/* ===== امنیت ===== */
+// ورود دو مرحله‌ای: بعد از رمز، کد ۶ رقمی برنامه‌ی Authenticator (Google Authenticator / Microsoft Authenticator)
+function renderMfa(note = ""){
+  $app.innerHTML = `<form class="login" id="mf">
+    <div class="logo glass rise"><img src="logo-mark.png" alt="Market Analysts"></div>
+    <h1 class="rise" style="--i:1">تأیید دو مرحله‌ای</h1>
+    <div class="tag rise" style="--i:2">کد ۶ رقمی برنامه‌ی Authenticator را وارد کنید</div>
+    <label class="field glass rise" style="--i:3">${I.lock}<input id="mcode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required placeholder="— — — — — —" class="ltr mcode"></label>
+    <button class="cta press rise" style="--i:4" id="mgo">تأیید و ورود</button>
+    <div class="err" id="mer">${esc(note)}</div>
+    <button type="button" class="ghost rise" style="--i:5" id="mout">خروج</button>
+  </form>`;
+  $("mcode").focus();
+  $("mout").onclick = () => sb.auth.signOut();
+  $("mf").onsubmit = async e => {
+    e.preventDefault(); const b = $("mgo"); busy(b, true); $("mer").textContent = "";
+    const code = toEnA($("mcode").value).replace(/\D/g, "");
+    let error = null;
+    try { const { data: f } = await sb.auth.mfa.listFactors(); const fac = f?.totp?.[0];
+      error = fac ? (await sb.auth.mfa.challengeAndVerify({ factorId: fac.id, code })).error : { message: "no_factor" }; } catch (x) { error = x; }
+    if (error) { busy(b, false, "تأیید و ورود"); $("mer").textContent = "کد درست نیست یا وقتش گذشته؛ کد تازه را وارد کنید."; $("mcode").select(); }
+  };
+}
+const uaShort = u => { u = u || "";
+  const os = /Android/i.test(u) ? "اندروید" : /iPhone|iPad/i.test(u) ? "آیفون" : /Windows/i.test(u) ? "ویندوز" : /Mac OS/i.test(u) ? "مک" : /Linux/i.test(u) ? "لینوکس" : "دستگاه نامشخص";
+  const app = /; wv\)/.test(u) ? "اپ اندروید" : /Edg\//.test(u) ? "Edge" : /Chrome\//.test(u) ? "Chrome" : /Firefox\//.test(u) ? "Firefox" : /Safari\//.test(u) ? "Safari" : "مرورگر";
+  return os + " · " + app; };
+async function sheetSecurity(){
+  openSheet(`<h2>🛡 امنیت</h2><div id="secb"><p class="hint">در حال بارگذاری…</p></div>`);
+  let enrolling = null;
+  const draw = async () => {
+    const [fl, ss, st] = await Promise.all([(async () => sb.auth.mfa.listFactors())().catch(() => ({ data: null })), sb.rpc("admin_sessions", { p_user: null }),
+      sb.from("settings").select("value").eq("key", "security").maybeSingle()]);
+    const on = (fl.data?.totp || []).filter(f => f.status === "verified");
+    const maxd = Number(st.data?.value?.max_devices) || 2;
+    const rows = ss.data || [], live = rows.filter(r => !r.revoked_at), week = Date.now() - 7 * 864e5;
+    const kicks = rows.filter(r => r.revoked_by === "limit" && new Date(r.revoked_at) > week);
+    const by = {}; for (const r of live) (by[r.user_id] ||= { name: r.name || "عضو", list: [] }).list.push(r);
+    const kc = {}; for (const r of kicks) kc[r.user_id] = (kc[r.user_id] || 0) + 1;
+    const sus = Object.entries(kc).filter(([, n]) => n >= 3);
+    if (!$("secb")) return;
+    $("secb").innerHTML = `
+      <div class="dcard"><h4>🔐 ورود دو مرحله‌ای مدیر</h4>
+        ${on.length ? `<p class="okline">✅ فعال است. ورود به پنل مدیر بدون کد گوشی شما ممکن نیست، حتی اگر کسی رمز را بداند.</p><button class="ghost red" id="mfa_off">غیرفعال کردن</button>`
+        : enrolling ? `<p class="hint">۱) برنامه‌ی <b>Google Authenticator</b> یا <b>Microsoft Authenticator</b> را روی گوشی نصب کنید. ۲) این QR را اسکن کنید (یا کلید زیر را دستی وارد کنید). ۳) کد ۶ رقمی را بنویسید.</p>
+            <div class="qrbox"><img src="${esc(enrolling.totp.qr_code)}" alt="QR"></div>
+            <div class="hpwh"><code class="ltr" id="mfa_sec">${esc(enrolling.totp.secret)}</code><button type="button" id="mfa_cp">کپی</button></div>
+            <p class="hint">⚠️ این کلید را جای امنی (روی کاغذ) نگه دارید؛ اگر گوشی گم شد، با همین کلید دوباره کد می‌سازید.</p>
+            <input class="in ltr mcode" id="mfa_code" inputmode="numeric" maxlength="6" placeholder="کد ۶ رقمی">
+            <button class="cta press" id="mfa_ok">تأیید و فعال‌سازی</button><button class="ghost" id="mfa_cancel">انصراف</button>`
+        : `<p class="hint">پیشنهاد جدی: با فعال کردن این گزینه، برای ورود به پنل مدیر علاوه بر رمز، کدی لازم است که فقط گوشی شما می‌سازد.</p><button class="cta press" id="mfa_on">فعال‌سازی ورود دو مرحله‌ای</button>`}
+      </div>
+      <div class="dcard"><h4>📱 محدودیت دستگاه برای هر عضو</h4>
+        <p class="hint">هر حساب حداکثر روی این تعداد دستگاه هم‌زمان باز می‌ماند. اگر عضو رمزش را به کس دیگری بدهد، با ورود دستگاه جدید، قدیمی‌ترین دستگاه خودکار خارج می‌شود؛ پس اشتراک‌گذاری حساب عملاً ممکن نیست.</p>
+        <div class="chips" id="maxd">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="chip ${n === maxd ? "on" : ""}" data-n="${n}">${n} دستگاه</button>`).join("")}</div>
+      </div>
+      ${sus.length ? `<div class="dcard warnc"><h4>⚠️ مشکوک به اشتراک‌گذاری حساب (۷ روز اخیر)</h4>${sus.map(([u, n]) => `<div class="dst"><span>${esc(rows.find(r => r.user_id === u)?.name || "عضو")}</span><span class="chip off">${n} بار خروج خودکار</span></div>`).join("")}<p class="hint">این اعضا پشت سر هم روی دستگاه‌های مختلف وارد شده‌اند.</p></div>` : ""}
+      <div class="dcard"><h4>🟢 دستگاه‌های فعال اعضا (${live.length})</h4>
+        ${Object.keys(by).length ? Object.entries(by).map(([u, g]) => `<div class="sesg"><div class="sesh"><b>${esc(g.name)}</b><button type="button" class="ghost2 red" data-kall="${u}">خروج از همه</button></div>
+          ${g.list.map(r => `<div class="dst"><span>${uaShort(r.ua)}<small> · ورود ${agoFa(r.created_at)} · آخرین فعالیت ${agoFa(r.last_seen)}</small></span><button type="button" class="ghost2" data-k1="${r.session_id}" data-u="${u}">خروج</button></div>`).join("")}</div>`).join("")
+          : `<p class="hint">هنوز دستگاهی ثبت نشده؛ اعضا بعد از باز کردن برنامه اینجا دیده می‌شوند.</p>`}
+      </div>`;
+    const el = $("secb");
+    el.onclick = async e => {
+      const t = e.target;
+      if (t.closest("#mfa_on")) { busy(t, true);
+        try { const { data: fl2 } = await sb.auth.mfa.listFactors(); for (const f of (fl2?.all || []).filter(f => f.status !== "verified")) await sb.auth.mfa.unenroll({ factorId: f.id }); } catch {}
+        const { data, error } = await sb.auth.mfa.enroll({ factorType: "totp", friendlyName: "Market Analysts " + new Date().toISOString().slice(0, 10) });
+        if (error) { toast("فعال‌سازی ممکن نشد: " + error.message, true); return draw(); }
+        enrolling = data; return draw(); }
+      if (t.closest("#mfa_cp")) { try { await navigator.clipboard.writeText(enrolling.totp.secret); toast("کلید کپی شد"); } catch {} return; }
+      if (t.closest("#mfa_cancel")) { try { await sb.auth.mfa.unenroll({ factorId: enrolling.id }); } catch {} enrolling = null; return draw(); }
+      if (t.closest("#mfa_ok")) { const b = $("mfa_ok"); busy(b, true);
+        const { error } = await sb.auth.mfa.challengeAndVerify({ factorId: enrolling.id, code: toEnA($("mfa_code").value).replace(/\D/g, "") });
+        if (error) { busy(b, false, "تأیید و فعال‌سازی"); return toast("کد درست نیست؛ کد تازه‌ی برنامه را وارد کنید.", true); }
+        enrolling = null; toast("✅ ورود دو مرحله‌ای فعال شد"); return draw(); }
+      if (t.closest("#mfa_off")) { if (!confirm("ورود دو مرحله‌ای غیرفعال شود؟ امنیت پنل مدیر کمتر می‌شود.")) return;
+        const { error } = await sb.auth.mfa.unenroll({ factorId: on[0].id }); if (error) return toast("خطا: " + error.message, true);
+        toast("غیرفعال شد"); return draw(); }
+      const mb = t.closest("#maxd [data-n]");
+      if (mb) { const n = Number(mb.dataset.n);
+        const { error } = await sb.from("settings").upsert({ key: "security", value: { ...(st.data?.value || {}), max_devices: n }, updated_at: new Date().toISOString() });
+        if (error) return toast("خطا: " + error.message, true); toast(`حداکثر ${n} دستگاه برای هر عضو`); return draw(); }
+      const ka = t.closest("[data-kall]"), k1 = t.closest("[data-k1]");
+      if (ka || k1) { const u = (ka || k1).dataset.kall || k1.dataset.u;
+        if (ka && !confirm("این عضو از همه‌ی دستگاه‌ها خارج شود؟ باید دوباره با رمز وارد شود.")) return;
+        const { error } = await sb.rpc("admin_revoke_sessions", { p_user: u, p_session: k1 ? k1.dataset.k1 : null });
+        if (error) return toast("خطا: " + error.message, true); toast("خارج شد"); return draw(); }
+    };
+  };
+  await draw();
 }
 
 /* مسیر */
@@ -2558,6 +2667,8 @@ async function route(session){
   if (!session) { const n = pendingNote; pendingNote = ""; return renderLogin(n); }
   const { data: me } = await sb.from("profiles").select("role,name").eq("id", session.user.id).maybeSingle();
   if (me?.role !== "admin") { pendingNote = "این صفحه فقط برای مدیر است."; await sb.auth.signOut(); return; }
+  try { const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal?.nextLevel === "aal2" && aal.currentLevel !== "aal2") return renderMfa(); } catch {}
   renderPanel(); adminUid = session.user.id; pushSetup(false, adminUid).then(paintAdminPush);
 }
 let lastUid;

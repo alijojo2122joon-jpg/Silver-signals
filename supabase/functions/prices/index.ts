@@ -1,9 +1,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { who, denied } from "./gate.ts";
 
 // Public market data: world gold/silver spot every 5s (silver = the live Telegram feed read every 5s by xag-live;
 // gold-api is the fallback), 24h sparklines + DXY every 5 min, world markets (FX, crypto, oil) every 15s,
-// USD/AFN market fallback every 6h.
+// USD/AFN market fallback every 6h. Only signed-in active members, the admin and the scheduled jobs may read it.
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -42,6 +43,8 @@ const marketClosed = () => { const n = new Date(), d = n.getUTCDay(), h = n.getU
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const w = await who(req, admin);
+  if (!w.cron && !w.admin && !w.member) return denied(cors);
   const { data: rows } = await admin.from("settings").select("key,value,updated_at").in("key", ["market_cache", "tg_cache", "xag_live", "ticker_cfg"]);
   const cache = rows?.find(r => r.key === "market_cache"); const tg = rows?.find(r => r.key === "tg_cache")?.value as any;
   const live = rows?.find(r => r.key === "xag_live")?.value as any;
