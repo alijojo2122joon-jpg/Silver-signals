@@ -724,6 +724,55 @@
   .tcomp{margin:8px 0 12px;padding:12px;border-radius:18px;background:var(--tile);box-shadow:var(--raise)} .tcomp textarea{margin:0}
   .tcrep{font-size:12px;color:var(--muted);margin-bottom:6px} .tcrep button{border:0;background:none;color:var(--sell);cursor:pointer}
   .tcemo{display:flex;gap:2px;margin-top:4px;overflow-x:auto} .tcemo button{border:0;background:none;font-size:19px;cursor:pointer;padding:2px 4px}
+  /* ===== نوار چرخشی قیمت‌ها ===== */
+  .mtk{position:relative;overflow:hidden;margin:0 0 12px;padding:7px 0;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);direction:ltr;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack,.mtk:active .tktrack{animation-play-state:paused}
+  .tkset{display:flex;flex:none}
+  .tki{display:inline-flex;align-items:baseline;gap:6px;padding:0 16px;white-space:nowrap;font-size:12.5px;border-inline-end:1px solid color-mix(in srgb,var(--muted) 25%,transparent)}
+  .tki b{font-weight:800;direction:rtl} .tki i{font-style:normal;font-size:10.5px;color:var(--muted);font-family:Montserrat,Arial,sans-serif}
+  .tki em{font-style:normal;font-weight:900;font-family:Montserrat,Arial,sans-serif} .tki u{text-decoration:none;font-weight:800;font-size:11px;font-family:Montserrat,Arial,sans-serif}
+  .tki.up u,.tki.up em{color:#0a9b5c} .tki.dn u,.tki.dn em{color:#d93a3a}
+  @keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.tktrack{animation-duration:calc(var(--tkd,45s)*3)}}
+  /* ===== آمار عملکرد سیگنال‌ها ===== */
+  .sgx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+  .sgc{padding:12px 8px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);text-align:center;min-width:0}
+  .sgc small{display:block;font-size:11px;font-weight:700;color:var(--muted)} .sgc b{display:block;margin-top:2px;font:900 22px Montserrat,Arial,sans-serif}
+  .sgc.w b,.sgbl .w b{color:#0a9b5c} .sgc.l b,.sgbl .l b{color:#d93a3a} .sgc.o b{color:#ff8a3d}
+  .sgc.wide{grid-column:span 2;text-align:start;padding:12px 14px}
+  .sgbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,var(--muted) 18%,transparent);margin:4px 0 8px}
+  .sgbar i.w{background:linear-gradient(90deg,#2fd08c,#0a9b5c)} .sgbar i.l{background:linear-gradient(90deg,#ff7a7a,#d93a3a)}
+  .sgbl{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;flex-wrap:wrap}
+  .sgc.perf b{font-size:24px} .sgc.perf.w b{color:#0a9b5c} .sgc.perf.l b{color:#d93a3a} .sgc.perf span{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+  @media (max-width:420px){ .sgx{grid-template-columns:repeat(2,minmax(0,1fr))} .sgc.wide{grid-column:1/-1} }
+
+  /* ===== داشبورد مدیر ===== */
+  .nav{width:min(540px,calc(100% - 12px))!important;grid-template-columns:repeat(6,1fr)!important} .nav .pill{width:calc((100% - 12px)/6)!important}
+  .nav button span{font-size:11px!important} .nav button svg{width:20px;height:20px}
+  .snode{border:0;background:none;font:inherit;color:inherit;cursor:pointer;padding:0}
+  .mkic{display:grid;place-items:center;width:40px;height:40px;margin:0 auto;font-size:24px}
+  .mf small{font-size:10px;opacity:.7;margin-inline-start:2px}
+  .msum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px} .msum span{flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);font-size:11.5px;font-weight:700;color:var(--muted)}
+  .msum b{display:block;font:800 18px/1.2 Montserrat,Arial,sans-serif;color:var(--text)} .msum .w b{color:var(--buy)} .msum .l b{color:var(--sell)}
+  .dk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .dkc{padding:14px 10px;border-radius:20px;background:var(--tile,var(--field));box-shadow:var(--raise);text-align:center;min-width:0}
+  .dkc small{display:block;font-size:11px;font-weight:700;color:var(--muted)} .dkc b{display:block;font:900 24px Montserrat,Arial,sans-serif;margin:2px 0} .dkc span{font-size:10.5px;color:var(--muted);font-weight:700}
+  .dkc.w b{color:var(--buy)} .dkc.warn{outline:2px solid #f59e0b88;cursor:pointer} .dkc[data-dgo]{cursor:pointer}
+  .dcard{padding:14px;border-radius:22px;background:var(--tile,var(--field));box-shadow:var(--raise);margin-bottom:12px;min-width:0} .dcard h4{margin:0 0 8px;font-size:14px}
+  .dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px} .dgrid .dcard{margin-bottom:12px}
+  .dbars{width:100%;height:auto;display:block} .dbars text{font:700 9px Montserrat,Arial,sans-serif;fill:var(--muted)}
+  .dleg{display:flex;gap:12px;justify-content:center;font-size:11px;font-weight:700} .dleg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-inline-end:4px;vertical-align:middle}
+  .dleg .w::before{background:#0a9b5c} .dleg .l::before{background:#d93a3a} .dleg .o::before{background:#ff8a3d}
+  .dpr,.dst{display:flex;align-items:center;gap:8px;padding:7px 2px;border-bottom:1px solid color-mix(in srgb,var(--muted) 15%,transparent);font-size:12.5px}
+  .dpr b{flex:1} .dpr span{font:800 13px Montserrat,Arial,sans-serif} .dpr i{font-style:normal;font:800 11px Montserrat,Arial,sans-serif;min-width:52px;text-align:end} .dpr i.up{color:#0a9b5c} .dpr i.dn{color:#d93a3a}
+  .dst span:first-child{flex:1;font-weight:700} .dst .chip{font-size:10.5px;white-space:nowrap}
+  .dact{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid color-mix(in srgb,var(--muted) 15%,transparent)} .dact p{flex:1;margin:0;font-size:12.5px;line-height:1.7} .dact small{font-size:10.5px;color:var(--muted);white-space:nowrap}
+  .dlinks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .dlinks a{display:grid;gap:3px;padding:12px;border-radius:16px;background:var(--field);box-shadow:var(--raise);text-decoration:none;color:var(--text);font-weight:800;font-size:13px}
+  .dlinks small{font-size:10.5px;color:var(--muted);font-weight:600;line-height:1.6}
+  .cmmed{margin:6px 0} .cmmed img,.cmmed video{max-width:100%;max-height:260px;border-radius:14px;display:block;background:#000;cursor:zoom-in}
+  .pos{color:var(--buy)} .neg{color:var(--sell)}
+  @media (max-width:560px){ .dk{grid-template-columns:repeat(2,minmax(0,1fr))} .dgrid{grid-template-columns:1fr} .dlinks{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -738,7 +787,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611091408";
+const BUILD = "1794218195";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -811,6 +860,7 @@ const avatar = m => m.avatar ? `<span class="av" style="--ac:${avColor(m.name)};
 const paintProf = () => { const b = $("prof"); if (!b) return; b.innerHTML = teacherSet.photo ? `<img src="${esc(teacherSet.photo)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : "👤"; b.style.padding = teacherSet.photo ? "0" : ""; b.style.overflow = "hidden"; };
 
 const I = {
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5.5" rx="2"/><rect x="13.5" y="11.5" width="7.5" height="9.5" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/></svg>',
   user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
   users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .6 3.5 2.3 3.5 5.2"/></svg>',
   coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v5c0 1.7 2.7 3 6 3s6-1.3 6-3V7"/><path d="M9 15v2c0 1.7 2.7 3 6 3s6-1.3 6-3v-5c0-1.6-2.4-2.9-5.5-3"/></svg>',
@@ -942,26 +992,30 @@ function renderLogin(note = ""){
 
 /* پنل */
 let msq = "", cmReported = 0;
-let tab = new URLSearchParams(location.search).get("tab") === "msgs" ? "msgs" : "signals", signals = [], members = [], channel = null, q = "";
+let tab = (() => { const t = new URLSearchParams(location.search).get("tab"); return ["msgs","signals","members","prices","content"].includes(t) ? t : "dash"; })(), signals = [], members = [], channel = null, q = "";
 
 function renderPanel(){
   $app.innerHTML = `<div class="top rise">
       <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div><span class="role">مدیر</span></div>
       <div class="icons"><button class="ib press" id="prof" aria-label="پروفایل">👤</button><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
     </div>
+    <div class="mtk rise" id="mtk" hidden></div>
     <div class="hubstats glass rise" style="--i:1">
-      <div class="snode" style="--ac:var(--buy)"><span class="nd"><i></i><b class="num" id="s1">0</b></span><small>اعضای فعال</small></div>
-      <div class="snode" style="--ac:var(--sell)"><span class="nd"><i></i><b class="num" id="s2">0</b></span><small>تمام‌شده</small></div>
-      <div class="snode" style="--ac:#ff8a3d"><span class="nd"><i></i><b class="num" id="s3">0</b></span><small>سیگنال باز</small></div>
+      <button type="button" class="snode" data-go="active" style="--ac:var(--buy)"><span class="nd"><i></i><b class="num" id="s1">0</b></span><small>اعضای فعال</small></button>
+      <button type="button" class="snode" data-go="exp" style="--ac:var(--sell)"><span class="nd"><i></i><b class="num" id="s2">0</b></span><small>اشتراک تمام‌شده</small></button>
+      <button type="button" class="snode" data-go="open" style="--ac:#ff8a3d"><span class="nd"><i></i><b class="num" id="s3">0</b></span><small>سیگنال باز</small></button>
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">${I.coins}<span>قیمت‌ها</span></button><button data-t="content">${I.folder}<span>محتوا</span></button><button data-t="msgs">${I.chat}<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
+      <button data-t="dash">${I.grid || "📊"}<span>داشبورد</span></button><button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">${I.coins}<span>قیمت‌ها</span></button><button data-t="content">${I.folder}<span>محتوا</span></button><button data-t="msgs">${I.chat}<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
   $("out").onclick = async () => { await pushTeardown(); sb.auth.signOut(); };
   $("prof").onclick = sheetProfile; loadTeacherSet();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
   $("pane").onclick = paneClick;
+  document.querySelector(".hubstats").onclick = e => { const g = e.target.closest("[data-go]")?.dataset.go; if (!g) return;
+    if (g === "open") { tab = "signals"; pfilter = "all"; mfilter = "all"; } else { tab = "members"; jfilter = g; } drawPane(); };
+  loadTicker(true);
   drawPane();
   loadSignals(); loadMembers();
   if (channel) sb.removeChannel(channel);
@@ -984,12 +1038,14 @@ function countUp(el, to){
 function drawStats(){
   if (!$("s1")) return;
   const live = members.filter(m => !m.deleted_at), act = live.filter(m => mState(m)[0] !== "off").length;
-  countUp($("s1"), act); countUp($("s2"), live.length - act); countUp($("s3"), signals.filter(s => s.status === "active").length);
+  countUp($("s1"), act); countUp($("s2"), live.length - act); countUp($("s3"), sgStats(signals).open);
+  if (tab === "dash") drawDash(true);
 }
 
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
-  $("np").style.transform = `translateX(${-["signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
+  $("np").style.transform = `translateX(${-["dash","signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
+  if (tab === "dash") return drawDash();
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div class="apush rise" id="apush"></div>
     <div class="fxab rise"><button class="press" id="cmadm">💬 مدیریت نظرات${cmReported ? ` <b class="fxnb">${cmReported}</b>` : ""}</button></div>
     <input class="in" id="msq" placeholder="🔎 جستجو در گفتگوها (نام یا متن پیام)" value="${esc(msq)}" style="margin:0 0 14px">
@@ -1035,15 +1091,15 @@ function drawList(){
       if (pfilter === "all") return true; if (pfilter === "day") return d >= D0; if (pfilter === "yest") return d >= new Date(+D0 - 864e5) && d < D0;
       if (pfilter === "custom") { const a = pfrom ? new Date(pfrom + "T00:00:00") : null, b = pto ? new Date(pto + "T23:59:59") : null; return (!a || d >= a) && (!b || d <= b); }
       return Date.now() - d < span[pfilter] * 864e5; };
-    const shown = signals.filter(x => (mfilter === "all" || (x.market || "xag") === mfilter) && inPer(x));
+    const shown = signals.filter(x => inGroup(x.market || "xag", mfilter) && inPer(x));
     const pw = shown.filter(x => /^tp[123]$/.test(x.status)).length, pl = shown.filter(x => x.status === "sl").length, pa = shown.filter(x => x.status === "active" || (x.phase === "open" && !/^(sl|tp3|expired|closed)$/.test(x.status))).length;
     // total performance in R from server-recorded entry/result (auto signals only)
     const rs = shown.filter(x => x.auto && x.phase === "done" && x.entry_price != null && x.result_price != null && x.sl != null).map(x => (Number(x.result_price) - Number(x.entry_price)) * (x.type === "buy" ? 1 : -1) / (Math.abs(Number(x.entry_price) - Number(x.sl)) || 1e-9));
     const sumR = rs.reduce((a, b) => a + b, 0);
     el._set = `<div class="mf mfp">${PER.map(([k, v]) => `<button data-pf="${k}" class="${k===pfilter?"on":""}">${v}</button>`).join("")}</div>
     ${pfilter === "custom" ? `<div class="pcust"><label>از<input type="date" id="pfrom" value="${esc(pfrom)}"></label><label>تا<input type="date" id="pto" value="${esc(pto)}"></label></div>` : ""}
-    <div class="psum"><span>کل <b>${shown.length}</b></span><span class="w">موفق <b>${pw}</b></span><span class="l">ناموفق <b>${pl}</b></span><span>باز <b>${pa}</b></span><span class="r">درصد موفقیت <b>${pw + pl ? Math.round(pw / (pw + pl) * 100) : 0}%</b></span><span class="${sumR >= 0 ? "w" : "l"}">مجموع عملکرد <b class="ltr">${sumR >= 0 ? "+" : ""}${sumR.toFixed(2)}R</b></span></div>
-    <div class="mf">${[["all","همه"],...Object.entries(MARKETS).map(([k,v]) => [k, v.name])].map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${k!=="all"?`<img src="${MARKETS[k].th}" alt="">`:""}${v}</button>`).join("")}</div>
+    ${sgGridHTML(sgStats(shown))}
+    <div class="mf mfp">${MGROUPS.map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${MARKETS[k]?.th ? `<img src="${MARKETS[k].th}" alt="">` : ""}${v} <small>${signals.filter(x => inGroup(x.market || "xag", k)).length}</small></button>`).join("")}</div>
     <div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${shown.length ? shown.map(s => {
       const b = s.type === "buy";
       const c = s.status === "sl" ? "off" : s.status === "closed" || s.status === "expired" ? "mute" : s.auto && s.phase === "waiting" ? "warn" : "on";
@@ -1053,19 +1109,21 @@ function drawList(){
       : `<div class="empty"><div class="big">📈</div>هنوز سیگنالی منتشر نکرده‌اید.<br>دکمه‌ی «سیگنال جدید» را بزنید.</div>`}</div>`;
   } else {
     const k = q.trim().toLowerCase();
-    const JF = [["all","همه"],["d7","۷ روز اخیر"],["d30","۳۰ روز اخیر"],["d90","۳ ماه اخیر"],["y1","یک سال"],["exp","اشتراک تمام‌شده"],["soon","کمتر از ۷ روز مانده"],["online","آنلاین"]];
+    const JF = [["all","همه"],["active","فعال"],["exp","اشتراک تمام‌شده"],["disabled","غیرفعال‌شده"],["d7","۷ روز اخیر"],["d30","۳۰ روز اخیر"],["d90","۳ ماه اخیر"],["y1","یک سال"],["soon","کمتر از ۷ روز مانده"],["online","آنلاین"]];
     const jok = m => { const age = Date.now() - new Date(m.created_at), left = new Date(m.expires_at) - Date.now();
-      return jfilter === "all" ? true : jfilter === "exp" ? left <= 0 : jfilter === "soon" ? left > 0 && left < 7 * DAY : jfilter === "online" ? m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000
+      return jfilter === "all" ? true : jfilter === "active" ? mState(m)[0] !== "off" : jfilter === "disabled" ? !!m.disabled : jfilter === "exp" ? left <= 0 : jfilter === "soon" ? left > 0 && left < 7 * DAY : jfilter === "online" ? m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000
         : age < ({ d7: 7, d30: 30, d90: 90, y1: 365 })[jfilter] * DAY; };
     const match = m => (!k || [m.name, m.email, m.phone, m.whatsapp, m.telegram, m.city].filter(Boolean).join(" ").toLowerCase().includes(k)) && jok(m);
     const PLN = { trader: "معامله‌گر", sarraf: "صراف", vip: "VIP" };
     const rowHTML = m => { const [c, lab] = mState(m), on = m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000;
       return `<div class="it" data-mem="${m.id}"><span class="avw">${avatar(m)}${on ? `<i class="ondot"></i>` : ""}</span>
         <div><div class="t">${esc(m.name)} ${m.plan ? `<small class="pl">${PLN[m.plan] || m.plan}</small>` : ""}${m.chat_muted ? " 🔇" : ""}</div><div class="s ltr" style="text-align:right">${esc(m.email)}${m.phone ? " · " + esc(m.phone) : ""}</div>
-        <div class="s">عضویت: ${fmtDate(m.created_at)}</div></div>
+        <div class="s">ثبت‌نام: ${fmtDate(m.created_at)} · پایان اشتراک: ${m.expires_at ? fmtDate(m.expires_at) : "—"}${m.city ? " · " + esc(m.city) : ""}</div></div>
         <span class="chip ${c}">${lab}</span></div>`; };
     const rows = members.filter(m => !m.deleted_at && match(m)), dels = members.filter(m => m.deleted_at && match(m));
-    el._set = `<div class="mf mfp">${JF.map(([key, v]) => `<button data-jf="${key}" class="${key === jfilter ? "on" : ""}">${v}</button>`).join("")}</div>
+    const liveM = members.filter(m => !m.deleted_at), actM = liveM.filter(m => mState(m)[0] !== "off").length;
+    el._set = `<div class="msum"><span>کل اعضا <b>${liveM.length}</b></span><span class="w">فعال <b>${actM}</b></span><span class="l">غیرفعال / منقضی <b>${liveM.length - actM}</b></span>${members.length - liveM.length ? `<span>حذف‌شده <b>${members.length - liveM.length}</b></span>` : ""}<span>نمایش <b>${rows.length}</b></span></div>
+      <div class="mf mfp">${JF.map(([key, v]) => `<button data-jf="${key}" class="${key === jfilter ? "on" : ""}">${v}</button>`).join("")}</div>
       <div class="list glass sw rise" style="--i:2;--sd:1.2s"><span class="shine"></span>${rows.length ? rows.map(rowHTML).join("")
       : `<div class="empty"><div class="big">👥</div>${members.length ? "نتیجه‌ای پیدا نشد." : "هنوز عضوی اضافه نکرده‌اید."}</div>`}</div>
       ${dels.length ? `<div class="sec" style="margin-top:18px"><h3>حذف‌شده‌ها</h3></div><div class="list glass rise" style="--i:3;opacity:.92">${dels.map(rowHTML).join("")}</div>` : ""}`;
@@ -1092,7 +1150,14 @@ const MARKETS = {
   xau: { name: "طلا", sym: "XAU/USD", unit: "دالر", th: "img/th-xau.webp" },
   xag: { name: "نقره", sym: "XAG/USD", unit: "دالر", th: "img/th-xag.webp" },
   usd: { name: "دالر", sym: "USD/AFN", unit: "افغانی", th: "img/th-usd.webp" },
+  eurusd: { name: "یورو/دالر", sym: "EUR/USD", unit: "دالر", ic: "🇪🇺", g: "fx", dg: 5 }, gbpusd: { name: "پوند/دالر", sym: "GBP/USD", unit: "دالر", ic: "🇬🇧", g: "fx", dg: 5 },
+  usdjpy: { name: "دالر/ین", sym: "USD/JPY", unit: "ین", ic: "🇯🇵", g: "fx", dg: 3 }, usdchf: { name: "دالر/فرانک", sym: "USD/CHF", unit: "فرانک", ic: "🇨🇭", g: "fx", dg: 5 },
+  btcusd: { name: "بیت‌کوین", sym: "BTC/USD", unit: "دالر", ic: "₿", g: "crypto", dg: 1 }, ethusd: { name: "اتریوم", sym: "ETH/USD", unit: "دالر", ic: "Ξ", g: "crypto", dg: 2 },
+  wti: { name: "نفت WTI", sym: "WTI", unit: "دالر", ic: "🛢", g: "oil", dg: 2 }, brent: { name: "نفت برنت", sym: "BRENT", unit: "دالر", ic: "🛢", g: "oil", dg: 2 },
 };
+const mkIcon = k => MARKETS[k]?.th ? `<img src="${MARKETS[k].th}" alt="">` : `<span class="mkic">${MARKETS[k]?.ic || "📈"}</span>`;
+const MGROUPS = [["all","همه"],["xau","طلا"],["xag","نقره"],["usd","دالر/افغانی"],["fx","فارکس"],["crypto","کریپتو"],["oil","نفت"]];
+const inGroup = (m, g) => g === "all" || m === g || MARKETS[m]?.g === g;
 let mfilter = "all", pfilter = "all", pfrom = "", pto = "", jfilter = "all";
 const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسانی 4 ساعته", d1:"روزانه", w1:"هفتگی" };
 /* ===== محتوا: نرخ‌ها، آکادمی، اخبار، آموزش، ویدیو، نظرسنجی ===== */
@@ -1334,9 +1399,9 @@ function drawFxAdminCard(){
   const el = $("fxadm"); if (!el) return;
   const live = fxA.filter(c => c.buy != null || c.sell != null || c.mid != null).length;
   el.innerHTML = `<div class="fxat"><span>💱</span><div><b>مدیریت جدول ارزها</b><small>${fxA.length} ارز · ${live} دارای نرخ · ${fxA.filter(c => !c.auto).length} قفل دستی</small></div></div>
-    <div class="fxab"><button class="press" data-fxa="list">ارزها و نرخ‌ها</button><button class="press" data-fxa="msgs">پیام‌های تلگرام${fxReview ? ` <b class="fxnb">${fxReview}</b>` : ""}</button><button class="press" data-fxa="new">＋ ارز جدید</button></div>`;
+    <div class="fxab"><button class="press" data-fxa="list">ارزها و نرخ‌ها</button><button class="press" data-fxa="new">＋ ارز جدید</button><button class="press" data-fxa="world">🌐 بازار جهانی و نوار قیمت</button><button class="press" data-fxa="health">🩺 وضعیت منابع</button></div>`;
   el.onclick = e => { const b = e.target.closest("[data-fxa]"); if (!b) return; const a = b.dataset.fxa;
-    a === "list" ? sheetFxList() : a === "msgs" ? sheetFxMsgs() : sheetFxEdit(null); };
+    a === "list" ? sheetFxList() : a === "world" ? sheetWorld() : a === "health" ? sheetHealth() : sheetFxEdit(null); };
 }
 
 const fxCityName = c => fxACities.find(x => x.code === c)?.name_fa || c;
@@ -1498,6 +1563,7 @@ async function sheetBilling(){
     sb.from("plans").select("*").order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(200), sb.from("profiles").select("id,name,email,plan,expires_at").eq("role", "member"),
     sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle()]);
   const BN = bset?.value || {};
+  const { data: hmset } = await sb.from("settings").select("value").eq("key", "pay_hesabpay_manual").maybeSingle(); const HM = hmset?.value || {};
   const el = $("bill"); if (!el) return;
   const nm = Object.fromEntries((profs || []).map(p => [p.id, p.name || p.email]));
   const paid = (pays || []).filter(p => p.status === "paid"), m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
@@ -1505,15 +1571,15 @@ async function sheetBilling(){
   const cnt = c => (profs || []).filter(p => (p.plan || "legacy") === c && new Date(p.expires_at) > Date.now()).length;
   const ST = { pending: ["warn", "در انتظار درگاه"], review: ["warn", "⏳ منتظر تأیید شما"], paid: ["on", "پرداخت‌شده"], failed: ["off", "ناموفق"], expired: ["mute", "منقضی"], rejected: ["off", "رد شد"] };
   const rev = (pays || []).filter(x => x.status === "review");
-  const PV = { hesabpay: "HesabPay", binance: "Binance" };
+  const PV = { hesabpay: "HesabPay (آنلاین)", binance: "Binance", hesabpay_manual: "HesabPay (انتقال دستی)" };
   el.innerHTML = `<div class="bsum"><div><small>درآمد این ماه</small><b class="ltr">${mon.toLocaleString("en-US")} ؋</b></div><div><small>کل درآمد آنلاین</small><b class="ltr">${all.toLocaleString("en-US")} ؋</b></div>
       <div><small>معامله‌گر</small><b>${cnt("trader")}</b></div><div><small>صراف</small><b>${cnt("sarraf")}</b></div><div><small>VIP</small><b>${cnt("vip")}</b></div><div><small>قدیمی (کامل)</small><b>${cnt("legacy")}</b></div></div>
-    <h3 class="bh">⏳ پرداخت‌های بایننس منتظر تأیید <b>${rev.length}</b></h3>
-    ${rev.length ? rev.map(x => `<div class="bplan brev" data-rid="${x.id}"><div class="bph"><b>${esc(nm[x.user_id] || "—")}</b><span class="chip warn">منتظر تأیید</span></div>
+    <h3 class="bh">⏳ پرداخت‌های منتظر تأیید <b>${rev.length}</b></h3>
+    ${rev.length ? rev.map(x => `<div class="bplan brev" data-rid="${x.id}"><div class="bph"><b>${esc(nm[x.user_id] || "—")}</b><span class="chip warn">${PV[x.provider] || x.provider} · منتظر تأیید</span></div>
       <div class="hint">${fmtFull(x.created_at)} · ${esc(x.plan_code || "")} · ${x.months} ماه · قیمت پلان <b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div>
-      <div class="bkv"><span>شناسه تراکنش / Order ID</span><b class="ltr">${esc(x.payer_ref || "—")}</b><span>مبلغ اعلام‌شده</span><b class="ltr">${x.amount_usd != null ? Number(x.amount_usd).toLocaleString("en-US") + " USDT" : "—"}</b>${x.note ? `<span>یادداشت عضو</span><b>${esc(x.note)}</b>` : ""}</div>
+      <div class="bkv"><span>شناسه تراکنش / Order ID</span><b class="ltr">${esc(x.payer_ref || "—")}</b><span>مبلغ اعلام‌شده</span><b class="ltr">${x.amount_usd != null ? Number(x.amount_usd).toLocaleString("en-US") + " USDT" : x.provider === "hesabpay_manual" ? Number(x.amount_afn).toLocaleString("en-US") + " AFN" : "—"}</b>${x.note ? `<span>یادداشت عضو</span><b>${esc(x.note)}</b>` : ""}</div>
       ${x.proof_path ? `<img class="bproof" data-proof="${esc(x.proof_path)}" alt="رسید">` : `<p class="hint">رسید تصویری ارسال نشده.</p>`}
-      <p class="hint">پیش از تأیید، در اپ بایننس خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
+      <p class="hint">پیش از تأیید، در ${x.provider === "binance" ? "اپ بایننس" : "حساب HesabPay"} خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
       <div class="fxabtn"><button data-rv="ok">✅ تأیید و فعال‌سازی</button><button data-rv="no" class="red">✖ رد</button></div></div>`).join("") : `<p class="hint">پرداختی منتظر تأیید نیست.</p>`}
     <h3 class="bh">⚙️ تنظیمات درگاه HesabPay</h3>
     <div class="bplan" id="hpset"><div class="hpst" id="hpst"><span class="spin"></span></div>
@@ -1526,6 +1592,12 @@ async function sheetBilling(){
       <div class="hpwh"><code class="ltr" id="hp_wh">${SUPABASE_URL}/functions/v1/pay-webhook</code><button type="button" id="hp_cp">کپی</button></div>
       <div class="fxabtn"><button id="hp_save">ذخیره</button><button id="hp_test">🔌 آزمایش اتصال</button><button id="hp_del" class="red">حذف کلید</button></div>
       <div class="hint" id="hp_res"></div></div>
+    <h3 class="bh">⚙️ HesabPay — انتقال دستی (بدون کلید API)</h3>
+    <div class="bplan" id="hmset"><div class="tgl2"><label class="sw"><input type="checkbox" id="hm_on" ${HM.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (عضو به حساب شما انتقال می‌دهد و شما تأیید می‌کنید)</span></div>
+      <div class="two"><div><label class="l">شماره / شناسه حساب HesabPay</label><input class="in ltr" id="hm_acc" maxlength="60" value="${esc(HM.account || "")}"></div><div><label class="l">نام صاحب حساب</label><input class="in" id="hm_name" maxlength="80" value="${esc(HM.name || "")}"></div></div>
+      <label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="hm_link" maxlength="300" value="${esc(HM.link || "")}" placeholder="https://">
+      <label class="l">راهنما برای عضو</label><textarea class="in" id="hm_note" rows="2" maxlength="500">${esc(HM.note || "")}</textarea>
+      <div class="fxabtn"><button id="hm_save">ذخیره تنظیمات HesabPay دستی</button></div></div>
     <h3 class="bh">⚙️ تنظیمات پرداخت بایننس</h3>
     <div class="bplan" id="bnset"><div class="tgl2"><label class="sw"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (اعضا گزینه‌ی Binance را ببینند)</span></div>
       <div class="two"><div><label class="l">Binance Pay ID</label><input class="in ltr" id="bn_id" maxlength="40" value="${esc(BN.pay_id || "")}"></div><div><label class="l">نام حساب</label><input class="in" id="bn_name" maxlength="80" value="${esc(BN.name || "")}"></div></div>
@@ -1563,6 +1635,10 @@ async function sheetBilling(){
         : d?.error === "gateway_not_configured" ? "⚠️ اول کلید API را ذخیره کنید."
         : `❌ اتصال ناموفق${d?.http ? " (HTTP " + d.http + ")" : ""}${d?.message ? ": " + esc(String(d.message)) : ""}. کلید یا حالت (آزمایشی/واقعی) را بررسی کنید — کلید Sandbox فقط در حالت آزمایشی کار می‌کند.`;
     } catch (e) { r.textContent = "خطا: " + e.message; } b.disabled = false; };
+  $("hm_save").onclick = async () => { const v = { enabled: $("hm_on").checked, account: $("hm_acc").value.trim(), name: $("hm_name").value.trim(), link: $("hm_link").value.trim(), note: $("hm_note").value.trim() };
+    if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
+    if (v.enabled && !v.account && !v.link) return toast("شماره حساب یا لینک پرداخت لازم است", true);
+    const { error } = await sb.from("settings").upsert({ key: "pay_hesabpay_manual", value: v, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true); toast("ذخیره شد ✓"); };
   $("bn_save").onclick = async () => { const v = { enabled: $("bn_on").checked, pay_id: $("bn_id").value.trim(), name: $("bn_name").value.trim(), address: $("bn_addr").value.trim(), network: $("bn_net").value.trim(), link: $("bn_link").value.trim(), note: $("bn_note").value.trim() };
     if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
     if (v.enabled && !v.pay_id && !v.address) return toast("حداقل Pay ID یا آدرس کیف پول لازم است", true);
@@ -1616,7 +1692,7 @@ function sheetNewSignal(){
   openSheet(`<h2>تحلیل جدید</h2><p class="hint">بعد از انتشار فوراً برای اعضا نمایش داده می‌شود. 🤖 ورود، تارگت‌ها و حد ضرر با قیمت زنده خودکار بررسی و ثبت می‌شوند؛ بعد از انتشار اعداد قابل تغییر نیستند.</p>
     <form id="sf">
       <label class="l" style="margin-top:4px">بازار</label>
-      <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}"><img src="${v.th}" alt=""><b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
+      <div class="mksel" id="mks">${Object.entries(MARKETS).map(([k, v]) => `<button type="button" data-m="${k}">${mkIcon(k)}<b>${v.name}</b><small>${v.sym}</small></button>`).join("")}</div>
       <div class="tog" id="tg"><span class="k"></span><button type="button" class="on" data-s="buy">خرید ↑</button><button type="button" data-s="sell">فروش ↓</button></div>
       <label class="l">تایم‌فریم</label><div class="tfc" id="tfc">${Object.entries(TF).map(([k, v]) => `<button type="button" data-tf="${k}">${v}</button>`).join("")}</div>
       <div class="two"><div><label class="l">قیمت ورود از <span class="unit"></span></label><input class="in num" id="ef" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" spellcheck="false" dir="ltr" required placeholder="51"></div>
@@ -1632,11 +1708,12 @@ function sheetNewSignal(){
       <div class="slide" id="pubs" role="button" tabindex="0" aria-label="انتشار سیگنال"><span class="sfill"></span><span class="slab">بکشید تا منتشر شود</span><span class="sknob"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
     </form>`);
   let side = "buy";
-  let mk = (() => { try { return localStorage.getItem("amk") || (mfilter !== "all" ? mfilter : "xau"); } catch { return "xau"; } })();
+  let mk = (() => { let m; try { m = localStorage.getItem("amk"); } catch {} if (MARKETS[mfilter]) m = mfilter; return MARKETS[m] ? m : "xau"; })();
   const setMk = m => { mk = m; try { localStorage.setItem("amk", m); } catch {}
     $("mks").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
     const u = MARKETS[m].unit;
-    const ph = { xau: ["2650","2655","2680","2630"], xag: ["31.5","31.8","32.6","30.9"], usd: ["65","65.5","67","64"] }[m];
+    const lp = tkQuote(tkData, m)?.price, dg = MARKETS[m].dg ?? 2;
+    const ph = lp ? [lp, lp * 1.001, lp * 1.01, lp * 0.99].map(v => Number(v).toFixed(dg)) : ({ xau: ["2650","2655","2680","2630"], xag: ["31.5","31.8","32.6","30.9"], usd: ["65","65.5","67","64"] }[m] || ["", "", "", ""]);
     ["ef","et","tp1","sl"].forEach((id, i) => $(id).placeholder = ph[i]);
     document.querySelectorAll("#sf .unit").forEach(x => x.textContent = "(" + u + ")"); };
   $("mks").onclick = e => { const b = e.target.closest("button"); if (b) setMk(b.dataset.m); };
@@ -2053,10 +2130,12 @@ async function sheetComments(sigId){
     $("cmlist").innerHTML = v.length ? v.map(r => `<div class="box cmr ${r.deleted ? "gone" : r.hidden ? "hid" : ""}" data-c="${r.id}">
       <div class="cmrh"><b>${esc(r.name || "—")}</b>${r.muted ? '<span class="chip off" style="font-size:10px">🔇 بی‌صدا</span>' : ""}${r.reports ? `<span class="chip off" style="font-size:10px">🚩 ${r.reports}</span>` : ""}<small>${fmtFull(r.created_at)}</small></div>
       ${sigId ? "" : `<div class="hint" style="margin:2px 0 4px">↳ ${esc(sigName(r.signal_id))}</div>`}
-      <div class="cmrb">${r.deleted ? "🚫 حذف‌شده — " : r.hidden ? "👁‍🗨 پنهان — " : ""}${esc(r.body)}</div><div class="hint">❤️ ${r.likes}</div>
+      <div class="cmrb">${r.deleted ? "🚫 حذف‌شده — " : r.hidden ? "👁‍🗨 پنهان — " : ""}${esc(r.body || "")}</div>${r.media_path ? `<div class="cmmed" data-cmp="${esc(r.media_path)}" data-k="${r.media_kind}"><span class="spin"></span></div>` : ""}<div class="hint">❤️ ${r.likes}</div>
       ${r.deleted ? "" : `<div class="cmra"><button type="button" data-a="reply">↩ پاسخ استاد</button><button type="button" data-a="hide">${r.hidden ? "نمایش" : "پنهان"}</button><button type="button" data-a="del" class="red">حذف</button><button type="button" data-a="mute">${r.muted ? "رفع بی‌صدا" : "بی‌صدا کردن عضو"}</button>${r.reports ? `<button type="button" data-a="ok">گزارش بی‌مورد است</button>` : ""}</div>`}</div>`).join("")
       : `<div class="empty"><div class="big">💬</div>${only ? "گزارشی نیست." : "هنوز نظری ثبت نشده است."}</div>`; };
-  const load = async () => { const { data, error } = await sb.rpc("admin_comments", { p_only_reported: only }); if (error) return toast(error.message, true); rows = data || []; draw(); loadCmReported(); };
+  const load = async () => { const { data, error } = await sb.rpc("admin_comments", { p_only_reported: only }); if (error) return toast(error.message, true); rows = data || []; draw(); loadCmReported();
+    $("cmlist").querySelectorAll("[data-cmp]").forEach(async d => { const { data: u } = await sb.storage.from("comments").createSignedUrl(d.dataset.cmp, 3600); if (!u?.signedUrl) { d.textContent = "فایل در دسترس نیست"; return; }
+      d.innerHTML = d.dataset.k === "video" ? `<video src="${u.signedUrl}" controls playsinline preload="metadata"></video>` : `<img src="${u.signedUrl}" alt="" onclick="window.open(this.src)">`; }); };
   $("tcomp").querySelector(".tcemo").onclick = e => { const b = e.target.closest("button"); if (b) { $("tcbody").value += b.textContent; $("tcbody").focus(); } };
   $("tcomp").onsubmit = async e => { e.preventDefault(); const body = $("tcbody").value.trim(); if (!body || !targetSig) return $("tcbody").focus();
     const btn = $("tcsend"); busy(btn, true);
@@ -2067,10 +2146,11 @@ async function sheetComments(sigId){
   $("cmf").onclick = e => { const b = e.target.closest("[data-o]"); if (!b) return; $("cmf").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); only = b.dataset.o === "1"; load(); };
   $("cmlist").onclick = async e => { const b = e.target.closest("[data-a]"); if (!b) return; const r = rows.find(x => x.id === Number(b.closest("[data-c]").dataset.c)); if (!r) return; let res;
     if (b.dataset.a === "reply") { replyTo = r.id; targetSig = r.signal_id; const f = $("tcomp"); f.hidden = false; $("tcrep").hidden = false;
-      $("tcrep").innerHTML = `↩ پاسخ به <b>${esc(r.name || "")}</b>: ${esc(r.body.slice(0, 60))} <button type="button" id="tcx">✕</button>`; $("tcx").onclick = () => { replyTo = null; $("tcrep").hidden = true; if (!sigId) f.hidden = true; };
+      $("tcrep").innerHTML = `↩ پاسخ به <b>${esc(r.name || "")}</b>: ${esc((r.body || "📎").slice(0, 60))} <button type="button" id="tcx">✕</button>`; $("tcx").onclick = () => { replyTo = null; $("tcrep").hidden = true; if (!sigId) f.hidden = true; };
       f.scrollIntoView({ behavior: "smooth", block: "center" }); $("tcbody").focus(); return; }
     if (b.dataset.a === "hide") res = await sb.from("signal_comments").update({ hidden: !r.hidden }).eq("id", r.id);
     if (b.dataset.a === "del") { if (!confirm("این نظر حذف شود؟")) return; res = await sb.from("signal_comments").update({ deleted_at: new Date().toISOString(), deleted_by: "admin" }).eq("id", r.id);
+      if (!res.error && r.media_path) sb.storage.from("comments").remove([r.media_path]);
       if (!res.error) await sb.from("comment_reports").update({ status: "done" }).eq("comment_id", r.id); }
     if (b.dataset.a === "mute") res = await sb.from("profiles").update({ comments_muted: !r.muted }).eq("id", r.user_id);
     if (b.dataset.a === "ok") res = await sb.from("comment_reports").update({ status: "dismissed" }).eq("comment_id", r.id).eq("status", "open");
@@ -2281,6 +2361,194 @@ function paintAdminPush(){ const el = $("apush"); if (!el) return; const i = pus
   if (i.on) { el.innerHTML = `<span>✅ اعلان پیام اعضا و پرداخت‌های بایننس روی این دستگاه فعال است.</span>`; return; }
   el.innerHTML = i.perm === "denied" ? `<span>⚠️ اعلان در تنظیمات مرورگر مسدود است.</span>` : `<span>📲 اعلان پیام اعضا و پرداخت‌ها روی این دستگاه فعال نیست.</span><button type="button" id="apon">فعال‌سازی</button>`;
   if ($("apon")) $("apon").onclick = async () => { const r = await pushSetup(true, adminUid); paintAdminPush(); toast(r === "on" ? "اعلان فعال شد ✓" : "فعال نشد", r !== "on"); }; }
+
+/* ===== نوار چرخشی قیمت‌های بازار (مشترک مدیر و اعضا) ===== */
+const TKDEF = [["xau", "🥇 طلا", "XAU/USD", 2], ["xag", "🥈 نقره", "XAG/USD", 3], ["dxy", "💵 شاخص دالر", "DXY", 2], ["eurusd", "🇪🇺 یورو/دالر", "EUR/USD", 4],
+  ["gbpusd", "🇬🇧 پوند/دالر", "GBP/USD", 4], ["usdjpy", "🇯🇵 دالر/ین", "USD/JPY", 3], ["usdchf", "🇨🇭 دالر/فرانک", "USD/CHF", 4], ["btcusd", "₿ بیت‌کوین", "BTC/USD", 0],
+  ["ethusd", "Ξ اتریوم", "ETH/USD", 1], ["wti", "🛢 نفت WTI", "WTI", 2], ["brent", "🛢 نفت برنت", "BRENT", 2]];
+let tkData = null, tkAt = 0, tkSig = "", tkCfg = null;
+const tkQuote = (d, k) => k === "xau" || k === "xag" || k === "dxy" ? d?.[k] : d?.markets?.[k];
+function tkItems(d){
+  const hide = new Set(tkCfg?.hide || []), extra = (tkCfg?.extra || []).map(x => [x.key, x.name, x.sym || x.key.toUpperCase(), x.digits ?? 2]);
+  return [...TKDEF, ...extra].filter(([k]) => !hide.has(k)).map(([k, name, sym, dg]) => { const q = tkQuote(d, k); if (!q || q.price == null) return "";
+    const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null, cls = ch == null ? "" : ch > 0 ? "up" : ch < 0 ? "dn" : "";
+    const pr = Number(q.price).toLocaleString("en-US", { minimumFractionDigits: dg, maximumFractionDigits: dg });
+    return `<span class="tki ${cls}"><b>${name}</b><i>${sym}</i><em>${pr}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : ch < 0 ? "▼" : "•"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join("");
+}
+function paintTicker(){
+  const el = document.getElementById("mtk"); if (!el || !tkData) return;
+  const items = tkItems(tkData); if (!items) { el.hidden = true; return; } el.hidden = false;
+  if (items === tkSig && el.querySelector(".tktrack")) return; tkSig = items;
+  const tr = el.querySelector(".tktrack");
+  if (tr) { tr.querySelectorAll(".tkset").forEach(s => s.innerHTML = items); return; }   // update prices without restarting the scroll
+  const n = (items.match(/class="tki/g) || []).length;
+  el.innerHTML = `<div class="tktrack" style="--tkd:${Math.max(28, n * 4.5)}s"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+}
+async function loadTicker(force){
+  if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
+  try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) tkData = await r.json(); } catch {}
+  if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
+  paintTicker();
+}
+setInterval(() => loadTicker(), 5000);
+
+/* ===== آمار عملکرد سیگنال‌ها (مشترک مدیر و اعضا؛ از وضعیت واقعی ثبت‌شده در دیتابیس) ===== */
+const SGL = { fa: { total: "کل سیگنال‌ها", win: "موفق", loss: "ناموفق", open: "باز", other: "منقضی / بسته", wr: "درصد موفقیت", lr: "درصد عدم موفقیت", perf: "عملکرد کلی", perfH: "مجموع سود و زیان به واحد R (هر R = اندازه‌ی ریسک همان سیگنال)", avg: "میانگین هر سیگنال", none: "—" },
+  ps: { total: "ټول سیګنالونه", win: "بریالي", loss: "ناکام", open: "خلاص", other: "پای ته رسیدلي", wr: "د بریا سلنه", lr: "د ناکامۍ سلنه", perf: "ټول فعالیت", perfH: "د R په واحد ګټه او زیان (هر R = د هماغه سیګنال خطر)", avg: "منځنی", none: "—" },
+  en: { total: "Total signals", win: "Successful", loss: "Failed", open: "Open", other: "Expired / closed", wr: "Win rate", lr: "Loss rate", perf: "Overall performance", perfH: "Total result in R (1R = that signal's risk)", avg: "Avg per signal", none: "—" } };
+const SG = () => SGL[(typeof lang !== "undefined" && lang) || "fa"] || SGL.fa;
+const sgNum = v => v == null ? null : Number(v);
+const sgEntry = s => sgNum(s.entry_price) ?? (s.entry_to != null ? (Number(s.entry_from) + Number(s.entry_to)) / 2 : Number(s.entry_from));
+function sgR(s){ // result of one decided signal in R
+  const win = /^tp[123]$/.test(s.status), loss = s.status === "sl"; if (!win && !loss) return null;
+  const e = sgEntry(s), sl = sgNum(s.sl); if (sl == null || !e) return null; const risk = Math.abs(e - sl); if (!risk) return null;
+  const exit = sgNum(s.result_price) ?? (win ? sgNum(s[s.status]) : sl); if (exit == null) return null;
+  return (exit - e) * (s.type === "buy" ? 1 : -1) / risk; }
+function sgStats(list){
+  const w = list.filter(s => /^tp[123]$/.test(s.status)).length, l = list.filter(s => s.status === "sl").length;
+  const open = list.filter(s => s.status === "active" && s.phase !== "done").length, other = list.length - w - l - open, dec = w + l;
+  const rs = list.map(sgR).filter(v => v != null && isFinite(v)), sumR = rs.reduce((a, b) => a + b, 0);
+  return { n: list.length, w, l, open, other, dec, wr: dec ? w / dec * 100 : null, lr: dec ? l / dec * 100 : null, sumR, avgR: rs.length ? sumR / rs.length : null, nr: rs.length }; }
+function sgGridHTML(st){
+  const L = SG(), pct = v => v == null ? L.none : Math.round(v) + "%", r = v => v == null ? L.none : (v > 0 ? "+" : "") + v.toFixed(2) + "R";
+  return `<div class="sgx">
+    <div class="sgc t"><small>${L.total}</small><b>${st.n}</b></div><div class="sgc w"><small>${L.win}</small><b>${st.w}</b></div>
+    <div class="sgc l"><small>${L.loss}</small><b>${st.l}</b></div><div class="sgc o"><small>${L.open}</small><b>${st.open}</b></div>
+    <div class="sgc wide"><div class="sgbar"><i class="w" style="width:${st.wr ?? 0}%"></i><i class="l" style="width:${st.lr ?? 0}%"></i></div>
+      <div class="sgbl"><span class="w">${L.wr}: <b>${pct(st.wr)}</b></span><span class="l">${L.lr}: <b>${pct(st.lr)}</b></span></div></div>
+    <div class="sgc wide perf ${st.sumR > 0 ? "w" : st.sumR < 0 ? "l" : ""}" title="${L.perfH}"><small>${L.perf}</small><b class="ltr">${st.nr ? r(st.sumR) : L.none}</b><span>${L.avg}: <bdi class="ltr">${r(st.avgR)}</bdi>${st.other ? ` · ${L.other}: ${st.other}` : ""}</span></div>
+  </div>`; }
+
+/* ===== داشبورد مدیر ===== */
+let dashX = { pays: [], cms: [], set: {}, at: 0, news: null };
+const freshSt = (iso, okMin, oldMin) => { if (!iso) return ["mute", "بدون داده"]; const m = (Date.now() - new Date(iso)) / 60000;
+  return m <= okMin ? ["on", "زنده"] : m <= oldMin ? ["warn", agoFa(iso)] : ["off", agoFa(iso)]; };
+const agoFa = iso => { const s = Math.max(0, (Date.now() - new Date(iso)) / 1000); return s < 60 ? Math.round(s) + " ثانیه پیش" : s < 3600 ? Math.round(s / 60) + " دقیقه پیش" : s < 86400 ? Math.round(s / 3600) + " ساعت پیش" : Math.round(s / 86400) + " روز پیش"; };
+async function loadDashExtra(){
+  if (Date.now() - dashX.at < 20000) return; dashX.at = Date.now();
+  const [p, c, st] = await Promise.all([sb.from("payments").select("id,user_id,status,provider,amount_afn,created_at,paid_at").order("created_at", { ascending: false }).limit(200),
+    sb.rpc("admin_comments", { p_only_reported: false }), sb.from("settings").select("key,value,updated_at").in("key", ["tg_cache", "xag_live", "market_cache"])]);
+  dashX.pays = p.data || []; dashX.cms = c.data || []; dashX.set = Object.fromEntries((st.data || []).map(r => [r.key, r]));
+  if (!dashX.news || Date.now() - dashX.news.t > 300000) { try { const r = await fetch(SUPABASE_URL + "/functions/v1/news"); if (r.ok) dashX.news = { t: Date.now(), j: await r.json() }; } catch {} }
+  if (tab === "dash") drawDash(true);
+}
+function barsSVG(rows, keys, colors, h = 120){ // stacked bars
+  const W = 300, n = rows.length || 1, bw = W / n * .62, mx = Math.max(1, ...rows.map(r => keys.reduce((a, k) => a + (r[k] || 0), 0)));
+  return `<svg viewBox="0 0 ${W} ${h + 18}" class="dbars">${rows.map((r, i) => { let y = h; const x = i * W / n + (W / n - bw) / 2;
+    return keys.map((k, j) => { const v = r[k] || 0, hh = v / mx * (h - 6); y -= hh; return v ? `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}" rx="3" fill="${colors[j]}"/>` : ""; }).join("")
+      + `<text x="${(x + bw / 2).toFixed(1)}" y="${h + 14}" text-anchor="middle">${r.lab}</text>`; }).join("")}</svg>`; }
+function drawDash(soft){
+  if (tab !== "dash") return;
+  const pane = $("pane"); if (!pane) return;
+  if (!soft || !$("dashv")) pane.innerHTML = `<div class="sec rise"><h3>📊 داشبورد مدیریت</h3><span class="hint" id="dupd"></span></div><div id="dashv"></div>`;
+  const el = $("dashv"); loadDashExtra();
+  const live = members.filter(m => !m.deleted_at), act = live.filter(m => mState(m)[0] !== "off").length, st = sgStats(signals);
+  const online = live.filter(m => m.last_seen && Date.now() - new Date(m.last_seen) < 3 * 60000).length;
+  const mon = new Date(); mon.setDate(1); mon.setHours(0, 0, 0, 0);
+  const paid = dashX.pays.filter(x => x.status === "paid"), paidMon = paid.filter(x => new Date(x.paid_at || x.created_at) >= mon), rev = paidMon.reduce((a, x) => a + Number(x.amount_afn || 0), 0);
+  const review = dashX.pays.filter(x => x.status === "review").length;
+  // weekly signals chart (last 8 weeks)
+  const wk = [...Array(8)].map((_, i) => { const end = Date.now() - (7 - i) * 7 * 864e5, start = end - 7 * 864e5; const l = signals.filter(s => { const t = +new Date(s.created_at); return t > start && t <= end; });
+    const d = new Date(end); return { lab: `${d.getMonth() + 1}/${d.getDate()}`, w: l.filter(s => /^tp/.test(s.status)).length, l: l.filter(s => s.status === "sl").length, o: l.filter(s => !/^tp/.test(s.status) && s.status !== "sl").length }; });
+  const mm = [...Array(6)].map((_, i) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - (5 - i)); const e = new Date(d); e.setMonth(e.getMonth() + 1);
+    return { lab: `${d.getMonth() + 1}/${String(d.getFullYear()).slice(2)}`, n: members.filter(m => { const t = new Date(m.created_at); return t >= d && t < e; }).length }; });
+  // data status (no channel names)
+  const mc = dashX.set.market_cache?.value || tkData || {};
+  const kab = dashX.set.tg_cache?.value?.places?.kabul?.at, xagAt = dashX.set.xag_live?.value?.at || mc?.xag?.quoteAt;
+  const eng = signals.map(s => s.checked_at).filter(Boolean).sort().pop();
+  const newsAt = dashX.news?.j?.items?.map(x => x.date || x.at).filter(Boolean).sort().pop();
+  const rowsS = [["🥇 قیمت طلای جهانی", freshSt(mc?.xau?.quoteAt || mc?.at, 5, 60)], ["🥈 قیمت نقره‌ی جهانی", freshSt(xagAt, 5, 60)], ["🌐 فارکس، کریپتو و نفت", freshSt(mc?.mktAt, 2, 30)],
+    ["💵 نرخ دالر کابل", freshSt(kab, 240, 1440)], ["🏙 نرخ ارزها و شهرها", freshSt(fxA?.map?.(c => c.rate_at).filter(Boolean).sort().pop(), 240, 1440)], ["📰 اخبار اقتصادی", freshSt(newsAt, 720, 2880)],
+    ["🤖 بررسی خودکار سیگنال‌ها", st.open ? freshSt(eng, 2, 30) : ["on", "آماده"]]];
+  const mrow = (k, name) => { const q = tkQuote(tkData || mc, k); if (!q?.price) return ""; const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null;
+    return `<div class="dpr"><b>${name}</b><span class="ltr">${Number(q.price).toLocaleString("en-US", { maximumFractionDigits: k === "btcusd" ? 0 : 5 })}</span><i class="${ch > 0 ? "up" : ch < 0 ? "dn" : ""} ltr">${ch == null ? "" : (ch > 0 ? "+" : "") + ch.toFixed(2) + "%"}</i></div>`; };
+  // recent activity
+  const nm = id => members.find(m => m.id === id)?.name || "عضو";
+  const acts = [
+    ...signals.slice(0, 15).map(s => ({ t: s.created_at, i: "📢", x: `سیگنال ${(MARKETS[s.market] || MARKETS.xag).name} ${s.type === "buy" ? "خرید" : "فروش"} منتشر شد` })),
+    ...signals.filter(s => s.result_at).map(s => ({ t: s.result_at, i: /^tp/.test(s.status) ? "🎯" : s.status === "sl" ? "⛔" : "⏹", x: `سیگنال ${(MARKETS[s.market] || MARKETS.xag).name}: ${STATUS[s.status] || s.status}` })),
+    ...members.slice(0, 15).map(m => ({ t: m.created_at, i: "👤", x: `عضو جدید: ${m.name}` })),
+    ...dashX.pays.slice(0, 15).map(x => ({ t: x.paid_at || x.created_at, i: "💳", x: `پرداخت ${x.status === "paid" ? "موفق" : x.status === "review" ? "منتظر تأیید" : x.status === "rejected" ? "رد شد" : x.status === "failed" ? "ناموفق" : x.status === "expired" ? "منقضی" : x.status === "pending" ? "در انتظار درگاه" : x.status} · ${nm(x.user_id)} · ${Number(x.amount_afn).toLocaleString("en-US")} ؋` })),
+    ...dashX.cms.slice(0, 15).map(c => ({ t: c.created_at, i: "💬", x: `نظر ${c.name || ""}: ${(c.body || (c.media_kind === "video" ? "🎬 ویدیو" : "🖼 عکس")).slice(0, 50)}` })),
+    ...(typeof allMsgs !== "undefined" ? allMsgs.filter(x => x.sender === "member").slice(-15).map(x => ({ t: x.created_at, i: "✉️", x: `پیام از ${nm(x.member_id)}` })) : []),
+  ].filter(a => a.t).sort((a, b) => new Date(b.t) - new Date(a.t)).slice(0, 14);
+  el._set = `
+    <div class="dk">
+      <div class="dkc"><small>کل اعضا</small><b>${live.length}</b><span>${online} آنلاین</span></div>
+      <div class="dkc w"><small>اعضای فعال</small><b>${act}</b><span>${live.length - act} منقضی/غیرفعال</span></div>
+      <div class="dkc"><small>سیگنال‌های منتشرشده</small><b>${st.n}</b><span>${st.open} باز</span></div>
+      <div class="dkc w"><small>درصد موفقیت</small><b>${st.wr == null ? "—" : Math.round(st.wr) + "%"}</b><span>${st.w} موفق · ${st.l} ناموفق</span></div>
+      <div class="dkc"><small>درآمد این ماه</small><b class="ltr">${rev.toLocaleString("en-US")}</b><span>افغانی · ${paidMon.length} پرداخت</span></div>
+      <div class="dkc ${review ? "warn" : ""}" data-dgo="bill"><small>پرداخت منتظر تأیید</small><b>${review}</b><span>${review ? "بررسی کنید ←" : "همه بررسی شده"}</span></div>
+    </div>
+    <div class="dcard"><h4>📈 آمار عملکرد سیگنال‌ها (همه‌ی زمان‌ها)</h4>${sgGridHTML(st)}</div>
+    <div class="dgrid">
+      <div class="dcard"><h4>سیگنال‌ها در ۸ هفته‌ی اخیر</h4>${barsSVG(wk, ["w", "l", "o"], ["#0a9b5c", "#d93a3a", "#ff8a3d"])}<div class="dleg"><span class="w">موفق</span><span class="l">ناموفق</span><span class="o">باز/سایر</span></div></div>
+      <div class="dcard"><h4>عضو جدید در ۶ ماه اخیر</h4>${barsSVG(mm, ["n"], ["#4a7bff"])}</div>
+    </div>
+    <div class="dgrid">
+      <div class="dcard"><h4>💹 وضعیت قیمت‌های بازار</h4>${mrow("xau", "طلا")}${mrow("xag", "نقره")}${mrow("dxy", "شاخص دالر")}${mrow("eurusd", "یورو/دالر")}${mrow("gbpusd", "پوند/دالر")}${mrow("usdjpy", "دالر/ین")}${mrow("btcusd", "بیت‌کوین")}${mrow("wti", "نفت WTI")}${mrow("brent", "نفت برنت")}</div>
+      <div class="dcard"><h4>🩺 وضعیت به‌روزرسانی اطلاعات</h4>${rowsS.map(([n, [c, t]]) => `<div class="dst"><span>${n}</span><span class="chip ${c}">${t}</span></div>`).join("")}</div>
+    </div>
+    <div class="dcard"><h4>🕑 آخرین فعالیت‌های سیستم</h4>${acts.length ? acts.map(a => `<div class="dact"><span>${a.i}</span><p>${esc(a.x)}</p><small>${agoFa(a.t)}</small></div>`).join("") : `<p class="hint">هنوز فعالیتی ثبت نشده.</p>`}</div>
+    <div class="dcard"><h4>🧭 بخش‌های مشترک با اعضا</h4><div class="dlinks">
+      <a href="index.html?pg=tool&from=admin">🧰 ابزارهای معاملاتی<small>ماشین‌حساب‌ها، ریسک، تبدیل ارز، هشدار، ژورنال، دیکشنری</small></a>
+      <a href="index.html?pg=acad&from=admin">🎓 آکادمی، تقویم و اخبار<small>تقویم جهانی و افغانستان، اخبار جهان و افغانستان، سرای شهزاده</small></a>
+      <a href="index.html?pg=dash&from=admin">📊 داشبورد معامله‌گر<small>ماشین‌حساب ریسک حرفه‌ای و گزارش عملکرد</small></a>
+      <a href="index.html?pg=sig&from=admin">👁 صفحه‌ی سیگنال‌ها از نگاه اعضا<small>با نظرات و لایک‌ها</small></a></div>
+      <p class="hint">مدیریت محتوای آکادمی، اخبار و تقویم از تب «محتوا» انجام می‌شود.</p></div>`;
+  $("dupd").textContent = "به‌روزرسانی خودکار · " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  el.onclick = e => { if (e.target.closest("[data-dgo=bill]")) sheetBilling(); };
+}
+setInterval(() => { if (tab === "dash" && !document.hidden && $("dashv")) { dashX.at = 0; drawDash(true); } }, 30000);
+
+/* ===== بازار جهانی و تنظیم نوار قیمت ===== */
+async function sheetWorld(){
+  await loadTicker(true); const cfg = Object.assign({ hide: [], extra: [] }, tkCfg || {});
+  const all = [...TKDEF, ...cfg.extra.map(x => [x.key, x.name, x.sym, x.digits ?? 2, true])];
+  const draw = () => { $("wlist").innerHTML = all.map(([k, name, sym, dg, ex]) => { const q = tkQuote(tkData, k), ch = q?.prev ? (q.price - q.prev) / q.prev * 100 : null;
+    return `<div class="fxhr"><div><b>${name} <small class="ltr">${sym}</small></b><small>${q?.price != null ? `<bdi class="ltr">${Number(q.price).toFixed(dg)}</bdi>${ch != null ? ` · <bdi class="ltr ${ch >= 0 ? "pos" : "neg"}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}%</bdi>` : ""} · ${q.at || q.quoteAt ? agoFa(q.at || q.quoteAt) : ""}` : "⚠️ داده‌ای دریافت نشده"}</small></div>
+      <label class="sw"><input type="checkbox" data-wk="${k}" ${cfg.hide.includes(k) ? "" : "checked"}><i></i></label>${ex ? `<button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-wdel="${k}">حذف</button>` : ""}</div>`; }).join(""); };
+  openSheet(`<h2>🌐 بازار جهانی و نوار قیمت</h2><p class="hint">نمادهای روشن در نوار چرخشی بالای صفحه (برای مدیر و اعضا) نمایش داده می‌شوند. قیمت‌ها هر ۱۵ ثانیه از Yahoo Finance و طلا/نقره هر چند ثانیه به‌روز می‌شوند؛ نفت تا حدود ۱۰ دقیقه تأخیر دارد.</p>
+    <div id="wlist"></div>
+    <h3 class="bh">＋ افزودن نماد جدید</h3><div class="bplan"><div class="two"><div><label class="l">نام فارسی</label><input class="in" id="w_name" maxlength="30" placeholder="مثلاً: شاخص S&P 500"></div><div><label class="l">نماد Yahoo</label><input class="in ltr" id="w_y" maxlength="20" placeholder="^GSPC"></div></div>
+      <div class="two"><div><label class="l">نمایش کوتاه</label><input class="in ltr" id="w_sym" maxlength="12" placeholder="SPX"></div><div><label class="l">رقم اعشار</label><input class="in ltr" id="w_dg" inputmode="numeric" value="2"></div></div>
+      <p class="hint">نماد را از finance.yahoo.com بردارید (مثلاً ^GSPC، AUDUSD=X، SOL-USD، NG=F). اگر اشتباه باشد، به‌جای قیمت «داده‌ای دریافت نشده» نشان داده می‌شود.</p>
+      <div class="fxabtn"><button id="w_add">افزودن</button></div></div>
+    <div class="fxabtn" style="margin-top:12px"><button id="w_save">ذخیره‌ی تنظیمات نوار</button></div>`);
+  draw();
+  const save = async () => { const { error } = await sb.from("settings").upsert({ key: "ticker_cfg", value: cfg, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true);
+    tkCfg = cfg; tkSig = ""; const t = $("mtk"); if (t) t.innerHTML = ""; paintTicker(); toast("ذخیره شد ✓"); };
+  $("wlist").onchange = e => { const k = e.target.dataset.wk; if (!k) return; cfg.hide = e.target.checked ? cfg.hide.filter(x => x !== k) : [...new Set([...cfg.hide, k])]; };
+  $("wlist").onclick = e => { const d = e.target.closest("[data-wdel]"); if (!d) return; cfg.extra = cfg.extra.filter(x => x.key !== d.dataset.wdel); all.splice(all.findIndex(x => x[0] === d.dataset.wdel), 1); draw(); };
+  $("w_add").onclick = () => { const name = $("w_name").value.trim(), y = $("w_y").value.trim(), sym = $("w_sym").value.trim() || y, dg = Math.min(6, Math.max(0, parseInt($("w_dg").value) || 2));
+    if (!name || !/^[\^A-Za-z0-9=.\-]{1,20}$/.test(y)) return toast("نام و نماد Yahoo درست لازم است", true); if (cfg.extra.length >= 10) return toast("حداکثر ۱۰ نماد اضافه", true);
+    const key = "x_" + y.toLowerCase().replace(/[^a-z0-9]/g, ""); if (all.some(x => x[0] === key)) return toast("این نماد قبلاً اضافه شده", true);
+    cfg.extra.push({ key, y, name, sym, digits: dg }); all.push([key, name, sym, dg, true]); draw(); ["w_name", "w_y", "w_sym"].forEach(i => $(i).value = ""); toast("اضافه شد؛ «ذخیره» را بزنید"); };
+  $("w_save").onclick = save;
+}
+
+/* ===== وضعیت منابع و APIها ===== */
+async function sheetHealth(){
+  openSheet(`<h2>🩺 وضعیت منابع اطلاعاتی</h2><p class="hint">آخرین زمان دریافت هر منبع. «زنده» یعنی همین چند دقیقه‌ی اخیر به‌روز شده است.</p><div id="hl"><span class="spin"></span></div>
+    <div class="fxabtn" style="margin-top:12px"><button id="h_run">🔄 به‌روزرسانی دستی همه‌ی منابع</button></div><div class="hint" id="h_res"></div>`);
+  const draw = async () => {
+    const [{ data: st }, cr] = await Promise.all([sb.from("settings").select("key,value,updated_at").in("key", ["market_cache", "tg_cache", "xag_live"]), sb.from("currency_board").select("rate_at").order("rate_at", { ascending: false }).limit(1)]);
+    const S = Object.fromEntries((st || []).map(r => [r.key, r])), mc = S.market_cache?.value || {};
+    const eng = signals.map(s => s.checked_at).filter(Boolean).sort().pop();
+    const rows = [["طلای جهانی (gold-api.com)", mc.xau?.quoteAt || S.market_cache?.updated_at, 5, 60], ["نقره‌ی جهانی — قیمت لحظه‌ای", S.xag_live?.value?.at, 5, 60],
+      ["فارکس، کریپتو، نفت (Yahoo Finance)", mc.mktAt, 2, 30], ["شاخص دالر و نمودارها (Yahoo Finance)", mc.sparkAt, 10, 60],
+      ["نرخ دالر کابل و ولایات", S.tg_cache?.value?.places?.kabul?.at, 240, 1440], ["جدول ارزها", cr.data?.[0]?.rate_at, 240, 1440],
+      ["نرخ مرجع افغانی (open.er-api.com)", mc.afnAt, 400, 1440], ["بررسی خودکار سیگنال‌ها", eng, 2, 30]];
+    $("hl").innerHTML = rows.map(([n, at, a, b]) => { const [c, t] = freshSt(at, a, b); return `<div class="dst"><span>${n}</span><span class="chip ${c}">${t}</span></div>`; }).join("");
+  };
+  await draw();
+  $("h_run").onclick = async () => { const b = $("h_run"); busy(b, true); const fns = ["prices", "xag-live", "tg-rates", "fx-ingest", "signal-engine"];
+    const res = await Promise.all(fns.map(f => fetch(SUPABASE_URL + "/functions/v1/" + f, { cache: "no-store" }).then(r => r.ok).catch(() => false)));
+    busy(b, false, "🔄 به‌روزرسانی دستی همه‌ی منابع"); $("h_res").textContent = res.every(Boolean) ? "✅ همه‌ی منابع دوباره خوانده شدند." : `⚠️ ${res.filter(x => !x).length} منبع پاسخ نداد؛ چند دقیقه بعد دوباره امتحان کنید.`;
+    dashX.at = 0; loadTicker(true); loadFxAdmin(); await draw(); };
+}
+
 /* مسیر */
 let pendingNote = "";
 async function route(session){

@@ -1301,6 +1301,41 @@
   .pcard.ok{outline:1.5px solid #16a34a55} .pcard .cta{margin-top:10px}
   .pfast{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);cursor:pointer}
   .pfast span{flex:1;display:grid;gap:2px} .pfast small{font-size:11px;color:var(--muted)} .pfast input{width:22px;height:22px;accent-color:#12a46b}
+  /* ===== نوار چرخشی قیمت‌ها ===== */
+  .mtk{position:relative;overflow:hidden;margin:0 0 12px;padding:7px 0;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);direction:ltr;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack,.mtk:active .tktrack{animation-play-state:paused}
+  .tkset{display:flex;flex:none}
+  .tki{display:inline-flex;align-items:baseline;gap:6px;padding:0 16px;white-space:nowrap;font-size:12.5px;border-inline-end:1px solid color-mix(in srgb,var(--muted) 25%,transparent)}
+  .tki b{font-weight:800;direction:rtl} .tki i{font-style:normal;font-size:10.5px;color:var(--muted);font-family:Montserrat,Arial,sans-serif}
+  .tki em{font-style:normal;font-weight:900;font-family:Montserrat,Arial,sans-serif} .tki u{text-decoration:none;font-weight:800;font-size:11px;font-family:Montserrat,Arial,sans-serif}
+  .tki.up u,.tki.up em{color:#0a9b5c} .tki.dn u,.tki.dn em{color:#d93a3a}
+  @keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.tktrack{animation-duration:calc(var(--tkd,45s)*3)}}
+  /* ===== آمار عملکرد سیگنال‌ها ===== */
+  .sgx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+  .sgc{padding:12px 8px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);text-align:center;min-width:0}
+  .sgc small{display:block;font-size:11px;font-weight:700;color:var(--muted)} .sgc b{display:block;margin-top:2px;font:900 22px Montserrat,Arial,sans-serif}
+  .sgc.w b,.sgbl .w b{color:#0a9b5c} .sgc.l b,.sgbl .l b{color:#d93a3a} .sgc.o b{color:#ff8a3d}
+  .sgc.wide{grid-column:span 2;text-align:start;padding:12px 14px}
+  .sgbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,var(--muted) 18%,transparent);margin:4px 0 8px}
+  .sgbar i.w{background:linear-gradient(90deg,#2fd08c,#0a9b5c)} .sgbar i.l{background:linear-gradient(90deg,#ff7a7a,#d93a3a)}
+  .sgbl{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;flex-wrap:wrap}
+  .sgc.perf b{font-size:24px} .sgc.perf.w b{color:#0a9b5c} .sgc.perf.l b{color:#d93a3a} .sgc.perf span{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+  @media (max-width:420px){ .sgx{grid-template-columns:repeat(2,minmax(0,1fr))} .sgc.wide{grid-column:1/-1} }
+
+  .toadm{position:fixed;z-index:60;bottom:calc(92px + env(safe-area-inset-bottom));inset-inline-start:14px;padding:10px 16px;border-radius:999px;background:linear-gradient(180deg,var(--navy2),var(--navy));color:var(--onNavy);font-weight:800;font-size:13px;text-decoration:none;box-shadow:0 10px 24px -8px rgba(17,22,44,.6)}
+  .perd{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:-4px 0 12px} .perd[hidden]{display:none}
+  .perd label{display:grid;gap:4px;font-size:11.5px;font-weight:800;color:var(--muted)} .perd input{height:42px;padding:0 10px;border:0;border-radius:14px;background:var(--field);box-shadow:var(--sh-in);font:inherit;color:var(--text)}
+  #perc{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none} #perc::-webkit-scrollbar{display:none} #perc button,#perc select{flex:none}
+  .mk .mkic{display:grid;place-items:center;width:34px;height:34px;font-size:24px;flex:none}
+  .wsym{display:inline-flex;gap:6px;align-items:center;margin-bottom:8px;padding:4px 12px;border-radius:999px;background:var(--field);box-shadow:var(--sh-in);font-size:12.5px;font-weight:700}
+  .wsym2{font-size:11px;font-weight:800;padding:1px 7px;border-radius:999px;background:var(--field);font-family:Montserrat,Arial,sans-serif}
+  .cmatt{flex:none;width:40px;height:44px;display:grid;place-items:center;font-size:20px;cursor:pointer}
+  .cmprev{position:relative;margin:4px 0 6px;max-width:160px} .cmprev img,.cmprev video{width:100%;max-height:120px;object-fit:cover;border-radius:14px;display:block}
+  .cmprev button{position:absolute;top:4px;inset-inline-end:4px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
+  .cmmed{margin-top:6px} .cmmed img,.cmmed video{max-width:100%;max-height:300px;border-radius:14px;display:block;background:#000}
+  .bnamt.hm{background:linear-gradient(180deg,#16a34a22,#16a34a0d)} .bnamt.hm b{color:#0a7a3e}
 </style>
 </head>
 <body>
@@ -1312,7 +1347,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "202611091408";
+const BUILD = "1794218195";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1450,7 +1485,11 @@ const fmtDate = d => {
 const fmtFull = d => { const x = new Date(d); return fmtDate(x) + " · " + T.at + " " + x.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit", hour12:false}); };
 
 /* ===== بازارها و تم ===== */
-const MK = { xau:{ sym:"XAU/USD", unit:"usd", th:"img/th-xau.webp" }, xag:{ sym:"XAG/USD", unit:"usd", th:"img/th-xag.webp" }, usd:{ sym:"USD/AFN", unit:"afn", th:"img/th-usd.webp" } };
+const MK = { xau:{ sym:"XAU/USD", unit:"usd", th:"img/th-xau.webp" }, xag:{ sym:"XAG/USD", unit:"usd", th:"img/th-xag.webp" }, usd:{ sym:"USD/AFN", unit:"afn", th:"img/th-usd.webp" }, world:{ sym:"FX · Crypto · Oil", unit:"usd", ic:"🌐" } };
+const MKW = { eurusd:{ sym:"EUR/USD", unit:"usd", ic:"🇪🇺" }, gbpusd:{ sym:"GBP/USD", unit:"usd", ic:"🇬🇧" }, usdjpy:{ sym:"USD/JPY", unit:"jpy", ic:"🇯🇵" }, usdchf:{ sym:"USD/CHF", unit:"chf", ic:"🇨🇭" },
+  btcusd:{ sym:"BTC/USD", unit:"usd", ic:"₿" }, ethusd:{ sym:"ETH/USD", unit:"usd", ic:"Ξ" }, wti:{ sym:"WTI", unit:"usd", ic:"🛢" }, brent:{ sym:"BRENT", unit:"usd", ic:"🛢" } };
+const mkOf = s => MKW[s.market] ? "world" : (s.market || "xag");
+const wBadge = s => MKW[s.market] ? `<span class="wsym">${MKW[s.market].ic} <b class="ltr">${MKW[s.market].sym}</b> · ${T.m[s.market] || ""}</span>` : "";
 let market = store.get("mk2", "xau"); if (!MK[market]) market = "xau";
 const EMBED_TH = new URLSearchParams(location.search).get("theme");
 let embedTheme = EMBED_TH === "dark" || EMBED_TH === "light" ? EMBED_TH : null;
@@ -1653,9 +1692,10 @@ function topbar(){
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
       <button class="ib" id="out" aria-label="logout">${I.out}</button>
       <div class="pop glass" id="pop">${langsHTML()}<button type="button" class="sndt" id="sndt" role="switch" aria-checked="${sndOn}">${sndOn ? "🔊" : "🔇"} ${T.sound}<span class="sw3 ${sndOn ? "on" : ""}"><i></i></span></button></div>
-    </div></div>`;
+    </div></div>${EMBED ? "" : `<div class="mtk" id="mtk" hidden></div>`}${me?.role === "admin" || new URLSearchParams(location.search).get("from") === "admin" ? `<a class="toadm" href="modir.html">↩ پنل مدیر</a>` : ""}`;
 }
 function bindTop(){
+  tkSig = ""; loadTicker(true);
   if ($("meav")) $("meav").onclick = openProfile;
   if ($("bell")) { $("bell").onclick = openNotifs; paintBell(); }
   $("out").onclick = async () => { store.set("cache_me", null); store.set("cache_msgs", []); await pushTeardown(); sb.auth.signOut(); };
@@ -1819,6 +1859,14 @@ Object.assign(L3.ps, { toTarget:"تر هدف پورې پرمختګ", toStop:"د 
 Object.assign(L3.en, { toTarget:"Progress to target", toStop:"Near stop loss", nowPx:"Now", waitEntry:"Waiting for entry", autoBadge:"Result recorded automatically from live price", entered:"Entry", resPrice:"Result price", validTill:"Valid until" });
 for (const k in L3) { Object.assign(L[k], L3[k]); L[k].st.expired = k === "fa" ? "فعال نشد (منقضی)" : k === "ps" ? "فعال نه شو (پای ته ورسېد)" : "Not triggered (expired)"; }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
+for (const [lg, o] of Object.entries({ fa: { world: "جهانی", eurusd: "یورو/دالر", gbpusd: "پوند/دالر", usdjpy: "دالر/ین", usdchf: "دالر/فرانک", btcusd: "بیت‌کوین", ethusd: "اتریوم", wti: "نفت WTI", brent: "نفت برنت" },
+    ps: { world: "نړیوال", eurusd: "یورو/ډالر", gbpusd: "پونډ/ډالر", usdjpy: "ډالر/ین", usdchf: "ډالر/فرانک", btcusd: "بټ کوین", ethusd: "ایتریوم", wti: "تېل WTI", brent: "برنټ تېل" },
+    en: { world: "World", eurusd: "EUR/USD", gbpusd: "GBP/USD", usdjpy: "USD/JPY", usdchf: "USD/CHF", btcusd: "Bitcoin", ethusd: "Ethereum", wti: "WTI Oil", brent: "Brent Oil" } })) {
+  if (!L[lg]) continue; Object.assign(L[lg].m, o); Object.assign(L[lg].unit, lg === "en" ? { jpy: "JPY", chf: "CHF" } : lg === "ps" ? { jpy: "ین", chf: "فرانک" } : { jpy: "ین", chf: "فرانک" });
+  L[lg].per = lg === "en" ? { all: "All", day: "Today", yest: "Yesterday", w1: "1 week", w2: "2 weeks", m1: "1 month", m3: "3 months", m6: "6 months", y1: "1 year", custom: "📅 Custom dates" }
+    : lg === "ps" ? { all: "ټول", day: "نن", yest: "پرون", w1: "یوه اونۍ", w2: "دوه اونۍ", m1: "یوه میاشت", m3: "درې میاشتې", m6: "شپږ میاشتې", y1: "یو کال", custom: "📅 ټاکلې نېټه" }
+    : { all: "همه", day: "امروز", yest: "دیروز", w1: "یک هفته", w2: "دو هفته", m1: "یک ماه", m3: "سه ماه", m6: "شش ماه", y1: "یک سال", custom: "📅 تاریخ دلخواه" }; }
+T = L[lang];
 
 const DICT = [
   ["Long / Buy", "خرید؛ پیش‌بینی بالا رفتن قیمت"], ["Short / Sell", "فروش؛ پیش‌بینی پایین آمدن قیمت"],
@@ -1847,6 +1895,8 @@ if (EMBED && parent !== window) { let lastH = 0;
   addEventListener("load", () => { new ResizeObserver(sendH).observe(document.body); sendH(); }); setInterval(sendH, 1500); }
 let page = EMBED === "prc" || EMBED === "dash" ? EMBED : (new URLSearchParams(location.search).get("pg") || store.get("page", "sig")); if (!["sig","dash","prc","tool","acad"].includes(page)) page = "sig"; document.documentElement.dataset.pg = page;
 let per = store.get("per", "all"), sortBy = store.get("sort", "new");
+if (!T.per[per]) per = ({ week: "w1", month: "m1", year: "y1" })[per] || "all";
+let perFrom = store.get("per_from", ""), perTo = store.get("per_to", "");
 let prices = store.get("cache_prices", null), rates = store.get("cache_rates", []), pricesAt = 0;
 let myRatings = {}, academy = store.get("cache_academy", {}), posts = store.get("cache_posts", []), poll = null, pollRes = {}, myVote = null;
 
@@ -1869,12 +1919,11 @@ const isWin = s => /^tp[123]$/.test(s.status), isLoss = s => s.status === "sl";
 const pnlOf = s => { const e = entryMid(s); if (isWin(s)) { const tp = s[s.status]; return tp != null ? Math.abs(tp - e) : 0; } if (isLoss(s) && s.sl != null) return -Math.abs(e - s.sl); return 0; };
 function inPeriod(s){
   if (per === "all") return true;
-  const d = new Date(s.created_at), n = new Date();
-  if (per === "day") return d.toDateString() === n.toDateString();
-  if (per === "week") return n - d < 7 * DAY;
-  if (per === "month") return n - d < 30 * DAY;
-  if (per === "year") return n - d < 365 * DAY;
-  return true;
+  const d = new Date(s.created_at), D0 = new Date(); D0.setHours(0, 0, 0, 0);
+  if (per === "day") return d >= D0;
+  if (per === "yest") return d >= new Date(+D0 - DAY) && d < D0;
+  if (per === "custom") { const a = perFrom ? new Date(perFrom + "T00:00:00") : null, b = perTo ? new Date(perTo + "T23:59:59") : null; return (!a || d >= a) && (!b || d <= b); }
+  const span = { w1: 7, w2: 14, m1: 30, m3: 91, m6: 182, y1: 365 }[per]; return span ? Date.now() - d < span * DAY : true;
 }
 function sortList(list){
   const l = [...list];
@@ -2384,10 +2433,12 @@ PL.ps = Object.assign({}, PL.fa, { t: "ګډونونه", pay: "تادیه او ف
 const BNL = { fa: { how: "روش پرداخت را انتخاب کنید", hp: "HesabPay · آنلاین", hpS: "کیف پول هساب‌پی، AfPay یا کارت — فعال‌سازی خودکار", bn: "Binance · USDT", bnS: "پرداخت دستی؛ پس از بررسی و تأیید مدیر فعال می‌شود", off: "این روش هنوز توسط مدیر فعال نشده است.",
     step1: "۱. این مبلغ را از اپ بایننس بفرستید", approx: "معادل تقریبی به نرخ امروز کابل", payId: "Binance Pay ID", addr: "آدرس کیف پول", net: "شبکه", open: "باز کردن لینک پرداخت", copy: "کپی", copied: "کپی شد",
     step2: "۲. مشخصات پرداخت را بفرستید", ref: "شناسه تراکنش / Order ID (الزامی)", amt: "مبلغ ارسال‌شده (USDT)", proof: "عکس رسید (اختیاری ولی توصیه می‌شود)", note: "یادداشت (اختیاری)", send: "ارسال برای بررسی",
+    hm: "HesabPay · انتقال به حساب", hmS: "به حساب HesabPay استاد بفرستید؛ پس از بررسی مدیر فعال می‌شود", hstep1: "۱. این مبلغ را از اپ HesabPay به این حساب بفرستید", hacc: "حساب HesabPay",
     sent: "ارسال شد ✓", sentS: "پرداخت شما «در انتظار تأیید مدیر» است. تا مدیر دریافت آن را در بایننس تأیید نکند، اشتراک فعال نمی‌شود. نتیجه را در 🔔 اعلان‌ها می‌بینید.", err: "ارسال نشد", dup: "این شناسه تراکنش قبلاً ثبت شده است.", many: "شما ۳ پرداخت در انتظار بررسی دارید؛ لطفاً منتظر نتیجه بمانید.", back: "بازگشت", why: "دلیل" },
   en: { how: "Choose a payment method", hp: "HesabPay · online", hpS: "HesabPay wallet, AfPay or card — activates automatically", bn: "Binance · USDT", bnS: "Manual; activates after the admin verifies it", off: "This method isn't enabled by the admin yet.",
     step1: "1. Send this amount from the Binance app", approx: "Approximate at today's Kabul rate", payId: "Binance Pay ID", addr: "Wallet address", net: "Network", open: "Open payment link", copy: "Copy", copied: "Copied",
     step2: "2. Submit your payment details", ref: "Transaction / Order ID (required)", amt: "Amount sent (USDT)", proof: "Receipt screenshot (recommended)", note: "Note (optional)", send: "Submit for review",
+    hm: "HesabPay · transfer", hmS: "Send to the teacher's HesabPay account; activates after admin review", hstep1: "1. Send this amount from the HesabPay app to this account", hacc: "HesabPay account",
     sent: "Submitted ✓", sentS: "Your payment is awaiting admin review. Your plan activates only after the admin confirms receipt in Binance. You'll see the result in 🔔 notifications.", err: "Not submitted", dup: "This transaction ID was already submitted.", many: "You already have 3 payments under review.", back: "Back", why: "Reason" } };
 BNL.ps = Object.assign({}, BNL.fa, { how: "د تادیې لاره وټاکئ", send: "د کتنې لپاره ولېږئ", back: "شاته" });
 const BT = () => BNL[lang] || BNL.fa;
@@ -2411,11 +2462,12 @@ async function openPlans(){
       <ul>${(p.features || []).map(f => `<li>${esc(f)}</li>`).join("")}</ul><button class="cta press" data-plan="${p.id}">${L.pay}</button></div>`).join("")}`).join("")}
     <div class="plerr" id="plerr"></div>
     ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}<small>${x.provider === "binance" ? "Binance" : "HesabPay"}${x.reject_reason ? ` · ${BT().why}: ${esc(x.reject_reason)}` : ""}</small></span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
-  const [{ data: bnS }, { data: hpOn }] = await Promise.all([sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(), sb.rpc("gateway_enabled")]); const BN = bnS?.value || {};
+  const [{ data: bnS }, { data: hpOn }, { data: hmS }] = await Promise.all([sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(), sb.rpc("gateway_enabled"), sb.from("settings").select("value").eq("key", "pay_hesabpay_manual").maybeSingle()]);
+  const BN = bnS?.value || {}, HM = hmS?.value || {};
   $("plbody").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if (!b || b.dataset.via) return; e.stopImmediatePropagation();
     const pl = (plans || []).find(p => p.id === Number(b.dataset.plan)); if (!pl) return; const B = BT();
-    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp" ${hpOn ? "" : "disabled"}><b>💳 ${B.hp}</b><small>${hpOn ? B.hpS : B.off}</small></button><button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
-      if (m === "hp") { b.dataset.via = "hp"; b.click(); delete b.dataset.via; } else if (m === "bn") binancePay(pl, BN); }); }, true);
+    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp" ${hpOn ? "" : "disabled"}><b>💳 ${B.hp}</b><small>${hpOn ? B.hpS : B.off}</small></button>${HM.enabled ? `<button class="pmo" data-m="hm"><b>📲 ${B.hm}</b><small>${B.hmS}</small></button>` : ""}<button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
+      if (m === "hp") { b.dataset.via = "hp"; b.click(); delete b.dataset.via; } else if (m === "bn") binancePay(pl, BN); else if (m === "hm") binancePay(pl, HM, "hesabpay_manual"); }); }, true);
   $("plbody").onclick = async e => {
     const b = e.target.closest("[data-plan]"); if (!b) return; const er = $("plerr"); er.textContent = "";
     b.disabled = true; const old = b.innerHTML; b.innerHTML = `<span class="spin"></span> ${L.wait}`;
@@ -2446,18 +2498,19 @@ function actionSheetHTML(html){ return new Promise(res => { const v = document.c
   document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
   const done = r => { v.classList.remove("show"); setTimeout(() => v.remove(), 300); res(r); };
   v.onclick = e => { const b = e.target.closest("[data-m]"); if (b && !b.disabled) return done(b.dataset.m); if (e.target === v) done(null); }; }); }
-async function binancePay(pl, BN){
-  const B = BT(), L = PT(), body = $("plbody"); if (!body) return; const rate = usdAfn(), usd = rate ? Math.ceil(Number(pl.price_afn) / rate * 2) / 2 : null;
+async function binancePay(pl, BN, prov = "binance"){
+  const B = BT(), L = PT(), body = $("plbody"); if (!body) return; const HMm = prov === "hesabpay_manual";
+  const rate = usdAfn(), usd = !HMm && rate ? Math.ceil(Number(pl.price_afn) / rate * 2) / 2 : null;
   const nm = (lang === "ps" ? pl.name_ps : lang === "en" ? pl.name_en : pl.name_fa) || pl.name_fa;
   const cp = (v, k) => v ? `<div class="bnrow"><span>${k}</span><b class="ltr">${esc(v)}</b><button type="button" class="bncp" data-cp="${esc(v)}">${B.copy}</button></div>` : "";
   body.innerHTML = `<button class="jback" id="bnbk">→ ${B.back}</button>
     <div class="plc"><div class="plh"><b>${esc(nm)}</b><span class="plp"><b class="ltr">${Number(pl.price_afn).toLocaleString("en-US")}</b> ${L.afn}<small> / ${pl.months} ${L.mon}</small></span></div>
-      <h4 class="plg">${B.step1}</h4>${usd ? `<div class="bnamt"><b class="ltr">≈ ${usd.toLocaleString("en-US")} USDT</b><small>${B.approx} (1 USD = ${nf(rate)} AFN)</small></div>` : ""}
-      ${cp(BN.pay_id, B.payId)}${BN.name ? `<div class="bnrow"><span>👤</span><b>${esc(BN.name)}</b></div>` : ""}${cp(BN.address, B.addr)}${BN.address && BN.network ? `<div class="bnrow"><span>${B.net}</span><b class="ltr">${esc(BN.network)}</b></div>` : ""}
+      <h4 class="plg">${HMm ? B.hstep1 : B.step1}</h4>${HMm ? `<div class="bnamt hm"><b class="ltr">${Number(pl.price_afn).toLocaleString("en-US")} AFN</b><small>HesabPay</small></div>` : usd ? `<div class="bnamt"><b class="ltr">≈ ${usd.toLocaleString("en-US")} USDT</b><small>${B.approx} (1 USD = ${nf(rate)} AFN)</small></div>` : ""}
+      ${HMm ? cp(BN.account, B.hacc) : ""}${cp(BN.pay_id, B.payId)}${BN.name ? `<div class="bnrow"><span>👤</span><b>${esc(BN.name)}</b></div>` : ""}${cp(BN.address, B.addr)}${BN.address && BN.network ? `<div class="bnrow"><span>${B.net}</span><b class="ltr">${esc(BN.network)}</b></div>` : ""}
       ${BN.link && /^https:\/\//.test(BN.link) ? `<a class="cta press bnlink" href="${esc(BN.link)}" target="_blank" rel="noopener">${B.open} ↗</a>` : ""}${BN.note ? `<p class="nphint">${esc(BN.note)}</p>` : ""}</div>
     <form class="plc jform" id="bnf"><h4 class="plg">${B.step2}</h4><div class="fgrid">
       <label style="grid-column:1/-1">${B.ref}<input class="inp ltr" id="bn_ref" maxlength="120" required autocomplete="off"></label>
-      <label>${B.amt}<input class="inp ltr" id="bn_amt" inputmode="decimal" value="${usd ?? ""}"></label><label>${B.note}<input class="inp" id="bn_note" maxlength="300"></label></div>
+      ${HMm ? "" : `<label>${B.amt}<input class="inp ltr" id="bn_amt" inputmode="decimal" value="${usd ?? ""}"></label>`}<label>${B.note}<input class="inp" id="bn_note" maxlength="300"></label></div>
       <label class="jip" style="margin-top:10px"><span>${B.proof}</span><img id="bn_img" alt="" hidden><i>📷 ${B.proof}</i><input type="file" accept="image/*" hidden id="bn_file"></label>
       <button class="cta press" id="bn_send" style="margin-top:12px">${B.send}</button><div class="cmerr" id="bn_err"></div></form>`;
   $("plpanel").scrollTop = 0; let file = null;
@@ -2467,7 +2520,7 @@ async function binancePay(pl, BN){
   $("bnf").onsubmit = async e => { e.preventDefault(); const ref = $("bn_ref").value.trim(); if (!ref) return $("bn_ref").focus(); const btn = $("bn_send"); btn.disabled = true; $("bn_err").textContent = "";
     let proof = null;
     try { if (file) { const blob = await compressImage(file, 1600); proof = `${me.id}/${Date.now()}.jpg`; const up = await sb.storage.from("payproof").upload(proof, blob, { contentType: "image/jpeg" }); if (up.error) throw up.error; }
-      const { error } = await sb.rpc("submit_binance_payment", { p_plan: pl.id, p_ref: ref, p_amount_usd: num($("bn_amt").value), p_proof: proof, p_note: $("bn_note").value.trim() || null });
+      const { error } = await sb.rpc("submit_manual_payment", { p_provider: prov, p_plan: pl.id, p_ref: ref, p_amount: HMm ? null : num($("bn_amt")?.value), p_proof: proof, p_note: $("bn_note").value.trim() || null });
       if (error) throw error;
       body.innerHTML = `<div class="plc" style="text-align:center"><div style="font-size:44px">⏳</div><h3>${B.sent}</h3><p class="nphint">${B.sentS}</p></div>`; sfx("button", .4);
     } catch (err) { btn.disabled = false; const m = String(err.message || err); $("bn_err").textContent = /duplicate|unique/i.test(m) ? B.dup : /too many/i.test(m) ? B.many : B.err + ": " + m; } };
@@ -2476,10 +2529,11 @@ window.openPlans = (...a) => openPlans(...a);
 
 /* ===== تعامل اجتماعی زیر سیگنال‌ها (لایک، نظر، اشتراک) ===== */
 const socMap = {}; let socAt = 0;
-const SCL = { fa: { t: "نظرات", ph: "نظر، تحلیل یا سؤال خود را بنویسید…", reply: "پاسخ", replying: "در پاسخ به", like: "پسند", edit: "ویرایش", del: "حذف", report: "گزارش", reported: "گزارش شد؛ مدیر بررسی می‌کند", deleted: "این نظر حذف شد", edited: "ویرایش‌شده", none: "اولین نظر را شما بنویسید 👇", off: "نظردهی برای این سیگنال بسته است.", muted: "امکان نظر دادن برای شما محدود شده است.", teacher: "استاد", send: "ارسال", share: "اشتراک", copied: "متن سیگنال کپی شد", save: "ذخیره", reason: "دلیل گزارش (اختیاری):", delQ: "این نظر حذف شود؟" },
-  ps: { t: "نظرونه", ph: "خپل نظر، تحلیل یا پوښتنه ولیکئ…", reply: "ځواب", replying: "د ځواب په توګه", like: "خوښ", edit: "سمول", del: "ړنګول", report: "راپور", reported: "راپور ورکړل شو", deleted: "دا نظر ړنګ شو", edited: "سم شوی", none: "لومړی نظر تاسو ولیکئ 👇", off: "د دې سیګنال لپاره نظرونه بند دي.", muted: "ستاسو نظر ورکول محدود شوي.", teacher: "استاد", send: "ولېږه", share: "شریکول", copied: "کاپي شو", save: "خوندي", reason: "د راپور دلیل:", delQ: "دا نظر ړنګ شي؟" },
-  en: { t: "Comments", ph: "Write your comment, analysis or question…", reply: "Reply", replying: "Replying to", like: "Like", edit: "Edit", del: "Delete", report: "Report", reported: "Reported — the admin will review it", deleted: "This comment was deleted", edited: "edited", none: "Be the first to comment 👇", off: "Comments are closed for this signal.", muted: "You can't comment right now.", teacher: "Teacher", send: "Send", share: "Share", copied: "Signal copied", save: "Save", reason: "Reason (optional):", delQ: "Delete this comment?" } };
+const SCL = { fa: { t: "نظرات", ph: "نظر، تحلیل یا سؤال خود را بنویسید…", reply: "پاسخ", replying: "در پاسخ به", like: "پسند", edit: "ویرایش", del: "حذف", report: "گزارش", reported: "گزارش شد؛ مدیر بررسی می‌کند", deleted: "این نظر حذف شد", edited: "ویرایش‌شده", none: "اولین نظر را شما بنویسید 👇", off: "نظردهی برای این سیگنال بسته است.", muted: "امکان نظر دادن برای شما محدود شده است.", teacher: "استاد", send: "ارسال", share: "اشتراک", copied: "متن سیگنال کپی شد", save: "ذخیره", reason: "دلیل گزارش (اختیاری):", delQ: "این نظر حذف شود؟", up: "در حال بارگذاری فایل…", bigI: "حجم عکس حداکثر ۱۵ مگابایت", bigV: "حجم ویدیو حداکثر ۲۵ مگابایت" },
+  ps: { t: "نظرونه", ph: "خپل نظر، تحلیل یا پوښتنه ولیکئ…", reply: "ځواب", replying: "د ځواب په توګه", like: "خوښ", edit: "سمول", del: "ړنګول", report: "راپور", reported: "راپور ورکړل شو", deleted: "دا نظر ړنګ شو", edited: "سم شوی", none: "لومړی نظر تاسو ولیکئ 👇", off: "د دې سیګنال لپاره نظرونه بند دي.", muted: "ستاسو نظر ورکول محدود شوي.", teacher: "استاد", send: "ولېږه", share: "شریکول", copied: "کاپي شو", save: "خوندي", reason: "د راپور دلیل:", delQ: "دا نظر ړنګ شي؟", up: "فایل پورته کېږي…", bigI: "انځور تر ۱۵ MB", bigV: "ویډیو تر ۲۵ MB" },
+  en: { t: "Comments", ph: "Write your comment, analysis or question…", reply: "Reply", replying: "Replying to", like: "Like", edit: "Edit", del: "Delete", report: "Report", reported: "Reported — the admin will review it", deleted: "This comment was deleted", edited: "edited", none: "Be the first to comment 👇", off: "Comments are closed for this signal.", muted: "You can't comment right now.", teacher: "Teacher", send: "Send", share: "Share", copied: "Signal copied", save: "Save", reason: "Reason (optional):", delQ: "Delete this comment?", up: "Uploading…", bigI: "Images up to 15 MB", bigV: "Videos up to 25 MB" } };
 const SC = () => SCL[lang] || SCL.fa;
+const cmU = {}; async function cmUrl(p){ if (cmU[p]) return cmU[p]; const { data } = await sb.storage.from("comments").createSignedUrl(p, 3600); return cmU[p] = data?.signedUrl || ""; }
 function socHTML(s){ if (!me) return ""; const x = socMap[s.id] || {};
   return `<div class="soc" data-soc="${s.id}"><button type="button" class="${x.my_like ? "on" : ""}" data-sl="1"><span class="hrt">${x.my_like ? "❤️" : "🤍"}</span><b>${x.likes ?? ""}</b></button>
     <button type="button" data-sc="1">💬 <b>${x.comments ?? ""}</b></button><button type="button" data-ss="1">↗️ <span>${SC().share}</span></button></div>`; }
@@ -2506,7 +2560,8 @@ async function openComments(sid){
   v.innerHTML = `<div class="nphd"><b>💬 ${L.t} <span id="cmn"></span></b><button class="ib" id="cmx" aria-label="close">${I.x}</button></div>
     <div class="cml" id="cml"><span class="spin"></span></div>
     <div class="cmin"><div class="cmrep" id="cmrep" hidden></div><div class="cmemo">${["❤️","🔥","👏","👍","😂","🙏","📈","📉","💯","🤔"].map(e => `<button type="button">${e}</button>`).join("")}</div>
-      <form id="cmf"><span class="cmme">${myAvatarHTML()}</span><textarea id="cmt" rows="1" maxlength="1000" placeholder="${L.ph}"></textarea><button class="send" id="cms">${I.send || "➤"}</button></form><div class="cmerr" id="cmerr"></div></div>`;
+      <div class="cmprev" id="cmprev" hidden></div>
+      <form id="cmf"><span class="cmme">${myAvatarHTML()}</span><label class="cmatt" title="📎"><input type="file" id="cmfile" accept="image/*,video/*" hidden>📎</label><textarea id="cmt" rows="1" maxlength="1000" placeholder="${L.ph}"></textarea><button class="send" id="cms">${I.send || "➤"}</button></form><div class="cmerr" id="cmerr"></div></div>`;
   document.body.appendChild(v); lockBody();
   const close = () => { if (ch) sb.removeChannel(ch); v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); loadSocial(true); };
   overlayPush(close); requestAnimationFrame(() => v.classList.add("show")); $("cmx").onclick = () => history.back();
@@ -2515,13 +2570,20 @@ async function openComments(sid){
   const item = c => { const t = fmtFull(c.created_at);
     return `<div class="cmc ${c.parent_id ? "sub" : ""}" data-cid="${c.id}"><span class="cav">${c.avatar ? `<img src="${esc(c.avatar)}" alt="">` : `<b>${initial(c.name || "?")}</b>`}</span>
       <div class="cmb"><div class="cmh"><b>${esc(c.name || "—")}</b>${c.is_teacher ? `<i class="tch">✔ ${L.teacher}</i>` : ""}<small>${t}${c.edited_at ? " · " + L.edited : ""}</small></div>
-        <div class="cmx">${c.deleted ? `<i class="cdel">${L.deleted}</i>` : esc(c.body).replace(/\n/g, "<br>")}</div>
+        <div class="cmx">${c.deleted ? `<i class="cdel">${L.deleted}</i>` : esc(c.body || "").replace(/\n/g, "<br>")}</div>${!c.deleted && c.media_path ? `<div class="cmmed" data-cmp="${esc(c.media_path)}" data-k="${c.media_kind}"></div>` : ""}
         ${c.deleted ? "" : `<div class="cma"><button data-ca="like" class="${c.my_like ? "on" : ""}">${c.my_like ? "❤️" : "🤍"} ${c.likes || ""}</button><button data-ca="reply">${L.reply}</button>
           ${c.mine ? `<button data-ca="edit">${L.edit}</button><button data-ca="del">${L.del}</button>` : `<button data-ca="rep">${L.report}</button>`}</div>`}</div></div>`; };
   const draw = () => { const top = rows.filter(r => !r.parent_id), kids = id => rows.filter(r => r.parent_id === id);
     $("cmn").textContent = rows.filter(r => !r.deleted).length || "";
     $("cml").innerHTML = rows.length ? top.map(c => item(c) + kids(c.id).map(item).join("")).join("") : `<div class="upd">${L.none}</div>`; };
-  const load = async () => { const { data } = await sb.rpc("get_comments", { p_signal: sid }); rows = data || []; draw(); };
+  const hyd = () => $("cml")?.querySelectorAll("[data-cmp]").forEach(async d => { if (d.firstChild) return; const u = await cmUrl(d.dataset.cmp); if (!u) return;
+    d.innerHTML = d.dataset.k === "video" ? `<video src="${u}" controls playsinline preload="metadata"></video>` : `<img src="${u}" alt="" loading="lazy">`; });
+  const load = async () => { const { data } = await sb.rpc("get_comments", { p_signal: sid }); rows = data || []; draw(); hyd(); };
+  let cmFile = null;
+  $("cmfile").onchange = e => { const f = e.target.files[0]; e.target.value = ""; if (!f) return; const vid = f.type.startsWith("video/");
+    if (f.size > (vid ? 25 : 15) * 1048576) { $("cmerr").textContent = vid ? L.bigV : L.bigI; return; }
+    cmFile = f; const u = URL.createObjectURL(f); const pv = $("cmprev"); pv.hidden = false;
+    pv.innerHTML = `${vid ? `<video src="${u}" muted playsinline></video>` : `<img src="${u}" alt="">`}<button type="button" id="cmpx">✕</button>`; $("cmpx").onclick = () => { cmFile = null; pv.hidden = true; pv.innerHTML = ""; }; };
   await load();
   ch = sb.channel("cm" + sid).on("postgres_changes", { event: "*", schema: "public", table: "signal_comments", filter: `signal_id=eq.${sid}` }, () => load()).subscribe();
   v.querySelector(".cmemo").onclick = e => { const b = e.target.closest("button"); if (!b) return; const t = $("cmt"); t.value += b.textContent; t.focus(); };
@@ -2536,9 +2598,16 @@ async function openComments(sid){
     if (a === "del") { if (!confirm(L.delQ)) return; await sb.rpc("delete_my_comment", { p_id: id }); load(); }
     if (a === "rep") { const why = prompt(L.reason) ; if (why === null) return; const { error } = await sb.from("comment_reports").insert({ comment_id: id, reason: why.slice(0, 300) || null }); banner("🚩", L.reported, error && !/duplicate/i.test(error.message) ? esc(error.message) : ""); }
   };
-  $("cmf").onsubmit = async e => { e.preventDefault(); const t = $("cmt"), body = t.value.trim(); if (!body) return; $("cms").disabled = true; $("cmerr").textContent = "";
+  $("cmf").onsubmit = async e => { e.preventDefault(); const t = $("cmt"), body = t.value.trim(); if (!body && !(cmFile && !editId)) return; $("cms").disabled = true; $("cmerr").textContent = "";
+    let media = null;
+    if (cmFile && !editId) { try { const vid = cmFile.type.startsWith("video/"), blob = vid ? cmFile : await compressImage(cmFile, 1600);
+        const ext = vid ? ((cmFile.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "") || "mp4") : "jpg", path = `${me.id}/${Date.now()}.${ext}`;
+        $("cmerr").textContent = "⏳ " + L.up; const up = await sb.storage.from("comments").upload(path, blob, { contentType: vid ? (cmFile.type || "video/mp4") : "image/jpeg" }); if (up.error) throw up.error;
+        media = { media_path: path, media_kind: vid ? "video" : "image" }; $("cmerr").textContent = ""; } catch (err) { $("cms").disabled = false; $("cmerr").textContent = err.message || String(err); return; } }
     const r = editId ? await sb.from("signal_comments").update({ body, edited_at: new Date().toISOString() }).eq("id", editId)
-      : await sb.from("signal_comments").insert({ signal_id: sid, body, parent_id: replyTo });
+      : await sb.from("signal_comments").insert({ signal_id: sid, body: body || null, parent_id: replyTo, ...(media || {}) });
+    if (r.error && media) sb.storage.from("comments").remove([media.media_path]);
+    if (!r.error) { cmFile = null; $("cmprev").hidden = true; $("cmprev").innerHTML = ""; }
     $("cms").disabled = false;
     if (r.error) { $("cmerr").textContent = /row-level|policy/i.test(r.error.message) ? L.off : r.error.message; return; }
     t.value = ""; t.style.height = "44px"; setRep(null); editId = null; sfx("button", .35); await load(); const l = $("cml"); l.scrollTop = l.scrollHeight;
@@ -2771,6 +2840,63 @@ function wireConv(){ if (!$("cva")) return; const sv = () => store.set("conv", c
   $("cva").oninput = e => { cv.a = e.target.value; sv(); convCalc(); };
   $("cvc").onchange = e => { cv.city = e.target.value; sv(); const t = $("cvtool").querySelector(".tb"); t.innerHTML = convHTML(); wireConv(); }; $("cvf").onchange = e => { cv.f = e.target.value; sv(); convCalc(); }; $("cvt").onchange = e => { cv.t = e.target.value; sv(); convCalc(); };
   $("cvs").onclick = () => { [cv.f, cv.t] = [cv.t, cv.f]; $("cvf").value = cv.f; $("cvt").value = cv.t; sv(); sfx("tap_01", .3); convCalc(); }; convCalc(); }
+
+/* ===== نوار چرخشی قیمت‌های بازار (مشترک مدیر و اعضا) ===== */
+const TKDEF = [["xau", "🥇 طلا", "XAU/USD", 2], ["xag", "🥈 نقره", "XAG/USD", 3], ["dxy", "💵 شاخص دالر", "DXY", 2], ["eurusd", "🇪🇺 یورو/دالر", "EUR/USD", 4],
+  ["gbpusd", "🇬🇧 پوند/دالر", "GBP/USD", 4], ["usdjpy", "🇯🇵 دالر/ین", "USD/JPY", 3], ["usdchf", "🇨🇭 دالر/فرانک", "USD/CHF", 4], ["btcusd", "₿ بیت‌کوین", "BTC/USD", 0],
+  ["ethusd", "Ξ اتریوم", "ETH/USD", 1], ["wti", "🛢 نفت WTI", "WTI", 2], ["brent", "🛢 نفت برنت", "BRENT", 2]];
+let tkData = null, tkAt = 0, tkSig = "", tkCfg = null;
+const tkQuote = (d, k) => k === "xau" || k === "xag" || k === "dxy" ? d?.[k] : d?.markets?.[k];
+function tkItems(d){
+  const hide = new Set(tkCfg?.hide || []), extra = (tkCfg?.extra || []).map(x => [x.key, x.name, x.sym || x.key.toUpperCase(), x.digits ?? 2]);
+  return [...TKDEF, ...extra].filter(([k]) => !hide.has(k)).map(([k, name, sym, dg]) => { const q = tkQuote(d, k); if (!q || q.price == null) return "";
+    const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null, cls = ch == null ? "" : ch > 0 ? "up" : ch < 0 ? "dn" : "";
+    const pr = Number(q.price).toLocaleString("en-US", { minimumFractionDigits: dg, maximumFractionDigits: dg });
+    return `<span class="tki ${cls}"><b>${name}</b><i>${sym}</i><em>${pr}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : ch < 0 ? "▼" : "•"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join("");
+}
+function paintTicker(){
+  const el = document.getElementById("mtk"); if (!el || !tkData) return;
+  const items = tkItems(tkData); if (!items) { el.hidden = true; return; } el.hidden = false;
+  if (items === tkSig && el.querySelector(".tktrack")) return; tkSig = items;
+  const tr = el.querySelector(".tktrack");
+  if (tr) { tr.querySelectorAll(".tkset").forEach(s => s.innerHTML = items); return; }   // update prices without restarting the scroll
+  const n = (items.match(/class="tki/g) || []).length;
+  el.innerHTML = `<div class="tktrack" style="--tkd:${Math.max(28, n * 4.5)}s"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+}
+async function loadTicker(force){
+  if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
+  try { const r = await fetch(SUPABASE_URL + "/functions/v1/prices", { cache: "no-store" }); if (r.ok) tkData = await r.json(); } catch {}
+  if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
+  paintTicker();
+}
+setInterval(() => loadTicker(), 5000);
+
+/* ===== آمار عملکرد سیگنال‌ها (مشترک مدیر و اعضا؛ از وضعیت واقعی ثبت‌شده در دیتابیس) ===== */
+const SGL = { fa: { total: "کل سیگنال‌ها", win: "موفق", loss: "ناموفق", open: "باز", other: "منقضی / بسته", wr: "درصد موفقیت", lr: "درصد عدم موفقیت", perf: "عملکرد کلی", perfH: "مجموع سود و زیان به واحد R (هر R = اندازه‌ی ریسک همان سیگنال)", avg: "میانگین هر سیگنال", none: "—" },
+  ps: { total: "ټول سیګنالونه", win: "بریالي", loss: "ناکام", open: "خلاص", other: "پای ته رسیدلي", wr: "د بریا سلنه", lr: "د ناکامۍ سلنه", perf: "ټول فعالیت", perfH: "د R په واحد ګټه او زیان (هر R = د هماغه سیګنال خطر)", avg: "منځنی", none: "—" },
+  en: { total: "Total signals", win: "Successful", loss: "Failed", open: "Open", other: "Expired / closed", wr: "Win rate", lr: "Loss rate", perf: "Overall performance", perfH: "Total result in R (1R = that signal's risk)", avg: "Avg per signal", none: "—" } };
+const SG = () => SGL[(typeof lang !== "undefined" && lang) || "fa"] || SGL.fa;
+const sgNum = v => v == null ? null : Number(v);
+const sgEntry = s => sgNum(s.entry_price) ?? (s.entry_to != null ? (Number(s.entry_from) + Number(s.entry_to)) / 2 : Number(s.entry_from));
+function sgR(s){ // result of one decided signal in R
+  const win = /^tp[123]$/.test(s.status), loss = s.status === "sl"; if (!win && !loss) return null;
+  const e = sgEntry(s), sl = sgNum(s.sl); if (sl == null || !e) return null; const risk = Math.abs(e - sl); if (!risk) return null;
+  const exit = sgNum(s.result_price) ?? (win ? sgNum(s[s.status]) : sl); if (exit == null) return null;
+  return (exit - e) * (s.type === "buy" ? 1 : -1) / risk; }
+function sgStats(list){
+  const w = list.filter(s => /^tp[123]$/.test(s.status)).length, l = list.filter(s => s.status === "sl").length;
+  const open = list.filter(s => s.status === "active" && s.phase !== "done").length, other = list.length - w - l - open, dec = w + l;
+  const rs = list.map(sgR).filter(v => v != null && isFinite(v)), sumR = rs.reduce((a, b) => a + b, 0);
+  return { n: list.length, w, l, open, other, dec, wr: dec ? w / dec * 100 : null, lr: dec ? l / dec * 100 : null, sumR, avgR: rs.length ? sumR / rs.length : null, nr: rs.length }; }
+function sgGridHTML(st){
+  const L = SG(), pct = v => v == null ? L.none : Math.round(v) + "%", r = v => v == null ? L.none : (v > 0 ? "+" : "") + v.toFixed(2) + "R";
+  return `<div class="sgx">
+    <div class="sgc t"><small>${L.total}</small><b>${st.n}</b></div><div class="sgc w"><small>${L.win}</small><b>${st.w}</b></div>
+    <div class="sgc l"><small>${L.loss}</small><b>${st.l}</b></div><div class="sgc o"><small>${L.open}</small><b>${st.open}</b></div>
+    <div class="sgc wide"><div class="sgbar"><i class="w" style="width:${st.wr ?? 0}%"></i><i class="l" style="width:${st.lr ?? 0}%"></i></div>
+      <div class="sgbl"><span class="w">${L.wr}: <b>${pct(st.wr)}</b></span><span class="l">${L.lr}: <b>${pct(st.lr)}</b></span></div></div>
+    <div class="sgc wide perf ${st.sumR > 0 ? "w" : st.sumR < 0 ? "l" : ""}" title="${L.perfH}"><small>${L.perf}</small><b class="ltr">${st.nr ? r(st.sumR) : L.none}</b><span>${L.avg}: <bdi class="ltr">${r(st.avgR)}</bdi>${st.other ? ` · ${L.other}: ${st.other}` : ""}</span></div>
+  </div>`; }
 function drawPrices(){
   const el = $("pcards"); if (!el || page !== "prc") return;
   const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
@@ -3125,15 +3251,18 @@ function drawPage(){
   const el = $("pg"); if (!el) return;
   el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
   if (page === "sig") {
-    el.innerHTML = `<div id="stbar" class="stbar" hidden></div><div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
+    el.innerHTML = `<div id="stbar" class="stbar" hidden></div><div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:v.ic?`<span class="mkic">${v.ic}</span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
       <div class="sline" id="sl2"><span class="lv2"><span class="ldot"></span><b>${offline?T.offline:T.live}</b></span><span class="subtxt">${subLine()}</span></div>
-      <div class="chips" id="perc">${Object.keys(T.per).map(k => `<button data-per="${k}" class="${k===per?"on":""}">📅 ${T.per[k]}</button>`).join("")}
+      <div class="chips" id="perc">${Object.keys(T.per).map(k => `<button data-per="${k}" class="${k===per?"on":""}">${T.per[k]}</button>`).join("")}
         <select id="sortS">${Object.keys(T.sort).map(k => `<option value="${k}" ${k===sortBy?"selected":""}>${T.sort[k]}</option>`).join("")}</select></div>
+      <div class="perd" id="perd" hidden><label>${lang === "en" ? "From" : lang === "ps" ? "له" : "از"}<input type="date" id="pfr" value="${esc(perFrom)}"></label><label>${lang === "en" ? "To" : lang === "ps" ? "تر" : "تا"}<input type="date" id="pto2" value="${esc(perTo)}"></label></div>
       <div id="feed">${all.length || offline ? "" : '<div class="sk"></div><div class="sk" style="height:160px"></div>'}</div>
       <div class="disc">${T.disc}</div>`;
     document.querySelectorAll(".mk button").forEach(b => b.onclick = () => { if (b.dataset.m !== market) selectMarket(b.dataset.m); });
     $("sl2").querySelector(".lv2").onclick = () => loadFeed();
-    $("perc").onclick = e => { const b = e.target.closest("[data-per]"); if (!b) return; per = b.dataset.per; store.set("per", per); $("perc").querySelectorAll("[data-per]").forEach(x => x.classList.toggle("on", x === b)); drawFeed(); };
+    const perDates = () => { const d = $("perd"); if (!d) return; d.hidden = per !== "custom"; };
+    $("perc").onclick = e => { const b = e.target.closest("[data-per]"); if (!b) return; per = b.dataset.per; store.set("per", per); $("perc").querySelectorAll("[data-per]").forEach(x => x.classList.toggle("on", x === b)); perDates(); drawFeed(); };
+    $("perd").onchange = () => { perFrom = $("pfr").value; perTo = $("pto2").value; store.set("per_from", perFrom); store.set("per_to", perTo); drawFeed(); }; perDates();
     $("sortS").onchange = e => { sortBy = e.target.value; store.set("sort", sortBy); drawFeed(); };
     $("feed").onclick = e => { if (e.target.closest(".vp,.trbar,.stars,#shareSt,.soc")) return; const it = e.target.closest(".it"); if (!it) return; const was = it.classList.contains("open");
       $("feed").querySelectorAll(".it.open").forEach(x => x.classList.remove("open")); if (!was) it.classList.add("open"); if (!was) sfx("tap_04", .26); };
@@ -3292,8 +3421,8 @@ function resultHTML(s){
 const chipCls = s => s.status === "active" ? (s.auto && s.phase === "waiting" ? "wait" : "active") : s.status === "sl" ? "lose" : (s.status || "").startsWith("tp") ? "win" : "";
 const tagsHTML = s => { const rr = rrOf(s); return (s.timeframe || rr) ? `<div class="tags">${s.timeframe?`<span class="tag2">⏱ ${T.tf[s.timeframe]||s.timeframe}</span>`:""}${rr?`<span class="tag2 rr">${T.rr} <b class="ltr">1:${rr.toFixed(1)}</b></span>`:""}</div>` : ""; };
 function hero(s){
-  const b = s.type === "buy", m = MK[s.market] || MK.xag;
-  return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span>
+  const b = s.type === "buy", m = MK[s.market] || MKW[s.market] || MK.xag;
+  return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span>${wBadge(s)}
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
     ${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
@@ -3303,7 +3432,7 @@ function item(s, i){
   const b = s.type === "buy";
   return `<div class="it rise" data-id="${s.id}" style="--i:${i+2}">
     <div class="row"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-      <div><div class="t">${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
+      <div><div class="t">${MKW[s.market] ? `<small class="wsym2">${MKW[s.market].ic} ${MKW[s.market].sym}</small> ` : ""}${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
         <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div></div>
       <div class="e"><span class="chip ${chipCls(s)}">${stLabel(s)}</span><br>${fmtDate(s.created_at)}</div></div>
     <div class="more"><div>${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div>${socHTML(s)}</div>`;
@@ -3311,14 +3440,14 @@ function item(s, i){
 function drawFeed(){
   const el = $("feed"); if (!el) return;
   const open = [...el.querySelectorAll(".it.open")].map(e => e.dataset.id);
-  const mlist = all.filter(s => (s.market || "xag") === market), list = sortList(mlist.filter(inPeriod)), st = statsOf(list);
+  const mlist = all.filter(s => mkOf(s) === market), list = sortList(mlist.filter(inPeriod)), st = statsOf(list);
   let h = offline ? `<div class="offline glass glow" style="--bd:6s"><span class="oi">${I.wifi}</span><div><b>${T.offTitle}</b><span>${T.offText}</span></div></div>` : "";
   if (!mlist.length && !planHas("trader")) h += `<div class="empty glass glow rise"><h2>🔒 ${PT().trader_up}</h2><button class="cta" id="upg">${PT().up}</button></div>`;
-  else if (!mlist.length) h += `<div class="empty glass glow rise"><img src="${MK[market].th}" alt=""><h2>${tt(T.empty, {m: T.m[market]})}</h2><div>${T.emptySub}</div></div>`;
-  else if (!list.length) h += statsHTML(st) + `<div class="empty glass glow rise"><img src="${MK[market].th}" alt=""><h2>📅 ${T.per[per]}</h2><div>${T.emptyPer}</div></div>`;
+  else if (!mlist.length) h += `<div class="empty glass glow rise">${MK[market].th ? `<img src="${MK[market].th}" alt="">` : `<div style="font-size:54px">${MK[market].ic}</div>`}<h2>${tt(T.empty, {m: T.m[market]})}</h2><div>${T.emptySub}</div></div>`;
+  else if (!list.length) h += statsHTML(st) + sgGridHTML(sgStats(list)) + `<div class="empty glass glow rise">${MK[market].th ? `<img src="${MK[market].th}" alt="">` : ""}<h2>📅 ${T.per[per]}</h2><div>${T.emptyPer}</div></div>`;
   else if (sortBy === "new") { const [first, ...rest] = list;
-    h += statsHTML(st) + `<h3>${T.latest}</h3>${hero(first)}` + (rest.length ? `<h3>${T.previous}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${rest.map(item).join("")}</div>` : ""); }
-  else h += statsHTML(st) + `<h3>${T.sort[sortBy]}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${list.map(item).join("")}</div>`;
+    h += statsHTML(st) + sgGridHTML(sgStats(list)) + `<h3>${T.latest}</h3>${hero(first)}` + (rest.length ? `<h3>${T.previous}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${rest.map(item).join("")}</div>` : ""); }
+  else h += statsHTML(st) + sgGridHTML(sgStats(list)) + `<h3>${T.sort[sortBy]}</h3><div class="list glass glow rise" style="--i:2;--bd:9s;--bdl:-3s">${list.map(item).join("")}</div>`;
   el.innerHTML = h; if ($("upg")) $("upg").onclick = openPlans; loadSocial();
   const sb2 = $("shareSt"); if (sb2) sb2.onclick = e => { e.stopPropagation(); shareStats(st); };
   el.querySelectorAll(".stars[data-sid]").forEach(paintStars);
