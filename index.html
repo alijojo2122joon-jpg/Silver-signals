@@ -1339,6 +1339,17 @@
   .cmprev button{position:absolute;top:4px;inset-inline-end:4px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
   .cmmed{margin-top:6px} .cmmed img,.cmmed video{max-width:100%;max-height:300px;border-radius:14px;display:block;background:#000}
   .bnamt.hm{background:linear-gradient(180deg,#16a34a22,#16a34a0d)} .bnamt.hm b{color:#0a7a3e}
+
+  /* ===== سیبر: نور گردان دور تحلیل اصلی و بازار انتخاب‌شده — فقط چرخش (روی کارت گرافیک)، بدون نقاشی دوباره در هر فریم ===== */
+  .sbr{position:absolute;inset:-1px;border-radius:inherit;padding:2px;overflow:hidden;pointer-events:none;z-index:2;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+  .sbr b{position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;border-radius:50%;will-change:transform;transform:translate(-50%,-50%) rotate(0deg);
+    background:conic-gradient(transparent 0deg,transparent 200deg,color-mix(in srgb,var(--beam) 35%,transparent) 280deg,var(--beam) 335deg,#fff 350deg,transparent 360deg);
+    animation:sbr var(--bd,7s) linear infinite}
+  @keyframes sbr{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  .hero .sbr{opacity:1} .mk button .sbr{display:none} .mk button.on .sbr{display:block;opacity:.85}
+  .mk button.on .sbr b{width:300%}
+  @media (prefers-reduced-motion:reduce){.sbr b{animation:none}}
 </style>
 </head>
 <body>
@@ -1350,7 +1361,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794218920";
+const BUILD = "1794220019";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -3259,7 +3270,7 @@ function drawPage(){
   const el = $("pg"); if (!el) return;
   el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";
   if (page === "sig") {
-    el.innerHTML = `<div id="stbar" class="stbar" hidden></div><div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:v.ic?`<span class="mkic">${v.ic}</span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
+    el.innerHTML = `<div id="stbar" class="stbar" hidden></div><div class="mk rise" style="--i:1">${Object.entries(MK).map(([k, v]) => `<button data-m="${k}" class="glow ${k===market?"on":""}" style="--bd:6s"><span class="dot"></span><i class="sbr" aria-hidden="true"><b></b></i>${k==="usd"?`<span class="dual"><img src="${v.th}" alt=""><img src="${AFN_IMG}" alt=""></span>`:v.ic?`<span class="mkic">${v.ic}</span>`:`<img src="${v.th}" alt="">`}<span class="tx"><b>${T.m[k]}</b><small>${v.sym}</small></span></button>`).join("")}</div>
       <div class="sline" id="sl2"><span class="lv2"><span class="ldot"></span><b>${offline?T.offline:T.live}</b></span><span class="subtxt">${subLine()}</span></div>
       <div class="chips" id="perc">${Object.keys(T.per).map(k => `<button data-per="${k}" class="${k===per?"on":""}">${T.per[k]}</button>`).join("")}
         <select id="sortS">${Object.keys(T.sort).map(k => `<option value="${k}" ${k===sortBy?"selected":""}>${T.sort[k]}</option>`).join("")}</select></div>
@@ -3430,7 +3441,7 @@ const chipCls = s => s.status === "active" ? (s.auto && s.phase === "waiting" ? 
 const tagsHTML = s => { const rr = rrOf(s); return (s.timeframe || rr) ? `<div class="tags">${s.timeframe?`<span class="tag2">⏱ ${T.tf[s.timeframe]||s.timeframe}</span>`:""}${rr?`<span class="tag2 rr">${T.rr} <b class="ltr">1:${rr.toFixed(1)}</b></span>`:""}</div>` : ""; };
 function hero(s){
   const b = s.type === "buy", m = MK[s.market] || MKW[s.market] || MK.xag;
-  return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span>${wBadge(s)}
+  return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span><i class="sbr" aria-hidden="true"><b></b></i>${wBadge(s)}
     <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
     ${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
