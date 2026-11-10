@@ -808,6 +808,7 @@
   .tki.lv-pos u,.tki.lv-pos em{color:#0a9b5c} .tki.lv-neg u,.tki.lv-neg em{color:#d93a3a} .tktrack{will-change:transform}
   .lv-up{animation:lvup .9s ease-out} .lv-dn{animation:lvdn .9s ease-out}
   @keyframes lvup{0%{background:rgba(10,155,92,.32);color:#0a9b5c}100%{background:transparent}} @keyframes lvdn{0%{background:rgba(217,58,58,.3);color:#d93a3a}100%{background:transparent}}
+  .tvadv{height:min(70vh,520px);border-radius:20px;overflow:hidden;padding:0!important;margin-bottom:6px} #tvchart .mf{margin-bottom:8px}
   html[dir=ltr] .nav .pill{right:auto;left:6px} html[dir=ltr] .amenu{inset-inline-end:12px}
 </style>
 </head>
@@ -823,7 +824,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794296918";
+const BUILD = "1794327836";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1103,10 +1104,11 @@ function drawPane(){
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>نرخ‌ها (همان که اعضا می‌بینند)</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
       <div class="fxab rise"><button class="press" id="ratebtn">✍️ ثبت نرخ دستی (دالر، مثقال طلا و نقره)</button><button class="press" id="worldbtn">🌐 نمادهای نوار قیمت</button><button class="press" id="keybtn">⚡ منبع داده‌ی زنده</button></div>
       <div id="rstat" class="rstat"></div>
+      <div class="sec rise"><h3>📈 چارت نرخ ارز</h3></div><div id="tvchart"></div>
       <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>
       <div class="sec rise" style="margin-top:18px"><h3>⚡ بازار جهانی زنده</h3></div><div id="lboard"></div>`;
     $("ratebtn").onclick = sheetRates; $("worldbtn").onclick = sheetWorld; $("keybtn").onclick = sheetMarketKey;
-    loadFxAdmin(); drawLiveBoardA(); paintRStatA(); return; }
+    tvChartA(); loadFxAdmin(); drawLiveBoardA(); paintRStatA(); return; }
   $("pane").innerHTML = tab === "signals"
     ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="chbtn">📡 کانال‌های تلگرام: سیگنال‌های خودکار و کارنامه‌ی هر کانال</button><button class="dashbtn glass press rise" id="anbtn">📰 اخبار خودکار (همان که اعضا می‌بینند)</button><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button><button class="dashbtn glass press rise" id="secbtn">🛡 امنیت: ورود دو مرحله‌ای مدیر، محدودیت دستگاه و دستگاه‌های فعال اعضا</button>
@@ -2651,6 +2653,20 @@ setInterval(() => { if (tab === "dash" && !document.hidden && $("dashv")) { dash
 /* ===== بازار جهانی و تنظیم نوار قیمت ===== */
 
 
+/* ===== چارت TradingView (همان چارت صفحه‌ی اعضا) ===== */
+let tvSymA = (() => { try { return localStorage.getItem("tv_sym_a") || "FOREXCOM:XAUUSD"; } catch { return "FOREXCOM:XAUUSD"; } })();
+const TVSA = [["FOREXCOM:XAUUSD", "🥇 XAU/USD"], ["FOREXCOM:XAGUSD", "🥈 XAG/USD"], ["TVC:DXY", "💵 DXY"], ["FX_IDC:USDAFN", "🇦🇫 USD/AFN"], ["BITSTAMP:BTCUSD", "₿ BTC/USD"], ["BITSTAMP:ETHUSD", "Ξ ETH/USD"], ["FX:EURUSD", "EUR/USD"], ["FX:GBPUSD", "GBP/USD"], ["FX:USDJPY", "USD/JPY"], ["TVC:USOIL", "🛢 WTI"]];
+function tvChartA(){
+  const box = $("tvchart"); if (!box) return;
+  box.innerHTML = `<div class="mf mfp" id="tvsyms">${TVSA.map(([k, t]) => `<button data-tv="${k}" class="${k === tvSymA ? "on" : ""}">${t}</button>`).join("")}</div>
+    <div class="tvadv glass"><div class="tradingview-widget-container" style="height:100%;width:100%"><div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div></div></div>
+    <p class="hint">چارت از TradingView است؛ برای نماد دیگر، نام نماد را در بالای چارت جست‌وجو کنید. ابزارهای رسم (خط، فیبوناچی و…) در نوار کنار چارت هستند.</p>`;
+  const s = document.createElement("script"); s.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"; s.async = true;
+  s.textContent = JSON.stringify({ autosize: true, symbol: tvSymA, interval: "15", timezone: "Asia/Kabul", theme: getTheme() === "dark" ? "dark" : "light", style: "1",
+    locale: alang === "en" ? "en" : "fa_IR", allow_symbol_change: true, hide_side_toolbar: false, withdateranges: true, details: true, calendar: false, support_host: "https://www.tradingview.com" });
+  box.querySelector(".tradingview-widget-container").appendChild(s);
+  $("tvsyms").onclick = e => { const b = e.target.closest("[data-tv]"); if (!b) return; tvSymA = b.dataset.tv; try { localStorage.setItem("tv_sym_a", tvSymA); } catch {} tvChartA(); };
+}
 /* ===== منوی ⋮ مدیر ===== */
 function openAdminMore(){
   let m = $("amenu"); if (m) { m.remove(); return; }
