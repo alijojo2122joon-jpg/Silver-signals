@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co wss://stream.binance.com:9443 wss://data-stream.binance.vision https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com https://www.youtube-nocookie.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>/* clickjacking guard: never run inside a frame from another site */try{if(top!==self&&top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.display="none";top.location=self.location.href}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -730,14 +730,14 @@
   /* ===== نوار چرخشی قیمت‌ها ===== */
   .mtk{position:relative;overflow:hidden;margin:0 0 12px;padding:7px 0;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);direction:ltr;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
-  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack,.mtk:active .tktrack{animation-play-state:paused}
+  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack{animation-play-state:paused}
   .tkset{display:flex;flex:none}
   .tki{display:inline-flex;align-items:baseline;gap:6px;padding:0 16px;white-space:nowrap;font-size:12.5px;border-inline-end:1px solid color-mix(in srgb,var(--muted) 25%,transparent)}
   .tki b{font-weight:800;direction:rtl} .tki i{font-style:normal;font-size:10.5px;color:var(--muted);font-family:Montserrat,Arial,sans-serif}
   .tki em{font-style:normal;font-weight:900;font-family:Montserrat,Arial,sans-serif} .tki u{text-decoration:none;font-weight:800;font-size:11px;font-family:Montserrat,Arial,sans-serif}
   .tki.up u,.tki.up em{color:#0a9b5c} .tki.dn u,.tki.dn em{color:#d93a3a}
-  @keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media (prefers-reduced-motion:reduce){.tktrack{animation-duration:calc(var(--tkd,45s)*3)}}
+  @keyframes tkmove{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  
   /* ===== آمار عملکرد سیگنال‌ها ===== */
   .sgx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
   .sgc{padding:12px 8px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);text-align:center;min-width:0}
@@ -786,6 +786,29 @@
   .cmmed{margin:6px 0} .cmmed img,.cmmed video{max-width:100%;max-height:260px;border-radius:14px;display:block;background:#000;cursor:zoom-in}
   .pos{color:var(--buy)} .neg{color:var(--sell)}
   @media (max-width:560px){ .dk{grid-template-columns:repeat(2,minmax(0,1fr))} .dgrid{grid-template-columns:1fr} .dlinks{grid-template-columns:1fr} }
+
+  /* ===== spec 3: header, menu, live, calendar ===== */
+  .nav{width:min(440px,calc(100% - 16px))!important;grid-template-columns:repeat(4,1fr)!important} .nav .pill{width:calc((100% - 12px)/4)!important}
+  .icons{gap:6px!important;flex-wrap:nowrap} .icons .ib{width:38px!important;height:38px!important} .ib.on{outline:2px solid #d4a53b}
+  @media(max-width:440px){.icons .ib{width:34px!important;height:34px!important;border-radius:11px!important} .icons{gap:4px!important} .brand .role,.brand .wm{display:none!important}}
+  .hb{position:absolute;top:-3px;left:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#e5484d;color:#fff;font-size:10.5px;font-weight:800;display:none;place-items:center;font-family:Montserrat,Arial,sans-serif;z-index:2} .hb.show{display:grid}
+  .ib .hb{position:absolute} .ib{overflow:visible!important}
+  .amenu{position:fixed;z-index:60;top:calc(64px + env(safe-area-inset-top));inset-inline-end:12px;min-width:250px;padding:8px;border-radius:20px;display:grid;gap:2px;opacity:0;transform:translateY(-8px) scale(.98);transition:.2s;box-shadow:0 20px 50px -12px rgba(0,0,0,.35)}
+  .amenu.show{opacity:1;transform:none} .amenu button{display:flex;align-items:center;gap:10px;padding:12px 12px;border:0;background:none;color:var(--text);font:inherit;font-weight:700;font-size:14px;border-radius:13px;cursor:pointer;text-align:start}
+  .amenu button:hover{background:var(--field)} .amenu button span{width:26px;text-align:center;font-size:17px} .amenu hr{border:0;border-top:1px solid var(--stroke);margin:4px 6px} .amenu .mout{color:#e5484d}
+  .langsA{display:grid;grid-template-columns:repeat(3,1fr);gap:8px} .langsA button{padding:14px 8px;border-radius:14px;border:1px solid var(--stroke);background:var(--field);color:var(--text);font:inherit;font-weight:800;cursor:pointer} .langsA button.on{background:linear-gradient(135deg,#f3d27a,#c9962b);color:#1b1405}
+  .pwrow{display:flex;gap:8px} .pwrow .in{flex:1}
+  .lkrow{display:grid;grid-template-columns:58px 1fr;gap:6px;margin-bottom:8px;padding:8px;border-radius:14px;background:var(--field)} .lkrow .in{margin:0} .lkrow .in.ltr{grid-column:1/-1} .lkrow button{grid-column:1/-1}
+  .calnavA{display:flex;align-items:center;gap:8px;padding:8px;border-radius:18px;margin-bottom:10px} .calnavA b{flex:1;text-align:center} .calnavA .ghost{width:auto!important;margin:0!important;padding:0 12px!important;height:38px!important}
+  .rstat{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px;border-radius:18px;margin:0 0 12px;background:rgba(18,164,107,.12);color:#0a9b5c;font-size:13px} .rstat.slow{background:rgba(216,145,28,.13);color:#b8770f}
+  .rstat .ldot{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 20%,transparent)}
+  .rsg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin-top:8px} .rsg span{display:grid;gap:1px;padding:8px 10px;border-radius:12px;background:var(--field)} .rsg small{font-size:10.5px;color:var(--muted)} .rsg b{font-size:13px;color:var(--text)}
+  @media(min-width:640px){.rsg{grid-template-columns:repeat(4,1fr)}}
+  .lrowa .lvp{font-family:Montserrat,Arial,sans-serif;font-weight:900;font-size:15px;padding:1px 6px;border-radius:8px} .lrowa.lv-pos .lvc{color:#0a9b5c} .lrowa.lv-neg .lvc{color:#d93a3a}
+  .tki.lv-pos u,.tki.lv-pos em{color:#0a9b5c} .tki.lv-neg u,.tki.lv-neg em{color:#d93a3a} .tktrack{will-change:transform}
+  .lv-up{animation:lvup .9s ease-out} .lv-dn{animation:lvdn .9s ease-out}
+  @keyframes lvup{0%{background:rgba(10,155,92,.32);color:#0a9b5c}100%{background:transparent}} @keyframes lvdn{0%{background:rgba(217,58,58,.3);color:#d93a3a}100%{background:transparent}}
+  html[dir=ltr] .nav .pill{right:auto;left:6px} html[dir=ltr] .amenu{inset-inline-end:12px}
 </style>
 </head>
 <body>
@@ -800,7 +823,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794287940";
+const BUILD = "1794296918";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1010,12 +1033,12 @@ function renderLogin(note = ""){
 
 /* پنل */
 let msq = "", cmReported = 0;
-let tab = (() => { const t = new URLSearchParams(location.search).get("tab"); return ["msgs","signals","members","prices","content"].includes(t) ? t : "dash"; })(), signals = [], members = [], channel = null, q = "";
+let tab = (() => { const t = new URLSearchParams(location.search).get("tab"); return ["msgs","signals","members","prices","news","cal","content"].includes(t) ? t : "signals"; })(), signals = [], members = [], channel = null, q = "";
 
 function renderPanel(){
   $app.innerHTML = `<div class="top rise">
       <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div><span class="role">مدیر</span></div>
-      <div class="icons"><button class="ib press" id="prof" aria-label="پروفایل">👤</button><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="out" aria-label="خروج">${I.out}</button></div>
+      <div class="icons"><button class="ib press hav" id="prof" aria-label="پروفایل">👤</button><button class="ib press" id="hmem" aria-label="اعضا">${I.users}<b class="hb" id="nbm"></b></button><button class="ib press" id="hmsg" aria-label="پیام‌ها">${I.chat}<b class="hb" id="nb"></b></button><button class="ib press" id="alg" aria-label="زبان">🌐</button><button class="ib press" id="th" aria-label="تغییر تم">${getTheme()==="dark"?I.sun:I.moon}</button><button class="ib press" id="amore" aria-label="منو">⋮</button></div>
     </div>
     <div class="mtk rise" id="mtk" hidden></div>
     <div class="hubstats glass rise" style="--i:1">
@@ -1025,9 +1048,12 @@ function renderPanel(){
     </div>
     <div id="pane"></div>
     <div class="nav glass"><span class="pill" id="np"></span>
-      <button data-t="dash">${I.grid || "📊"}<span>داشبورد</span></button><button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="members">${I.users}<span>اعضا</span></button><button data-t="prices">${I.coins}<span>قیمت‌ها</span></button><button data-t="content">${I.folder}<span>محتوا</span></button><button data-t="msgs">${I.chat}<span>پیام‌ها</span><span class="nb" id="nb"></span></button></div>`;
-  $("out").onclick = async () => { await pushTeardown(); sb.auth.signOut(); };
+      <button data-t="signals">${I.chart}<span>سیگنال‌ها</span></button><button data-t="prices">${I.coins}<span>نرخ‌ها</span></button><button data-t="news">📰<span>اخبار</span></button><button data-t="cal">🗓<span>تقویم</span></button></div>`;
   $("prof").onclick = sheetProfile; loadTeacherSet();
+  $("hmem").onclick = () => { tab = "members"; drawPane(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  $("hmsg").onclick = () => { tab = "msgs"; drawPane(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  $("amore").onclick = openAdminMore; $("alg").onclick = sheetLang;
+  liveStartA();
   $("th").onclick = () => { setTheme(getTheme()==="dark"?"light":"dark"); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; };
   document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { if (tab !== b.dataset.t) { tab = b.dataset.t; drawPane(); } });
   $("pane").onclick = paneClick;
@@ -1057,29 +1083,39 @@ function drawStats(){
   if (!$("s1")) return;
   const live = members.filter(m => !m.deleted_at), act = live.filter(m => mState(m)[0] !== "off").length;
   countUp($("s1"), act); countUp($("s2"), live.length - act); countUp($("s3"), sgStats(signals).open);
+  { const nw = live.filter(m => m.self_signup && !m.plan && new Date(m.expires_at) <= Date.now()).length, b = $("nbm"); if (b) { b.textContent = nw; b.classList.toggle("show", nw > 0); } }
   if (tab === "dash") drawDash(true);
 }
 
 function drawPane(){
   document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
-  $("np").style.transform = `translateX(${-["dash","signals","members","prices","content","msgs"].indexOf(tab) * 100}%)`;
+  { const ix = ["signals","prices","news","cal"].indexOf(tab); $("np").style.opacity = ix < 0 ? "0" : "1"; if (ix >= 0) $("np").style.transform = `translateX(${(document.documentElement.dir === "ltr" ? 1 : -1) * ix * 100}%)`; }
+  $("hmem")?.classList.toggle("on", tab === "members"); $("hmsg")?.classList.toggle("on", tab === "msgs");
   if (tab === "dash") return drawDash();
+  if (tab === "news") return drawNewsAdmin();
+  if (tab === "cal") return drawCalAdmin();
   if (tab === "msgs") { $("pane").innerHTML = `<div class="sec rise"><h3>پیام‌های اعضا</h3></div><div class="apush rise" id="apush"></div>
     <div class="fxab rise"><button class="press" id="cmadm">💬 مدیریت نظرات${cmReported ? ` <b class="fxnb">${cmReported}</b>` : ""}</button></div>
     <input class="in" id="msq" placeholder="🔎 جستجو در گفتگوها (نام یا متن پیام)" value="${esc(msq)}" style="margin:0 0 14px">
     <div id="list"></div>`;
     paintAdminPush(); $("cmadm").onclick = () => sheetComments(); $("msq").oninput = e => { msq = e.target.value.trim(); drawList(); }; return drawList(); }
   if (tab === "content") return drawContent();
-  if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
-      <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>`; loadFxAdmin(); return; }
+  if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>نرخ‌ها (همان که اعضا می‌بینند)</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
+      <div class="fxab rise"><button class="press" id="ratebtn">✍️ ثبت نرخ دستی (دالر، مثقال طلا و نقره)</button><button class="press" id="worldbtn">🌐 نمادهای نوار قیمت</button><button class="press" id="keybtn">⚡ منبع داده‌ی زنده</button></div>
+      <div id="rstat" class="rstat"></div>
+      <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>
+      <div class="sec rise" style="margin-top:18px"><h3>⚡ بازار جهانی زنده</h3></div><div id="lboard"></div>`;
+    $("ratebtn").onclick = sheetRates; $("worldbtn").onclick = sheetWorld; $("keybtn").onclick = sheetMarketKey;
+    loadFxAdmin(); drawLiveBoardA(); paintRStatA(); return; }
   $("pane").innerHTML = tab === "signals"
-    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="dashbtn">📊 داشبورد: آمار سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد</button><button class="dashbtn glass press rise" id="chbtn">📡 کانال‌های تلگرام: سیگنال و اخبار خودکار، کارنامه‌ی هر کانال</button><div id="list"></div>`
+    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="chbtn">📡 کانال‌های تلگرام: سیگنال‌های خودکار و کارنامه‌ی هر کانال</button><button class="dashbtn glass press rise" id="anbtn">📰 اخبار خودکار (همان که اعضا می‌بینند)</button><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button><button class="dashbtn glass press rise" id="secbtn">🛡 امنیت: ورود دو مرحله‌ای مدیر، محدودیت دستگاه و دستگاه‌های فعال اعضا</button>
        <label class="search glass rise" style="--i:1">${I.search}<input id="q" placeholder="جستجوی نام، ایمیل، شماره، تلگرام یا شهر…" value="${esc(q)}"></label><div id="list"></div>`;
   if ($("billbtn")) $("billbtn").onclick = sheetBilling;
   if ($("secbtn")) $("secbtn").onclick = sheetSecurity;
   if ($("dashbtn")) $("dashbtn").onclick = () => window.open("index.html?pg=dash", "_blank");
   if ($("chbtn")) $("chbtn").onclick = sheetChannels;
+  if ($("anbtn")) $("anbtn").onclick = sheetAutoNews;
   if ($("q")) $("q").oninput = e => { q = e.target.value; drawList(); };
   drawList();
 }
@@ -1118,7 +1154,6 @@ function drawList(){
     const sumR = rs.reduce((a, b) => a + b, 0);
     el._set = `<div class="mf mfp">${PER.map(([k, v]) => `<button data-pf="${k}" class="${k===pfilter?"on":""}">${v}</button>`).join("")}</div>
     ${pfilter === "custom" ? `<div class="pcust"><label>از<input type="date" id="pfrom" value="${esc(pfrom)}"></label><label>تا<input type="date" id="pto" value="${esc(pto)}"></label></div>` : ""}
-    ${sgGridHTML(sgStats(shown))}
     <div class="mf mfp">${MGROUPS.map(([k, v]) => `<button data-mf="${k}" class="${k===mfilter?"on":""}">${MARKETS[k]?.th ? `<img src="${MARKETS[k].th}" alt="">` : ""}${v} <small>${signals.filter(x => inGroup(x.market || "xag", k)).length}</small></button>`).join("")}</div>
     <div class="list glass sw rise" style="--i:1;--sd:1.2s"><span class="shine"></span>${shown.length ? shown.map(s => {
       const b = s.type === "buy";
@@ -1246,6 +1281,7 @@ async function loadContent(){
     sb.from("polls").select("*").order("created_at", { ascending: false }).limit(10)]);
   cPosts = a.data || []; cRates = b.data || []; cPolls = c.data || [];
   if (tab === "content") drawContentList();
+  if (tab === "news") paintNewsAdmin();
 }
 function drawContent(){
   const tiles = [["autonews","📡","اخبار خودکار (همان که اعضا می‌بینند)","آفاق، آریانا، بانک مرکزی، وزارت مالیه، بانک جهانی و بازار طلا — مشاهده و به‌روزرسانی فوری"],["story","✨","استوری (۲۴ ساعته)","عکس یا ویدیوی حداکثر ۱ دقیقه؛ اعضا لایک و پاسخ می‌دهند"],["prices","💱","نرخ ارزها و شهرها","به تب «قیمت‌ها» می‌رود — همه‌ی ارزها، شهرها، تاریخچه و ثبت دستی"],["academy","🏛","آکادمی و استاد","معرفی، سوابق، مجوزها، واتس‌اپ و تلگرام"],
@@ -1303,34 +1339,45 @@ function sheetRates(){
     closeSheet(); toast("نرخ‌ها ثبت شد ✓"); loadContent();
   };
 }
-async function sheetAcademy(){
+async function sheetAcademy(sec){
   const { data } = await sb.from("settings").select("value").eq("key", "academy").maybeSingle();
-  const A = data?.value || {};
+  const A = data?.value || {}; let links = Array.isArray(A.links) ? A.links.map(x => ({ ...x })) : [];
   const f = (id, lab, ph = "", area = false, ltr = false) => `<label class="l">${lab}</label>${area ? `<textarea class="in" id="a_${id}" rows="3" placeholder="${ph}">${esc(A[id] || "")}</textarea>` : `<input class="in" id="a_${id}" ${ltr ? 'dir="ltr"' : ""} placeholder="${ph}" value="${esc(A[id] || "")}">`}`;
-  openSheet(`<h2>درباره ما، معرفی استاد و راه‌های ارتباطی</h2><p class="hint">هر چه اینجا بنویسید همان لحظه در صفحه‌های «درباره ما»، «معرفی استاد» و «راه‌های ارتباطی» (منوی ⋮ اعضا) نمایش داده می‌شود. نام و عکس استاد از دکمه‌ی 👤 بالا تنظیم می‌شود.</p>
-    <h3 class="bh">🏢 درباره ما</h3>
-    ${f("name", "نام مجموعه", "Market Analysts")}${f("tagline", "شعار / معرفی یک‌خطی", "مثلاً: تحلیل تخصصی طلا، نقره و ارز برای صرافان")}
-    ${f("about", "معرفی مجموعه", "", true)}${f("goals", "اهداف", "", true)}${f("activities", "فعالیت‌ها", "", true)}${f("services", "خدمات", "", true)}
-    <div class="two"><div>${f("founded", "سال تأسیس", "مثلاً: 1402")}</div><div>${f("licenses", "مجوزها", "مثلاً: اتحادیه صرافان")}</div></div>
-    <h3 class="bh">👨‍🏫 معرفی استاد</h3>
-    ${f("specialty", "تخصص اصلی", "مثلاً: تحلیلگر بازارهای مالی")}<div class="two"><div>${f("years", "تجربه کاری", "مثلاً: ۱۲ سال")}</div><div>${f("certs", "گواهی‌نامه‌ها", "مثلاً: CMT")}</div></div>
-    ${f("inst_bio", "معرفی کامل استاد", "", true)}${f("education", "سوابق تحصیلی", "", true)}${f("work", "سوابق کاری", "", true)}
-    ${f("expertise", "تخصص‌ها", "", true)}${f("courses", "دوره‌های آموزشی", "", true)}${f("achievements", "فعالیت‌ها و دستاوردها", "", true)}
-    <h3 class="bh">📞 راه‌های ارتباطی</h3>
-    <div class="two"><div>${f("telegram", "تلگرام", "@username", false, true)}</div><div>${f("whatsapp", "واتساپ (با کد کشور)", "+93 7xx xxx xxx", false, true)}</div></div>
-    <div class="two"><div>${f("instagram", "اینستاگرام", "@username", false, true)}</div><div>${f("phone", "شماره تماس", "+93 7xx xxx xxx", false, true)}</div></div>
-    <div class="two"><div>${f("email", "ایمیل", "info@...", false, true)}</div><div>${f("website", "وب‌سایت", "example.com", false, true)}</div></div>
-    <div class="two"><div>${f("facebook", "فیسبوک", "", false, true)}</div><div>${f("youtube", "یوتیوب", "@channel", false, true)}</div></div>
-    ${f("tiktok", "تیک‌تاک", "@username", false, true)}
+  const S = {
+    about: ["🏢 درباره ما", ["name","tagline","about","goals","activities","services","founded","licenses"], `${f("name", "نام مجموعه", "Market Analysts")}${f("tagline", "شعار / معرفی یک‌خطی", "مثلاً: تحلیل تخصصی طلا، نقره و ارز برای صرافان")}
+      ${f("about", "معرفی مجموعه", "", true)}${f("goals", "اهداف", "", true)}${f("activities", "فعالیت‌ها", "", true)}${f("services", "خدمات", "", true)}
+      <div class="two"><div>${f("founded", "سال تأسیس", "مثلاً: 1402")}</div><div>${f("licenses", "مجوزها", "مثلاً: اتحادیه صرافان")}</div></div>`],
+    inst: ["👨‍🏫 درباره استاد", ["specialty","years","certs","inst_bio","education","work","expertise","courses","achievements"], `<div class="box" style="display:flex;align-items:center;gap:12px"><span class="av" style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--field);display:grid;place-items:center">${teacherSet.photo ? `<img src="${esc(teacherSet.photo)}" alt="" style="width:100%;height:100%;object-fit:cover">` : "👤"}</span><div style="flex:1"><b>${esc(teacherSet.name)}</b><div class="hint">نام و عکس استاد</div></div><button type="button" class="ghost" id="a_tph" style="width:auto;margin:0;padding:0 12px">تغییر نام / عکس</button></div>
+      ${f("specialty", "تخصص اصلی", "مثلاً: تحلیلگر بازارهای مالی")}<div class="two"><div>${f("years", "تجربه کاری", "مثلاً: ۱۲ سال")}</div><div>${f("certs", "گواهی‌نامه‌ها", "مثلاً: CMT")}</div></div>
+      ${f("inst_bio", "معرفی کامل استاد", "", true)}${f("education", "سوابق تحصیلی", "", true)}${f("work", "سوابق کاری", "", true)}
+      ${f("expertise", "تخصص‌ها", "", true)}${f("courses", "دوره‌های آموزشی", "", true)}${f("achievements", "فعالیت‌ها و دستاوردها", "", true)}`],
+    contact: ["📞 مدیریت راه‌های ارتباطی", ["telegram","whatsapp","instagram","phone","email","website","facebook","youtube","tiktok"], `<p class="hint">هر خانه را خالی کنید تا از صفحه‌ی اعضا برداشته شود.</p>
+      <div class="two"><div>${f("telegram", "تلگرام", "@username", false, true)}</div><div>${f("whatsapp", "واتساپ (با کد کشور)", "+93 7xx xxx xxx", false, true)}</div></div>
+      <div class="two"><div>${f("instagram", "اینستاگرام", "@username", false, true)}</div><div>${f("phone", "شماره تماس", "+93 7xx xxx xxx", false, true)}</div></div>
+      <div class="two"><div>${f("email", "ایمیل", "info@...", false, true)}</div><div>${f("website", "وب‌سایت", "example.com", false, true)}</div></div>
+      <div class="two"><div>${f("facebook", "فیسبوک", "", false, true)}</div><div>${f("youtube", "یوتیوب", "@channel", false, true)}</div></div>
+      ${f("tiktok", "تیک‌تاک", "@username", false, true)}
+      <h3 class="bh">＋ شبکه‌های اجتماعی دیگر</h3><div id="a_links"></div><button type="button" class="ghost" id="a_ladd">＋ افزودن راه ارتباطی دیگر</button>`] };
+  const secs = sec && S[sec] ? [sec] : ["about", "inst", "contact"];
+  openSheet(`<h2>${sec && S[sec] ? S[sec][0] : "درباره ما، استاد و راه‌های ارتباطی"}</h2><p class="hint">تغییرات همان لحظه در صفحه‌های مربوط در منوی ⋮ اعضا نمایش داده می‌شود.</p>
+    ${secs.map(k => (secs.length > 1 ? `<h3 class="bh">${S[k][0]}</h3>` : "") + S[k][2]).join("")}
     <button class="cta press" id="asave">ذخیره</button>`);
-  const KEYS = ["name","tagline","about","goals","activities","services","founded","licenses","specialty","years","certs","inst_bio","education","work","expertise","courses","achievements","telegram","whatsapp","instagram","phone","email","website","facebook","youtube","tiktok"];
+  const KEYS = secs.flatMap(k => S[k][1]);
+  const drawLinks = () => { const el = $("a_links"); if (!el) return; el.innerHTML = links.map((x, i) => `<div class="lkrow"><input class="in" data-li="${i}" data-lk="icon" maxlength="4" value="${esc(x.icon || "🔗")}" style="width:58px;text-align:center"><input class="in" data-li="${i}" data-lk="label" maxlength="40" placeholder="نام (مثلاً: لینکدین)" value="${esc(x.label || "")}"><input class="in ltr" data-li="${i}" data-lk="url" maxlength="300" placeholder="https://..." value="${esc(x.url || "")}"><button type="button" class="ghost red" data-ldel="${i}" style="width:auto;margin:0;padding:0 12px">حذف</button></div>`).join(""); };
+  drawLinks();
+  if ($("a_links")) { $("a_links").oninput = e => { const i = e.target.dataset.li; if (i != null) links[i][e.target.dataset.lk] = e.target.value; };
+    $("a_links").onclick = e => { const d = e.target.closest("[data-ldel]"); if (d) { links.splice(Number(d.dataset.ldel), 1); drawLinks(); } };
+    $("a_ladd").onclick = () => { if (links.length >= 12) return toast("حداکثر ۱۲ مورد", true); links.push({ icon: "🔗", label: "", url: "" }); drawLinks(); }; }
+  if ($("a_tph")) $("a_tph").onclick = sheetProfile;
   $("asave").onclick = async () => {
     const v = { ...A }; KEYS.forEach(k => { const x = $("a_" + k).value.trim(); if (x) v[k] = x.slice(0, 3000); else delete v[k]; });
     if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) return toast("ایمیل درست نیست", true);
+    if (secs.includes("contact")) { const bad = links.find(x => x.url && !/^(https?:\/\/|mailto:|tel:)/i.test(x.url.trim())); if (bad) return toast("لینک «" + (bad.label || "") + "» باید با https:// یا mailto: یا tel: شروع شود", true);
+      v.links = links.filter(x => x.url && x.label).map(x => ({ icon: String(x.icon || "🔗").slice(0, 4), label: x.label.trim().slice(0, 40), url: x.url.trim().slice(0, 300) })); }
     busy($("asave"), true);
     const { error } = await sb.from("settings").upsert({ key: "academy", value: v, updated_at: new Date().toISOString() });
     if (error) { busy($("asave"), false, "ذخیره"); return toast("خطا: " + error.message, true); }
-    closeSheet(); toast("ذخیره شد ✓");
+    closeSheet(); toast("ذخیره شد ✓ — اعضا همین حالا می‌بینند");
   };
 }
 function sheetPost(kind, P){
@@ -1350,6 +1397,8 @@ function sheetPost(kind, P){
     ${isNews || isAf ? `<div class="two"><div><label class="l">منبع ${isAf ? "(الزامی)" : ""}</label><input class="in" id="psrc" maxlength="120" value="${esc(x.source || "")}" placeholder="مثلاً: د افغانستان بانک"></div><div><label class="l">لینک منبع</label><input class="in" id="purl" dir="ltr" maxlength="400" value="${esc(x.source_url || "")}" placeholder="https://"></div></div>` : ""}
     ${isVid ? `<label class="l">فایل ویدیو (حداکثر 50 مگابایت)${P ? " — برای تغییر انتخاب کنید" : ""}</label><input class="in" id="pv" type="file" accept="video/*" style="padding-top:13px">` : ""}
     ${isArt || isVid || isNews ? `<label class="l">تصویر کاور (اختیاری)${x.cover_path ? " — دارد ✓" : ""}</label><input class="in" id="pcv" type="file" accept="image/*" style="padding-top:13px">` : ""}
+    ${isNews ? `<label class="l">تاریخ خبر</label><input class="in" id="pnd" type="datetime-local" value="${dtl(x.event_at || x.created_at || new Date())}">
+      <label class="fxchk"><input type="checkbox" id="pimpn" ${x.importance === "high" ? "checked" : ""}> ⭐ خبر مهم (در بالای فهرست اخبار اعضا نمایش داده می‌شود)</label>` : ""}
     ${isArt ? `<label class="l">فایل پیوست (PDF یا تصویر، اختیاری)${x.attachment_name ? " — " + esc(x.attachment_name) : ""}</label><input class="in" id="pat" type="file" accept="application/pdf,image/*" style="padding-top:13px">` : ""}
     <label class="l">${isArt ? "متن کامل تحلیل" : isNews ? "متن کامل خبر" : "توضیح"}${isVid ? " (اختیاری)" : ""}</label><textarea class="in" id="pb" rows="${isArt || isNews ? 10 : 4}">${esc(x.body || "")}</textarea>
     ${isNews || kind === "event" ? `<label class="l">تأثیر</label><div class="impsel">${impRow("xau","طلا")}${impRow("xag","نقره")}${impRow("usd","دالر")}</div>` : ""}
@@ -1375,6 +1424,7 @@ function sheetPost(kind, P){
     if (isEv) { row.importance = importance; row.event_at = $("pe").value ? new Date($("pe").value).toISOString() : null; if (isAf && !row.event_at) { $("pe").focus(); return toast("تاریخ رویداد را وارد کنید", true); }
       ["pp:previous","pf:forecast","pa:actual"].forEach(z => { const [id, k] = z.split(":"); row[k] = toEnA($(id).value.trim()) || null; }); row.country = isAf ? "af" : "global"; if (isAf) row.event_status = evst; }
     if (isArt || isVid) row.status = status;
+    if (isNews) { row.event_at = $("pnd").value ? new Date($("pnd").value).toISOString() : null; row.importance = $("pimpn").checked ? "high" : null; }
     const b = $("psave"), label = b.textContent; busy(b, true); const added = [];
     try {
       const vf = $("pv")?.files[0]; if (isVid && !vf && !P) { busy(b, false, label); return toast("ویدیو را انتخاب کنید", true); }
@@ -1982,17 +2032,30 @@ async function squareJpeg(file, size = 400){
 }
 async function sheetProfile(){
   await loadTeacherSet();
-  let newPhoto = null;
+  let newPhoto = null; const { data: { user } } = await sb.auth.getUser();
   const pf = () => teacherSet.photo ? `<img src="${esc(teacherSet.photo)}" alt="">` : esc([...String(teacherSet.name).replace("استاد", "").trim()][0] || "م");
-  openSheet(`<h2>پروفایل استاد</h2><p class="hint">این نام و عکس در بخش پیام برای همه‌ی اعضا نمایش داده می‌شود.</p>
+  openSheet(`<h2>پروفایل مدیر</h2><p class="hint">نام، عکس و معرفی کوتاه شما در پیام‌ها و صفحه‌ی «درباره استاد» برای اعضا نمایش داده می‌شود.</p>
     <label class="pfp" id="pfp">${pf()}<span class="cam">تغییر عکس</span><input type="file" accept="image/*" id="pfile" style="display:none"></label>
     <label class="l">نام نمایشی</label><input class="in" id="pname" value="${esc(teacherSet.name)}" maxlength="80">
-    <button class="cta press" id="psave">ذخیره</button>
-    ${teacherSet.photo ? `<button class="ghost red" id="pdel">حذف عکس</button>` : ""}`);
+    <label class="l">عنوان / سمت</label><input class="in" id="ptitle" value="${esc(teacherSet.title || "")}" maxlength="80" placeholder="مثلاً: تحلیلگر ارشد بازارهای مالی">
+    <label class="l">بیوگرافی کوتاه</label><textarea class="in" id="pbio" rows="3" maxlength="600">${esc(teacherSet.bio || "")}</textarea>
+    <button class="cta press" id="psave">ذخیره‌ی پروفایل</button>
+    ${teacherSet.photo ? `<button class="ghost red" id="pdel">حذف عکس</button>` : ""}
+    <h3 class="bh">⚙️ تنظیمات</h3>
+    <div class="box" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span>🌐 زبان پنل: <b>${AL_NAMES[alang]}</b></span><button type="button" class="ghost" id="plang" style="width:auto;margin:0;padding:0 12px">تغییر زبان</button></div>
+    <div class="box" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span>🌓 حالت نمایش: <b>${getTheme() === "dark" ? "تیره" : "روشن"}</b></span><button type="button" class="ghost" id="pth" style="width:auto;margin:0;padding:0 12px">تغییر</button></div>
+    <h3 class="bh">🔐 حساب و امنیت</h3>
+    <div class="box">ایمیل ورود: <b class="ltr">${esc(user?.email || "")}</b></div>
+    <label class="l">رمز فعلی</label><input class="in ltr" id="pw0" type="password" autocomplete="current-password">
+    <div class="two"><div><label class="l">رمز جدید (حداقل ۸)</label><input class="in ltr" id="pw1" type="password" autocomplete="new-password"></div><div><label class="l">تکرار رمز جدید</label><input class="in ltr" id="pw2" type="password" autocomplete="new-password"></div></div>
+    <button class="ghost" id="pwsave">تغییر رمز</button>
+    <button class="ghost" id="psec">🛡 ورود دو مرحله‌ای و دستگاه‌ها</button>`);
   const onPick = async e => { const f = e.target.files[0]; if (!f) return;
     try { newPhoto = await squareJpeg(f); $("pfp").innerHTML = `<img src="${URL.createObjectURL(newPhoto)}" alt=""><span class="cam">تغییر عکس</span><input type="file" accept="image/*" id="pfile" style="display:none">`; $("pfile").onchange = onPick; }
     catch { toast("این عکس قابل خواندن نیست", true); } };
   $("pfile").onchange = onPick;
+  $("plang").onclick = sheetLang; $("psec").onclick = sheetSecurity;
+  $("pth").onclick = () => { setTheme(getTheme() === "dark" ? "light" : "dark"); if ($("th")) $("th").innerHTML = getTheme() === "dark" ? I.sun : I.moon; sheetProfile(); };
   if ($("pdel")) $("pdel").onclick = async () => { teacherSet.photo = null; await saveTeacher(); closeSheet(); };
   $("psave").onclick = async () => {
     const name = $("pname").value.trim(); if (!name) return toast("نام را بنویسید", true);
@@ -2000,12 +2063,19 @@ async function sheetProfile(){
     if (newPhoto) {
       const path = `teacher-${Date.now()}.jpg`;
       const up = await sb.storage.from("avatars").upload(path, newPhoto, { contentType: "image/jpeg", upsert: true });
-      if (up.error) { busy($("psave"), false, "ذخیره"); return toast("آپلود عکس ناموفق بود: " + up.error.message, true); }
+      if (up.error) { busy($("psave"), false, "ذخیره‌ی پروفایل"); return toast("آپلود عکس ناموفق بود: " + up.error.message, true); }
       teacherSet.photo = sb.storage.from("avatars").getPublicUrl(path).data.publicUrl;
     }
-    teacherSet.name = name;
-    if (await saveTeacher()) { closeSheet(); toast("پروفایل ذخیره شد ✓"); } else busy($("psave"), false, "ذخیره");
+    teacherSet.name = name; teacherSet.title = $("ptitle").value.trim() || null; teacherSet.bio = $("pbio").value.trim() || null;
+    if (await saveTeacher()) { closeSheet(); toast("پروفایل ذخیره شد ✓"); } else busy($("psave"), false, "ذخیره‌ی پروفایل");
   };
+  $("pwsave").onclick = async () => { const p0 = $("pw0").value, p1 = $("pw1").value, p2 = $("pw2").value;
+    if (!p0) return toast("رمز فعلی را وارد کنید", true); if (p1.length < 8) return toast("رمز جدید باید حداقل ۸ حرف باشد", true); if (p1 !== p2) return toast("تکرار رمز یکسان نیست", true);
+    busy($("pwsave"), true);
+    try { const { data: { session } } = await sb.auth.getSession(); const r = await fetch(SUPABASE_URL + "/functions/v1/account", { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + session.access_token, "Content-Type": "application/json" }, body: JSON.stringify({ action: "password", password: p0, new_password: p1 }) });
+      const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error === "wrong_password" ? "رمز فعلی درست نیست" : j.error === "pwned_password" ? "این رمز در فهرست رمزهای لورفته است؛ رمز دیگری انتخاب کنید" : j.error === "weak_password" ? "رمز ضعیف است" : (j.error || "ناموفق"));
+      ["pw0", "pw1", "pw2"].forEach(i => $(i).value = ""); busy($("pwsave"), false, "تغییر رمز"); toast("رمز عوض شد ✓"); }
+    catch (x) { busy($("pwsave"), false, "تغییر رمز"); toast(x.message, true); } };
 }
 async function saveTeacher(){
   const { error } = await sb.from("settings").upsert({ key: "teacher", value: teacherSet, updated_at: new Date().toISOString() });
@@ -2189,16 +2259,16 @@ function sheetSignal(s){
     <div class="box cmbox"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><b>💬 نظرات این سیگنال</b>
       <label class="swt"><input type="checkbox" id="cmon" ${s.comments_enabled !== false ? "checked" : ""}><i></i></label></div>
       <div class="hint" id="cmst" style="margin-top:6px">در حال بارگذاری…</div><button type="button" class="ghost" id="cmview" style="margin-top:8px">مشاهده و مدیریت نظرات</button></div>
-    ${(!s.auto || (s.phase === "waiting" && Date.now() - new Date(s.created_at) < 15 * 60000)) ? `<button class="ghost red" id="del">حذف این سیگنال</button><p class="hint" style="text-align:center">حذف فقط تا ۱۵ دقیقه بعد از انتشار و قبل از فعال شدن ممکن است.</p>` : `<p class="hint" style="text-align:center">🔒 این سیگنال قفل است و قابل حذف یا تغییر نیست.</p>`}`);
+    <button class="ghost red" id="del">🗑 حذف این سیگنال</button><p class="hint" style="text-align:center">با حذف، سیگنال از صفحه‌ی همه‌ی اعضا برداشته می‌شود${s.auto && s.phase !== "waiting" ? " و در آمار و کارنامه هم دیگر حساب نمی‌شود" : ""}.</p>`);
   applyNoteLang($("sheet"));
   sb.rpc("signal_social", { p_ids: [s.id] }).then(({ data }) => { const x = data?.[0]; const el = $("cmst"); if (el) el.textContent = x ? `❤️ ${x.likes} پسند · 💬 ${x.comments} نظر` : "—"; });
   $("cmon").onchange = async e => { const v = e.target.checked; const { error } = await sb.from("signals").update({ comments_enabled: v }).eq("id", s.id);
     if (error) { e.target.checked = !v; return toast("انجام نشد: " + error.message, true); } s.comments_enabled = v; toast(v ? "نظردهی باز شد" : "نظردهی بسته شد"); };
   $("cmview").onclick = () => sheetComments(s.id);
   $("sheet").onclick = async e => {
-    if (e.target.closest("#del") && confirm("این سیگنال حذف شود؟")) {
+    if (e.target.closest("#del") && confirm("این سیگنال برای همه‌ی اعضا حذف شود؟ این کار برگشت ندارد.")) {
       const { data, error } = await sb.from("signals").delete().eq("id", s.id).select("id");
-      if (error || !data?.length) return toast("این سیگنال دیگر قابل حذف نیست (فعال شده یا بیشتر از ۱۵ دقیقه گذشته).", true);
+      if (error || !data?.length) return toast("حذف نشد: " + (error?.message || "دسترسی ندارید"), true);
       if (s.voice_path) await sb.storage.from("voices").remove([s.voice_path]);
       closeSheet(); toast("حذف شد"); loadSignals(); }
   };
@@ -2249,7 +2319,7 @@ async function sheetMember(m){
   openSheet(`<div class="mhead"><label class="mav" title="تغییر عکس">${avatar(m)}<span>📷</span><input type="file" id="m_av" accept="image/*" hidden></label>
       <div><h2>${esc(m.name)}</h2><div class="hint">${on ? "🟢 آنلاین" : m.last_seen ? "آخرین فعالیت: " + fmtFull(m.last_seen) : "هنوز فعالیتی ثبت نشده"}</div></div></div>
     <div class="box">وضعیت: <span class="chip ${c}">${lab}</span> · عضویت از <b>${fmtDate(m.created_at)}</b><br>اعتبار تا: <b>${fmtDate(m.expires_at)}</b></div>
-    <div class="mact" id="mact"><span class="spin"></span></div>
+    <div class="mact" id="mact"><span class="spin"></span></div><div id="mact2"></div>
     <h3 class="bh">اطلاعات شخصی</h3>
     <div class="two">${f("m_name", "نام و نام خانوادگی", m.name, 'maxlength="80"')}${f("m_email", "ایمیل (برای ورود)", m.email, 'dir="ltr" type="email"')}</div>
     <div class="two">${f("m_phone", "شماره تماس", m.phone, 'dir="ltr" inputmode="tel"')}${f("m_wa", "واتساپ", m.whatsapp, 'dir="ltr" inputmode="tel"')}</div>
@@ -2263,7 +2333,7 @@ async function sheetMember(m){
     <label class="fxchk"><input type="checkbox" id="m_km" ${m.comments_muted ? "checked" : ""}> محدود کردن نظر گذاشتن زیر سیگنال‌ها</label>
     <button class="cta press" id="m_save" style="margin-top:14px">ذخیره‌ی تغییرات</button>
     <button class="cta press" data-a="ext" style="margin-top:10px">تمدید ۱ ماه</button>
-    <div class="acts" style="margin-top:10px"><button class="ghost" data-a="tog">${m.disabled ? "فعال کردن حساب" : "غیرفعال کردن حساب"}</button><button class="ghost" data-a="pw">رمز جدید</button></div>
+    <div class="acts" style="margin-top:10px"><button class="ghost" data-a="tog">${m.disabled ? "فعال کردن حساب" : "غیرفعال کردن حساب"}</button><button class="ghost" data-a="pw">🔑 تعیین رمز جدید</button></div>
     ${m.deleted_at ? `<div class="box" style="margin-top:10px">این حساب در ${fmtDate(m.deleted_at)} حذف شده. عضو هنوز می‌تواند به شما پیام بدهد ولی تحلیل‌ها را نمی‌بیند.</div>
       <button class="cta press" data-a="restore" style="margin-top:12px">↩ بازگرداندن حساب</button><button class="ghost red" data-a="purge">حذف دائمی (غیرقابل بازگشت)</button>`
     : `<button class="ghost red" data-a="del">حذف حساب</button>`}`);
@@ -2271,6 +2341,10 @@ async function sheetMember(m){
   sb.rpc("admin_member_activity").then(({ data }) => { const a = (data || []).find(x => x.id === m.id), el = $("mact"); if (!el) return;
     el.innerHTML = a ? `<div><small>آخرین ورود</small><b>${a.last_sign_in ? fmtFull(a.last_sign_in) : "—"}</b></div><div><small>پیام‌ها</small><b>${a.msgs}</b></div><div><small>آخرین پیام</small><b>${a.last_msg ? fmtDate(a.last_msg) : "—"}</b></div>
       <div><small>معاملات دفترچه</small><b>${a.journal}</b></div><div><small>هشدارهای قیمت</small><b>${a.alerts}</b></div><div><small>پرداخت‌ها</small><b>${a.payments} · ${Number(a.paid_afn).toLocaleString("en-US")} ؋</b></div>` : ""; });
+  sb.rpc("admin_member_activity", { p_user: m.id }).then(({ data: x }) => { const el = $("mact2"); if (!el || !x) return; const PS = { paid: "✅ پرداخت شد", pending: "⏳ در انتظار بررسی", review: "⏳ در انتظار بررسی", rejected: "✖ رد شد", failed: "✖ ناموفق", expired: "⌛ منقضی" };
+    el.innerHTML = `<h3 class="bh">📱 دستگاه‌ها (${(x.sessions || []).filter(z => !z.revoked_at).length} فعال)</h3>${(x.sessions || []).length ? `<div class="list glass">${x.sessions.map(z => `<div class="it" style="cursor:default"><span class="av" style="background:var(--field)">${z.revoked_at ? "⛔" : "📱"}</span><div><div class="t">${esc(uaShort(z.ua))}</div><div class="s">ورود: ${fmtFull(z.created_at)} · آخرین فعالیت: ${fmtFull(z.last_seen)}${z.revoked_at ? " · خارج شده" : ""}</div></div></div>`).join("")}</div>` : `<p class="hint">هنوز دستگاهی ثبت نشده.</p>`}
+      <h3 class="bh">💳 پرداخت‌ها</h3>${(x.payments || []).length ? `<div class="list glass">${x.payments.map(z => `<div class="it" style="cursor:default"><span class="av" style="background:var(--field)">💳</span><div><div class="t">${z.amount_usd != null ? "$" + z.amount_usd : ""}${z.amount_afn != null ? " " + Number(z.amount_afn).toLocaleString("en-US") + " ؋" : ""} · ${esc(z.plan_code || "")} ${z.months ? "· " + z.months + " ماه" : ""}</div><div class="s">${PS[z.status] || esc(z.status)} · ${esc(z.provider || "")} · ${fmtFull(z.created_at)}</div></div></div>`).join("")}</div>` : `<p class="hint">پرداختی ثبت نشده.</p>`}
+      <div class="mact" style="margin-top:10px"><div><small>ثبت حساب</small><b>${x.auth?.created_at ? fmtDate(x.auth.created_at) : "—"}</b></div><div><small>تأیید ایمیل</small><b>${x.auth?.email_confirmed_at ? "✅" : "—"}</b></div><div><small>نظرها</small><b>${x.comments}</b></div><div><small>امتیازها</small><b>${x.ratings}</b></div></div>`; });
   $("m_av").onchange = async e => { const file = e.target.files[0]; if (!file) return;
     try { const blob = await compressImage(file, 512); const path = `${m.id}/admin-${Date.now()}.jpg`;
       const up = await sb.storage.from("avatars").upload(path, blob, { contentType: "image/jpeg", upsert: true }); if (up.error) throw up.error;
@@ -2297,9 +2371,7 @@ async function sheetMember(m){
       } else if (a === "tog") {
         await sb.from("profiles").update({ disabled: !m.disabled }).eq("id", m.id);
         toast(m.disabled ? "حساب فعال شد ✓" : "حساب غیرفعال شد");
-      } else if (a === "pw") {
-        const pw = prompt(`رمز جدید برای «${m.name}» (حداقل 6 حرف):`); if (!pw) return;
-        await callFn({ action: "password", id: m.id, password: pw }); toast("رمز عوض شد ✓");
+      } else if (a === "pw") { return sheetMemberPw(m);
       } else if (a === "del") {
         if (!confirm(`حساب «${m.name}» حذف شود؟\n(عضو دیگر تحلیل‌ها را نمی‌بیند ولی می‌تواند به شما پیام بدهد و بعداً می‌توانید حسابش را برگردانید.)`)) return;
         await sb.from("profiles").update({ deleted_at: new Date().toISOString(), disabled: true }).eq("id", m.id); toast("حساب حذف شد");
@@ -2369,35 +2441,100 @@ function paintAdminPush(){ const el = $("apush"); if (!el) return; const i = pus
   el.innerHTML = i.perm === "denied" ? `<span>⚠️ اعلان در تنظیمات مرورگر مسدود است.</span>` : `<span>📲 اعلان پیام اعضا و پرداخت‌ها روی این دستگاه فعال نیست.</span><button type="button" id="apon">فعال‌سازی</button>`;
   if ($("apon")) $("apon").onclick = async () => { const r = await pushSetup(true, adminUid); paintAdminPush(); toast(r === "on" ? "اعلان فعال شد ✓" : "فعال نشد", r !== "on"); }; }
 
-/* ===== نوار چرخشی قیمت‌های بازار (مشترک مدیر و اعضا) ===== */
-const TKDEF = [["xau", "🥇 طلا", "XAU/USD", 2], ["xag", "🥈 نقره", "XAG/USD", 3], ["dxy", "💵 شاخص دالر", "DXY", 2], ["eurusd", "🇪🇺 یورو/دالر", "EUR/USD", 4],
-  ["gbpusd", "🇬🇧 پوند/دالر", "GBP/USD", 4], ["usdjpy", "🇯🇵 دالر/ین", "USD/JPY", 3], ["usdchf", "🇨🇭 دالر/فرانک", "USD/CHF", 4], ["btcusd", "₿ بیت‌کوین", "BTC/USD", 0],
-  ["ethusd", "Ξ اتریوم", "ETH/USD", 1], ["wti", "🛢 نفت WTI", "WTI", 2], ["brent", "🛢 نفت برنت", "BRENT", 2]];
-let tkData = null, tkAt = 0, tkSig = "", tkCfg = null;
-const tkQuote = (d, k) => k === "xau" || k === "xag" || k === "dxy" ? d?.[k] : d?.markets?.[k];
-function tkItems(d){
-  const hide = new Set(tkCfg?.hide || []), extra = (tkCfg?.extra || []).map(x => [x.key, x.name, x.sym || x.key.toUpperCase(), x.digits ?? 2]);
-  return [...TKDEF, ...extra].filter(([k]) => !hide.has(k)).map(([k, name, sym, dg]) => { const q = tkQuote(d, k); if (!q || q.price == null) return "";
-    const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null, cls = ch == null ? "" : ch > 0 ? "up" : ch < 0 ? "dn" : "";
-    const pr = Number(q.price).toLocaleString("en-US", { minimumFractionDigits: dg, maximumFractionDigits: dg });
-    return `<span class="tki ${cls}"><b>${name}</b><i>${sym}</i><em>${pr}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : ch < 0 ? "▼" : "•"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join("");
+/* ===== قیمت‌های زنده (همان live.js اعضا) و نوار چرخشی ===== */
+let LS = null, LIVE = null, tkCfg = null, tkBuilt = "", tkData = null;
+const tkQuote = (d, k) => { const L = { xau: "XAU", xag: "XAG", dxy: "DXY", eurusd: "EURUSD", gbpusd: "GBPUSD", usdjpy: "USDJPY", usdchf: "USDCHF", btcusd: "BTCUSD", ethusd: "ETHUSD", wti: "WTI", brent: "BRENT" }[k], q = L && LIVE?.Q[L];
+  if (q) return { price: q.p, prev: q.pc, at: q.t ? new Date(q.t).toISOString() : null }; return k === "xau" || k === "xag" || k === "dxy" ? d?.[k] : d?.markets?.[k]; };
+async function liveStartA(){
+  if (LIVE) return;
+  try { LS = await import("./live.js?v=" + BUILD); } catch { return; }
+  if (LIVE) return;
+  LIVE = LS.startLive(sb, { onUpdate: keys => { LS.paintLive(document, LIVE, keys); paintTicker(); }, onStatus: () => paintRStatA() });
+  try { const r = await fnFetch("prices"); if (r.ok) { tkData = await r.json(); if (tkData?.live) LIVE.seed(tkData.live); } } catch {}
+  loadTicker(true); if (tab === "prices") drawLiveBoardA();
 }
+function tkKeys(){ if (!LS) return []; const hide = new Set((tkCfg?.hide || []).map(x => String(x).toUpperCase())), list = Array.isArray(tkCfg?.order) && tkCfg.order.length ? tkCfg.order : LS.TICKER_DEFAULT;
+  return list.filter(k => LS.LMETA[k] && !hide.has(k) && LIVE?.Q[k]); }
 function paintTicker(){
-  const el = document.getElementById("mtk"); if (!el || !tkData) return;
-  const items = tkItems(tkData); if (!items) { el.hidden = true; return; } el.hidden = false;
-  if (items === tkSig && el.querySelector(".tktrack")) return; tkSig = items;
-  const tr = el.querySelector(".tktrack");
-  if (tr) { tr.querySelectorAll(".tkset").forEach(s => s.innerHTML = items); return; }   // update prices without restarting the scroll
-  const n = (items.match(/class="tki/g) || []).length;
-  el.innerHTML = `<div class="tktrack" style="--tkd:${Math.max(28, n * 4.5)}s"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+  const el = document.getElementById("mtk"); if (!el || !LIVE) return;
+  const keys = tkKeys(), sig = keys.join(",") + "|" + (tkCfg?.extra || []).length;
+  if (!keys.length) { el.hidden = true; return; } el.hidden = false;
+  if (sig === tkBuilt && el.querySelector(".tktrack")) return; tkBuilt = sig;
+  const ex = (tkCfg?.extra || []).map(x => { const q = tkData?.markets?.[x.key]; if (!q?.price) return ""; const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null;
+    return `<span class="tki ${ch > 0 ? "lv-pos" : ch < 0 ? "lv-neg" : ""}"><b>${esc(x.name || x.key)}</b><i>${esc(x.sym || "")}</i><em>${Number(q.price).toFixed(x.digits ?? 2)}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : "▼"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join("");
+  const items = keys.map(k => { const m = LS.LMETA[k]; return `<span class="tki" data-lrow><b>${m.ic} ${esc(m.fa)}</b><i>${LS.lsCode(k)}</i><em data-lv="${k}" data-lf="p"></em><u data-lv="${k}" data-lf="pct"></u></span>`; }).join("") + ex;
+  el.innerHTML = `<div class="tktrack"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+  LS.paintLive(el, LIVE);
+  requestAnimationFrame(() => { const tr = el.querySelector(".tktrack"), w = tr?.firstElementChild?.scrollWidth || 0; if (tr && w) tr.style.setProperty("--tkd", Math.max(20, w / 42).toFixed(1) + "s"); });
 }
 async function loadTicker(force){
-  if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
-  try { const r = await fnFetch("prices"); if (r.ok) tkData = await r.json(); } catch {}
-  if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
+  if (!tkCfg || force) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = tkCfg || {}; } }
   paintTicker();
 }
-setInterval(() => loadTicker(), 5000);
+setInterval(async () => { if (document.hidden || !LIVE) return; try { const r = await fnFetch("prices"); if (r.ok) { tkData = await r.json(); if (tkData?.live) LIVE.seed(tkData.live); } } catch {} }, 60000);
+function paintRStatA(){
+  const el = $("rstat"); if (!el || !LIVE) return;
+  const rs = LIVE.status, rx = LIVE.lastRx, quiet = rs === "live" && rx > 0 && Date.now() - rx > 60000, st = rs === "live" ? (quiet ? "slow" : "ok") : "slow";
+  const xq = LIVE.Q.XAU;
+  el.className = "rstat " + st;
+  el.innerHTML = `<span class="ldot"></span><b>${rs === "live" ? (quiet ? "اتصال زنده برقرار است؛ بازار فعلاً آرام یا بسته است" : "پخش زنده‌ی قیمت برقرار است") : "در حال اتصال به پخش زنده…"}</b>
+    <div class="rsg"><span><small>آخرین دریافت</small><b class="ltr">${rx ? new Date(rx).toLocaleTimeString("en-GB", { hour12: false }) : "—"}</b></span><span><small>عمر قیمت طلا در منبع</small><b class="ltr">${xq ? LS.ageTxt(xq.t, LIVE.skew) : "—"}</b></span>
+      <span><small>انتقال سرور ← این دستگاه</small><b class="ltr">${LIVE.net != null ? Math.round(LIVE.net) + " ms" : "—"}</b></span><span><small>رمزارز (بایننس)</small><b>${LIVE.crypto === "live" ? "🟢 زنده" : "🟡 در انتظار"}</b></span></div>`;
+}
+setInterval(() => { if (tab === "prices" && !document.hidden) { paintRStatA(); document.querySelectorAll('#lbx [data-lf="age"]').forEach(e => { const q = LIVE?.Q[e.dataset.lv]; if (q) e.textContent = LS.ageTxt(q.t, LIVE.skew); }); } }, 1000);
+let lbGrpA = "all";
+function drawLiveBoardA(){
+  const el = $("lboard"); if (!el) return; if (!LS) { el.innerHTML = `<div class="fxadm glass"><span class="spin"></span></div>`; return; }
+  el.innerHTML = `<div class="mf mfp" id="lbg">${LS.LGROUPS.map(g => `<button data-g="${g[0]}" class="${g[0] === lbGrpA ? "on" : ""}">${g[1]}</button>`).join("")}</div><div class="list glass" id="lbx"></div>
+    <p class="hint">منبع‌ها: طلا و فلزات gold-api، جفت‌ارزها/شاخص‌ها/انرژی Yahoo Finance از طریق رله‌ی زنده‌ی سرور، رمزارز مستقیم از بایننس. «⏱» عمر واقعی قیمت در منبع است.</p>`;
+  const paint = () => { $("lbx").innerHTML = LS.LSYM.filter(r => lbGrpA === "all" || r[1] === lbGrpA).map(([k]) => { const m = LS.LMETA[k];
+    return `<div class="it lrowa" data-lrow style="cursor:default"><span class="av" style="background:var(--field)">${m.ic}</span><div><div class="t">${esc(m.fa)} <small class="ltr">${LS.lsCode(k)}</small></div><div class="s ltr" style="text-align:right">bid <bdi data-lv="${k}" data-lf="b">—</bdi> · ask <bdi data-lv="${k}" data-lf="a">—</bdi> · ⏱ <bdi data-lv="${k}" data-lf="age">—</bdi></div></div>
+      <div style="text-align:left"><b class="ltr lvp" data-lv="${k}" data-lf="p">—</b><div class="s ltr lvc" data-lv="${k}" data-lf="pct">—</div></div></div>`; }).join(""); LS.paintLive($("lbx"), LIVE); };
+  paint(); $("lbg").onclick = e => { const b = e.target.closest("[data-g]"); if (!b) return; lbGrpA = b.dataset.g; $("lbg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); paint(); };
+}
+async function sheetWorld(){
+  await loadTicker(true); if (!LS) await liveStartA();
+  const cfg = Object.assign({ hide: [], extra: [] }, tkCfg || {}); cfg.hide = (cfg.hide || []).map(x => String(x).toUpperCase());
+  const draw = () => { $("wlist").innerHTML = LS.LSYM.map(([k]) => { const m = LS.LMETA[k], q = LIVE?.Q[k];
+    return `<div class="fxhr"><div><b>${m.ic} ${esc(m.fa)} <small class="ltr">${LS.lsCode(k)}</small></b><small>${q ? `<bdi class="ltr">${LS.lsFmt(k, q.p, q)}</bdi> · ${LS.ageTxt(q.t, LIVE.skew)}` : "⚠️ هنوز داده‌ای نرسیده"}${LS.TICKER_DEFAULT.includes(k) ? "" : " · (پیش‌فرض خاموش)"}</small></div>
+      <label class="swt"><input type="checkbox" data-wk="${k}" ${(cfg.order?.length ? cfg.order.includes(k) : LS.TICKER_DEFAULT.includes(k)) && !cfg.hide.includes(k) ? "checked" : ""}><i></i></label></div>`; }).join("")
+    + cfg.extra.map(x => `<div class="fxhr"><div><b>${esc(x.name)} <small class="ltr">${esc(x.sym || x.y)}</small></b><small>نماد اضافه (Yahoo: <bdi class="ltr">${esc(x.y)}</bdi>) · هر ۱۵ ثانیه</small></div><button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-wdel="${esc(x.key)}">حذف</button></div>`).join(""); };
+  openSheet(`<h2>🌐 نمادهای نوار قیمت</h2><p class="hint">نمادهای روشن در نوار چرخشی بالای صفحه برای مدیر و همه‌ی اعضا نمایش داده می‌شوند و با هر قیمت جدید فوراً به‌روز می‌شوند.</p>
+    <div id="wlist"></div>
+    <h3 class="bh">＋ نماد اضافه از Yahoo Finance</h3><div class="bplan"><div class="two"><div><label class="l">نام فارسی</label><input class="in" id="w_name" maxlength="30" placeholder="مثلاً: سولانا"></div><div><label class="l">نماد Yahoo</label><input class="in ltr" id="w_y" maxlength="20" placeholder="SOL-USD"></div></div>
+      <div class="two"><div><label class="l">نمایش کوتاه</label><input class="in ltr" id="w_sym" maxlength="12" placeholder="SOL"></div><div><label class="l">رقم اعشار</label><input class="in ltr" id="w_dg" inputmode="numeric" value="2"></div></div>
+      <div class="fxabtn"><button id="w_add">افزودن</button></div></div>
+    <div class="fxabtn" style="margin-top:12px"><button id="w_save">ذخیره‌ی تنظیمات نوار</button></div>`);
+  draw();
+  $("wlist").onchange = e => { const k = e.target.dataset.wk; if (!k) return; const base = cfg.order?.length ? cfg.order : [...LS.TICKER_DEFAULT];
+    cfg.order = e.target.checked ? [...new Set([...base, k])] : base.filter(x => x !== k); cfg.hide = cfg.hide.filter(x => x !== k); };
+  $("wlist").onclick = e => { const d = e.target.closest("[data-wdel]"); if (!d) return; cfg.extra = cfg.extra.filter(x => x.key !== d.dataset.wdel); draw(); };
+  $("w_add").onclick = () => { const name = $("w_name").value.trim(), y = $("w_y").value.trim(), sym = $("w_sym").value.trim() || y, dg = Math.min(6, Math.max(0, parseInt($("w_dg").value) || 2));
+    if (!name || !/^[\^A-Za-z0-9=.\-]{1,20}$/.test(y)) return toast("نام و نماد Yahoo درست لازم است", true); if (cfg.extra.length >= 10) return toast("حداکثر ۱۰ نماد اضافه", true);
+    const key = "x_" + y.toLowerCase().replace(/[^a-z0-9]/g, ""); if (cfg.extra.some(x => x.key === key)) return toast("این نماد قبلاً اضافه شده", true);
+    cfg.extra.push({ key, y, name, sym, digits: dg }); draw(); ["w_name", "w_y", "w_sym"].forEach(i => $(i).value = ""); toast("اضافه شد؛ «ذخیره» را بزنید"); };
+  $("w_save").onclick = async () => { const { error } = await sb.from("settings").upsert({ key: "ticker_cfg", value: cfg, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true);
+    tkCfg = cfg; tkBuilt = ""; paintTicker(); closeSheet(); toast("ذخیره شد ✓ — نوار اعضا هم به‌روز شد"); };
+}
+async function sheetMarketKey(){
+  const [{ data: ks }, { data: sc }] = await Promise.all([sb.rpc("market_key_status"), sb.from("settings").select("value").eq("key", "stream").maybeSingle()]);
+  const cfg = sc?.value || { enabled: true, flush_ms: 1000 };
+  openSheet(`<h2>⚡ منبع داده‌ی زنده</h2>
+    <div class="box"><b>وضعیت فعلی:</b> ${ks?.provider === "tiingo" ? `✅ Tiingo (کلید …${esc(ks.tail || "")}) — قیمت خرید/فروش (bid/ask) لحظه‌ای برای جفت‌ارزهای اصلی، طلا و نقره` : "منبع‌های رایگان عمومی: gold-api برای فلزات، Yahoo Finance برای ارزها و شاخص‌ها، بایننس برای رمزارز"}</div>
+    <p class="hint">TradingView برای استفاده در سایت‌ها API زنده‌ی رایگان ندارد. برای قیمت خرید و فروش واقعی با کمترین تأخیر، یک ارائه‌دهنده‌ی مجاز لازم است. سیستم آماده‌ی اتصال به <b>Tiingo</b> است: در tiingo.com حساب بسازید، پلانی را که استفاده‌ی تجاری را اجازه می‌دهد انتخاب کنید و کلید API را اینجا وارد کنید. کلید فقط روی سرور نگه داشته می‌شود و هیچ‌وقت به مرورگر اعضا نمی‌رسد.</p>
+    <label class="l">کلید API تیینگو</label><input class="in ltr" id="mk_key" type="password" autocomplete="off" placeholder="${ks?.provider === "tiingo" ? "برای تغییر، کلید جدید را وارد کنید" : "Tiingo API key"}">
+    <div class="two" style="margin-top:10px"><button class="cta press" id="mk_save">ذخیره‌ی کلید</button>${ks?.provider === "tiingo" ? `<button class="ghost red" id="mk_del">حذف کلید</button>` : ""}</div>
+    <h3 class="bh">⏱ سرعت پخش</h3><label class="l">فاصله‌ی ارسال به‌روزرسانی‌ها به دستگاه‌ها</label>
+    <select class="in" id="mk_fl">${[[500, "۰٫۵ ثانیه (سریع‌ترین)"], [1000, "۱ ثانیه (پیشنهادی)"], [2000, "۲ ثانیه (کم‌مصرف)"], [3000, "۳ ثانیه"]].map(([v, t]) => `<option value="${v}" ${Number(cfg.flush_ms) === v ? "selected" : ""}>${t}</option>`).join("")}</select>
+    <p class="hint">طرح رایگان Supabase ماهانه حدود ۲ میلیون پیام لحظه‌ای دارد. با تعداد زیاد اعضای هم‌زمان، فاصله‌ی بیشتر مصرف را کم می‌کند. پخش فقط وقتی کسی صفحه را باز دارد انجام می‌شود.</p>
+    <button class="cta press" id="mk_fsave">ذخیره‌ی سرعت</button>`);
+  $("mk_save").onclick = async () => { const k = $("mk_key").value.trim(); if (!k) return toast("کلید را وارد کنید", true);
+    const { error } = await sb.rpc("set_market_key", { p_provider: "tiingo", p_key: k }); if (error) return toast("ذخیره نشد: " + error.message, true); closeSheet(); toast("کلید ذخیره شد ✓ — از دقیقه‌ی بعد فعال می‌شود"); };
+  if ($("mk_del")) $("mk_del").onclick = async () => { if (!confirm("کلید حذف شود؟")) return; const { error } = await sb.rpc("set_market_key", { p_provider: "none", p_key: "" }); if (error) return toast(error.message, true); closeSheet(); toast("حذف شد"); };
+  $("mk_fsave").onclick = async () => { const { error } = await sb.from("settings").upsert({ key: "stream", value: { ...cfg, flush_ms: Number($("mk_fl").value) }, updated_at: new Date().toISOString() }); if (error) return toast(error.message, true); closeSheet(); toast("ذخیره شد ✓"); };
+}
+
+
 
 /* ===== آمار عملکرد سیگنال‌ها (مشترک مدیر و اعضا؛ از وضعیت واقعی ثبت‌شده در دیتابیس) ===== */
 const SGL = { fa: { total: "کل سیگنال‌ها", win: "موفق", loss: "ناموفق", open: "باز", other: "منقضی / بسته", wr: "درصد موفقیت", lr: "درصد عدم موفقیت", perf: "عملکرد کلی", perfH: "مجموع سود و زیان به واحد R (هر R = اندازه‌ی ریسک همان سیگنال)", avg: "میانگین هر سیگنال", none: "—" },
@@ -2512,29 +2649,299 @@ function drawDash(soft){
 setInterval(() => { if (tab === "dash" && !document.hidden && $("dashv")) { dashX.at = 0; drawDash(true); } }, 30000);
 
 /* ===== بازار جهانی و تنظیم نوار قیمت ===== */
-async function sheetWorld(){
-  await loadTicker(true); const cfg = Object.assign({ hide: [], extra: [] }, tkCfg || {});
-  const all = [...TKDEF, ...cfg.extra.map(x => [x.key, x.name, x.sym, x.digits ?? 2, true])];
-  const draw = () => { $("wlist").innerHTML = all.map(([k, name, sym, dg, ex]) => { const q = tkQuote(tkData, k), ch = q?.prev ? (q.price - q.prev) / q.prev * 100 : null;
-    return `<div class="fxhr"><div><b>${name} <small class="ltr">${sym}</small></b><small>${q?.price != null ? `<bdi class="ltr">${Number(q.price).toFixed(dg)}</bdi>${ch != null ? ` · <bdi class="ltr ${ch >= 0 ? "pos" : "neg"}">${ch >= 0 ? "+" : ""}${ch.toFixed(2)}%</bdi>` : ""} · ${q.at || q.quoteAt ? agoFa(q.at || q.quoteAt) : ""}` : "⚠️ داده‌ای دریافت نشده"}</small></div>
-      <label class="swt"><input type="checkbox" data-wk="${k}" ${cfg.hide.includes(k) ? "" : "checked"}><i></i></label>${ex ? `<button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-wdel="${k}">حذف</button>` : ""}</div>`; }).join(""); };
-  openSheet(`<h2>🌐 بازار جهانی و نوار قیمت</h2><p class="hint">نمادهای روشن در نوار چرخشی بالای صفحه (برای مدیر و اعضا) نمایش داده می‌شوند. قیمت‌ها هر ۱۵ ثانیه از Yahoo Finance و طلا/نقره هر چند ثانیه به‌روز می‌شوند؛ نفت تا حدود ۱۰ دقیقه تأخیر دارد.</p>
-    <div id="wlist"></div>
-    <h3 class="bh">＋ افزودن نماد جدید</h3><div class="bplan"><div class="two"><div><label class="l">نام فارسی</label><input class="in" id="w_name" maxlength="30" placeholder="مثلاً: شاخص S&P 500"></div><div><label class="l">نماد Yahoo</label><input class="in ltr" id="w_y" maxlength="20" placeholder="^GSPC"></div></div>
-      <div class="two"><div><label class="l">نمایش کوتاه</label><input class="in ltr" id="w_sym" maxlength="12" placeholder="SPX"></div><div><label class="l">رقم اعشار</label><input class="in ltr" id="w_dg" inputmode="numeric" value="2"></div></div>
-      <p class="hint">نماد را از finance.yahoo.com بردارید (مثلاً ^GSPC، AUDUSD=X، SOL-USD، NG=F). اگر اشتباه باشد، به‌جای قیمت «داده‌ای دریافت نشده» نشان داده می‌شود.</p>
-      <div class="fxabtn"><button id="w_add">افزودن</button></div></div>
-    <div class="fxabtn" style="margin-top:12px"><button id="w_save">ذخیره‌ی تنظیمات نوار</button></div>`);
-  draw();
-  const save = async () => { const { error } = await sb.from("settings").upsert({ key: "ticker_cfg", value: cfg, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true);
-    tkCfg = cfg; tkSig = ""; const t = $("mtk"); if (t) t.innerHTML = ""; paintTicker(); toast("ذخیره شد ✓"); };
-  $("wlist").onchange = e => { const k = e.target.dataset.wk; if (!k) return; cfg.hide = e.target.checked ? cfg.hide.filter(x => x !== k) : [...new Set([...cfg.hide, k])]; };
-  $("wlist").onclick = e => { const d = e.target.closest("[data-wdel]"); if (!d) return; cfg.extra = cfg.extra.filter(x => x.key !== d.dataset.wdel); all.splice(all.findIndex(x => x[0] === d.dataset.wdel), 1); draw(); };
-  $("w_add").onclick = () => { const name = $("w_name").value.trim(), y = $("w_y").value.trim(), sym = $("w_sym").value.trim() || y, dg = Math.min(6, Math.max(0, parseInt($("w_dg").value) || 2));
-    if (!name || !/^[\^A-Za-z0-9=.\-]{1,20}$/.test(y)) return toast("نام و نماد Yahoo درست لازم است", true); if (cfg.extra.length >= 10) return toast("حداکثر ۱۰ نماد اضافه", true);
-    const key = "x_" + y.toLowerCase().replace(/[^a-z0-9]/g, ""); if (all.some(x => x[0] === key)) return toast("این نماد قبلاً اضافه شده", true);
-    cfg.extra.push({ key, y, name, sym, digits: dg }); all.push([key, name, sym, dg, true]); draw(); ["w_name", "w_y", "w_sym"].forEach(i => $(i).value = ""); toast("اضافه شد؛ «ذخیره» را بزنید"); };
-  $("w_save").onclick = save;
+
+
+/* ===== منوی ⋮ مدیر ===== */
+function openAdminMore(){
+  let m = $("amenu"); if (m) { m.remove(); return; }
+  m = document.createElement("div"); m.id = "amenu"; m.className = "amenu glass"; m.setAttribute("role", "menu");
+  m.innerHTML = [["tool", "🧮", "ابزارهای معاملاتی"], ["acad", "🎓", "مدیریت آکادمی و آموزش"], ["inst", "👨‍🏫", "درباره استاد"], ["about", "🏢", "درباره ما"], ["pay", "💳", "مدیریت پرداخت‌ها"], ["contact", "📞", "مدیریت راه‌های ارتباطی"]]
+    .map(([k, ic, t]) => `<button type="button" role="menuitem" data-am="${k}"><span>${ic}</span>${t}</button>`).join("")
+    + `<hr><button type="button" role="menuitem" data-am="sec"><span>🛡</span>امنیت و دستگاه‌ها</button><button type="button" role="menuitem" data-am="out" class="mout"><span>⎋</span>خروج از حساب</button>`;
+  document.body.appendChild(m); requestAnimationFrame(() => m.classList.add("show"));
+  m.onclick = e => { const b = e.target.closest("[data-am]"); if (!b) return; m.remove(); const k = b.dataset.am;
+    if (k === "tool") return window.open("index.html?pg=tool&from=admin", "_blank", "noopener");
+    if (k === "acad") return sheetAcadMgr();
+    if (k === "inst" || k === "about" || k === "contact") return sheetAcademy(k);
+    if (k === "pay") return sheetBilling();
+    if (k === "sec") return sheetSecurity();
+    if (k === "out") return confirmLogoutA(); };
+}
+document.addEventListener("click", e => { const m = $("amenu"); if (m && !e.target.closest("#amenu,#amore")) m.remove(); });
+function confirmLogoutA(){
+  openSheet(`<div style="text-align:center;padding:10px 0"><div style="font-size:44px">⎋</div><h2>خروج از حساب مدیر؟</h2><p class="hint">برای ورود دوباره، رمز و کد دو مرحله‌ای لازم است.</p></div>
+    <div class="two"><button class="ghost" id="lo_no">انصراف</button><button class="cta press" id="lo_yes" style="margin:0">خروج</button></div>`);
+  $("lo_no").onclick = () => closeSheet();
+  $("lo_yes").onclick = async () => { closeSheet(); await pushTeardown(); sb.auth.signOut(); };
+}
+
+/* ===== رمز جدید برای عضو (فقط مدیر؛ رمز جایی ذخیره یا نمایش داده نمی‌شود) ===== */
+function sheetMemberPw(m){
+  const gen = () => { const A = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%"; const r = crypto.getRandomValues(new Uint32Array(14)); return Array.from(r, x => A[x % A.length]).join(""); };
+  openSheet(`<h2>🔑 رمز جدید برای «${esc(m.name)}»</h2>
+    <p class="hint">رمز با رمزنگاری امن (هش) روی سرور ذخیره می‌شود و نه شما و نه هیچ‌کس دیگری نمی‌تواند آن را بعداً ببیند. بعد از تعیین رمز جدید، عضو از همه‌ی دستگاه‌ها خارج می‌شود. رمز را خودتان مستقیم و خصوصی به عضو بدهید.</p>
+    <label class="l">رمز جدید (حداقل ۸ حرف)</label><div class="pwrow"><input class="in ltr" id="np1" type="password" autocomplete="new-password" maxlength="72"><button type="button" class="ghost" id="npeye" style="width:auto;margin:0;padding:0 14px">👁</button></div>
+    <label class="l">تکرار رمز</label><input class="in ltr" id="np2" type="password" autocomplete="new-password" maxlength="72">
+    <button type="button" class="ghost" id="npgen">🎲 ساخت رمز قوی تصادفی</button>
+    <div class="hint" id="npst"></div>
+    <button class="cta press" id="npsave">ثبت رمز جدید</button>`);
+  $("npeye").onclick = () => { const t = $("np1").type === "password" ? "text" : "password"; $("np1").type = $("np2").type = t; };
+  $("npgen").onclick = () => { const g = gen(); $("np1").value = $("np2").value = g; $("np1").type = $("np2").type = "text"; $("npst").textContent = "رمز ساخته شد؛ قبل از ثبت آن را برای عضو یادداشت کنید."; };
+  $("npsave").onclick = async () => { const a = $("np1").value, b = $("np2").value;
+    if (a.length < 8) return toast("رمز باید حداقل ۸ حرف باشد", true); if (a !== b) return toast("تکرار رمز یکسان نیست", true);
+    busy($("npsave"), true);
+    try { await callFn({ action: "password", id: m.id, password: a }); $("np1").value = $("np2").value = ""; closeSheet(); toast("رمز جدید ثبت شد ✓ — عضو از همه‌ی دستگاه‌ها خارج شد"); }
+    catch (x) { busy($("npsave"), false, "ثبت رمز جدید"); toast("خطا: " + x.message, true); } };
+}
+
+/* ===== تب اخبار مدیر ===== */
+let nwFilter = "news", nwHidden = [], nwExt = [], nwAuto = [];
+function drawNewsAdmin(){
+  $("pane").innerHTML = `<div class="sec rise"><h3>مدیریت اخبار</h3><button class="add press" id="nwadd">${I.plus}خبر جدید</button></div>
+    <div class="fxab rise"><button class="press" id="nwauto">📡 اخبار خودکار</button><button class="press" id="nwstory">✨ استوری</button><button class="press" id="nwpoll">📊 نظرسنجی</button><button class="press" id="nwart">🧠 تحلیل / آموزش</button></div>
+    <div class="mf mfp" id="nwf">${[["news", "📰 خبرهای مدیر"], ["ext", "📡 خبرهای خودکار و کانال‌ها"], ["all", "همه‌ی پست‌ها"]].map(([k, t]) => `<button data-nf="${k}" class="${k === nwFilter ? "on" : ""}">${t}</button>`).join("")}</div>
+    <div id="nwlist"><div class="fxadm glass"><span class="spin"></span></div></div><div id="stadm"></div>`;
+  $("nwadd").onclick = () => sheetPost("news"); $("nwauto").onclick = sheetAutoNews; $("nwstory").onclick = sheetStory; $("nwpoll").onclick = sheetPoll; $("nwart").onclick = () => sheetPost("article");
+  $("nwf").onclick = e => { const b = e.target.closest("[data-nf]"); if (!b) return; nwFilter = b.dataset.nf; $("nwf").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); paintNewsAdmin(); };
+  loadContent(); loadNewsExtA();
+}
+async function loadNewsExtA(){
+  const [{ data: h }, { data: x }] = await Promise.all([sb.from("settings").select("value").eq("key", "news_hidden").maybeSingle(), sb.from("ext_posts").select("channel,msg_id,posted_at,text,kind").eq("kind", "news").order("posted_at", { ascending: false }).limit(40)]);
+  nwHidden = Array.isArray(h?.value) ? h.value : []; nwExt = x || [];
+  try { const r = await fnFetch("news"); if (r.ok) { const j = await r.json(); nwAuto = (j.items || []).filter(i => /^https?:\/\//.test(i.link || "")).slice(0, 40); } } catch {}
+  paintNewsAdmin();
+}
+async function saveHidden(){ const { error } = await sb.from("settings").upsert({ key: "news_hidden", value: nwHidden.slice(-500), updated_at: new Date().toISOString() }); if (error) toast("خطا: " + error.message, true); }
+function paintNewsAdmin(){
+  const el = $("nwlist"); if (!el) return; drawStoryAdmin();
+  if (nwFilter === "ext") {
+    const rows = [...nwAuto.map(i => ({ id: "a" + i.link, t: i.title, s: (i.src || "") + " · " + agoFa(i.at), url: i.link })), ...nwExt.map(x => ({ id: "x" + x.channel + x.msg_id, t: String(x.text || "").replace(/\n+/g, " ").slice(0, 140), s: "📡 " + x.channel + " · " + agoFa(x.posted_at), url: `https://t.me/${x.channel}/${x.msg_id}` }))];
+    el.innerHTML = `<p class="hint">خبرهایی که خودکار از منابع و کانال‌ها می‌آیند. با «پنهان» از صفحه‌ی اعضا برداشته می‌شوند.</p><div class="list glass">${rows.length ? rows.map(r => { const hid = nwHidden.includes(r.id);
+      return `<div class="it" style="cursor:default;${hid ? "opacity:.5" : ""}"><span class="av" style="background:var(--field)">${r.id[0] === "x" ? "📡" : "🌐"}</span><div><div class="t">${esc(r.t)}</div><div class="s">${esc(r.s)} · <a href="${esc(r.url)}" target="_blank" rel="noopener">منبع ↗</a></div></div>
+        <button class="ghost ${hid ? "" : "red"}" style="width:auto;height:36px;margin:0;padding:0 12px" data-hide="${esc(r.id)}">${hid ? "نمایش" : "پنهان"}</button></div>`; }).join("") : `<div class="empty">در حال حاضر خبر خودکاری نیست.</div>`}</div>`;
+  } else {
+    const L = cPosts.filter(p => nwFilter === "all" ? KINDS[postKind(p)] : p.kind === "news");
+    el.innerHTML = `<div class="list glass">${L.length ? L.map(p => `<div class="it" data-editpost="${p.id}"><span class="av" style="background:var(--field)">${p.cover_path ? "🖼" : KINDS[postKind(p)]?.split(" ")[0] || "📰"}</span>
+      <div><div class="t">${p.importance === "high" && p.kind === "news" ? "⭐ " : ""}${p.status === "draft" ? '<span class="chip warn" style="font-size:10px">پیش‌نویس</span> ' : ""}${esc(p.title)}</div><div class="s">${KINDS[postKind(p)]?.split(" ").slice(1).join(" ") || ""}${p.category ? " · " + esc(p.category) : ""} · ${fmtFull(p.event_at || p.created_at)}</div></div>
+      <div style="display:flex;gap:6px">${p.kind === "news" ? `<button class="ghost" style="width:auto;height:36px;margin:0;padding:0 10px" data-star="${p.id}" title="مهم">${p.importance === "high" ? "⭐" : "☆"}</button>` : ""}<button class="ghost red" style="width:auto;height:36px;margin:0;padding:0 12px" data-delpost="${p.id}">حذف</button></div></div>`).join("")
+      : `<div class="empty"><div class="big">📰</div>هنوز خبری منتشر نکرده‌اید. «خبر جدید» را بزنید.</div>`}</div>`;
+  }
+  el.onclick = async e => {
+    const h = e.target.closest("[data-hide]"); if (h) { const id = h.dataset.hide; nwHidden = nwHidden.includes(id) ? nwHidden.filter(x => x !== id) : [...nwHidden, id]; paintNewsAdmin(); await saveHidden(); return toast("ذخیره شد ✓"); }
+    const st = e.target.closest("[data-star]"); if (st) { e.stopPropagation(); const p = cPosts.find(x => String(x.id) === st.dataset.star); const v = p.importance === "high" ? null : "high";
+      const { error } = await sb.from("posts").update({ importance: v }).eq("id", p.id); if (error) return toast(error.message, true); p.importance = v; paintNewsAdmin(); return toast(v ? "⭐ مهم شد" : "از حالت مهم خارج شد"); }
+    const d = e.target.closest("[data-delpost]"); if (d) { e.stopPropagation(); if (!confirm("این مورد برای همه‌ی اعضا حذف شود؟")) return; const p = cPosts.find(x => String(x.id) === d.dataset.delpost);
+      const { error } = await sb.from("posts").delete().eq("id", d.dataset.delpost); if (error) return toast(error.message, true); const rm = [p?.file_path, p?.cover_path, p?.attachment_path].filter(Boolean); if (rm.length) sb.storage.from("media").remove(rm); toast("حذف شد"); return loadContent(); }
+    const ed = e.target.closest("[data-editpost]"); if (ed) { const p = cPosts.find(x => String(x.id) === ed.dataset.editpost); if (p) sheetPost(postKind(p), p); }
+  };
+}
+
+/* ===== تب تقویم مدیر ===== */
+let caMonth = new Date().toISOString().slice(0, 7), caRows = [], caImp = "all", caSrc = "all";
+const IMPF = { high: "🔴 زیاد", medium: "🟠 متوسط", low: "⚪ کم", holiday: "🏖 تعطیلی" }, SRCF = { ff: "📊 Forex Factory", official: "🏛 برنامه‌ی رسمی", admin: "✍️ مدیر" };
+function drawCalAdmin(){
+  $("pane").innerHTML = `<div class="sec rise"><h3>تقویم اقتصادی</h3><button class="add press" id="caadd">${I.plus}رویداد جدید</button></div>
+    <div class="calnavA glass rise"><button class="ghost" id="caprev">‹ ماه قبل</button><b id="calab"></b><button class="ghost" id="canext">ماه بعد ›</button></div>
+    <div class="mf mfp" id="caf">${[["all", "همه"], ...Object.entries(IMPF)].map(([k, t]) => `<button data-ci="${k}" class="${k === caImp ? "on" : ""}">${t}</button>`).join("")}</div>
+    <div class="mf mfp" id="cas">${[["all", "همه‌ی منابع"], ...Object.entries(SRCF)].map(([k, t]) => `<button data-cs="${k}" class="${k === caSrc ? "on" : ""}">${t}</button>`).join("")}</div>
+    <p class="hint">تقویم اعضا همین داده‌هاست: هفته‌ی جاری از Forex Factory (هر ساعت به‌روز می‌شود و هفته‌های گذشته ذخیره می‌مانند)، تاریخ‌های رسمی بانک‌های مرکزی و آمار آمریکا تا یک سال آینده، و رویدادهایی که شما ثبت می‌کنید. هر رویداد را می‌توانید ویرایش، پنهان یا حذف کنید.</p>
+    <div id="calistA"><div class="fxadm glass"><span class="spin"></span></div></div>`;
+  $("caadd").onclick = () => sheetEco();
+  $("caprev").onclick = () => { const d = new Date(caMonth + "-01T00:00:00Z"); d.setUTCMonth(d.getUTCMonth() - 1); caMonth = d.toISOString().slice(0, 7); loadCalA(); };
+  $("canext").onclick = () => { const d = new Date(caMonth + "-01T00:00:00Z"); d.setUTCMonth(d.getUTCMonth() + 1); caMonth = d.toISOString().slice(0, 7); loadCalA(); };
+  $("caf").onclick = e => { const b = e.target.closest("[data-ci]"); if (!b) return; caImp = b.dataset.ci; $("caf").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); paintCalA(); };
+  $("cas").onclick = e => { const b = e.target.closest("[data-cs]"); if (!b) return; caSrc = b.dataset.cs; $("cas").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); paintCalA(); };
+  $("calistA").onclick = async e => {
+    const hb = e.target.closest("[data-chide]"); if (hb) { e.stopPropagation(); const r = caRows.find(x => String(x.id) === hb.dataset.chide); const { error } = await sb.from("econ_events").update({ hidden: !r.hidden }).eq("id", r.id); if (error) return toast(error.message, true); r.hidden = !r.hidden; paintCalA(); return toast(r.hidden ? "از تقویم اعضا پنهان شد" : "دوباره نمایش داده می‌شود"); }
+    const db = e.target.closest("[data-cdel]"); if (db) { e.stopPropagation(); if (!confirm("این رویداد حذف شود؟")) return; const { error } = await sb.from("econ_events").delete().eq("id", db.dataset.cdel); if (error) return toast(error.message, true); toast("حذف شد"); return loadCalA(); }
+    const it = e.target.closest("[data-cev]"); if (it) sheetEco(caRows.find(x => String(x.id) === it.dataset.cev));
+  };
+  loadCalA();
+}
+async function loadCalA(){
+  const a = caMonth + "-01T00:00:00Z", d = new Date(a); d.setUTCMonth(d.getUTCMonth() + 1);
+  $("calab").textContent = new Intl.DateTimeFormat("fa-AF", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(caMonth + "-15T00:00:00Z")) + " · " + caMonth;
+  const { data, error } = await sb.from("econ_events").select("*").gte("at", a).lt("at", d.toISOString()).order("at").limit(2000);
+  if (error) { $("calistA").innerHTML = `<div class="empty">خطا: ${esc(error.message)}</div>`; return; }
+  caRows = data || []; paintCalA();
+}
+function paintCalA(){
+  const el = $("calistA"); if (!el) return;
+  const L = caRows.filter(r => (caImp === "all" || r.impact === caImp) && (caSrc === "all" || r.source === caSrc));
+  if (!L.length) { el.innerHTML = `<div class="empty"><div class="big">🗓</div>در این ماه رویدادی با این فیلترها نیست.</div>`; return; }
+  let last = "", h = "";
+  const kd = iso => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kabul" }).format(new Date(iso)), tm = iso => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kabul", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(iso));
+  for (const r of L) { const k = kd(r.at); if (k !== last) { if (last) h += "</div>"; last = k; h += `<div class="sec" style="margin-top:14px"><h3 style="font-size:14px">${fmtDate(r.at)}</h3></div><div class="list glass">`; }
+    h += `<div class="it" data-cev="${r.id}" style="${r.hidden || r.superseded ? "opacity:.5" : ""}"><span class="av" style="background:var(--field);font-size:12px" class="ltr">${r.all_day ? "روز" : tm(r.at)}</span>
+      <div><div class="t">${IMPF[r.impact]?.split(" ")[0] || ""} ${esc(r.title_fa || r.title)}</div><div class="s"><bdi class="ltr">${esc(r.currency || "")}</bdi> · ${SRCF[r.source] || r.source}${r.forecast ? " · پیش‌بینی " + esc(r.forecast) : ""}${r.previous ? " · قبلی " + esc(r.previous) : ""}${r.actual ? " · واقعی " + esc(r.actual) : ""}${r.superseded ? " · جایگزین با Forex Factory" : ""}${r.hidden ? " · پنهان" : ""}</div></div>
+      <div style="display:flex;gap:6px"><button class="ghost" style="width:auto;height:34px;margin:0;padding:0 10px" data-chide="${r.id}">${r.hidden ? "نمایش" : "پنهان"}</button>${r.source === "admin" || r.source === "official" ? `<button class="ghost red" style="width:auto;height:34px;margin:0;padding:0 10px" data-cdel="${r.id}">حذف</button>` : ""}</div></div>`; }
+  el.innerHTML = h + "</div>";
+}
+function sheetEco(r){
+  const x = r || {}, dtl = v => v ? new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Kabul", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(v)).replace(" ", "T") : "";
+  const CURS = ["USD", "EUR", "GBP", "JPY", "CNY", "CHF", "CAD", "AUD", "NZD", "AFN", "ALL"];
+  openSheet(`<h2>${r ? "ویرایش رویداد" : "رویداد جدید تقویم"}</h2>${r && r.source === "ff" ? `<p class="hint">این رویداد از Forex Factory آمده؛ با به‌روزرسانی بعدی ممکن است اعداد آن دوباره از منبع جایگزین شوند.</p>` : ""}
+    <label class="l">عنوان (دری)</label><input class="in" id="ce_t" maxlength="200" value="${esc(x.title_fa || x.title || "")}">
+    <label class="l">عنوان انگلیسی (اختیاری)</label><input class="in ltr" id="ce_te" maxlength="200" value="${esc(x.title_fa ? x.title : "")}">
+    <div class="two"><div><label class="l">تاریخ و ساعت (به وقت کابل)</label><input class="in" id="ce_at" type="datetime-local" value="${dtl(x.at)}"></div><div><label class="l">ارز / کشور</label><select class="in" id="ce_cur">${CURS.map(c => `<option ${c === (x.currency || "USD") ? "selected" : ""}>${c}</option>`).join("")}</select></div></div>
+    <label class="fxchk"><input type="checkbox" id="ce_ad" ${x.all_day ? "checked" : ""}> تمام روز (ساعت مشخص ندارد)</label>
+    <label class="l">اهمیت</label><select class="in" id="ce_imp">${Object.entries(IMPF).map(([k, t]) => `<option value="${k}" ${k === (x.impact || "medium") ? "selected" : ""}>${t}</option>`).join("")}</select>
+    <div class="rrow"><div><label class="l">قبلی</label><input class="in num" id="ce_p" dir="ltr" value="${esc(x.previous || "")}"></div><div><label class="l">پیش‌بینی</label><input class="in num" id="ce_f" dir="ltr" value="${esc(x.forecast || "")}"></div><div><label class="l">واقعی</label><input class="in num" id="ce_a" dir="ltr" value="${esc(x.actual || "")}"></div></div>
+    <label class="l">توضیحات</label><textarea class="in" id="ce_d" rows="4">${esc(x.description || "")}</textarea>
+    <label class="l">لینک منبع (اختیاری)</label><input class="in ltr" id="ce_u" value="${esc(x.source_url || "")}" placeholder="https://">
+    <button class="cta press" id="ce_s">${r ? "ذخیره‌ی تغییرات" : "افزودن به تقویم"}</button>`);
+  $("ce_s").onclick = async () => { const t = $("ce_t").value.trim(), at = $("ce_at").value; if (!t) return toast("عنوان را بنویسید", true); if (!at) return toast("تاریخ را وارد کنید", true);
+    const u = $("ce_u").value.trim(); if (u && !/^https?:\/\//.test(u)) return toast("لینک باید با https:// شروع شود", true);
+    const iso = new Date(at + ":00+04:30").toISOString(), te = $("ce_te").value.trim();
+    const row = { title: te || t, title_fa: t, at: iso, currency: $("ce_cur").value, all_day: $("ce_ad").checked, impact: $("ce_imp").value, previous: toEnA($("ce_p").value.trim()) || null, forecast: toEnA($("ce_f").value.trim()) || null, actual: toEnA($("ce_a").value.trim()) || null, description: $("ce_d").value.trim() || null, source_url: u || null, updated_at: new Date().toISOString() };
+    busy($("ce_s"), true);
+    const { error } = r ? await sb.from("econ_events").update(row).eq("id", r.id) : await sb.from("econ_events").insert({ ...row, source: "admin" });
+    if (error) { busy($("ce_s"), false, "ذخیره"); return toast("خطا: " + error.message, true); }
+    closeSheet(); toast("ذخیره شد ✓ — در تقویم اعضا دیده می‌شود"); caMonth = iso.slice(0, 7); if (tab === "cal") loadCalA(); };
+}
+
+/* ===== مدیریت آکادمی: دوره‌ها، تحلیل‌های هفتگی، ویدیوهای کوتاه ===== */
+let amTab = "courses", amC = [], amI = [], amA = [];
+async function upMedia(file, dir){ const ext = (file.name?.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "") || "bin";
+  const path = `academy/${dir}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+  const up = await sb.storage.from("media").upload(path, file, { contentType: file.type || "application/octet-stream" }); if (up.error) throw up.error; return path; }
+async function sheetAcadMgr(){
+  const [{ data: c }, { data: i }, { data: a }] = await Promise.all([sb.from("courses").select("*").order("sort").order("created_at", { ascending: false }), sb.from("course_items").select("*").order("sort").order("id"), sb.from("academy_items").select("*").order("publish_at", { ascending: false }).limit(300)]);
+  amC = c || []; amI = i || []; amA = a || [];
+  const T3 = [["courses", "📚 دوره‌ها"], ["weekly", "🗓 تحلیل‌های هفتگی"], ["short", "🎬 ویدیوهای کوتاه"]];
+  const body = () => {
+    if (amTab === "courses") return `<button class="cta press" id="am_new">＋ دوره‌ی جدید</button><div class="list glass" style="margin-top:12px">${amC.length ? amC.map(x => `<div class="it" data-amc="${x.id}"><span class="av" style="background:var(--field)">📚</span>
+      <div><div class="t">${esc(x.title)} ${x.status === "hidden" ? '<span class="chip off" style="font-size:10px">غیرفعال</span>' : '<span class="chip on" style="font-size:10px">منتشر</span>'}</div><div class="s">${amI.filter(z => z.course_id === x.id).length} درس · ${fmtDate(x.created_at)}</div></div><span class="s">›</span></div>`).join("") : `<div class="empty">هنوز دوره‌ای نساخته‌اید.</div>`}</div>`;
+    const k = amTab, L = amA.filter(x => x.kind === k);
+    return `<button class="cta press" id="am_new">＋ ${k === "weekly" ? "تحلیل هفتگی جدید" : "ویدیوی کوتاه جدید"}</button><div class="list glass" style="margin-top:12px">${L.length ? L.map(x => `<div class="it" data-ama="${x.id}"><span class="av" style="background:var(--field)">${k === "weekly" ? "🗓" : "🎬"}</span>
+      <div><div class="t">${esc(x.title)} ${x.status === "hidden" ? '<span class="chip off" style="font-size:10px">غیرفعال</span>' : new Date(x.publish_at) > Date.now() ? '<span class="chip warn" style="font-size:10px">زمان‌بندی‌شده</span>' : ""}</div><div class="s">انتشار: ${fmtFull(x.publish_at)}${x.video_path || x.video_url ? " · 🎬" : ""}${x.file_path ? " · 📎" : ""}</div></div><span class="s">›</span></div>`).join("") : `<div class="empty">هنوز موردی ثبت نشده.</div>`}</div>`;
+  };
+  openSheet(`<h2>🎓 مدیریت آکادمی و آموزش</h2><p class="hint">هر چه اینجا منتشر کنید در «آکادمی و آموزش» اعضا (منوی ⋮) دیده می‌شود.</p>
+    <div class="mf mfp" id="amt">${T3.map(([k, t]) => `<button data-amt="${k}" class="${k === amTab ? "on" : ""}">${t}</button>`).join("")}</div><div id="amb">${body()}</div>`);
+  const rebind = () => { $("am_new").onclick = () => amTab === "courses" ? sheetCourse() : sheetAItem(amTab); };
+  rebind();
+  $("amt").onclick = e => { const b = e.target.closest("[data-amt]"); if (!b) return; amTab = b.dataset.amt; $("amt").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); $("amb").innerHTML = body(); rebind(); };
+  $("amb").onclick = e => { const c2 = e.target.closest("[data-amc]"); if (c2) return sheetCourse(amC.find(x => String(x.id) === c2.dataset.amc)); const a2 = e.target.closest("[data-ama]"); if (a2) return sheetAItem(amTab, amA.find(x => String(x.id) === a2.dataset.ama)); };
+}
+function sheetCourse(C){
+  const x = C || {}, its = C ? amI.filter(z => z.course_id === C.id) : [];
+  openSheet(`<button type="button" class="ghost" id="cbk" style="width:auto;padding:0 12px">→ بازگشت</button><h2>${C ? "ویرایش دوره" : "دوره‌ی جدید"}</h2>
+    <label class="l">عنوان دوره</label><input class="in" id="c_t" maxlength="160" value="${esc(x.title || "")}">
+    <label class="l">توضیح کوتاه</label><textarea class="in" id="c_d" rows="3" maxlength="1000">${esc(x.description || "")}</textarea>
+    <label class="l">سرفصل‌ها و محتوای دوره</label><textarea class="in" id="c_c" rows="6" maxlength="8000">${esc(x.content || "")}</textarea>
+    <div class="two"><div><label class="l">سطح</label><select class="in" id="c_l">${[["", "—"], ["beginner", "مقدماتی"], ["intermediate", "متوسط"], ["pro", "پیشرفته"]].map(([k, t]) => `<option value="${k}" ${k === (x.level || "") ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+      <div><label class="l">ترتیب نمایش</label><input class="in ltr" id="c_s" inputmode="numeric" value="${x.sort ?? 0}"></div></div>
+    <label class="l">تصویر کاور${x.cover_path ? " — دارد ✓" : ""}</label><input class="in" id="c_cv" type="file" accept="image/*" style="padding-top:13px">
+    <label class="fxchk"><input type="checkbox" id="c_pub" ${x.status !== "hidden" ? "checked" : ""}> منتشر شده (اعضا می‌بینند)</label>
+    <div class="hint" id="c_pg"></div><button class="cta press" id="c_save">${C ? "ذخیره‌ی دوره" : "ساخت دوره"}</button>
+    ${C ? `<h3 class="bh">🎬 درس‌ها (${its.length})</h3><div class="list glass">${its.map((z, n) => `<div class="it" data-les="${z.id}"><span class="av" style="background:var(--field)">${n + 1}</span><div><div class="t">${esc(z.title)}</div><div class="s">${z.video_path || z.video_url ? "🎬 ویدیو" : ""}${z.image_path ? " · 🖼" : ""}${z.file_path ? " · 📎" : ""}</div></div><span class="s">›</span></div>`).join("") || `<div class="empty">هنوز درسی اضافه نشده.</div>`}</div>
+      <button class="cta press" id="c_les" style="margin-top:10px">＋ افزودن درس / ویدیو</button><button class="ghost red" id="c_del">حذف کامل دوره</button>` : ""}`);
+  $("cbk").onclick = sheetAcadMgr;
+  $("c_save").onclick = async () => { const t = $("c_t").value.trim(); if (!t) return toast("عنوان دوره را بنویسید", true); const b = $("c_save"); busy(b, true);
+    try { const row = { title: t, description: $("c_d").value.trim() || null, content: $("c_c").value.trim() || null, level: $("c_l").value || null, sort: parseInt($("c_s").value) || 0, status: $("c_pub").checked ? "published" : "hidden", updated_at: new Date().toISOString() };
+      const f = $("c_cv").files[0]; if (f) { $("c_pg").textContent = "آپلود کاور…"; row.cover_path = await upMedia(await compressImage(f), "covers"); }
+      const { data, error } = C ? await sb.from("courses").update(row).eq("id", C.id).select().single() : await sb.from("courses").insert(row).select().single(); if (error) throw error;
+      if (f && C?.cover_path) sb.storage.from("media").remove([C.cover_path]);
+      toast("ذخیره شد ✓"); amC = amC.filter(z => z.id !== data.id).concat(data); sheetCourse(data);
+    } catch (x2) { busy(b, false, "ذخیره"); toast("خطا: " + x2.message, true); } };
+  if (!C) return;
+  $("c_les").onclick = () => sheetLesson(C);
+  $("sheet").querySelectorAll("[data-les]").forEach(el => el.onclick = () => sheetLesson(C, its.find(z => String(z.id) === el.dataset.les)));
+  $("c_del").onclick = async () => { if (!confirm(`دوره‌ی «${C.title}» با همه‌ی درس‌هایش حذف شود؟`)) return;
+    const files = [C.cover_path, ...its.flatMap(z => [z.video_path, z.image_path, z.file_path])].filter(Boolean);
+    const { error } = await sb.from("courses").delete().eq("id", C.id); if (error) return toast(error.message, true); if (files.length) sb.storage.from("media").remove(files); toast("دوره حذف شد"); sheetAcadMgr(); };
+}
+function sheetLesson(C, L){
+  const x = L || {};
+  openSheet(`<button type="button" class="ghost" id="lbk" style="width:auto;padding:0 12px">→ بازگشت به دوره</button><h2>${L ? "ویرایش درس" : "درس جدید"} · ${esc(C.title)}</h2>
+    <label class="l">عنوان درس</label><input class="in" id="l_t" maxlength="160" value="${esc(x.title || "")}">
+    <label class="l">توضیحات</label><textarea class="in" id="l_d" rows="4" maxlength="4000">${esc(x.description || "")}</textarea>
+    <label class="l">فایل ویدیو (حداکثر ۵۰ مگابایت)${x.video_path ? " — دارد ✓" : ""}</label><input class="in" id="l_v" type="file" accept="video/*" style="padding-top:13px">
+    <label class="l">یا لینک ویدیو (یوتیوب یا هر لینک دیگر)</label><input class="in ltr" id="l_u" value="${esc(x.video_url || "")}" placeholder="https://youtu.be/...">
+    <label class="l">تصویر (اختیاری)${x.image_path ? " — دارد ✓" : ""}</label><input class="in" id="l_i" type="file" accept="image/*" style="padding-top:13px">
+    <label class="l">فایل پیوست PDF (اختیاری)${x.file_name ? " — " + esc(x.file_name) : ""}</label><input class="in" id="l_f" type="file" accept="application/pdf,image/*" style="padding-top:13px">
+    <label class="l">ترتیب</label><input class="in ltr" id="l_s" inputmode="numeric" value="${x.sort ?? amI.filter(z => z.course_id === C.id).length + 1}">
+    <div class="hint" id="l_pg"></div><button class="cta press" id="l_save">${L ? "ذخیره" : "افزودن درس"}</button>${L ? `<button class="ghost red" id="l_del">حذف درس</button>` : ""}`);
+  $("lbk").onclick = () => sheetCourse(C);
+  $("l_save").onclick = async () => { const t = $("l_t").value.trim(); if (!t) return toast("عنوان درس را بنویسید", true); const u = $("l_u").value.trim(); if (u && !/^https?:\/\//.test(u)) return toast("لینک باید با https:// شروع شود", true);
+    const b = $("l_save"); busy(b, true); const added = [];
+    try { const row = { course_id: C.id, title: t, description: $("l_d").value.trim() || null, video_url: u || null, sort: parseInt($("l_s").value) || 0 };
+      const v = $("l_v").files[0]; if (v) { if (v.size > 50 * 1024 * 1024) throw new Error("ویدیو بیشتر از ۵۰ مگابایت است"); $("l_pg").textContent = "آپلود ویدیو…"; row.video_path = await upMedia(v, "videos"); added.push(row.video_path); }
+      const im = $("l_i").files[0]; if (im) { $("l_pg").textContent = "آپلود تصویر…"; row.image_path = await upMedia(await compressImage(im), "images"); added.push(row.image_path); }
+      const f = $("l_f").files[0]; if (f) { if (f.size > 20 * 1024 * 1024) throw new Error("پیوست بیشتر از ۲۰ مگابایت است"); $("l_pg").textContent = "آپلود پیوست…"; row.file_path = await upMedia(f, "files"); row.file_name = f.name.slice(0, 120); added.push(row.file_path); }
+      const { data, error } = L ? await sb.from("course_items").update(row).eq("id", L.id).select().single() : await sb.from("course_items").insert(row).select().single(); if (error) throw error;
+      if (L) { const old = [row.video_path && L.video_path, row.image_path && L.image_path, row.file_path && L.file_path].filter(Boolean); if (old.length) sb.storage.from("media").remove(old); }
+      amI = amI.filter(z => z.id !== data.id).concat(data).sort((p, q) => p.sort - q.sort); toast("ذخیره شد ✓"); sheetCourse(C);
+    } catch (x2) { if (added.length) sb.storage.from("media").remove(added); busy(b, false, "ذخیره"); $("l_pg").textContent = ""; toast("خطا: " + x2.message, true); } };
+  if ($("l_del")) $("l_del").onclick = async () => { if (!confirm("این درس حذف شود؟")) return; const { error } = await sb.from("course_items").delete().eq("id", L.id); if (error) return toast(error.message, true);
+    const files = [L.video_path, L.image_path, L.file_path].filter(Boolean); if (files.length) sb.storage.from("media").remove(files); amI = amI.filter(z => z.id !== L.id); toast("حذف شد"); sheetCourse(C); };
+}
+function sheetAItem(kind, X){
+  const x = X || {}, wk = kind === "weekly", dtl = v => v ? new Date(new Date(v) - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 16) : "";
+  openSheet(`<button type="button" class="ghost" id="abk" style="width:auto;padding:0 12px">→ بازگشت</button><h2>${X ? "ویرایش" : "افزودن"} ${wk ? "تحلیل هفتگی" : "ویدیوی کوتاه"}</h2>
+    <label class="l">عنوان</label><input class="in" id="a_t" maxlength="160" value="${esc(x.title || "")}">
+    <label class="l">${wk ? "متن تحلیل" : "توضیحات"}</label><textarea class="in" id="a_b" rows="${wk ? 8 : 3}" maxlength="10000">${esc(x.body || "")}</textarea>
+    <label class="l">تاریخ انتشار${wk ? " (هفته‌ی تحلیل)" : ""}</label><input class="in" id="a_at" type="datetime-local" value="${dtl(x.publish_at || new Date())}">
+    <label class="l">فایل ویدیو (حداکثر ۵۰ مگابایت)${x.video_path ? " — دارد ✓" : ""}</label><input class="in" id="a_v" type="file" accept="video/*" style="padding-top:13px">
+    <label class="l">یا لینک ویدیو</label><input class="in ltr" id="a_u" value="${esc(x.video_url || "")}" placeholder="https://">
+    ${wk ? `<label class="l">تصویر کاور (اختیاری)${x.cover_path ? " — دارد ✓" : ""}</label><input class="in" id="a_c" type="file" accept="image/*" style="padding-top:13px">
+      <label class="l">فایل پیوست (PDF، اختیاری)${x.file_name ? " — " + esc(x.file_name) : ""}</label><input class="in" id="a_f" type="file" accept="application/pdf,image/*" style="padding-top:13px">` : ""}
+    <label class="fxchk"><input type="checkbox" id="a_pub" ${x.status !== "hidden" ? "checked" : ""}> منتشر شده (اعضا می‌بینند)</label>
+    <div class="hint" id="a_pg"></div><button class="cta press" id="a_save">${X ? "ذخیره" : "انتشار"}</button>${X ? `<button class="ghost red" id="a_del">حذف</button>` : ""}`);
+  $("abk").onclick = sheetAcadMgr;
+  $("a_save").onclick = async () => { const t = $("a_t").value.trim(); if (!t) return toast("عنوان را بنویسید", true); const u = $("a_u").value.trim(); if (u && !/^https?:\/\//.test(u)) return toast("لینک باید با https:// شروع شود", true);
+    const b = $("a_save"); busy(b, true); const added = [];
+    try { const row = { kind, title: t, body: $("a_b").value.trim() || null, video_url: u || null, publish_at: $("a_at").value ? new Date($("a_at").value).toISOString() : new Date().toISOString(), status: $("a_pub").checked ? "published" : "hidden", updated_at: new Date().toISOString() };
+      const v = $("a_v").files[0]; if (v) { if (v.size > 50 * 1024 * 1024) throw new Error("ویدیو بیشتر از ۵۰ مگابایت است"); $("a_pg").textContent = "آپلود ویدیو…"; row.video_path = await upMedia(v, "videos"); added.push(row.video_path); }
+      if (!wk && !row.video_path && !row.video_url && !x.video_path && !x.video_url) throw new Error("ویدیو یا لینک ویدیو لازم است");
+      const c = $("a_c")?.files[0]; if (c) { row.cover_path = await upMedia(await compressImage(c), "covers"); added.push(row.cover_path); }
+      const f = $("a_f")?.files[0]; if (f) { if (f.size > 20 * 1024 * 1024) throw new Error("پیوست بیشتر از ۲۰ مگابایت است"); row.file_path = await upMedia(f, "files"); row.file_name = f.name.slice(0, 120); added.push(row.file_path); }
+      const { error } = X ? await sb.from("academy_items").update(row).eq("id", X.id) : await sb.from("academy_items").insert(row); if (error) throw error;
+      if (X) { const old = [row.video_path && X.video_path, row.cover_path && X.cover_path, row.file_path && X.file_path].filter(Boolean); if (old.length) sb.storage.from("media").remove(old); }
+      toast("ذخیره شد ✓"); sheetAcadMgr();
+    } catch (x2) { if (added.length) sb.storage.from("media").remove(added); busy(b, false, "ذخیره"); $("a_pg").textContent = ""; toast("خطا: " + x2.message, true); } };
+  if ($("a_del")) $("a_del").onclick = async () => { if (!confirm("حذف شود؟")) return; const { error } = await sb.from("academy_items").delete().eq("id", X.id); if (error) return toast(error.message, true);
+    const files = [X.video_path, X.cover_path, X.file_path].filter(Boolean); if (files.length) sb.storage.from("media").remove(files); toast("حذف شد"); sheetAcadMgr(); };
+}
+
+/* ===== زبان پنل مدیر (دری / پشتو / انگلیسی): ترجمه‌ی کامل همه‌ی متن‌های پنل، با حافظه ===== */
+let alang = (() => { try { return localStorage.getItem("alang") || "fa"; } catch { return "fa"; } })();
+const AL_NAMES = { fa: "دری", ps: "پښتو", en: "English" };
+let alCache = (() => { try { return JSON.parse(localStorage.getItem("alc_" + alang) || "{}"); } catch { return {}; } })();
+const alSave = () => { try { const k = Object.keys(alCache); if (k.length > 4000) k.slice(0, k.length - 4000).forEach(z => delete alCache[z]); localStorage.setItem("alc_" + alang, JSON.stringify(alCache)); } catch {} };
+const AR = /[\u0600-\u06FF]/, alOut = new Set(Object.values(alCache));
+const alSkip = el => !el || el.closest("[data-notr],script,style,textarea,.bub,.ntext,.note,.cmrb,.tki b,.mtk");
+const alQ = new Map(); let alT = null, alBusy = false;
+function alNode(n){
+  if (n.nodeType === 3) { const t = n.nodeValue; if (!t || !AR.test(t) || n.__al === t || alSkip(n.parentElement)) return; const k = t.trim(); if (!k || alOut.has(k)) return;
+    if (alCache[k]) { n.nodeValue = t.replace(k, alCache[k]); n.__al = n.nodeValue; } else alQ.set(k, true); return; }
+  if (n.nodeType !== 1 || alSkip(n)) return;
+  const atr = el => { for (const a of ["placeholder", "title", "aria-label"]) { const v = el.getAttribute(a); if (v && AR.test(v) && !alOut.has(v.trim())) { if (alCache[v.trim()]) el.setAttribute(a, alCache[v.trim()]); else alQ.set(v.trim(), true); } } };
+  atr(n);
+  if ((n.tagName === "INPUT" && (n.type === "button" || n.type === "submit")) && AR.test(n.value || "")) { const v = n.value.trim(); if (alCache[v]) n.value = alCache[v]; else alQ.set(v, true); }
+  const w = document.createTreeWalker(n, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT); let c; while ((c = w.nextNode())) { if (c.nodeType === 3) alNode(c); else if (!alSkip(c)) atr(c); }
+}
+async function alFlush(){
+  if (alBusy || !alQ.size) return; alBusy = true;
+  const all = [...alQ.keys()].filter(k => !alCache[k]); alQ.clear();
+  for (let i = 0; i < all.length;) { const chunk = []; let len = 0; while (i < all.length && len + all[i].length < 1400 && chunk.length < 40) { chunk.push(all[i]); len += all[i].length + 1; i++; } if (!chunk.length) { chunk.push(all[i]); i++; }
+    try { const r = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&dt=t&tl=" + alang + "&q=" + encodeURIComponent(chunk.join("\n")));
+      if (r.ok) { const j = await r.json(), out = (j[0] || []).map(x => x[0]).join("").split("\n"); if (out.length === chunk.length) chunk.forEach((k, n) => { alCache[k] = out[n].trim() || k; alOut.add(alCache[k]); });
+        else for (const k of chunk) { try { const r1 = await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&dt=t&tl=" + alang + "&q=" + encodeURIComponent(k)); if (r1.ok) { const j1 = await r1.json(); alCache[k] = (j1[0] || []).map(x => x[0]).join("").trim() || k; alOut.add(alCache[k]); } } catch {} } } } catch {} }
+  alSave(); alBusy = false; alApply(document.body); if (alQ.size) { clearTimeout(alT); alT = setTimeout(alFlush, 4000); }
+}
+function alApply(root){ if (alang === "fa") return; alNode(root); clearTimeout(alT); alT = setTimeout(alFlush, 120); }
+function alInit(){
+  if (alang === "fa") return;
+  document.documentElement.lang = alang; if (alang === "en") document.documentElement.dir = "ltr";
+  alApply(document.body);
+  new MutationObserver(ms => { if (alang === "fa") return; for (const m of ms) { if (m.type === "characterData") { const n = m.target; if (n.__al !== n.nodeValue) alNode(n); } else m.addedNodes.forEach(n => alNode(n)); } clearTimeout(alT); alT = setTimeout(alFlush, 120); })
+    .observe(document.body, { childList: true, subtree: true, characterData: true });
+}
+function sheetLang(){
+  openSheet(`<h2>🌐 زبان پنل مدیر</h2><p class="hint">با انتخاب زبان، تمام متن‌های پنل مدیر (منوها، دکمه‌ها، فرم‌ها و پیام‌ها) به آن زبان نمایش داده می‌شود. ترجمه‌ها در همین دستگاه ذخیره می‌شوند و دفعه‌های بعد فوری‌اند. محتوایی که اعضا می‌نویسند (پیام‌ها و نظرها) ترجمه نمی‌شود.</p>
+    <div class="langsA">${Object.entries(AL_NAMES).map(([k, t]) => `<button type="button" class="${k === alang ? "on" : ""}" data-al="${k}">${t}</button>`).join("")}</div>`);
+  $("sheet").querySelector(".langsA").onclick = e => { const b = e.target.closest("[data-al]"); if (!b || b.dataset.al === alang) return; try { localStorage.setItem("alang", b.dataset.al); } catch {} location.reload(); };
 }
 
 /* ===== وضعیت منابع و APIها ===== */
@@ -2771,6 +3178,7 @@ async function route(session){
   renderPanel(); adminUid = session.user.id; pushSetup(false, adminUid).then(paintAdminPush);
 }
 let lastUid;
+alInit();
 sb.auth.onAuthStateChange((event, session) => {
   const uid = session?.user?.id ?? null;
   if (event === "TOKEN_REFRESHED" && uid === lastUid) return;

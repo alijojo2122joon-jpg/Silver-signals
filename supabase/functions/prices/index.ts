@@ -45,10 +45,12 @@ Deno.serve(async (req) => {
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
   const w = await who(req, admin);
   if (!w.cron && !w.admin && !w.member) return denied(cors);
-  const { data: rows } = await admin.from("settings").select("key,value,updated_at").in("key", ["market_cache", "tg_cache", "xag_live", "ticker_cfg"]);
+  const { data: rows } = await admin.from("settings").select("key,value,updated_at").in("key", ["market_cache", "tg_cache", "xag_live", "ticker_cfg", "live_ticks"]);
+  const liveV = rows?.find(r => r.key === "live_ticks")?.value as any;
+  const withLive = (v: any) => (liveV?.q ? { ...v, live: liveV } : v);
   const cache = rows?.find(r => r.key === "market_cache"); const tg = rows?.find(r => r.key === "tg_cache")?.value as any;
   const live = rows?.find(r => r.key === "xag_live")?.value as any;
-  if (cache && Date.now() - new Date(cache.updated_at).getTime() < 5_000) return json(cache.value);
+  if (cache && Date.now() - new Date(cache.updated_at).getTime() < 5_000) return json(withLive(cache.value));
   const prev = (cache?.value ?? {}) as Record<string, any>;
   const old = (k: string, ms: number) => !prev[k] || Date.now() - new Date(prev[k]).getTime() > ms;
   const needSpark = old("sparkAt", 300_000) || !prev.dxy?.price;
@@ -79,7 +81,12 @@ Deno.serve(async (req) => {
     afn: { rate: afn ?? prev.afn?.rate ?? null, src: "market" },
     markets,
   };
+  // the live relay's quote wins when it is newer (same source for the whole site)
+  const lq = liveV?.q || {};
+  for (const [k, K] of [["xau", "XAU"], ["xag", "XAG"], ["dxy", "DXY"]]) { const q = lq[K]; if (Array.isArray(q) && q[3] && q[3] > (Date.parse(val[k].quoteAt) || 0) && Date.now() - q[3] < 10 * 60_000) { val[k].price = q[0]; val[k].quoteAt = new Date(q[3]).toISOString(); } }
+  for (const [k, K] of [["eurusd", "EURUSD"], ["gbpusd", "GBPUSD"], ["usdjpy", "USDJPY"], ["usdchf", "USDCHF"], ["wti", "WTI"], ["brent", "BRENT"]]) { const q = lq[K]; const m = markets[k];
+    if (m && Array.isArray(q) && q[3] && q[3] > (Date.parse(m.at) || 0)) { m.price = q[0]; m.at = new Date(q[3]).toISOString(); } }
   for (const k of ["xau", "xag"]) { const s = val[k]; if (s.price && s.spark.length) s.spark = [...s.spark.slice(0, -1), s.price]; }
   await admin.from("settings").upsert({ key: "market_cache", value: val, updated_at: new Date().toISOString() });
-  return json(val);
+  return json(withLive(val));
 });

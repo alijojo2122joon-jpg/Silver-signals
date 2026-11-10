@@ -1,7 +1,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-// Member self-service for sensitive account changes. Every action re-checks the CURRENT password first (security confirmation):
+// Sensitive account changes for the ADMIN's own account (members cannot change their email or password; only the admin
+// does that for them, through manage-members). Every action re-checks the CURRENT password first (security confirmation):
 //  - email:    change the sign-in email
 //  - password: change the password (leaked passwords are refused)
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
@@ -25,6 +26,8 @@ Deno.serve(async (req) => {
   const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
   const { data: u } = await admin.auth.getUser(tok);
   const user = u?.user; if (!user?.email) return json({ error: "unauthorized" }, 401);
+  const { data: prof } = await admin.from("profiles").select("role").eq("id", user.id).maybeSingle();
+  if (prof?.role !== "admin") return json({ error: "admin_only" }, 403);
   let b: Record<string, unknown> = {}; try { b = await req.json(); } catch { return json({ error: "bad_request" }, 400); }
   const password = String(b.password ?? "");
   // security confirmation: the current password must be right (separate client; the extra session is signed out right away)

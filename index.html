@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https://segfazxjglbawdhopnra.supabase.co https://cdn.jsdelivr.net; connect-src 'self' https://segfazxjglbawdhopnra.supabase.co wss://segfazxjglbawdhopnra.supabase.co wss://stream.binance.com:9443 wss://data-stream.binance.vision https://cdn.jsdelivr.net https://translate.googleapis.com https://api.mymemory.translated.net; frame-src https://*.tradingview.com https://*.tradingview-widget.com https://www.youtube-nocookie.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>/* clickjacking guard: never run inside a frame from another site */try{if(top!==self&&top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.display="none";top.location=self.location.href}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1307,14 +1307,59 @@
   /* ===== نوار چرخشی قیمت‌ها ===== */
   .mtk{position:relative;overflow:hidden;margin:0 0 12px;padding:7px 0;border-radius:16px;background:var(--field);box-shadow:var(--sh-in);direction:ltr;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
-  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack,.mtk:active .tktrack{animation-play-state:paused}
+  .tktrack{display:flex;width:max-content;animation:tkmove var(--tkd,45s) linear infinite} .mtk:hover .tktrack{animation-play-state:paused}
   .tkset{display:flex;flex:none}
   .tki{display:inline-flex;align-items:baseline;gap:6px;padding:0 16px;white-space:nowrap;font-size:12.5px;border-inline-end:1px solid color-mix(in srgb,var(--muted) 25%,transparent)}
   .tki b{font-weight:800;direction:rtl} .tki i{font-style:normal;font-size:10.5px;color:var(--muted);font-family:Montserrat,Arial,sans-serif}
   .tki em{font-style:normal;font-weight:900;font-family:Montserrat,Arial,sans-serif} .tki u{text-decoration:none;font-weight:800;font-size:11px;font-family:Montserrat,Arial,sans-serif}
   .tki.up u,.tki.up em{color:#0a9b5c} .tki.dn u,.tki.dn em{color:#d93a3a}
-  @keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media (prefers-reduced-motion:reduce){.tktrack{animation-duration:calc(var(--tkd,45s)*3)}}
+  @keyframes tkmove{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  .tktrack{will-change:transform} .tki.lv-pos u,.tki.lv-pos em{color:#0a9b5c} .tki.lv-neg u,.tki.lv-neg em{color:#d93a3a}
+  .lv-up{animation:lvup .9s ease-out} .lv-dn{animation:lvdn .9s ease-out}
+  @keyframes lvup{0%{background:rgba(10,155,92,.32);color:#0a9b5c}100%{background:transparent}} @keyframes lvdn{0%{background:rgba(217,58,58,.3);color:#d93a3a}100%{background:transparent}}
+  .rsg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin-top:8px} .rsg span{display:grid;gap:1px;padding:8px 10px;border-radius:12px;background:var(--field)} .rsg small{font-size:10.5px;color:var(--muted)} .rsg b{font-size:13px}
+  @media(min-width:640px){.rsg{grid-template-columns:repeat(4,1fr)}}
+  .lbhead{display:grid;gap:8px;margin-bottom:8px} .lbq{width:100%;padding:10px 14px;border-radius:14px;border:0;background:var(--field);box-shadow:var(--sh-in);color:inherit;font:inherit}
+  .lbx{border-radius:20px;padding:4px 0;overflow:hidden}
+  .lrow{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1.2fr) auto;gap:8px;align-items:center;padding:11px 14px;border-bottom:1px solid color-mix(in srgb,var(--muted) 14%,transparent)}
+  .lrow:last-child{border-bottom:0} .ln{display:flex;align-items:center;gap:8px;min-width:0} .ln i{font-style:normal;font-size:18px} .ln span{display:grid;min-width:0} .ln b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .ln small{font-size:10.5px;color:var(--muted)}
+  .lp{display:grid;justify-items:end;gap:2px} .lp b{font-family:Montserrat,Arial,sans-serif;font-weight:900;font-size:15px;padding:1px 6px;border-radius:8px} .lba{font-size:10.5px;color:var(--muted)} .lba em{font-style:normal;opacity:.75}
+  .lrow.nba .lba{display:none}
+  .lc{display:grid;justify-items:end;gap:2px;min-width:74px} .lc u{text-decoration:none;font-weight:800;font-size:12px;font-family:Montserrat,Arial,sans-serif;padding:3px 7px;border-radius:9px;background:var(--field)} .lc small{font-size:10px;color:var(--muted)}
+  .luxp .bigav{box-shadow:0 0 0 3px #f3d27a,0 0 0 6px rgba(201,150,43,.25),0 14px 34px rgba(201,150,43,.28)} .luxp .pbody h2{font-size:22px;letter-spacing:.2px}
+  .pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px} .pstats span{display:grid;gap:2px;padding:10px 8px;border-radius:16px;background:linear-gradient(160deg,rgba(243,210,122,.16),rgba(201,150,43,.06));border:1px solid rgba(212,165,59,.25);text-align:center}
+  .pstats small{font-size:10.5px;color:var(--muted)} .pstats b{font-size:13px}
+  .pform.lux{border:1px solid rgba(212,165,59,.22);background:linear-gradient(170deg,rgba(243,210,122,.07),transparent 60%)} .pform.lux h3{color:#c9962b}
+  .pfl.lx span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px} .cta.gold{background:linear-gradient(135deg,#f3d27a,#c9962b);color:#1b1405}
+  .pfro2{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:var(--field);margin-top:8px;font-size:13px} .pfro2 span{color:var(--muted)}
+  .pflock{font-size:11.5px;line-height:1.8;color:var(--muted);margin:10px 2px 0}
+  .nimp{background:linear-gradient(135deg,#f3d27a,#c9962b)!important;color:#1b1405!important;margin-inline-start:6px}
+  .acseg{margin:0 0 12px} .acseg button{font-size:12.5px}
+  .acgrid{display:grid;gap:12px} @media(min-width:640px){.acgrid{grid-template-columns:1fr 1fr}}
+  .accard{display:grid;grid-template-columns:96px 1fr;gap:12px;text-align:start;padding:10px;border:0;border-radius:20px;color:inherit;font:inherit;cursor:pointer;align-items:start}
+  .accard img,.acph{width:96px;height:96px;border-radius:16px;object-fit:cover;background:var(--field);display:grid;place-items:center;font-size:34px} .accard b{font-size:15px} .accard small{display:block;color:#c9962b;font-size:11.5px;margin:3px 0} .accard p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .accourse{padding:16px;border-radius:22px;margin:10px 0} .accov{width:100%;max-height:220px;object-fit:cover;border-radius:16px;margin-bottom:10px} .accourse h2{margin:0 0 6px} .pre{white-space:pre-wrap;line-height:1.9}
+  .aclesson{padding:14px;border-radius:20px;margin-bottom:10px} .acln{display:flex;gap:10px;align-items:flex-start} .acln>b{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f3d27a,#c9962b);color:#1b1405}
+  .acln h4{margin:2px 0 4px} .acln p{margin:0;font-size:13px;color:var(--muted);line-height:1.8}
+  .acv,.shv{width:100%;border-radius:14px;margin-top:10px;background:#000;max-height:420px} .acimg{width:100%;border-radius:14px;margin-top:10px;object-fit:cover;max-height:300px}
+  .acbtn{display:inline-flex;align-items:center;gap:6px;margin:10px 6px 0 0;padding:9px 14px;border-radius:12px;border:0;background:var(--field);color:inherit;font:inherit;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none}
+  .ytw{position:relative;padding-top:56.25%;margin-top:10px;border-radius:14px;overflow:hidden} .ytw.tall{padding-top:177%} .ytw iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .acweek{padding:16px;border-radius:22px;margin-bottom:12px} .acwd{display:inline-flex;gap:6px;align-items:baseline;padding:5px 12px;border-radius:999px;background:linear-gradient(135deg,rgba(243,210,122,.22),rgba(201,150,43,.1));font-size:12px} .acwd span{color:var(--muted)}
+  .acweek h3{margin:10px 0 6px} .acweek p{font-size:13.5px} .nclip{max-height:7.2em;overflow:hidden}
+  .shgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px} @media(min-width:640px){.shgrid{grid-template-columns:repeat(3,1fr)}} .shcard{padding:8px;border-radius:18px;display:grid;gap:4px} .shcard .shv{aspect-ratio:9/16;object-fit:cover;margin-top:0;max-height:none}
+  .shcard b{font-size:13px} .shcard p{margin:0;font-size:12px;color:var(--muted)} .shcard small{font-size:10.5px;color:var(--muted)}
+  .calbar{display:grid;gap:10px;padding:12px;border-radius:20px;margin-bottom:10px} .seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--field);box-shadow:var(--sh-in)}
+  .seg3 button{border:0;background:none;color:inherit;font:inherit;font-weight:800;padding:8px;border-radius:11px;cursor:pointer} .seg3 button.on{background:var(--gold-grad,linear-gradient(135deg,#f3d27a,#c9962b));color:#1b1405}
+  .calnav{display:flex;align-items:center;gap:8px} .calnav b{flex:1;text-align:center;font-size:14px} .cnb{width:40px;height:40px;border-radius:12px;border:0;background:var(--field);color:inherit;font-size:22px;font-weight:900;cursor:pointer;box-shadow:var(--sh-out,none)}
+  [dir=rtl] .cnb{transform:scaleX(-1)} .calnav2{display:flex;gap:8px;flex-wrap:wrap} .cnt{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 10px;border-radius:12px;border:0;background:var(--field);color:inherit;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;position:relative}
+  .cnt input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+  .mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px;border-radius:18px;margin-bottom:10px} .mgrid i{font-style:normal;text-align:center;font-size:11px;color:var(--muted);font-weight:800;padding:4px 0}
+  .mgrid button{display:grid;place-items:center;gap:1px;min-height:46px;border:0;border-radius:11px;background:var(--field);color:inherit;font:inherit;cursor:pointer;opacity:.6} .mgrid button.has{opacity:1} .mgrid button.td{outline:2px solid #d4a53b}
+  .mgrid b{font-size:13px} .mgrid small{font-size:10px;color:var(--muted);display:flex;gap:3px} .mgrid em{font-style:normal;color:#d93a3a;font-weight:800}
+  .cday.tdy{color:#d4a53b} .cev2{cursor:pointer} .cev2 .ct small{display:block;font-size:9.5px;color:var(--muted)} .tag2.src{opacity:.8}
+  .cdesc{display:none;margin-top:8px;font-size:12.5px;line-height:1.8} .cdesc p{margin:0 0 6px} .cdesc .en{color:var(--muted);font-size:11.5px} .cdesc a{color:#d4a53b;font-weight:700}
+  .cev2.open .cdesc{display:block} .cmore{display:inline-block;margin-top:6px;font-size:11px;color:var(--muted)} .cev2.open .cmore{display:none}
+  .lrow.lv-pos .lc u{color:#0a9b5c;background:rgba(10,155,92,.1)} .lrow.lv-neg .lc u{color:#d93a3a;background:rgba(217,58,58,.1)}
   /* ===== آمار عملکرد سیگنال‌ها ===== */
   .sgx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}
   .sgc{padding:12px 8px;border-radius:18px;background:var(--field);box-shadow:var(--sh-in);text-align:center;min-width:0}
@@ -1425,7 +1470,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794287940";
+const BUILD = "1794296918";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1577,7 +1622,7 @@ const mkOf = s => MKW[s.market] ? "world" : (s.market || "xag");
 const PAGES = ["sig", "prc", "news", "cal", "tool", "acad", "about", "inst", "contact", "pay", "dash"];
 const SP = {
   fa: { nSig: "سیگنال", nRates: "نرخ ارز", nNews: "اخبار اقتصادی", nCal: "تقویم اقتصادی",
-    mTools: "ابزارهای معاملاتی", mAcad: "آکادمی", mAbout: "درباره ما", mInst: "معرفی استاد", mContact: "راه‌های ارتباطی", mPay: "پرداخت", mOut: "خروج از حساب کاربری",
+    mTools: "ابزارهای معاملاتی", mAcad: "آکادمی و آموزش", mAbout: "درباره ما", mInst: "درباره استاد", mContact: "راه‌های ارتباطی", mPay: "پرداخت‌ها", mOut: "خروج از حساب کاربری",
     outQ: "آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟", cancel: "انصراف", outBtn: "خروج از حساب", back: "بازگشت",
     locT: "نرخ‌های بازار داخلی افغانستان", worldT: "قیمت جهانی دارایی‌ها", chartT: "نمودار حرفه‌ای بازار", gunT: "قیمت طلا و نقره در واحدهای مختلف",
     unitT: "واحد", goldT: "طلا", silverT: "نقره", oz: "اونس", g: "گرم", mq: "مثقال", tola: "توله", kg: "کیلوگرم", gunNote: "تبدیل‌ها: ۱ اونس = ۳۱٫۱۰۳۵ گرم · ۱ مثقال = ۴٫۶۰۸ گرم · ۱ توله = ۱۱٫۶۶۴ گرم · قیمت ۲۴ عیار (خالص) · نرخ دالر به افغانی از بازار کابل",
@@ -1598,7 +1643,7 @@ const SP = {
     st: { pending: "در انتظار پرداخت", review: "پرداخت‌شده · در انتظار تأیید", paid: "تأییدشده ✅", rejected: "ردشده ❌", failed: "ناموفق", expired: "منقضی" },
     online: "پرداخت آنلاین حساب‌پی (تأیید خودکار درگاه)", onlineBtn: "پرداخت آنلاین", payNote: "⚠️ کلیک روی «پرداخت» به معنی پرداخت موفق نیست. بعد از پرداخت، رسید را بفرستید تا مدیر تأیید کند.",
     err: "ارسال نشد", dup: "این شماره تراکنش قبلاً ثبت شده است.", many: "۳ رسید در انتظار تأیید دارید؛ لطفاً صبر کنید.", need: "شماره تراکنش لازم است.", mon: "ماه", afn: "افغانی",
-    notifs: "اعلان‌ها", fn: "نام", ln: "نام خانوادگی", secT: "امنیت حساب", chEmail: "تغییر ایمیل ورود", chPw: "تغییر رمز", curPw: "رمز فعلی (تأیید امنیتی)", newEmail: "ایمیل جدید",
+    notifs: "اعلان‌ها", fn: "نام", ln: "تخلص", secT: "امنیت حساب", chEmail: "تغییر ایمیل ورود", chPw: "تغییر رمز", curPw: "رمز فعلی (تأیید امنیتی)", newEmail: "ایمیل جدید",
     newPw: "رمز جدید (حداقل ۸ حرف)", save: "ذخیره", done: "انجام شد ✅", wrongPw: "رمز فعلی درست نیست.", inUse: "این ایمیل قبلاً استفاده شده است.", weak: "این رمز ضعیف یا لو‌رفته است؛ رمز دیگری بگذارید.", badEmail: "ایمیل درست نیست.", tryLater: "انجام نشد؛ دوباره امتحان کنید.",
     ext: "سیگنال کانال", teacherSig: "تحلیل استاد", openSrc: "مشاهده در تلگرام ↗" },
   ps: { nSig: "سیګنال", nRates: "د اسعارو نرخ", nNews: "اقتصادي خبرونه", nCal: "اقتصادي جنتري", mTools: "د معاملې وسایل", mAcad: "اکاډمي", mAbout: "زموږ په اړه", mInst: "د استاد پېژندنه",
@@ -1606,7 +1651,7 @@ const SP = {
     cats: { all: "ټول", af: "د افغانستان اقتصاد", world: "نړیوال اقتصاد", markets: "مالي بازارونه", metals: "سره او سپین زر", fx: "ډالر او اسعار", teacher: "د استاد تحلیلونه" },
     cf: { today: "نن", tom: "سبا", week: "دا اونۍ", next: "راتلونکې اونۍ", month: "دا میاشت", date: "ټاکلې نېټه" } },
   en: { nSig: "Signals", nRates: "Market Rates", nNews: "Economic News", nCal: "Economic Calendar",
-    mTools: "Trading Tools", mAcad: "Academy", mAbout: "About Us", mInst: "About Instructor", mContact: "Contact Us", mPay: "Payment", mOut: "Log out",
+    mTools: "Trading Tools", mAcad: "Academy & Education", mAbout: "About Us", mInst: "About the Instructor", mContact: "Contact Us", mPay: "Payments", mOut: "Log out",
     outQ: "Are you sure you want to log out of your account?", cancel: "Cancel", outBtn: "Log out", back: "Back",
     locT: "Afghanistan local market rates", worldT: "World asset prices", chartT: "Professional market chart", gunT: "Gold and silver in different units",
     unitT: "Unit", goldT: "Gold", silverT: "Silver", oz: "Ounce", g: "Gram", mq: "Mithqal", tola: "Tola", kg: "Kilogram", gunNote: "1 oz = 31.1035 g · 1 mithqal = 4.608 g · 1 tola = 11.664 g · 24k (pure) · USD/AFN from the Kabul market",
@@ -1641,7 +1686,7 @@ function openMore(){
   let m = $("moremenu"); if (m) { m.remove(); return; }
   const S = SPx(), inFeed = view === "feed";
   m = document.createElement("div"); m.id = "moremenu"; m.className = "moremenu glass"; m.setAttribute("role", "menu");
-  m.innerHTML = [["tool", "🧮", S.mTools], ["acad", "🎓", S.mAcad], ["about", "🏢", S.mAbout], ["inst", "👨‍🏫", S.mInst], ["contact", "📞", S.mContact], ["pay", "💳", S.mPay]]
+  m.innerHTML = [["tool", "🧮", S.mTools], ["acad", "🎓", S.mAcad], ["inst", "👨‍🏫", S.mInst], ["about", "🏢", S.mAbout], ["pay", "💳", S.mPay], ["contact", "📞", S.mContact]]
     .filter(([k]) => inFeed || k === "pay" || k === "contact").map(([k, ic, t]) => `<button type="button" role="menuitem" data-mp="${k}"><span>${ic}</span>${t}</button>`).join("")
     + `<hr><button type="button" role="menuitem" data-mp="out" class="mout"><span>⎋</span>${S.mOut}</button>`;
   document.body.appendChild(m); requestAnimationFrame(() => m.classList.add("show"));
@@ -1671,12 +1716,22 @@ let acadAt = 0;
 
 /* ----- نرخ ارز: وضعیت اتصال و واحدهای طلا ----- */
 function paintRStat(){
-  const el = $("rstat"); if (!el) return; const S = SPx(), p = prices || {};
-  const age = p.at ? Date.now() - new Date(p.at).getTime() : Infinity, st = offline || age > 5 * 60000 ? "off" : age > 45000 ? "slow" : "ok";
+  const el = $("rstat"); if (!el) return; const S = SPx(), L = LV(), p = prices || {};
+  const rs = LIVE?.status, rx = LIVE?.lastRx || 0, quiet = rs === "live" && rx > 0 && Date.now() - rx > 60000;
+  const st = offline ? "off" : rs === "live" ? (quiet ? "slow" : "ok") : rs === "retry" || rs === "connecting" ? "slow" : (Date.now() - new Date(p.at || 0) < 60000 ? "slow" : "off");
+  const msg = offline ? S.connOff : rs === "live" ? (quiet ? L.quiet : L.live) : rs === "retry" || rs === "connecting" ? L.retry : L.off;
+  const xq = LIVE?.Q?.XAU, tm = rx ? new Date(rx).toLocaleTimeString("en-GB", { hour12: false }) : "—";
   el.className = "rstat " + st;
-  el.innerHTML = `<span class="ldot"></span><b>${st === "ok" ? S.connOk : st === "slow" ? S.connSlow : S.connOff}</b><small>${S.lastUpd}: ${agoTxt(p.at)}${p.closed ? " · 🌙 " + T.mktClosed : ""}</small><small class="rsrc">${S.srcs}</small>`;
+  el.innerHTML = `<span class="ldot"></span><b>${msg}</b>
+    <div class="rsg"><span><small>${L.rx}</small><b class="ltr">${tm}</b></span>
+      <span><small>${L.srcAge}</small><b class="ltr" data-lv="XAU" data-lf="age">${xq ? LS.ageTxt(xq.t, LIVE.skew) : "—"}</b></span>
+      <span><small>${L.net}</small><b class="ltr">${LIVE?.net != null ? Math.round(LIVE.net) + " ms" : "—"}</b></span>
+      <span><small>${L.cry}</small><b>${LIVE?.crypto === "live" ? "🟢 " + L.on : "🟡 " + L.wait}</b></span></div>
+    ${p.closed ? `<small>🌙 ${T.mktClosed}</small>` : ""}`;
 }
-setInterval(() => { if (page === "prc" && view === "feed" && !document.hidden) paintRStat(); }, 5000);
+setInterval(() => { if (view !== "feed" || document.hidden || !LIVE) return;
+  if (page === "prc") { paintRStat(); document.querySelectorAll('#lbx [data-lf="age"]').forEach(e => { const q = LIVE.Q[e.dataset.lv]; if (q) e.textContent = LS.ageTxt(q.t, LIVE.skew); });
+    document.querySelectorAll("#lbx .lrow").forEach(r => r.classList.toggle("nba", r.querySelector('[data-lf="b"]')?.textContent === "—")); } }, 1000);
 const TOLA = 11.664;
 function drawGoldUnits(){
   const el = $("gunits"); if (!el) return; const S = SPx(), p = prices || {}, afn = usdAfn();
@@ -1712,16 +1767,19 @@ const NIC = { af: "🇦🇫", world: "🌍", markets: "📊", metals: "🥇", fx
 function newsItems(){
   const out = [];
   for (const p of posts) { if (p.status === "draft") continue;
-    if (p.kind === "news") out.push({ id: "p" + p.id, post: p, title: p.title, sum: (p.body || "").slice(0, 220), body: p.body || "", src: p.source || teacher.name || "", url: p.source_url || "", at: p.created_at, cat: catOf(p), cover: p.cover_path });
+    if (p.kind === "news") out.push({ id: "p" + p.id, post: p, title: p.title, sum: (p.body || "").slice(0, 220), body: p.body || "", src: p.source || teacher.name || "", url: p.source_url || "", at: p.event_at || p.created_at, cat: catOf(p), cover: p.cover_path, imp: p.importance === "high" });
     else if (p.kind === "article") out.push({ id: "p" + p.id, post: p, title: p.title, sum: (p.body || "").slice(0, 220), body: p.body || "", src: p.author || teacher.name || "", at: p.created_at, cat: "teacher", cover: p.cover_path, analysis: true }); }
   for (const i of (news?.items || [])) if (i.kind === "news" || i.org === "afaaq") { if (!/^https?:\/\//.test(i.link || "")) continue;
     out.push({ id: "a" + i.link, title: lang === "en" && i.title_en ? i.title_en : i.title, sum: i.desc || "", src: i.src || "", url: i.link, at: i.at, cat: orgCat(i), auto: true }); }
   for (const x of extNews) { const txt = String(x.text || "").replace(/\n+/g, " ").trim(); if (!txt) continue;
     out.push({ id: "x" + x.channel + x.msg_id, title: txt.slice(0, 140), sum: txt.length > 140 ? txt.slice(140, 360) : "", body: x.text, src: "📡 " + (extNames[x.channel] || x.channel) + " · " + SPx().tg,
       url: `https://t.me/${encodeURIComponent(x.channel)}/${x.msg_id}`, at: x.posted_at, cat: "markets", ext: true }); }
-  return out.sort((a, b) => new Date(b.at || 0) - new Date(a.at || 0));
+  const hid = new Set(newsHidden), wk = Date.now() - 7 * DAY;
+  return out.filter(i => !hid.has(i.id)).sort((a, b) => ((b.imp && new Date(b.at) > wk) - (a.imp && new Date(a.at) > wk)) || new Date(b.at || 0) - new Date(a.at || 0));
 }
-async function loadExtNews(){
+let newsHidden = store.get("news_hidden", []);
+async function loadNewsHidden(){ try { const { data } = await sb.from("settings").select("value").eq("key", "news_hidden").maybeSingle(); newsHidden = Array.isArray(data?.value) ? data.value : []; store.set("news_hidden", newsHidden); } catch {} }
+async function loadExtNews(){ loadNewsHidden();
   if (Date.now() - extNewsAt < 120000) return; extNewsAt = Date.now();
   const [{ data: x }, { data: c }] = await Promise.all([sb.from("ext_posts").select("channel,msg_id,posted_at,text").eq("kind", "news").order("posted_at", { ascending: false }).limit(30),
     sb.from("ext_channels").select("handle,name")]);
@@ -1744,7 +1802,7 @@ function paintNewsList(){
   const L = all2.filter(i => newsCat2 === "all" || i.cat === newsCat2).slice(0, 60);
   box.innerHTML = L.length ? L.map(i => `<article class="ncard glass rise" data-nid="${esc(i.id)}">
       <div class="nimg">${i.cover ? `<img data-mpath="${esc(i.cover)}" alt="" loading="lazy">` : `<span>${NIC[i.cat] || "📰"}</span>`}</div>
-      <div class="nbd"><span class="ncat">${S.cats[i.cat]}</span><h4>${esc(i.title)}</h4>${i.sum ? `<p>${esc(i.sum)}${i.sum.length >= 200 ? "…" : ""}</p>` : ""}
+      <div class="nbd"><span class="ncat">${S.cats[i.cat]}</span>${i.imp ? `<span class="ncat nimp">⭐ ${lang === "en" ? "Important" : lang === "ps" ? "مهم" : "مهم"}</span>` : ""}<h4>${esc(i.title)}</h4>${i.sum ? `<p>${esc(i.sum)}${i.sum.length >= 200 ? "…" : ""}</p>` : ""}
         <div class="nft"><small>${S.src}: ${esc(i.src || "—")} · ${i.at ? fmtFull(i.at) : ""}</small><button type="button" class="nshare" data-nsh="1" aria-label="${S.share}">↗️ ${S.share}</button></div></div></article>`).join("")
     : `<div class="empty glass rise"><div style="font-size:44px">📰</div><h2>${S.noNews}</h2></div>`;
   box.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
@@ -1771,66 +1829,114 @@ function openNewsItem(it){
   v.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
 }
 
-/* ----- تقویم اقتصادی ----- */
-let calF = store.get("calf", "week"), calDay = "", calCountry = "all", calCur = "all", calImp = "all", calTz = store.get("caltz", "Asia/Kabul");
+/* ----- تقویم اقتصادی (جدول econ_events: فارکس‌فکتوری هفتگی که انباشته می‌شود + برنامه‌های رسمی بانک‌های مرکزی و آمار تا یک سال آینده + رویدادهای مدیر) ----- */
+let calV = store.get("calv", "week"), calAnchor = "", calCountry = "all", calCur = "all", calImp = store.get("calimp", "all"), calTz = store.get("caltz", "Asia/Kabul"), calOpen = null;
+let ecoRows = [], ecoKey = "", ecoBusy = false;
 const CTRY = { af: ["AFN", "افغانستان", "Afghanistan"], us: ["USD", "آمریکا", "United States"], eu: ["EUR", "اروپا", "Euro area"], gb: ["GBP", "انگلستان", "UK"], cn: ["CNY", "چین", "China"], jp: ["JPY", "ژاپن", "Japan"] };
-const CUR2C = { USD: ["آمریکا", "United States"], EUR: ["اروپا", "Euro area"], GBP: ["انگلستان", "UK"], JPY: ["ژاپن", "Japan"], CNY: ["چین", "China"], CAD: ["کانادا", "Canada"], AUD: ["استرالیا", "Australia"], NZD: ["نیوزیلند", "New Zealand"], CHF: ["سوئیس", "Switzerland"], AFN: ["افغانستان", "Afghanistan"], ALL: ["جهانی", "Global"] };
+const CUR2C = { USD: ["آمریکا", "United States", "🇺🇸"], EUR: ["اروپا", "Euro area", "🇪🇺"], GBP: ["انگلستان", "UK", "🇬🇧"], JPY: ["ژاپن", "Japan", "🇯🇵"], CNY: ["چین", "China", "🇨🇳"], CAD: ["کانادا", "Canada", "🇨🇦"], AUD: ["استرالیا", "Australia", "🇦🇺"], NZD: ["نیوزیلند", "New Zealand", "🇳🇿"], CHF: ["سوئیس", "Switzerland", "🇨🇭"], AFN: ["افغانستان", "Afghanistan", "🇦🇫"], ALL: ["جهانی", "Global", "🌐"] };
 const tzOpt = () => calTz === "device" ? {} : { timeZone: calTz };
 const dayKey = d => new Intl.DateTimeFormat("en-CA", { ...tzOpt(), year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(d));
 const tzTime = d => new Intl.DateTimeFormat("en-GB", { ...tzOpt(), hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(d));
+const CLT = { fa: { day: "روز", week: "هفته", month: "ماه", today: "امروز", prev: "قبلی", next: "بعدی", jump: "رفتن به تاریخ", src: "منبع", off: "برنامه‌ی رسمی", ff: "Forex Factory", adm: "مدیر", more: "جزئیات", none: "در این بازه رویدادی با این فیلترها نیست", wd: ["ش", "ی", "د", "س", "چ", "پ", "ج"], cnt: "رویداد", hi: "مهم", loading: "در حال دریافت…",
+    note: "رویدادهای هفته‌ی جاری با جزئیات کامل از Forex Factory است و هفته‌های گذشته نیز ذخیره می‌مانند. برای هفته‌ها و ماه‌های آینده (تا یک سال) تاریخ‌های رسمی اعلام‌شده‌ی فدرال رزرو، اداره‌ی آمار آمریکا (CPI، اشتغال، PPI)، بانک مرکزی اروپا، بانک انگلستان و بانک ژاپن نمایش داده می‌شود و وقتی آن هفته فرا برسد، جزئیات پیش‌بینی و قبلی جایگزین می‌شود.", tentative: "ساعت تقریبی" },
+  ps: { day: "ورځ", week: "اونۍ", month: "میاشت", today: "نن", prev: "مخکینی", next: "راتلونکی", jump: "نېټې ته تلل", src: "سرچینه", off: "رسمي مهال‌وېش", ff: "Forex Factory", adm: "مدیر", more: "جزئیات", none: "په دې موده کې له دې فلټرونو سره پېښه نشته", wd: ["ش", "ی", "د", "س", "چ", "پ", "ج"], cnt: "پېښې", hi: "مهم", loading: "ترلاسه کېږي…",
+    note: "د روانې اونۍ پېښې له Forex Factory څخه دي او تېرې اونۍ هم ساتل کېږي. د راتلونکو اونیو او میاشتو (تر یو کال) لپاره د فدرال ریزرو، د امریکا د احصایې ادارې، د اروپا مرکزي بانک، د انګلستان او جاپان بانکونو رسمي نېټې ښودل کېږي.", tentative: "نږدې وخت" },
+  en: { day: "Day", week: "Week", month: "Month", today: "Today", prev: "Previous", next: "Next", jump: "Go to date", src: "Source", off: "Official schedule", ff: "Forex Factory", adm: "Admin", more: "Details", none: "No events in this range with these filters", wd: ["Sa", "Su", "Mo", "Tu", "We", "Th", "Fr"], cnt: "events", hi: "high", loading: "Loading…",
+    note: "This week's events come from Forex Factory with full detail, and past weeks stay saved. Future weeks and months (up to one year) show the officially announced dates of the Fed, US BLS (CPI, jobs, PPI), ECB, Bank of England and Bank of Japan; forecast and previous values appear when that week arrives.", tentative: "approx. time" } };
+const CLX = () => CLT[lang] || CLT.fa;
+// short explanations for common releases (shown when an event has no description of its own)
+const EVDESC = [[/Non-Farm|Employment Situation|NFP/i, "تعداد شغل‌های جدید آمریکا در ماه گذشته. عدد بالاتر از پیش‌بینی معمولاً دالر را تقویت و طلا را تضعیف می‌کند.", "New US jobs last month. Above forecast usually lifts the dollar and weighs on gold."],
+  [/CPI|Consumer Price/i, "تورم مصرف‌کننده. تورم بالاتر احتمال نرخ بهره‌ی بالاتر را زیاد می‌کند و روی دالر و طلا اثر مستقیم دارد.", "Consumer inflation. Higher inflation raises rate-hike odds and moves the dollar and gold."],
+  [/PPI|Producer Price/i, "تورم در سطح تولیدکننده؛ نشانه‌ی زودهنگام تورم مصرف‌کننده.", "Producer-level inflation; an early signal for consumer inflation."],
+  [/Rate Decision|Funds Rate|Refinancing|Bank Rate|Policy Rate|Cash Rate|Overnight Rate/i, "تصمیم بانک مرکزی درباره‌ی نرخ بهره؛ از پرنوسان‌ترین رویدادهای بازار.", "Central bank interest-rate decision; one of the most volatile events."],
+  [/Unemployment Claims/i, "تعداد درخواست‌های جدید بیمه‌ی بیکاری در هفته‌ی گذشته.", "New jobless claims filed last week."], [/Unemployment Rate/i, "درصد نیروی کار بیکار.", "Share of the labour force without a job."],
+  [/PMI/i, "شاخص مدیران خرید؛ بالای ۵۰ یعنی رشد و زیر ۵۰ یعنی انقباض فعالیت.", "Purchasing managers' index; above 50 = expansion, below 50 = contraction."],
+  [/GDP/i, "تولید ناخالص داخلی؛ مهم‌ترین معیار رشد اقتصاد.", "Gross domestic product; the broadest measure of growth."], [/Retail Sales/i, "تغییر فروش خرده‌فروشی؛ معیار مصرف خانوارها.", "Change in retail sales; a gauge of consumer spending."],
+  [/Speaks|Press Conference|Testifies/i, "سخنرانی مقام پولی؛ لحن او درباره‌ی نرخ بهره می‌تواند بازار را حرکت دهد.", "Central-bank official speaks; tone on rates can move markets."], [/Holiday/i, "تعطیلی بانکی؛ نقدشوندگی بازار کم است.", "Bank holiday; thin market liquidity."]];
+const evDesc = e => e.desc || (EVDESC.find(([re]) => re.test(e.titleEn || ""))?.[lang === "en" ? 2 : 1] || "");
+const isoDay = d => d.toISOString().slice(0, 10);
+const addDays = (k, n) => isoDay(new Date(Date.parse(k + "T00:00:00Z") + n * DAY));
+function calSpan(){
+  const t = calAnchor || dayKey(Date.now());
+  if (calV === "day") return [t, t];
+  if (calV === "month") { const f = t.slice(0, 7) + "-01", n = new Date(Date.parse(f + "T00:00:00Z")); n.setUTCMonth(n.getUTCMonth() + 1); return [f, addDays(isoDay(n), -1)]; }
+  const dow = new Date(t + "T00:00:00Z").getUTCDay(), toSat = (dow + 1) % 7; return [addDays(t, -toSat), addDays(t, 6 - toSat)];
+}
+function calShift(n){
+  const t = calAnchor || dayKey(Date.now());
+  if (calV === "day") calAnchor = addDays(t, n); else if (calV === "week") calAnchor = addDays(t, 7 * n);
+  else { const d = new Date(t.slice(0, 7) + "-01T00:00:00Z"); d.setUTCMonth(d.getUTCMonth() + n); calAnchor = isoDay(d); }
+  const lim = addDays(dayKey(Date.now()), 400), low = "2026-01-01"; if (calAnchor > lim) calAnchor = lim; if (calAnchor < low) calAnchor = low;
+}
+async function loadEco(force){
+  const [a, b] = calSpan(), from = addDays(a, -1) + "T00:00:00Z", to = addDays(b, 2) + "T00:00:00Z", key = from + to;
+  if (!force && key === ecoKey && ecoRows.length) return paintCal();
+  ecoBusy = true; if (key !== ecoKey) { ecoRows = []; paintCal(); }
+  try { const { data, error } = await sb.from("econ_events").select("*").gte("at", from).lt("at", to).eq("superseded", false).order("at").limit(1500);
+    if (!error) { ecoRows = data || []; ecoKey = key; } } catch {}
+  ecoBusy = false; paintCal();
+}
 function calEvents(){
   const out = [];
-  for (const e of (cal?.events || [])) { const cur = String(e.country || "").toUpperCase();
-    out.push({ title: calTitle(e), cur, cname: lang === "en" ? (CUR2C[cur]?.[1] || cur) : (e.country_fa || CUR2C[cur]?.[0] || cur), at: e.at, imp: e.impact === "holiday" ? "low" : e.impact, prev: e.previous, fc: e.forecast, act: e.actual || "", allDay: e.impact === "low" && !/T\d\d:\d\d/.test(e.at || "") }); }
+  for (const e of ecoRows) { const cur = String(e.currency || "").toUpperCase(), cc = CUR2C[cur];
+    const title = lang === "en" ? e.title : lang === "ps" ? (e.title_ps || (trCache["cal:ps:" + e.title] ?? (calTitle({ title: e.title, title_fa: e.title_fa, tr: true }), e.title_fa || e.title))) : (e.title_fa || e.title);
+    out.push({ id: "e" + e.id, title, titleEn: e.title, cur, flag: cc?.[2] || "🌐", cname: cc ? (lang === "en" ? cc[1] : cc[0]) : (e.country || cur || "—"), at: e.at, imp: e.impact === "holiday" ? "low" : e.impact, holiday: e.impact === "holiday",
+      prev: e.previous, fc: e.forecast, act: e.actual || "", desc: e.description, src: e.source, url: e.source_url, allDay: e.all_day, tent: e.source === "official" && e.currency === "JPY" }); }
   for (const p of posts) if (p.kind === "event" && p.status !== "draft" && p.event_at) {
     const c = CTRY[p.country] || null, cur = c ? c[0] : String(p.country || "").toUpperCase();
-    out.push({ title: p.title, cur, cname: c ? (lang === "en" ? c[2] : c[1]) : (CUR2C[cur]?.[lang === "en" ? 1 : 0] || p.country || "—"), at: p.event_at, imp: p.importance || "low", prev: p.previous, fc: p.forecast, act: p.actual, body: p.body, admin: true, af: p.country === "af" });
+    out.push({ id: "p" + p.id, title: p.title, titleEn: p.title, cur, flag: CUR2C[cur]?.[2] || "🌐", cname: c ? (lang === "en" ? c[2] : c[1]) : (CUR2C[cur]?.[lang === "en" ? 1 : 0] || p.country || "—"), at: p.event_at, imp: p.importance || "low", prev: p.previous, fc: p.forecast, act: p.actual, desc: p.body, src: "admin", af: p.country === "af" });
   }
   return out.filter(e => !isNaN(new Date(e.at))).sort((a, b) => new Date(a.at) - new Date(b.at));
 }
-function calRange(){
-  const today = dayKey(Date.now()), d0 = new Date(today + "T00:00:00Z"), add = n => new Date(d0.getTime() + n * DAY).toISOString().slice(0, 10);
-  const dow = d0.getUTCDay(), toSat = (dow + 1) % 7; // week starts on Saturday
-  if (calF === "today") return [today, today];
-  if (calF === "tom") return [add(1), add(1)];
-  if (calF === "week") return [add(-toSat), add(6 - toSat)];
-  if (calF === "next") return [add(7 - toSat), add(13 - toSat)];
-  if (calF === "month") return [today.slice(0, 7) + "-01", today.slice(0, 7) + "-31"];
-  if (calF === "date") return calDay ? [calDay, calDay] : [today, today];
-  return [today, add(6)];
-}
 function drawCalPage(el){
-  const S = SPx();
+  const S = SPx(), C = CLX();
   el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>🗓 ${S.nCal}</h3></div>
-    <div class="qchips" id="calfs">${Object.keys(S.cf).map(k => `<button data-cf="${k}" class="${k === calF ? "on" : ""}">${S.cf[k]}</button>`).join("")}</div>
-    <div class="calsel"><input type="date" id="calday" value="${esc(calDay)}" ${calF === "date" ? "" : "hidden"}>
-      <label>${S.country}<select id="calc"></select></label><label>${S.cur}<select id="calcur"></select></label>
-      <label>${S.imp}<select id="calimp"><option value="all">${S.allX}</option>${["high", "medium", "low"].map(k => `<option value="${k}" ${k === calImp ? "selected" : ""}>${S.impL[k]}</option>`).join("")}</select></label>
+    <div class="calbar glass"><div class="seg3" id="calv">${["day", "week", "month"].map(k => `<button data-cv="${k}" class="${k === calV ? "on" : ""}">${C[k]}</button>`).join("")}</div>
+      <div class="calnav"><button class="cnb" id="calprev" aria-label="${C.prev}">‹</button><b id="callab"></b><button class="cnb" id="calnext" aria-label="${C.next}">›</button></div>
+      <div class="calnav2"><button class="cnt" id="caltoday">📍 ${C.today}</button><label class="cnt">📅 ${C.jump}<input type="date" id="calday" min="2026-01-01" max="${addDays(dayKey(Date.now()), 400)}"></label></div></div>
+    <div class="calsel"><label>${S.country}<select id="calc"></select></label><label>${S.cur}<select id="calcur"></select></label>
+      <label>${S.imp}<select id="calimp"><option value="all">${S.allX}</option>${["high", "medium", "low"].map(k => `<option value="${k}" ${k === calImp ? "selected" : ""}>${S.impL[k]}</option>`).join("")}<option value="hm" ${calImp === "hm" ? "selected" : ""}>${S.impL.high} + ${S.impL.medium}</option></select></label>
       <label>${S.tz}<select id="caltz">${[["Asia/Kabul", S.tzKabul], ["device", S.tzDev], ["UTC", S.tzUtc]].map(([k, t]) => `<option value="${k}" ${k === calTz ? "selected" : ""}>${t}</option>`).join("")}</select></label></div>
     <div class="impleg"><span class="lvl-high">● ${S.impL.high}</span><span class="lvl-medium">● ${S.impL.medium}</span><span class="lvl-low">● ${S.impL.low}</span></div>
-    <div id="calist"><div class="sk"></div></div><p class="src">${S.calNote}</p>`;
-  $("calfs").onclick = e => { const b = e.target.closest("[data-cf]"); if (!b) return; calF = b.dataset.cf; store.set("calf", calF); $("calfs").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); $("calday").hidden = calF !== "date"; paintCal(); };
-  $("calday").onchange = e => { calDay = e.target.value; paintCal(); };
+    <div id="calgrid"></div><div id="calist"><div class="sk"></div></div><p class="src">${C.note}</p>`;
+  $("calv").onclick = e => { const b = e.target.closest("[data-cv]"); if (!b) return; calV = b.dataset.cv; store.set("calv", calV); $("calv").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); loadEco(); };
+  $("calprev").onclick = () => { calShift(-1); loadEco(); }; $("calnext").onclick = () => { calShift(1); loadEco(); };
+  $("caltoday").onclick = () => { calAnchor = ""; loadEco(); };
+  $("calday").onchange = e => { if (e.target.value) { calAnchor = e.target.value; if (calV === "month") calV = "day", store.set("calv", calV), $("calv").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.cv === "day")); loadEco(); } };
   $("calc").onchange = e => { calCountry = e.target.value; paintCal(); }; $("calcur").onchange = e => { calCur = e.target.value; paintCal(); };
-  $("calimp").onchange = e => { calImp = e.target.value; paintCal(); }; $("caltz").onchange = e => { calTz = e.target.value; store.set("caltz", calTz); paintCal(); };
-  paintCal(); loadCalendar(); if (Date.now() - acadAt > 60000) loadAcademy();
+  $("calimp").onchange = e => { calImp = e.target.value; store.set("calimp", calImp); paintCal(); }; $("caltz").onchange = e => { calTz = e.target.value; store.set("caltz", calTz); ecoKey = ""; loadEco(); };
+  $("calist").onclick = e => { const it = e.target.closest("[data-ev]"); if (!it || e.target.closest("a")) return; calOpen = calOpen === it.dataset.ev ? null : it.dataset.ev; it.classList.toggle("open", calOpen === it.dataset.ev); };
+  $("calgrid").onclick = e => { const d = e.target.closest("[data-day]"); if (!d) return; calAnchor = d.dataset.day; calV = "day"; store.set("calv", calV); $("calv").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.cv === "day")); loadEco(); };
+  loadEco(); if (Date.now() - acadAt > 60000) loadAcademy();
 }
 function paintCal(){
-  const box = $("calist"); if (!box) return; const S = SPx(), evs = calEvents();
-  const cs = [...new Set(evs.map(e => e.cname))].sort(), us = [...new Set(evs.map(e => e.cur).filter(Boolean))].sort();
+  const box = $("calist"); if (!box) return; const S = SPx(), C = CLX(), evs = calEvents(), [a, b] = calSpan(), today = dayKey(Date.now());
+  const loc = lang === "en" ? "en-GB" : lang === "ps" ? "ps-AF" : "fa-AF";
+  const fmtK = (k, o) => new Intl.DateTimeFormat(loc, { timeZone: "UTC", ...o }).format(new Date(k + "T12:00:00Z"));
+  if ($("callab")) $("callab").textContent = calV === "day" ? fmtK(a, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : calV === "month" ? fmtK(a, { month: "long", year: "numeric" }) : fmtK(a, { day: "numeric", month: "short" }) + " – " + fmtK(b, { day: "numeric", month: "short", year: "numeric" });
+  const inRange = evs.filter(e => { const k = dayKey(e.at); return k >= a && k <= b; });
+  const cs = [...new Set(inRange.map(e => e.cname))].sort(), us = [...new Set(inRange.map(e => e.cur).filter(Boolean))].sort();
   const fill = (id, arr, cur) => { const s = $(id); if (!s) return; s.innerHTML = `<option value="all">${S.allX}</option>` + arr.map(x => `<option value="${esc(x)}" ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join(""); };
   fill("calc", cs, calCountry); fill("calcur", us, calCur);
-  const [a, b] = calRange();
-  const L = evs.filter(e => { const k = dayKey(e.at); return k >= a && k <= b && (calCountry === "all" || e.cname === calCountry) && (calCur === "all" || e.cur === calCur) && (calImp === "all" || e.imp === calImp); });
-  if (!L.length) { box.innerHTML = `<div class="empty glass rise"><div style="font-size:40px">🗓</div><h2>${cal || posts.length ? S.noEv : T.noContent}</h2></div>`; return; }
+  const L = inRange.filter(e => (calCountry === "all" || e.cname === calCountry) && (calCur === "all" || e.cur === calCur) && (calImp === "all" || (calImp === "hm" ? e.imp !== "low" : e.imp === calImp)));
+  // month: calendar grid with the number of (important) events per day
+  const g = $("calgrid");
+  if (g) { if (calV !== "month") g.innerHTML = ""; else {
+    const first = new Date(a + "T00:00:00Z"), pad = (first.getUTCDay() + 1) % 7, days = Math.round((Date.parse(b) - Date.parse(a)) / DAY) + 1;
+    let h = `<div class="mgrid glass">${C.wd.map(w => `<i>${w}</i>`).join("")}${"<span></span>".repeat(pad)}`;
+    for (let i = 0; i < days; i++) { const k = addDays(a, i), es = L.filter(e => dayKey(e.at) === k), hi = es.filter(e => e.imp === "high").length;
+      h += `<button data-day="${k}" class="${k === today ? "td" : ""} ${es.length ? "has" : ""}"><b>${Number(k.slice(8))}</b>${es.length ? `<small>${hi ? `<em>●${hi}</em>` : ""}${es.length}</small>` : ""}</button>`; }
+    g.innerHTML = h + "</div>"; } }
+  if (!L.length) { box.innerHTML = ecoBusy ? `<div class="sk"></div>` : `<div class="empty glass rise"><div style="font-size:40px">🗓</div><h2>${C.none}</h2></div>`; return; }
   const now = Date.now(); let last = "", h = "";
   for (const e of L) { const k = dayKey(e.at);
-    if (k !== last) { last = k; h += `<div class="cday">${k === dayKey(now) ? "📍 " + S.cf.today + " · " : k === dayKey(now + DAY) ? S.cf.tom + " · " : ""}${fmtDate(new Date(k + "T12:00:00Z"))}</div>`; }
-    const past = new Date(e.at).getTime() < now - 3600000;
-    h += `<div class="cev2 glass imp-${e.imp} ${past ? "past" : ""} ${e.af ? "afev" : ""}"><div class="ct">${e.allDay ? T.allDay : tzTime(e.at)}</div><div class="cb"><b>${e.af ? "🇦🇫 " : ""}${esc(e.title)}</b>
-      <div class="cm"><span class="tag2 lvl-${e.imp}">● ${S.impL[e.imp] || e.imp}</span><span class="tag2">${esc(e.cname)}</span>${e.cur ? `<span class="tag2 ltr">${esc(e.cur)}</span>` : ""}</div>
-      <div class="cvals"><span>${S.prev}<b class="ltr">${esc(e.prev || "—")}</b></span><span>${S.fc}<b class="ltr">${esc(e.fc || "—")}</b></span><span class="${e.act ? "has" : ""}">${S.act}<b class="ltr">${esc(e.act || "—")}</b></span></div>
-      ${e.body ? `<p>${esc(e.body)}</p>` : ""}</div></div>`; }
+    if (k !== last) { last = k; h += `<div class="cday ${k === today ? "tdy" : ""}">${k === today ? "📍 " + C.today + " · " : ""}${fmtK(k, { weekday: "long", day: "numeric", month: "long" })}</div>`; }
+    const past = new Date(e.at).getTime() < now - 3600000, d = evDesc(e), srcL = e.src === "official" ? "🏛 " + C.off : e.src === "admin" ? "✍️ " + C.adm : "📊 " + C.ff;
+    h += `<div class="cev2 glass imp-${e.imp} ${past ? "past" : ""} ${e.af ? "afev" : ""} ${calOpen === e.id ? "open" : ""}" data-ev="${e.id}"><div class="ct">${e.allDay || e.holiday ? T.allDay : tzTime(e.at)}${e.tent ? `<small>${C.tentative}</small>` : ""}</div><div class="cb"><b>${e.flag} ${esc(e.title)}</b>
+      <div class="cm"><span class="tag2 lvl-${e.imp}">● ${e.holiday ? "🏖" : S.impL[e.imp] || e.imp}</span><span class="tag2">${esc(e.cname)}</span>${e.cur ? `<span class="tag2 ltr">${esc(e.cur)}</span>` : ""}<span class="tag2 src">${srcL}</span></div>
+      ${e.prev || e.fc || e.act ? `<div class="cvals"><span>${S.prev}<b class="ltr">${esc(e.prev || "—")}</b></span><span>${S.fc}<b class="ltr">${esc(e.fc || "—")}</b></span><span class="${e.act ? "has" : ""}">${S.act}<b class="ltr">${esc(e.act || "—")}</b></span></div>` : ""}
+      <div class="cdesc">${d ? `<p>${esc(d)}</p>` : ""}${lang !== "en" && e.titleEn && e.titleEn !== e.title ? `<p class="ltr en">${esc(e.titleEn)}</p>` : ""}${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${C.src} ↗</a>` : ""}</div>
+      <span class="cmore">${C.more} ⌄</span></div></div>`; }
   box.innerHTML = h;
 }
 
@@ -1857,8 +1963,10 @@ function drawInfoPage(el){
       ["phone", "📞", v => "tel:" + digits(v)], ["email", "✉️", v => "mailto:" + clean(v)], ["facebook", "📘", v => /^https?:/.test(clean(v)) ? clean(v) : "https://facebook.com/" + clean(v)],
       ["youtube", "▶️", v => /^https?:/.test(clean(v)) ? clean(v) : "https://youtube.com/@" + clean(v).replace(/^@/, "")], ["tiktok", "🎵", v => /^https?:/.test(clean(v)) ? clean(v) : "https://tiktok.com/@" + clean(v).replace(/^@/, "")],
       ["website", "🌐", v => /^https?:/.test(clean(v)) ? clean(v) : "https://" + clean(v)]].filter(([k]) => clean(A[k]));
+    const XL = (Array.isArray(A.links) ? A.links : []).filter(x => x && x.url && /^(https?:|mailto:|tel:)/i.test(String(x.url)));
     h += `<div class="ctgrid rise">${L.map(([k, ic, u]) => `<a class="ctcard glass" href="${esc(u(A[k]))}" target="_blank" rel="noopener noreferrer"><span>${ic}</span><b>${S.ct[k]}</b><small class="ltr">${esc(A[k])}</small></a>`).join("")}
-      <button type="button" class="ctcard glass" id="ctchat"><span>💭</span><b>${S.chatT}</b><small>${esc(tn)}</small></button></div>${L.length ? "" : `<p class="upd">${S.noInfo}</p>`}`;
+      ${XL.map(x => `<a class="ctcard glass" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer"><span>${esc(x.icon || "🔗")}</span><b>${esc(x.label || "")}</b><small class="ltr">${esc(String(x.url).replace(/^(https?:\/\/|mailto:|tel:)/, "").slice(0, 40))}</small></a>`).join("")}
+      <button type="button" class="ctcard glass" id="ctchat"><span>💭</span><b>${S.chatT}</b><small>${esc(tn)}</small></button></div>${L.length || XL.length ? "" : `<p class="upd">${S.noInfo}</p>`}`;
   }
   el.innerHTML = h;
   if ($("ctchat")) $("ctchat").onclick = () => { if ($("chat")) openChat(); };
@@ -2084,25 +2192,30 @@ async function squareJpeg(file, size = 400){
 const PFL = { fa: { t: "اطلاعات من", name: "نام و نام خانوادگی", phone: "شماره تماس", wa: "واتساپ", tg: "آیدی تلگرام", country: "کشور", city: "شهر", exp: "سابقه در بازار (سال)", lv: "سطح تجربه", lvs: { "": "—", beginner: "مبتدی", intermediate: "متوسط", pro: "حرفه‌ای" }, skills: "مهارت‌ها و تخصص‌ها", bio: "درباره‌ی من", join: "تاریخ عضویت", save: "ذخیره‌ی اطلاعات", ok: "ذخیره شد ✓", email: "ایمیل (فقط مدیر می‌تواند عوض کند)" },
   ps: { t: "زما معلومات", name: "نوم", phone: "د اړیکې شمېره", wa: "واټساپ", tg: "د ټلګرام آیډي", country: "هېواد", city: "ښار", exp: "په بازار کې تجربه (کال)", lv: "د تجربې کچه", lvs: { "": "—", beginner: "نوی", intermediate: "منځنی", pro: "مسلکي" }, skills: "مهارتونه", bio: "زما په اړه", join: "د غړیتوب نېټه", save: "خوندي کول", ok: "خوندي شو ✓", email: "برېښنالیک" },
   en: { t: "My details", name: "Full name", phone: "Phone", wa: "WhatsApp", tg: "Telegram ID", country: "Country", city: "City", exp: "Years in markets", lv: "Experience level", lvs: { "": "—", beginner: "Beginner", intermediate: "Intermediate", pro: "Professional" }, skills: "Skills", bio: "About me", join: "Member since", save: "Save details", ok: "Saved ✓", email: "Email (only admin can change)" } };
-function profFormHTML(){ const L = PFL[lang] || PFL.fa, f = (id, l, v, a = "") => `<label class="pfl">${l}<input id="${id}" value="${esc(v ?? "")}" ${a}></label>`;
-  return `<div class="pform"><h3>👤 ${L.t}</h3><div class="pfjoin">${L.join}: <b>${fmtDate(me.created_at)}</b></div>
-    <div class="pf2">${f("pf_fn", SPx().fn, me.first_name ?? String(me.name || "").split(" ")[0], 'maxlength="40" autocomplete="given-name"')}${f("pf_ln", SPx().ln, me.last_name ?? String(me.name || "").split(" ").slice(1).join(" "), 'maxlength="40" autocomplete="family-name"')}</div>
-    <div class="pfl pfro"><span>✉️ ${T.email || "Email"}</span><b class="ltr">${esc(me.email || "")}</b></div><div class="pf2">${f("pf_phone", L.phone, me.phone, 'dir="ltr" inputmode="tel"')}${f("pf_wa", L.wa, me.whatsapp, 'dir="ltr" inputmode="tel"')}</div>
-    <div class="pf2">${f("pf_tg", L.tg, me.telegram, 'dir="ltr"')}${f("pf_exp", L.exp, me.experience_years, 'dir="ltr" inputmode="numeric"')}</div>
-    <div class="pf2">${f("pf_country", L.country, me.country)}${f("pf_city", L.city, me.city)}</div>
-    <label class="pfl">${L.lv}<select id="pf_lv">${Object.entries(L.lvs).map(([k, v]) => `<option value="${k}" ${k === (me.level || "") ? "selected" : ""}>${v}</option>`).join("")}</select></label>
-    ${f("pf_skills", L.skills, me.skills, 'maxlength="300"')}<label class="pfl">${L.bio}<textarea id="pf_bio" rows="3" maxlength="1000">${esc(me.bio || "")}</textarea></label>
-    <button class="cta" id="pfsave">${L.save}</button><div class="err" id="pferr"></div></div>`; }
+function profFormHTML(){ const L = PFL[lang] || PFL.fa, X = PFX(), f = (id, l, v, a = "", ic = "") => `<label class="pfl lx"><span>${ic} ${l}</span><input id="${id}" value="${esc(v ?? "")}" ${a}></label>`;
+  return `<div class="pform lux"><h3>✦ ${L.t}</h3>
+    <div class="pf2">${f("pf_fn", SPx().fn, me.first_name ?? String(me.name || "").split(" ")[0], 'maxlength="40" autocomplete="given-name"', "👤")}${f("pf_ln", SPx().ln, me.last_name ?? String(me.name || "").split(" ").slice(1).join(" "), 'maxlength="40" autocomplete="family-name"', "👤")}</div>
+    <div class="pf2">${f("pf_phone", L.phone, me.phone, 'dir="ltr" inputmode="tel" maxlength="30" autocomplete="tel"', "📞")}${f("pf_tg", L.tg, me.telegram, 'dir="ltr" maxlength="60" placeholder="@username"', "✈️")}</div>
+    <button class="cta gold" id="pfsave">${L.save}</button><div class="err" id="pferr"></div>
+    <h3 style="margin-top:18px">🔒 ${X.acc}</h3>
+    <div class="pfro2"><span>✉️ ${X.email}</span><b class="ltr">${esc(me.email || "")}</b></div>
+    <div class="pfro2"><span>🔑 ${X.pw}</span><b>••••••••</b></div>
+    <p class="pflock">${X.lock}</p></div>`; }
+const PFXT = { fa: { acc: "حساب کاربری", email: "ایمیل ورود", pw: "رمز عبور", lock: "برای امنیت حساب، تغییر ایمیل و رمز عبور فقط توسط مدیر انجام می‌شود. اگر نیاز به تغییر دارید از «راه‌های ارتباطی» به مدیر پیام دهید.", since: "عضو از", plan: "پلان", left: "روز مانده" },
+  ps: { acc: "ګڼون", email: "د ننوتلو برېښنالیک", pw: "پټنوم", lock: "د امنیت لپاره، برېښنالیک او پټنوم یوازې مدیر بدلولی شي. که بدلون ته اړتیا لرئ، مدیر ته پیغام ولېږئ.", since: "غړی له", plan: "پلان", left: "ورځې پاتې" },
+  en: { acc: "Account", email: "Sign-in email", pw: "Password", lock: "For account security, only the admin can change your email or password. Message the admin from “Contacts” if you need a change.", since: "Member since", plan: "Plan", left: "days left" } };
+const PFX = () => PFXT[lang] || PFXT.fa;
 async function saveProfForm(){ const L = PFL[lang] || PFL.fa, b = $("pfsave"), g = id => $(id).value;
-  const p = { first_name: g("pf_fn"), last_name: g("pf_ln"), phone: g("pf_phone"), whatsapp: g("pf_wa"), telegram: g("pf_tg"), country: g("pf_country"), city: g("pf_city"), experience_years: g("pf_exp").replace(/[^0-9]/g, ""), level: g("pf_lv"), skills: g("pf_skills"), bio: g("pf_bio") };
+  const p = { first_name: g("pf_fn"), last_name: g("pf_ln"), phone: g("pf_phone"), telegram: g("pf_tg") };
+  if (!p.first_name.trim()) { $("pferr").textContent = SPx().fn + " ?"; return; }
   b.disabled = true; const { error } = await sb.rpc("update_my_profile", { p }); b.disabled = false;
   if (error) { $("pferr").textContent = error.message; return; }
   const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle(); if (data) { me = data; store.set("cache_me", me); }
-  b.textContent = L.ok; sfx("button", .4); setTimeout(() => { if ($("pfsave")) $("pfsave").textContent = L.save; }, 1800); }
+  b.textContent = L.ok; sfx("button", .4); const h = document.querySelector("#prof .pbody h2"); if (h) h.textContent = me.name || ""; setTimeout(() => { if ($("pfsave")) $("pfsave").textContent = L.save; }, 1800); }
 function openProfile(){
   if ($("prof")) return;
   const veil = document.createElement("div"); veil.className = "cveil"; veil.id = "pveil";
-  const box = document.createElement("div"); box.className = "chat prof"; box.id = "prof";
+  const box = document.createElement("div"); box.className = "chat prof luxp"; box.id = "prof";
   const days = me.role === "admin" ? null : Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY));
   let pick = null;
   const draw = () => {
@@ -2111,15 +2224,16 @@ function openProfile(){
         <label class="bigav" id="pav">${pick ? `<img src="${URL.createObjectURL(pick)}" alt="">` : myAvatarHTML()}<span class="cam">📷 ${T.changePhoto}</span>
           <input type="file" accept="image/*" id="pfile" hidden></label>
         <h2>${esc(me.name || "")}</h2><div class="pmail ltr">${esc(me.email || "")}</div>
+        ${me.role !== "admin" ? `<div class="pstats"><span><small>${PFX().since}</small><b>${fmtDate(me.created_at)}</b></span><span><small>${PFX().plan}</small><b>${planName(me.plan)}</b></span><span><small>${PFX().left}</small><b class="num">${days}</b></span></div>` : ""}
         <button class="ghost2 instbtn" onclick="installApp()">🖥 ${lang === "en" ? "Install on this computer/phone" : lang === "ps" ? "په کمپیوټر/موبایل نصب کړئ" : "نصب برنامه روی همین کامپیوتر/گوشی"}</button>
-        ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })} · ${planName(me.plan)}</div><button class="cta" id="prenew" style="margin-top:10px">${PT().renew}</button>` : ""}
+        ${days != null ? `<button class="cta" id="prenew" style="margin-top:10px">${PT().renew}</button>` : ""}
         ${pick ? `<button class="cta" id="psave">${T.savePhoto}</button>` : ""}
-        ${me.role !== "admin" ? `<button type="button" class="ghost2 pnotif" id="pnotif">🔔 ${SPx().notifs} <b class="bdg2" id="pbdg">${notifs.filter(x => x.id > seenId()).length || ""}</b></button>` + profFormHTML() + secFormHTML() : ""}
+        ${me.role !== "admin" ? `<button type="button" class="ghost2 pnotif" id="pnotif">🔔 ${SPx().notifs} <b class="bdg2" id="pbdg">${notifs.filter(x => x.id > seenId()).length || ""}</b></button>` + profFormHTML() : ""}
         ${me.avatar && !pick ? `<button class="ghost2" id="pdel">${T.removePhoto}</button>` : ""}
         <div class="err" id="perr"></div></div>`;
     $("px").onclick = () => history.back();
     if ($("pfsave")) $("pfsave").onclick = saveProfForm;
-    bindSecForm(); if ($("pnotif")) $("pnotif").onclick = () => { history.back(); setTimeout(openNotifs, 420); };
+    if ($("pnotif")) $("pnotif").onclick = () => { history.back(); setTimeout(openNotifs, 420); };
     if ($("prenew")) $("prenew").onclick = () => { history.back(); setTimeout(openPlans, 450); };
     $("pfile").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { pick = await squareJpeg(f); draw(); } catch { $("perr").textContent = T.badPhoto; } };
     if ($("psave")) $("psave").onclick = async () => {
@@ -2154,7 +2268,7 @@ function topbar(){
     </div></div>${EMBED ? "" : `<div class="mtk" id="mtk" hidden></div>`}${me?.role === "admin" || new URLSearchParams(location.search).get("from") === "admin" ? `<a class="toadm" href="modir.html">↩ پنل مدیر</a>` : ""}`;
 }
 function bindTop(){
-  tkSig = ""; loadTicker(true);
+  tkBuilt = ""; paintTicker();
   if ($("meav")) $("meav").onclick = openProfile;
   paintBell();
   if ($("more3")) $("more3").onclick = e => { e.stopPropagation(); openMore(); };
@@ -2445,9 +2559,11 @@ document.addEventListener("click", async e => {
 
 /* ----- قیمت‌ها ----- */
 async function loadPrices(force){
-  if (!force && Date.now() - pricesAt < (page === "prc" ? 3000 : page === "tool" || page === "dash" ? 5000 : 55000)) return;
+  const lv = LIVE?.status === "live";
+  if (!force && Date.now() - pricesAt < (page === "prc" || page === "tool" || page === "dash" ? (lv ? 30000 : 10000) : 55000)) return;
   pricesAt = Date.now();
-  try { const r = await fnFetch("prices"); if (r.ok) { prices = await r.json(); store.set("cache_prices", prices); } } catch {}
+  try { const r = await fnFetch("prices"); if (r.ok) { const np = await r.json(); if (LIVE) for (const k in LEG) { const q = LIVE.Q[k]; if (q && np[LEG[k]] && q.t > Date.parse(np[LEG[k]].quoteAt || 0)) np[LEG[k]].price = q.p; }
+      prices = np; store.set("cache_prices", prices); if (LIVE && prices.live) LIVE.seed(prices.live); } } catch {}
   if (Date.now() - newsAt > 120000) loadNews();
   if (Date.now() - tgcAt > 30000) { tgcAt = Date.now(); const { data: t } = await sb.from("settings").select("value").eq("key", "tg_cache").maybeSingle(); if (t?.value) tgc = t.value; }
   if (Date.now() - localAt > 120000 || force) { localAt = Date.now(); try { const r = await fnFetch("local-rates"); if (r.ok) { local = await r.json(); store.set("cache_local", local); } } catch {} }
@@ -2476,7 +2592,7 @@ setInterval(() => {
   document.querySelectorAll("[data-ago]").forEach(el => { el.textContent = agoTxt(prices?.at); });
   document.querySelectorAll("[data-ts]").forEach(el => { if (el.dataset.ts) el.textContent = agoTxt(el.dataset.ts); });
   if (!document.hidden && view === "feed" && (page === "prc" || page === "tool" || page === "dash")) loadPrices();
-  if (!document.hidden && view === "feed" && (page === "news" || page === "cal")) { if (page === "news" && Date.now() - newsAt > 60000) { loadNews(); loadExtNews(); } if (page === "cal" && Date.now() - calAt > 5 * 60000) loadCalendar(); }
+  if (!document.hidden && view === "feed" && (page === "news" || page === "cal")) { if (page === "news" && Date.now() - newsAt > 60000) { loadNews(); loadExtNews(); } if (page === "cal" && Date.now() - calAt > 5 * 60000) { calAt = Date.now(); loadEco(true); } }
 }, 1000);
 function tvWidget(){
   const box = $("tvbox"); if (!box) return;
@@ -3274,35 +3390,84 @@ function wireConv(){ if (!$("cva")) return; const sv = () => store.set("conv", c
   $("cvc").onchange = e => { cv.city = e.target.value; sv(); const t = $("cvtool").querySelector(".tb"); t.innerHTML = convHTML(); wireConv(); }; $("cvf").onchange = e => { cv.f = e.target.value; sv(); convCalc(); }; $("cvt").onchange = e => { cv.t = e.target.value; sv(); convCalc(); };
   $("cvs").onclick = () => { [cv.f, cv.t] = [cv.t, cv.f]; $("cvf").value = cv.f; $("cvt").value = cv.t; sv(); sfx("tap_01", .3); convCalc(); }; convCalc(); }
 
-/* ===== نوار چرخشی قیمت‌های بازار (مشترک مدیر و اعضا) ===== */
-const TKDEF = [["xau", "🥇 طلا", "XAU/USD", 2], ["xag", "🥈 نقره", "XAG/USD", 3], ["dxy", "💵 شاخص دالر", "DXY", 2], ["eurusd", "🇪🇺 یورو/دالر", "EUR/USD", 4],
-  ["gbpusd", "🇬🇧 پوند/دالر", "GBP/USD", 4], ["usdjpy", "🇯🇵 دالر/ین", "USD/JPY", 3], ["usdchf", "🇨🇭 دالر/فرانک", "USD/CHF", 4], ["btcusd", "₿ بیت‌کوین", "BTC/USD", 0],
-  ["ethusd", "Ξ اتریوم", "ETH/USD", 1], ["wti", "🛢 نفت WTI", "WTI", 2], ["brent", "🛢 نفت برنت", "BRENT", 2]];
-let tkData = null, tkAt = 0, tkSig = "", tkCfg = null;
-const tkQuote = (d, k) => k === "xau" || k === "xag" || k === "dxy" ? d?.[k] : d?.markets?.[k];
-function tkItems(d){
-  const hide = new Set(tkCfg?.hide || []), extra = (tkCfg?.extra || []).map(x => [x.key, x.name, x.sym || x.key.toUpperCase(), x.digits ?? 2]);
-  return [...TKDEF, ...extra].filter(([k]) => !hide.has(k)).map(([k, name, sym, dg]) => { const q = tkQuote(d, k); if (!q || q.price == null) return "";
-    const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null, cls = ch == null ? "" : ch > 0 ? "up" : ch < 0 ? "dn" : "";
-    const pr = Number(q.price).toLocaleString("en-US", { minimumFractionDigits: dg, maximumFractionDigits: dg });
-    return `<span class="tki ${cls}"><b>${name}</b><i>${sym}</i><em>${pr}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : ch < 0 ? "▼" : "•"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join("");
+/* ===== قیمت‌های زنده (live.js: رله‌ی سرور از طریق Realtime + وب‌سوکت بایننس) و نوار چرخشی ===== */
+let LS = null, LIVE = null, tkCfg = null, tkBuilt = "", liveDrawT = 0;
+const LEG = { XAU: "xau", XAG: "xag", DXY: "dxy" };
+const LEGM = { EURUSD: "eurusd", GBPUSD: "gbpusd", USDJPY: "usdjpy", USDCHF: "usdchf", BTCUSD: "btcusd", ETHUSD: "ethusd", WTI: "wti", BRENT: "brent" };
+async function liveStart(){
+  if (LIVE || EMBED) return;
+  try { LS = await import("./live.js?v=" + BUILD); } catch { return; }
+  if (LIVE) return;
+  LIVE = LS.startLive(sb, { onUpdate: liveUpd, onStatus: () => { if (page === "prc") paintRStat(); } });
+  if (prices?.live) LIVE.seed(prices.live);
+  loadTicker(true);
 }
+function liveUpd(keys){
+  if (!prices) prices = { markets: {} };
+  for (const k of keys) { const q = LIVE.Q[k], lk = LEG[k], at = q.t ? new Date(q.t).toISOString() : null;
+    if (lk) prices[lk] = { ...(prices[lk] || {}), price: q.p, quoteAt: at, prev: q.pc ?? prices[lk]?.prev ?? null };
+    const mk = LEGM[k]; if (mk) { prices.markets = prices.markets || {}; prices.markets[mk] = { ...(prices.markets[mk] || {}), price: q.p, prev: q.pc ?? prices.markets[mk]?.prev ?? null, at }; } }
+  LS.paintLive(document, LIVE, keys);
+  paintTicker();
+  if (Date.now() - liveDrawT > 3000 && keys.some(k => LEG[k])) { liveDrawT = Date.now(); prices.at = new Date().toISOString();
+    if (view === "feed" && page === "prc") drawPrices(); if (view === "feed" && page === "tool") fillCalcLive(); checkAlerts(); }
+}
+function tkKeys(){
+  if (!LS) return [];
+  const hide = new Set((tkCfg?.hide || []).map(x => String(x).toUpperCase())), list = Array.isArray(tkCfg?.order) && tkCfg.order.length ? tkCfg.order : LS.TICKER_DEFAULT;
+  return list.filter(k => LS.LMETA[k] && !hide.has(k) && LIVE?.Q[k]);
+}
+function tkItem(k){ const m = LS.LMETA[k];
+  return `<span class="tki" data-lrow><b>${m.ic} ${esc(LS.lsName(k, lang))}</b><i>${LS.lsCode(k)}</i><em data-lv="${k}" data-lf="p"></em><u data-lv="${k}" data-lf="pct"></u></span>`; }
+function tkExtra(){ return (tkCfg?.extra || []).map(x => { const q = prices?.markets?.[x.key]; if (!q?.price) return ""; const ch = q.prev ? (q.price - q.prev) / q.prev * 100 : null;
+  return `<span class="tki ${ch > 0 ? "lv-pos" : ch < 0 ? "lv-neg" : ""}"><b>${esc(x.name || x.key)}</b><i>${esc(x.sym || x.key.toUpperCase())}</i><em>${Number(q.price).toLocaleString("en-US", { minimumFractionDigits: x.digits ?? 2, maximumFractionDigits: x.digits ?? 2 })}</em>${ch == null ? "" : `<u>${ch > 0 ? "▲" : "▼"} ${Math.abs(ch).toFixed(2)}%</u>`}</span>`; }).join(""); }
 function paintTicker(){
-  const el = document.getElementById("mtk"); if (!el || !tkData) return;
-  const items = tkItems(tkData); if (!items) { el.hidden = true; return; } el.hidden = false;
-  if (items === tkSig && el.querySelector(".tktrack")) return; tkSig = items;
-  const tr = el.querySelector(".tktrack");
-  if (tr) { tr.querySelectorAll(".tkset").forEach(s => s.innerHTML = items); return; }   // update prices without restarting the scroll
-  const n = (items.match(/class="tki/g) || []).length;
-  el.innerHTML = `<div class="tktrack" style="--tkd:${Math.max(28, n * 4.5)}s"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+  const el = document.getElementById("mtk"); if (!el || !LIVE) return;
+  const keys = tkKeys(), sig = keys.join(",") + "|" + lang + "|" + (tkCfg?.extra || []).length;
+  if (!keys.length) { el.hidden = true; return; } el.hidden = false;
+  if (sig !== tkBuilt || !el.querySelector(".tktrack")) { tkBuilt = sig;
+    const items = keys.map(tkItem).join("") + tkExtra();
+    el.innerHTML = `<div class="tktrack"><div class="tkset">${items}</div><div class="tkset" aria-hidden="true">${items}</div></div>`;
+    LS.paintLive(el, LIVE);
+    requestAnimationFrame(() => { const tr = el.querySelector(".tktrack"), w = tr?.firstElementChild?.scrollWidth || 0; if (tr && w) tr.style.setProperty("--tkd", Math.max(20, w / 42).toFixed(1) + "s"); });
+  }
 }
 async function loadTicker(force){
-  if (!force && (document.hidden || Date.now() - tkAt < 5000)) return; tkAt = Date.now();
-  try { const r = await fnFetch("prices"); if (r.ok) tkData = await r.json(); } catch {}
-  if (!tkCfg) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = {}; } }
+  if (!tkCfg || force) { try { const { data } = await sb.from("settings").select("value").eq("key", "ticker_cfg").maybeSingle(); tkCfg = data?.value || {}; } catch { tkCfg = tkCfg || {}; } }
   paintTicker();
 }
-setInterval(() => loadTicker(), 5000);
+const LVT = { fa: { live: "پخش زنده‌ی قیمت برقرار است", quiet: "اتصال زنده برقرار است؛ بازار فعلاً بی‌حرکت یا بسته است", retry: "در حال اتصال دوباره…", off: "اتصال زنده قطع است؛ قیمت‌ها هر ۱۰ ثانیه بررسی می‌شوند",
+    rx: "آخرین دریافت", srcAge: "عمر قیمت طلا در منبع", net: "انتقال سرور ← دستگاه شما", cry: "رمزارز (بایننس)", on: "زنده", wait: "در انتظار", bid: "خرید", ask: "فروش", sp: "اسپرد", chg: "تغییر روز", search: "جست‌وجوی نماد…",
+    note: "منبع‌ها: طلا و فلزات از gold-api، جفت‌ارزها، شاخص‌ها و انرژی از Yahoo Finance (رله‌ی لحظه‌ای سرور)، رمزارز مستقیم از بایننس. قیمت خرید/فروش فقط وقتی منبع معتبر آن را بدهد نمایش داده می‌شود. «عمر قیمت» زمان واقعی از آخرین معامله‌ی منبع است.", none: "نمادی پیدا نشد", boardT: "بازار جهانی زنده" },
+  ps: { live: "د بیو ژوندۍ خپرونه روانه ده", quiet: "ژوندۍ اړیکه شته؛ بازار اوس ارام یا تړلی دی", retry: "بیا نښلېږي…", off: "ژوندۍ اړیکه پرې ده؛ بیې هر ۱۰ ثانیې کتل کېږي",
+    rx: "وروستی ترلاسه", srcAge: "په سرچینه کې د سرو زرو د بیې عمر", net: "سرور ← ستاسو وسیله", cry: "کریپټو (بایننس)", on: "ژوندی", wait: "انتظار", bid: "پېرل", ask: "پلورل", sp: "سپرېډ", chg: "د ورځې بدلون", search: "نښه ولټوئ…",
+    note: "سرچینې: سره زر او فلزات له gold-api، اسعار، شاخصونه او انرژي له Yahoo Finance (د سرور ژوندۍ رله)، کریپټو مستقیم له بایننس. د پېر/پلور بیه یوازې هغه وخت ښودل کېږي چې معتبره سرچینه یې ورکړي.", none: "نښه ونه موندل شوه", boardT: "ژوندی نړیوال بازار" },
+  en: { live: "Live price stream connected", quiet: "Live connection up; the market is quiet or closed", retry: "Reconnecting…", off: "Live stream disconnected; checking prices every 10 s",
+    rx: "Last received", srcAge: "Gold quote age at source", net: "Server → your device", cry: "Crypto (Binance)", on: "live", wait: "waiting", bid: "Bid", ask: "Ask", sp: "Spread", chg: "Day change", search: "Search symbol…",
+    note: "Sources: metals from gold-api, FX pairs, indices and energy from Yahoo Finance (server live relay), crypto directly from Binance. Bid/ask are shown only where a valid source provides them. “Quote age” is the real time since the source's last trade.", none: "No symbol found", boardT: "Live world market" } };
+const LV = () => LVT[lang] || LVT.fa;
+let lbGrp = store.get("lb_grp", "all"), lbQ = "";
+function drawLiveBoard(){
+  const el = $("lboard"); if (!el) return; const L = LV();
+  if (!LS) { el.innerHTML = `<div class="sk"></div>`; return; }
+  const gl = g => { const r = LS.LGROUPS.find(x => x[0] === g); return r ? (lang === "ps" ? r[2] : lang === "en" ? r[3] : r[1]) : g; };
+  el.innerHTML = `<div class="lbhead"><div class="qchips" id="lbg">${LS.LGROUPS.map(([g]) => `<button data-g="${g}" class="${g === lbGrp ? "on" : ""}">${gl(g)}</button>`).join("")}</div>
+    <input id="lbq" class="lbq" type="search" placeholder="${L.search}" value="${esc(lbQ)}"></div><div class="lbx glass" id="lbx"></div><p class="src">${L.note}</p>`;
+  paintLiveRows();
+  $("lbg").onclick = e => { const b = e.target.closest("[data-g]"); if (!b) return; lbGrp = b.dataset.g; store.set("lb_grp", lbGrp); $("lbg").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); paintLiveRows(); };
+  $("lbq").oninput = e => { lbQ = e.target.value.trim().toLowerCase(); paintLiveRows(); };
+}
+function paintLiveRows(){
+  const box = $("lbx"); if (!box || !LS) return; const L = LV();
+  const rows = LS.LSYM.filter(r => (lbGrp === "all" || r[1] === lbGrp) && (!lbQ || (r[0] + " " + r[2] + " " + r[3] + " " + r[4]).toLowerCase().includes(lbQ)));
+  if (!rows.length) { box.innerHTML = `<div class="empty">${L.none}</div>`; return; }
+  box.innerHTML = rows.map(([k]) => { const m = LS.LMETA[k];
+    return `<div class="lrow" data-lrow><span class="ln"><i>${m.ic}</i><span><b>${esc(LS.lsName(k, lang))}</b><small class="ltr">${LS.lsCode(k)}</small></span></span>
+      <span class="lp"><b class="ltr" data-lv="${k}" data-lf="p">—</b><small class="lba ltr"><em>${L.bid}</em> <bdi data-lv="${k}" data-lf="b">—</bdi> · <em>${L.ask}</em> <bdi data-lv="${k}" data-lf="a">—</bdi></small></span>
+      <span class="lc"><u class="ltr" data-lv="${k}" data-lf="pct">—</u><small class="ltr">⏱ <bdi data-lv="${k}" data-lf="age">—</bdi></small></span></div>`; }).join("");
+  LS.paintLive(box, LIVE);
+  box.querySelectorAll(".lrow").forEach(r => { const has = r.querySelector('[data-lf="b"]')?.textContent !== "—"; r.classList.toggle("nba", !has); });
+}
 
 /* ===== آمار عملکرد سیگنال‌ها (مشترک مدیر و اعضا؛ از وضعیت واقعی ثبت‌شده در دیتابیس) ===== */
 const SGL = { fa: { total: "کل سیگنال‌ها", win: "موفق", loss: "ناموفق", open: "باز", other: "منقضی / بسته", wr: "درصد موفقیت", lr: "درصد عدم موفقیت", perf: "عملکرد کلی", perfH: "مجموع سود و زیان به واحد R (هر R = اندازه‌ی ریسک همان سیگنال)", avg: "میانگین هر سیگنال", none: "—" },
@@ -3615,40 +3780,75 @@ async function loadAcademy(){
   else if (view === "feed" && ["about", "inst", "contact"].includes(page)) drawInfoPage($("pg"));
 }
 const impHTML = imp => `<div class="imp">${["xau","xag","usd"].filter(k => imp?.[k]).map(k => `<span class="${imp[k] === "up" ? "up" : imp[k] === "down" ? "dn" : ""}">${T.m[k]}: ${imp[k] === "up" ? "▲ " + T.upI : imp[k] === "down" ? "▼ " + T.dnI : "• " + T.neuI}</span>`).join("")}</div>`;
+/* ----- آکادمی: دوره‌ها، تحلیل‌های هفتگی، ویدیوهای کوتاه (+ نظرسنجی و آرشیو تحلیل‌ها) ----- */
+let acadTab = store.get("acad_tab", "courses"), acad2 = { courses: [], items: [], ai: [], at: 0 }, acadCourse = null;
+const ACT = { fa: { courses: "دوره‌های آموزشی", weekly: "تحلیل‌های هفتگی", shorts: "ویدیوهای کوتاه", lessons: "درس", noC: "هنوز دوره‌ای منتشر نشده است.", noW: "هنوز تحلیل هفتگی منتشر نشده است.", noS: "هنوز ویدیوی کوتاهی منتشر نشده است.", watch: "▶ تماشا", file: "📎 دریافت فایل", archive: "آرشیو تحلیل‌ها", week: "هفته‌ی", back: "→ بازگشت به دوره‌ها", content: "سرفصل‌ها و محتوا", lvl: { beginner: "مقدماتی", intermediate: "متوسط", pro: "پیشرفته" } },
+  ps: { courses: "روزنیز کورسونه", weekly: "اونیزې تحلیلونه", shorts: "لنډې ویډیوګانې", lessons: "درس", noC: "تر اوسه کورس نشته.", noW: "تر اوسه اونیز تحلیل نشته.", noS: "تر اوسه لنډه ویډیو نشته.", watch: "▶ کتل", file: "📎 فایل", archive: "د تحلیلونو آرشیف", week: "اونۍ", back: "→ کورسونو ته", content: "سرلیکونه او منځپانګه", lvl: { beginner: "لومړنی", intermediate: "منځنی", pro: "پرمختللی" } },
+  en: { courses: "Courses", weekly: "Weekly analyses", shorts: "Short videos", lessons: "lessons", noC: "No courses published yet.", noW: "No weekly analysis yet.", noS: "No short videos yet.", watch: "▶ Watch", file: "📎 Download file", archive: "Analysis archive", week: "Week of", back: "← Back to courses", content: "Syllabus & content", lvl: { beginner: "Beginner", intermediate: "Intermediate", pro: "Advanced" } } };
+const AC = () => ACT[lang] || ACT.fa;
+async function loadAcad2(force){
+  if (!force && Date.now() - acad2.at < 60000) return;
+  acad2.at = Date.now();
+  try { const [{ data: c }, { data: i }, { data: ai }] = await Promise.all([sb.from("courses").select("*").order("sort").order("created_at", { ascending: false }),
+      sb.from("course_items").select("*").order("sort").order("id"), sb.from("academy_items").select("*").order("publish_at", { ascending: false }).limit(200)]);
+    acad2 = { courses: c || [], items: i || [], ai: ai || [], at: Date.now() }; } catch {}
+  if (page === "acad") drawAcademy();
+}
+const ytId = u => { const m = String(u || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/); return m ? m[1] : null; };
+function mediaBlock(x){ const C = AC(), yt = ytId(x.video_url);
+  return `${x.video_path ? `<video class="acv" controls playsinline preload="none" data-vpath="${esc(x.video_path)}"></video>` : ""}
+    ${yt ? `<div class="ytw"><iframe src="https://www.youtube-nocookie.com/embed/${yt}" title="video" allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : x.video_url ? `<a class="acbtn" href="${esc(x.video_url)}" target="_blank" rel="noopener">${C.watch} ↗</a>` : ""}
+    ${x.file_path ? `<button type="button" class="acbtn" data-dl="${esc(x.file_path)}" data-fn="${esc(x.file_name || "file")}">${C.file}</button>` : ""}`; }
 function drawAcademy(){
   const el = $("pg"); if (!el || page !== "acad") return;
-  const A = academy || {}, tn = teacher.name || T.teacher;
-  const wa = A.whatsapp ? "https://wa.me/" + toEn(A.whatsapp).replace(/[^0-9]/g, "") : "", tg = A.telegram ? "https://t.me/" + String(A.telegram).replace(/^@|https?:\/\/t\.me\//g, "") : "";
-  const news = posts.filter(p => (p.kind === "news" || (p.kind === "event" && p.country !== "af")) && p.status !== "draft"), afEv = posts.filter(p => p.kind === "event" && p.country === "af"),
-    anal = posts.filter(p => (p.kind === "article" || p.kind === "video") && p.status !== "draft"), C = CTL();
-  const nCats = [...new Set(news.map(p => p.category).filter(Boolean))], aCats = [...new Set(anal.map(p => p.category).filter(Boolean))];
-  const newsV = news.filter(p => newsCat === "all" || p.category === newsCat), analV = anal.filter(p => anCat === "all" || (anCat === "fav" ? favs.has(p.id) : p.category === anCat));
-  const t0 = Date.now() - 864e5, afUp = afEv.filter(e => !e.event_at || new Date(e.event_at) >= t0).sort((a, b) => new Date(a.event_at || 0) - new Date(b.event_at || 0)), afPast = afEv.filter(e => e.event_at && new Date(e.event_at) < t0).sort((a, b) => new Date(b.event_at) - new Date(a.event_at)).slice(0, 6);
-  const afItem = e => `<div class="afe ${e.event_status || "upcoming"}"><div class="afd"><b>${e.event_at ? fmtFull(e.event_at).split(" · ")[0] : "—"}</b><small>${e.event_at ? (fmtFull(e.event_at).split(" · ")[1] || "") : ""}</small></div>
-      <div class="afb"><b>${esc(e.title)}</b><div class="tags"><span class="tag2 st-${e.event_status || "upcoming"}">${C.evst[e.event_status || "upcoming"]}</span><span class="tag2 lvl-${e.importance || "low"}">● ${T.imp[e.importance || "low"]}</span>${e.previous ? `<span class="tag2">${T.prevV}: <bdi class="ltr">${esc(e.previous)}</bdi></span>` : ""}${e.forecast ? `<span class="tag2">${T.fcV}: <bdi class="ltr">${esc(e.forecast)}</bdi></span>` : ""}${e.actual ? `<span class="tag2">${T.actV}: <bdi class="ltr">${esc(e.actual)}</bdi></span>` : ""}</div>
-      ${e.body ? `<p>${esc(e.body)}</p>` : ""}<div class="nsrc">${C.src}: ${e.source_url ? `<a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(e.source || e.source_url)} ↗</a>` : esc(e.source || "—")}</div></div></div>`;
+  const C = AC(), A2 = acad2;
+  if (!A2.at) loadAcad2(true);
+  const tabs = `<div class="seg3 acseg" id="acseg">${[["courses", "📚", C.courses], ["weekly", "🗓", C.weekly], ["shorts", "🎬", C.shorts]].map(([k, ic, t]) => `<button data-at="${k}" class="${k === acadTab ? "on" : ""}">${ic} ${t}</button>`).join("")}</div>`;
+  let body = "";
+  if (acadTab === "courses") {
+    const course = acadCourse && A2.courses.find(c => c.id === acadCourse);
+    if (course) { const its = A2.items.filter(i => i.course_id === course.id);
+      body = `<button type="button" class="jback" id="acback">${C.back}</button><div class="accourse glass rise">${course.cover_path ? `<img class="accov" data-mpath="${esc(course.cover_path)}" alt="">` : ""}
+        <h2>${esc(course.title)}</h2>${course.level ? `<span class="tag2">${C.lvl[course.level] || esc(course.level)}</span>` : ""}<p>${esc(course.description || "")}</p>
+        ${course.content ? `<h4>${C.content}</h4><p class="pre">${esc(course.content)}</p>` : ""}</div>
+        ${its.map((i, n) => `<div class="aclesson glass rise"><div class="acln"><b class="num">${n + 1}</b><div><h4>${esc(i.title)}</h4>${i.description ? `<p>${esc(i.description)}</p>` : ""}</div></div>
+          ${i.image_path ? `<img class="acimg" data-mpath="${esc(i.image_path)}" alt="">` : ""}${mediaBlock(i)}</div>`).join("")}`; }
+    else body = A2.courses.length ? `<div class="acgrid">${A2.courses.map(c => { const n = A2.items.filter(i => i.course_id === c.id).length;
+        return `<button type="button" class="accard glass" data-course="${c.id}">${c.cover_path ? `<img data-mpath="${esc(c.cover_path)}" alt="">` : `<span class="acph">📚</span>`}<div><b>${esc(c.title)}</b><small>${n} ${C.lessons}${c.level ? " · " + (C.lvl[c.level] || esc(c.level)) : ""}</small><p>${esc(String(c.description || "").slice(0, 110))}</p></div></button>`; }).join("")}</div>`
+      : `<div class="empty glass"><div style="font-size:40px">📚</div><h2>${C.noC}</h2></div>`;
+  } else if (acadTab === "weekly") {
+    const w = A2.ai.filter(x => x.kind === "weekly"), anal = posts.filter(p => (p.kind === "article" || p.kind === "video") && p.status !== "draft");
+    body = (w.length ? w.map(x => `<article class="acweek glass rise"><div class="acwd"><span>${C.week}</span><b>${fmtDate(x.publish_at)}</b></div>
+        ${x.cover_path ? `<img class="acimg" data-mpath="${esc(x.cover_path)}" alt="">` : ""}<h3>${esc(x.title)}</h3>${x.body ? `<p class="pre nclip">${esc(x.body)}</p><button type="button" class="nmore">${CTL().more}</button>` : ""}${mediaBlock(x)}</article>`).join("")
+      : `<div class="empty glass"><div style="font-size:40px">🗓</div><h2>${C.noW}</h2></div>`)
+      + (anal.length ? `<div class="sec2"><h3>🧠 ${C.archive}</h3></div><div class="angrid">${anal.map(p => `<div class="ancard" data-an="${p.id}">${p.cover_path ? `<img data-mpath="${esc(p.cover_path)}" alt="">` : `<span class="anph">${p.kind === "video" ? "🎬" : "🧠"}</span>`}${p.kind === "video" ? `<span class="anplay">▶</span>` : ""}
+        <div class="anb"><b>${esc(p.title)}</b><small>${[p.category, p.author, fmtFull(p.created_at).split(" · ")[0]].filter(Boolean).map(esc).join(" · ")}</small></div></div>`).join("")}</div>` : "");
+  } else {
+    const sh = A2.ai.filter(x => x.kind === "short");
+    body = sh.length ? `<div class="shgrid">${sh.map(x => `<div class="shcard glass">${x.video_path ? `<video class="shv" controls playsinline preload="metadata" data-vpath="${esc(x.video_path)}"></video>` : ytId(x.video_url) ? `<div class="ytw tall"><iframe src="https://www.youtube-nocookie.com/embed/${ytId(x.video_url)}" title="video" allow="encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>` : x.video_url ? `<a class="acbtn" href="${esc(x.video_url)}" target="_blank" rel="noopener">${C.watch} ↗</a>` : ""}
+        <b>${esc(x.title)}</b>${x.body ? `<p>${esc(x.body)}</p>` : ""}<small>${fmtDate(x.publish_at)}</small></div>`).join("")}</div>` : `<div class="empty glass"><div style="font-size:40px">🎬</div><h2>${C.noS}</h2></div>`;
+  }
   const tot = Object.values(pollRes).reduce((a, b) => a + Number(b), 0);
-  el.innerHTML = subHead("acad") + `
-    ${poll ? `<div class="acard glass glow rise poll" style="--i:2;--bd:7s"><h2>📊 ${T.pollT}</h2><p style="margin-top:6px">${esc(poll.question)}</p>
+  el.innerHTML = subHead("acad") + tabs + `<div id="acbody">${body}</div>
+    ${poll ? `<div class="acard glass glow rise poll" style="--bd:7s;margin-top:16px"><h2>📊 ${T.pollT}</h2><p style="margin-top:6px">${esc(poll.question)}</p>
       ${(poll.options || []).map((o, i) => { const c = Number(pollRes[i] || 0), pc = tot ? Math.round(c / tot * 100) : 0;
         return `<button class="opt ${myVote === i ? "mine" : ""}" data-vote="${i}" ${myVote != null ? "disabled" : ""}><span class="bar" style="width:${myVote != null ? pc : 0}%"></span><span>${esc(o)}</span>${myVote != null ? `<em>${pc}%</em>` : ""}</button>`; }).join("")}
-      ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}
-    <div class="sec2"><h3>🧠 ${C.anT}</h3></div>
-    <div class="qchips acats" data-cg="an">${[["all", C.all], ["fav", "⭐ " + C.favs], ...aCats.map(c => [c, c])].map(([k, t]) => `<button data-c="${esc(k)}" class="${k === anCat ? "on" : ""}">${esc(t)}</button>`).join("")}</div>
-    <div class="angrid rise" style="--i:4">${analV.length ? analV.map(p => `<div class="ancard" data-an="${p.id}">${p.cover_path ? `<img data-mpath="${esc(p.cover_path)}" alt="">` : `<span class="anph">${p.kind === "video" ? "🎬" : "🧠"}</span>`}
-      <button type="button" class="anfav ${favs.has(p.id) ? "on" : ""}" data-fav="${p.id}" aria-label="favorite">${favs.has(p.id) ? "⭐" : "☆"}</button>${p.kind === "video" ? `<span class="anplay">▶</span>` : ""}
-      <div class="anb"><b>${esc(p.title)}</b><small>${[p.category, p.author, fmtFull(p.created_at).split(" · ")[0]].filter(Boolean).map(esc).join(" · ")}</small></div></div>`).join("") : `<div class="upd">${anCat === "fav" ? C.noFav : T.noContent}</div>`}</div>
-`;
+      ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}`;
   el.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
-  el.querySelectorAll(".acats").forEach(g => g.onclick = e => { const b = e.target.closest("[data-c]"); if (!b) return; if (g.dataset.cg === "news") newsCat = b.dataset.c; else anCat = b.dataset.c; drawAcademy(); });
-  el.querySelectorAll(".nmore").forEach(b => b.onclick = () => { const p = b.previousElementSibling; p.classList.toggle("nclip"); b.textContent = p.classList.contains("nclip") ? C.more : C.less; });
-  el.querySelector(".angrid").onclick = async e => { const f = e.target.closest("[data-fav]"); if (f) { e.stopPropagation(); return toggleFav(Number(f.dataset.fav)); }
-    const c = e.target.closest("[data-an]"); if (c) openAnalysis(posts.find(p => p.id === Number(c.dataset.an))); };
-  el.querySelectorAll("video[data-vpath]").forEach(async v => { if (!v.dataset.vpath) return; const { data } = await sb.storage.from("media").createSignedUrl(v.dataset.vpath, 3600); if (data?.signedUrl) v.src = data.signedUrl; });
+  el.querySelectorAll("video[data-vpath]").forEach(async v => { const u = await mediaUrl(v.dataset.vpath); if (u) v.src = u; });
+  $("acseg").onclick = e => { const b = e.target.closest("[data-at]"); if (!b) return; acadTab = b.dataset.at; acadCourse = null; store.set("acad_tab", acadTab); drawAcademy(); };
+  if ($("acback")) $("acback").onclick = () => { acadCourse = null; drawAcademy(); };
+  $("acbody").onclick = async e => {
+    const c = e.target.closest("[data-course]"); if (c) { acadCourse = Number(c.dataset.course); drawAcademy(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const d = e.target.closest("[data-dl]"); if (d) { const u = await mediaUrl(d.dataset.dl); if (u) { const a = document.createElement("a"); a.href = u; a.download = d.dataset.fn; a.target = "_blank"; a.rel = "noopener"; a.click(); } return; }
+    const m = e.target.closest(".nmore"); if (m) { const p = m.previousElementSibling; p.classList.toggle("nclip"); m.textContent = p.classList.contains("nclip") ? CTL().more : CTL().less; return; }
+    const an = e.target.closest("[data-an]"); if (an) openAnalysis(posts.find(p => p.id === Number(an.dataset.an)));
+  };
   el.querySelectorAll("[data-vote]").forEach(b => b.onclick = async () => {
     const i = Number(b.dataset.vote); myVote = i; pollRes[i] = Number(pollRes[i] || 0) + 1; drawAcademy();
     await sb.from("poll_votes").insert({ poll_id: poll.id, user_id: me.id, choice: i });
     const { data: r } = await sb.rpc("poll_results", { p_poll: poll.id }); pollRes = r || pollRes; drawAcademy(); });
+  if (Date.now() - acad2.at > 60000) loadAcad2();
 }
 
 /* ----- پوسته و ناوبری ----- */
@@ -3686,8 +3886,8 @@ function drawPage(){
     if (offline) statusLine("off");
     drawStoryBar(); if (Date.now() - storyAt > 60000) loadStories();
   } else if (page === "prc") { shown = {}; pSig = ""; const S = SPx(); el.innerHTML = `<div id="rstat" class="rstat"></div><div class="sec2" style="margin-top:0"><h3>🇦🇫 ${S.locT}</h3></div><div id="fxboard"></div>
-      <div class="sec2"><h3>🌐 ${S.worldT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div><div id="gunits"></div>
-      <div class="sec2"><h3>📈 ${S.chartT}</h3></div><div id="tvchart"></div>`; tvWidget(); tvChart(); drawPrices(); drawGoldUnits(); loadPrices(true); loadFx(true); }
+      <div class="sec2"><h3>🌐 ${S.worldT}</h3></div><div id="pcards"></div><div class="sec2"><h3>⚡ ${LV().boardT}</h3></div><div id="lboard"></div><div id="gunits"></div>
+      <div class="sec2"><h3>📈 ${S.chartT}</h3></div><div id="tvchart"></div>`; tvChart(); drawLiveBoard(); if (!LS) liveStart().then(drawLiveBoard); drawPrices(); drawGoldUnits(); loadPrices(true); loadFx(true); }
   else if (page === "dash") { el.innerHTML = `<div class="sk"></div>`; drawDash(); loadDash(); loadPrices(true); loadFx(true); }
   else if (page === "tool") { drawTools(); loadPrices(); el.insertAdjacentHTML("afterbegin", subHead("tool")); }
   else if (page === "acad") { el.innerHTML = subHead("acad") + `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
@@ -4009,7 +4209,7 @@ function renderFeed(){
       .on("postgres_changes", {event:"*", schema:"public", table:"stories"}, ev => { loadStories(); if (ev.eventType === "INSERT") banner("✨", T.newStory, esc(teacher.name || T.teacher) + " — " + T.tapView, () => { setPage("sig"); setTimeout(() => openStories(stories.length - 1), 900); }); }).subscribe();
     clearInterval(pollT); pollT = setInterval(() => { if (!document.hidden) { loadFeed(); if (!chatOpen) loadChat(); sb.rpc("touch_seen").then(() => {}); if (page === "prc") loadPrices();  } }, 8000);
   }
-  loadFeed(); loadPrices(); loadMyRatings(); loadNotifs(); loadAlerts(); sb.rpc("touch_seen").then(() => {});
+  loadFeed(); loadPrices().then(liveStart); loadMyRatings(); loadNotifs(); loadAlerts(); sb.rpc("touch_seen").then(() => {});
   pushSetup(false, me.id).then(r => { if (r === "off" && !store.get("push_asked", false)) { store.set("push_asked", true); setTimeout(() => banner("📲", PU().t, PU().btn + " ←", openNotifs), 4000); } });
   { const q = new URLSearchParams(location.search); if (q.get("chat")) setTimeout(() => openChat(), 700); else if (q.get("notifs")) setTimeout(openNotifs, 700);
     if (q.get("chat") || q.get("notifs")) history.replaceState(null, "", location.pathname + (q.get("pg") ? "?pg=" + q.get("pg") : "")); }
