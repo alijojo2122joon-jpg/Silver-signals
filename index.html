@@ -28,7 +28,7 @@
     --sh:0 18px 40px -16px rgba(20,45,30,.28),0 4px 12px -6px rgba(20,45,30,.12),inset 0 1px 0 #fff;
     --raise:5px 7px 14px rgba(40,70,52,.14),-4px -4px 10px rgba(255,255,255,.9),inset 0 1px 0 #fff;
     --sh-in:inset 2px 3px 7px rgba(40,70,52,.12),inset -2px -2px 6px rgba(255,255,255,.9);
-    --buy:#0f9d58; --buy-bg:rgba(15,157,88,.12); --sell:#e5484d; --sell-bg:rgba(229,72,77,.12); --amber:#c98a12;
+    --buy:#0f9d58; --buy-bg:rgba(15,157,88,.12); --sell:#e5484d; --sell-bg:rgba(229,72,77,.12); --amber:#c98a12; --amber-bg:rgba(201,138,18,.13);
     --ov:linear-gradient(180deg,rgba(240,244,242,.42),rgba(236,241,238,.72));
     --a1:#f9e3a0; --a2:#d4a53b; --a3:#93650f; --aText:#2a1c03; --brand:#b8861f; --beam:#e2b44c;
   }
@@ -41,7 +41,7 @@
     --sh:0 18px 40px -16px rgba(0,0,0,.7),0 4px 12px -6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);
     --raise:0 6px 14px -4px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);
     --sh-in:inset 0 2px 6px rgba(0,0,0,.45);
-    --buy:#34d17f; --buy-bg:rgba(52,209,127,.14); --sell:#ff6b70; --sell-bg:rgba(255,107,112,.14); --amber:#f0b44a;
+    --buy:#34d17f; --buy-bg:rgba(52,209,127,.14); --sell:#ff6b70; --sell-bg:rgba(255,107,112,.14); --amber:#f0b44a; --amber-bg:rgba(240,180,74,.14);
     --ov:linear-gradient(180deg,rgba(8,11,16,.55),rgba(8,11,16,.82));
   }
   :root[data-market="xau"]{--a1:#f9e3a0;--a2:#d4a53b;--a3:#93650f;--aText:#2a1c03;--brand:#b8861f;--beam:#e2b44c}
@@ -348,7 +348,7 @@
   html.app body{overscroll-behavior:none}
 
   /* ===== ناوبری پایین ===== */
-  .bnav{position:fixed;z-index:45;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100% - 20px));display:grid;grid-template-columns:repeat(5,1fr);padding:6px;border-radius:24px;background:var(--tile);border:1px solid var(--stroke);box-shadow:0 18px 40px -14px rgba(0,0,0,.4)}
+  .bnav{position:fixed;z-index:45;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100% - 20px));display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border-radius:24px;background:var(--tile);border:1px solid var(--stroke);box-shadow:0 18px 40px -14px rgba(0,0,0,.4)}
   .bnav button{position:relative;border:0;background:none;cursor:pointer;font-family:inherit;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border-radius:18px;font-size:11px;font-weight:800;transition:color .3s,background .4s}
   .bnav button span{font-size:19px;line-height:1;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
   .bnav button.on{color:var(--aText);background:linear-gradient(180deg,var(--a1),var(--a2) 60%,var(--a3))}
@@ -1356,6 +1356,64 @@
   .signup .field{height:52px;margin-bottom:10px} .hp{position:absolute!important;top:0;inset-inline-start:0;width:1px!important;height:1px!important;padding:0!important;border:0!important;opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%)}
   .wsteps{text-align:right;margin:12px 0 4px;padding-inline-start:20px;line-height:2;font-size:13.5px} .wsteps li{margin:2px 0}
   .wst{margin:12px 0 0;padding:10px 12px;border-radius:16px;font-size:13px;font-weight:700;line-height:1.8} .wst.wait{background:var(--amber-bg,#fff3d6);color:var(--amber,#b7791f)} .wst.bad{background:var(--sell-bg);color:var(--sell)}
+
+  /* ===== ساختار نهایی: هدر، منوی ⋮، صفحه‌های مستقل ===== */
+  .meav{position:relative} .meav .bdg{position:absolute;top:-3px;inset-inline-end:-3px}
+  .more3{font-size:22px;font-weight:900;line-height:1}
+  .moremenu{position:fixed;z-index:80;top:calc(64px + env(safe-area-inset-top));inset-inline-end:max(12px,calc(50% - 280px));width:min(290px,calc(100% - 24px));padding:8px;border-radius:22px;background:var(--tile)!important;box-shadow:var(--sh),0 18px 50px rgba(0,0,0,.18)!important;opacity:0;transform:translateY(-8px) scale(.97);transform-origin:top;transition:opacity .2s,transform .25s cubic-bezier(.22,1,.36,1)}
+  .moremenu.show{opacity:1;transform:none}
+  .moremenu button{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;font:inherit;font-size:14.5px;font-weight:700;color:var(--text);padding:12px 12px;border-radius:14px;cursor:pointer;text-align:start}
+  .moremenu button:hover,.moremenu button:focus-visible{background:var(--field)} .moremenu button span{width:26px;text-align:center;font-size:18px}
+  .moremenu hr{border:0;border-top:1px solid var(--stroke);margin:6px 8px} .moremenu .mout{color:var(--sell)}
+  .cdlg{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:20px;background:rgba(10,14,22,.45);opacity:0;transition:opacity .2s} .cdlg.show{opacity:1}
+  .cdb{width:min(360px,100%);padding:22px 18px 16px;border-radius:26px;background:var(--tile)!important;text-align:center;transform:scale(.95);transition:transform .25s cubic-bezier(.22,1,.36,1)} .cdlg.show .cdb{transform:none}
+  .cdi{font-size:30px;width:58px;height:58px;margin:0 auto 10px;display:grid;place-items:center;border-radius:50%;background:var(--sell-bg);color:var(--sell)} .cdb p{font-size:15px;font-weight:700;line-height:1.9;margin:0 0 16px}
+  .cdr{display:grid;grid-template-columns:1fr 1fr;gap:10px} .cdr .ghost2,.cdr .cta{margin:0;height:48px} .cta.red{background:var(--sell)!important;color:#fff!important}
+  .subh{display:flex;align-items:center;gap:10px;margin:4px 0 14px} .subh h2{margin:0;font-size:18px;font-weight:900} .subh .jback{margin:0}
+  .mtoast{position:fixed;z-index:99;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s}
+  .mtoast.show{opacity:1;transform:translate(-50%,0)}
+  .rstat{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:10px 14px;border-radius:18px;margin:0 0 12px;background:var(--buy-bg);color:var(--buy);font-size:13px}
+  .rstat small{color:var(--muted);font-size:11.5px} .rstat .rsrc{flex-basis:100%} .rstat.slow{background:var(--amber-bg);color:var(--amber)} .rstat.off{background:var(--sell-bg);color:var(--sell)}
+  .rstat.off .ldot,.rstat.slow .ldot{animation:none;background:currentColor}
+  .gunits h3{margin:0 0 10px;font-size:15px} .gunits.stale{opacity:.6} .gtab>div{display:grid;grid-template-columns:1fr 1.4fr 1.4fr;gap:6px;padding:8px 2px;border-top:1px solid var(--stroke);align-items:center;font-size:13px}
+  .gtab>.gh{border-top:0;color:var(--muted);font-size:12px;font-weight:700} .gtab span b{display:block;font-size:13.5px} .gtab span small{color:var(--muted);font-size:11px}
+  .tvadv{height:min(70vh,520px);border-radius:20px;overflow:hidden;padding:0!important} .tvsyms{margin-bottom:8px}
+  .ncats{margin-bottom:10px} .ncats small{opacity:.6;font-size:10.5px}
+  .ncard{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:12px;border-radius:22px;margin-bottom:10px;cursor:pointer}
+  .nimg{width:96px;height:96px;border-radius:16px;overflow:hidden;background:var(--field);display:grid;place-items:center;font-size:36px} .nimg img{width:100%;height:100%;object-fit:cover}
+  .nbd{min-width:0} .nbd h4{margin:4px 0;font-size:14.5px;font-weight:800;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .nbd p{margin:0 0 6px;font-size:12.5px;color:var(--muted);line-height:1.8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ncat{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--field);color:var(--muted)}
+  .nft{display:flex;align-items:center;justify-content:space-between;gap:8px} .nft small{color:var(--muted);font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nshare{border:0;background:var(--field);color:var(--text);font:inherit;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  @media (max-width:420px){.ncard{grid-template-columns:72px 1fr}.nimg{width:72px;height:72px;font-size:28px}}
+  .nwbody{padding:4px 16px 30px} .nwbody h2{font-size:19px;line-height:1.8;margin:8px 0} .nwcov{width:100%;max-height:260px;object-fit:cover;border-radius:18px}
+  .nwmeta{color:var(--muted);font-size:12px;margin-bottom:12px} .nwtxt{white-space:pre-wrap;line-height:2.1;font-size:14.5px;margin-bottom:16px;overflow-wrap:anywhere} .nwbody .cta{display:flex;justify-content:center;align-items:center;text-decoration:none}
+  .calsel{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:8px 0} .calsel label{display:grid;gap:4px;font-size:11.5px;color:var(--muted);font-weight:700}
+  .calsel select,.calsel input{font:inherit;font-size:13px;padding:9px 10px;border-radius:14px;border:1px solid var(--stroke);background:var(--field);color:var(--text)} .calsel input[type=date]{grid-column:1/-1}
+  .impleg{display:flex;gap:14px;font-size:12px;font-weight:700;margin:4px 2px 8px} .impleg .lvl-high,.cev2.imp-high .ct{color:#e0483e} .impleg .lvl-medium,.cev2.imp-medium .ct{color:#e8912d} .impleg .lvl-low,.cev2.imp-low .ct{color:#c9a227}
+  .cev2{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:12px;border-radius:18px;margin-bottom:8px;border-inline-start:4px solid transparent}
+  .cev2.imp-high{border-inline-start-color:#e0483e} .cev2.imp-medium{border-inline-start-color:#e8912d} .cev2.imp-low{border-inline-start-color:#c9a227} .cev2.past{opacity:.6}
+  .cev2 .ct{font-weight:900;font-size:14px;font-variant-numeric:tabular-nums} .cev2 b{font-size:13.5px;line-height:1.8} .cev2 .cm{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+  .cvals{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px} .cvals span{display:grid;gap:2px;font-size:10.5px;color:var(--muted);background:var(--field);border-radius:12px;padding:6px 8px}
+  .cvals b{font-size:13px;color:var(--text)} .cvals .has b{color:var(--buy)} .cev2 p{font-size:12.5px;color:var(--muted);margin:6px 0 0;line-height:1.8}
+  .iblk{margin-top:12px} .iblk h4{margin:0 0 4px;font-size:14px} .iblk p{margin:0;white-space:pre-wrap;line-height:2;font-size:13.5px} .logo2{background:#fff;padding:6px} .logo2 img{width:100%;height:100%;object-fit:contain}
+  .ctgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px} .ctcard{display:grid;gap:4px;justify-items:center;text-align:center;padding:16px 10px;border-radius:22px;text-decoration:none;color:var(--text);border:0;font:inherit;cursor:pointer}
+  .ctcard span{font-size:30px} .ctcard b{font-size:14px} .ctcard small{font-size:11.5px;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .plpick{display:grid;gap:8px} .plc2{display:grid;gap:3px;text-align:start;padding:12px 14px;border-radius:18px;border:2px solid transparent;background:var(--field);font:inherit;color:var(--text);cursor:pointer}
+  .plc2.on{border-color:var(--buy);background:var(--buy-bg)} .plc2 span{font-size:13px} .plc2 small{color:var(--muted);font-size:11.5px}
+  .pmc{padding:14px;border-radius:22px;margin-bottom:10px} .pmh{display:flex;align-items:center;gap:12px} .pmh>div{flex:1;min-width:0} .pmh b{display:block;font-size:15px} .pmh small{display:block;color:var(--muted);font-size:12px;line-height:1.8}
+  .pml{width:46px;height:46px;border-radius:14px;object-fit:contain;background:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;color:#333;flex:none}
+  .pma{font-weight:900;font-size:14px;white-space:nowrap} .pmb2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px} .pmb2 .cta,.pmb2 .ghost2{margin:0;height:46px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px}
+  .pmb2>:only-child{grid-column:1/-1} .pst{font-size:12px;white-space:nowrap} .pst.review,.pst.pending{color:var(--amber)} .pst.paid{color:var(--buy)} .pst.rejected,.pst.failed{color:var(--sell)}
+  .pubh{display:flex;align-items:center;gap:10px;margin:0 0 10px} .pubh.big{margin-bottom:12px} .pav{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none;display:grid;place-items:center;background:var(--field);font-weight:900}
+  .pav.ext{background:#e7f1ff} .pubn{flex:1;min-width:0} .pubn b{display:block;font-size:13.5px} .pubn small{color:var(--muted);font-size:11px}
+  .pcat{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 10px 4px 6px;border-radius:999px;background:var(--field);white-space:nowrap}
+  .pth{width:20px;height:20px;border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;font-size:13px} .psrc{display:inline-block;font-size:12px;font-weight:800;margin:-4px 0 10px;color:var(--accent,#2f6fda)}
+  .pubs{font-size:11px!important;opacity:.85}
+  .pnotif{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 0} .bdg2{background:var(--sell);color:#fff;border-radius:999px;font-size:11px;padding:0 7px;min-width:18px}
+  .bdg2:empty{display:none} .pfro{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;background:var(--field);margin-bottom:10px;font-size:13px}
+  .psec details{border-radius:16px;background:var(--field);padding:10px 12px;margin-top:8px} .psec summary{cursor:pointer;font-weight:800;font-size:13.5px} .psec .cta{margin-top:8px}
 </style>
 </head>
 <body>
@@ -1367,7 +1425,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794223919";
+const BUILD = "1794287940";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1510,12 +1568,387 @@ const fmtDate = d => {
 const fmtFull = d => { const x = new Date(d); return fmtDate(x) + " · " + T.at + " " + x.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit", hour12:false}); };
 
 /* ===== بازارها و تم ===== */
-const MK = { xau:{ sym:"XAU/USD", unit:"usd", th:"img/th-xau.webp" }, xag:{ sym:"XAG/USD", unit:"usd", th:"img/th-xag.webp" }, usd:{ sym:"USD/AFN", unit:"afn", th:"img/th-usd.webp" }, world:{ sym:"FX · Crypto · Oil", unit:"usd", ic:"🌐" } };
+const MK = { all:{ sym:"Gold · Silver · USD · FX", unit:"usd", ic:"📊" }, xau:{ sym:"XAU/USD", unit:"usd", th:"img/th-xau.webp" }, xag:{ sym:"XAG/USD", unit:"usd", th:"img/th-xag.webp" }, usd:{ sym:"USD/AFN", unit:"afn", th:"img/th-usd.webp" }, world:{ sym:"FX · Crypto · Oil", unit:"usd", ic:"🌐" } };
 const MKW = { eurusd:{ sym:"EUR/USD", unit:"usd", ic:"🇪🇺" }, gbpusd:{ sym:"GBP/USD", unit:"usd", ic:"🇬🇧" }, usdjpy:{ sym:"USD/JPY", unit:"jpy", ic:"🇯🇵" }, usdchf:{ sym:"USD/CHF", unit:"chf", ic:"🇨🇭" },
   btcusd:{ sym:"BTC/USD", unit:"usd", ic:"₿" }, ethusd:{ sym:"ETH/USD", unit:"usd", ic:"Ξ" }, wti:{ sym:"WTI", unit:"usd", ic:"🛢" }, brent:{ sym:"BRENT", unit:"usd", ic:"🛢" } };
 const mkOf = s => MKW[s.market] ? "world" : (s.market || "xag");
+
+/* ===== ساختار نهایی برنامه (طبق دستورالعمل): هدر، منوی پایین ۴ بخشی، منوی ⋮، صفحه‌های مستقل ===== */
+const PAGES = ["sig", "prc", "news", "cal", "tool", "acad", "about", "inst", "contact", "pay", "dash"];
+const SP = {
+  fa: { nSig: "سیگنال", nRates: "نرخ ارز", nNews: "اخبار اقتصادی", nCal: "تقویم اقتصادی",
+    mTools: "ابزارهای معاملاتی", mAcad: "آکادمی", mAbout: "درباره ما", mInst: "معرفی استاد", mContact: "راه‌های ارتباطی", mPay: "پرداخت", mOut: "خروج از حساب کاربری",
+    outQ: "آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟", cancel: "انصراف", outBtn: "خروج از حساب", back: "بازگشت",
+    locT: "نرخ‌های بازار داخلی افغانستان", worldT: "قیمت جهانی دارایی‌ها", chartT: "نمودار حرفه‌ای بازار", gunT: "قیمت طلا و نقره در واحدهای مختلف",
+    unitT: "واحد", goldT: "طلا", silverT: "نقره", oz: "اونس", g: "گرم", mq: "مثقال", tola: "توله", kg: "کیلوگرم", gunNote: "تبدیل‌ها: ۱ اونس = ۳۱٫۱۰۳۵ گرم · ۱ مثقال = ۴٫۶۰۸ گرم · ۱ توله = ۱۱٫۶۶۴ گرم · قیمت ۲۴ عیار (خالص) · نرخ دالر به افغانی از بازار کابل",
+    connOk: "اتصال به منبع برقرار است", connSlow: "تأخیر در دریافت قیمت‌ها", connOff: "اتصال به منبع قطع است؛ قیمت‌های نمایش‌داده‌شده لحظه‌ای نیستند", lastUpd: "آخرین به‌روزرسانی", srcs: "منابع: بازار جهانی (FOREX.com/Yahoo) · نرخ‌های کابل (کانال‌های صرافی و ثبت مدیر)",
+    chartNote: "نمودار کندلی TradingView با تایم‌فریم‌های ۱ دقیقه تا ماهانه؛ نقره از همان منبع FOREX.com که قیمت لحظه‌ای را می‌دهد.",
+    cats: { all: "همه", af: "اقتصاد افغانستان", world: "اقتصاد جهان", markets: "بازارهای مالی", metals: "طلا و نقره", fx: "دالر و ارزها", teacher: "تحلیل‌های استاد" },
+    share: "اشتراک‌گذاری", copied: "لینک کپی شد", readSrc: "خواندن متن کامل در منبع ↗", src: "منبع", noNews: "خبری در این بخش نیست.", tg: "تلگرام",
+    cf: { today: "امروز", tom: "فردا", week: "این هفته", next: "هفته آینده", month: "ماه جاری", date: "تاریخ مشخص" }, country: "کشور", cur: "ارز", imp: "اهمیت", allX: "همه",
+    impL: { high: "زیاد", medium: "متوسط", low: "کم" }, prev: "قبلی", fc: "پیش‌بینی", act: "واقعی", tz: "منطقه زمانی", tzKabul: "کابل", tzDev: "دستگاه من", tzUtc: "UTC",
+    noEv: "برای این فیلتر رویدادی نیست.", calNote: "منبع: Forex Factory (هفته‌ی جاری) و رویدادهای ثبت‌شده توسط استاد؛ مقدار واقعی بعد از انتشار هر رویداد اضافه می‌شود.",
+    aboutT: "درباره ما", goals: "اهداف", acts: "فعالیت‌ها", services: "خدمات", founded: "سال تأسیس", licenses: "مجوزها", noInfo: "اطلاعاتی ثبت نشده است.",
+    edu: "سوابق تحصیلی", work: "سوابق کاری", expert: "تخصص‌ها", years: "تجربه کاری", courses: "دوره‌های آموزشی", ach: "فعالیت‌ها و دستاوردها", certs: "گواهی‌نامه‌ها",
+    ct: { telegram: "تلگرام", whatsapp: "واتساپ", instagram: "اینستاگرام", phone: "شماره تماس", email: "ایمیل", facebook: "فیسبوک", youtube: "یوتیوب", tiktok: "تیک‌تاک", website: "وب‌سایت" }, chatT: "پیام مستقیم به استاد در برنامه",
+    curSub: "اشتراک فعلی", daysLeft: "روز باقی‌مانده", methods: "روش‌های پرداخت", payNow: "پرداخت (Pay Now) ↗", sendRc: "📤 ارسال رسید پرداخت", plans: "پلن‌ها", pickPlan: "پلن", hist: "پرداخت‌های من",
+    noMethods: "فعلاً روش پرداختی فعال نیست؛ به استاد پیام بدهید.", amount: "مبلغ", account: "آدرس / شناسه پرداخت", copy: "کپی", copiedS: "کپی شد ✓", txid: "شماره تراکنش (Transaction ID)",
+    paidAmt: "مبلغ پرداخت‌شده", note: "توضیح (اختیاری)", photo: "عکس رسید پرداخت", send: "ارسال برای تأیید مدیر", sent: "رسید ارسال شد ✅",
+    sentS: "بعد از بررسی و تأیید مدیر، اشتراک شما خودکار فعال می‌شود و اعلان می‌گیرید.",
+    st: { pending: "در انتظار پرداخت", review: "پرداخت‌شده · در انتظار تأیید", paid: "تأییدشده ✅", rejected: "ردشده ❌", failed: "ناموفق", expired: "منقضی" },
+    online: "پرداخت آنلاین حساب‌پی (تأیید خودکار درگاه)", onlineBtn: "پرداخت آنلاین", payNote: "⚠️ کلیک روی «پرداخت» به معنی پرداخت موفق نیست. بعد از پرداخت، رسید را بفرستید تا مدیر تأیید کند.",
+    err: "ارسال نشد", dup: "این شماره تراکنش قبلاً ثبت شده است.", many: "۳ رسید در انتظار تأیید دارید؛ لطفاً صبر کنید.", need: "شماره تراکنش لازم است.", mon: "ماه", afn: "افغانی",
+    notifs: "اعلان‌ها", fn: "نام", ln: "نام خانوادگی", secT: "امنیت حساب", chEmail: "تغییر ایمیل ورود", chPw: "تغییر رمز", curPw: "رمز فعلی (تأیید امنیتی)", newEmail: "ایمیل جدید",
+    newPw: "رمز جدید (حداقل ۸ حرف)", save: "ذخیره", done: "انجام شد ✅", wrongPw: "رمز فعلی درست نیست.", inUse: "این ایمیل قبلاً استفاده شده است.", weak: "این رمز ضعیف یا لو‌رفته است؛ رمز دیگری بگذارید.", badEmail: "ایمیل درست نیست.", tryLater: "انجام نشد؛ دوباره امتحان کنید.",
+    ext: "سیگنال کانال", teacherSig: "تحلیل استاد", openSrc: "مشاهده در تلگرام ↗" },
+  ps: { nSig: "سیګنال", nRates: "د اسعارو نرخ", nNews: "اقتصادي خبرونه", nCal: "اقتصادي جنتري", mTools: "د معاملې وسایل", mAcad: "اکاډمي", mAbout: "زموږ په اړه", mInst: "د استاد پېژندنه",
+    mContact: "د اړیکې لارې", mPay: "تادیه", mOut: "له حساب څخه وتل", outQ: "ایا ډاډه یاست چې غواړئ له خپل حساب څخه ووځئ؟", cancel: "لغوه", outBtn: "وتل", back: "بېرته",
+    cats: { all: "ټول", af: "د افغانستان اقتصاد", world: "نړیوال اقتصاد", markets: "مالي بازارونه", metals: "سره او سپین زر", fx: "ډالر او اسعار", teacher: "د استاد تحلیلونه" },
+    cf: { today: "نن", tom: "سبا", week: "دا اونۍ", next: "راتلونکې اونۍ", month: "دا میاشت", date: "ټاکلې نېټه" } },
+  en: { nSig: "Signals", nRates: "Market Rates", nNews: "Economic News", nCal: "Economic Calendar",
+    mTools: "Trading Tools", mAcad: "Academy", mAbout: "About Us", mInst: "About Instructor", mContact: "Contact Us", mPay: "Payment", mOut: "Log out",
+    outQ: "Are you sure you want to log out of your account?", cancel: "Cancel", outBtn: "Log out", back: "Back",
+    locT: "Afghanistan local market rates", worldT: "World asset prices", chartT: "Professional market chart", gunT: "Gold and silver in different units",
+    unitT: "Unit", goldT: "Gold", silverT: "Silver", oz: "Ounce", g: "Gram", mq: "Mithqal", tola: "Tola", kg: "Kilogram", gunNote: "1 oz = 31.1035 g · 1 mithqal = 4.608 g · 1 tola = 11.664 g · 24k (pure) · USD/AFN from the Kabul market",
+    connOk: "Connected to the data source", connSlow: "Price updates are delayed", connOff: "Disconnected; prices shown are not live", lastUpd: "Last update", srcs: "Sources: world market (FOREX.com/Yahoo) · Kabul rates (exchange channels and admin)",
+    chartNote: "TradingView candlestick chart, 1 minute to monthly; silver uses the same FOREX.com feed as the live price.",
+    cats: { all: "All", af: "Afghanistan economy", world: "World economy", markets: "Financial markets", metals: "Gold & silver", fx: "Dollar & currencies", teacher: "Instructor's analyses" },
+    share: "Share", copied: "Link copied", readSrc: "Read the full story at the source ↗", src: "Source", noNews: "No news in this section.", tg: "Telegram",
+    cf: { today: "Today", tom: "Tomorrow", week: "This week", next: "Next week", month: "This month", date: "Pick a date" }, country: "Country", cur: "Currency", imp: "Impact", allX: "All",
+    impL: { high: "High", medium: "Medium", low: "Low" }, prev: "Previous", fc: "Forecast", act: "Actual", tz: "Time zone", tzKabul: "Kabul", tzDev: "My device", tzUtc: "UTC",
+    noEv: "No events for this filter.", calNote: "Source: Forex Factory (this week) and events added by the instructor; actual values appear once released.",
+    aboutT: "About us", goals: "Goals", acts: "Activities", services: "Services", founded: "Founded", licenses: "Licenses", noInfo: "Nothing added yet.",
+    edu: "Education", work: "Work history", expert: "Expertise", years: "Experience", courses: "Courses", ach: "Activities & achievements", certs: "Certificates",
+    ct: { telegram: "Telegram", whatsapp: "WhatsApp", instagram: "Instagram", phone: "Phone", email: "Email", facebook: "Facebook", youtube: "YouTube", tiktok: "TikTok", website: "Website" }, chatT: "Message the instructor in the app",
+    curSub: "Current subscription", daysLeft: "days left", methods: "Payment methods", payNow: "Pay Now ↗", sendRc: "📤 Send payment receipt", plans: "Plans", pickPlan: "Plan", hist: "My payments",
+    noMethods: "No payment method is active yet; please message the instructor.", amount: "Amount", account: "Address / payment ID", copy: "Copy", copiedS: "Copied ✓", txid: "Transaction ID",
+    paidAmt: "Amount paid", note: "Note (optional)", photo: "Receipt photo", send: "Send for approval", sent: "Receipt sent ✅", sentS: "Your subscription turns on automatically once the admin approves it.",
+    st: { pending: "Pending", review: "Paid · awaiting confirmation", paid: "Confirmed ✅", rejected: "Rejected ❌", failed: "Failed", expired: "Expired" },
+    online: "HesabPay online (confirmed automatically by the gateway)", onlineBtn: "Pay online", payNote: "⚠️ Tapping “Pay” is not a completed payment. After paying, send the receipt so the admin can confirm it.",
+    err: "Not sent", dup: "This transaction ID was already submitted.", many: "You have 3 receipts waiting for approval; please wait.", need: "Transaction ID is required.", mon: "months", afn: "AFN",
+    notifs: "Notifications", fn: "First name", ln: "Last name", secT: "Account security", chEmail: "Change sign-in email", chPw: "Change password", curPw: "Current password (security check)", newEmail: "New email",
+    newPw: "New password (min 8 characters)", save: "Save", done: "Done ✅", wrongPw: "Current password is wrong.", inUse: "This email is already in use.", weak: "This password is weak or leaked; choose another.", badEmail: "Email is not valid.", tryLater: "Failed; please try again.",
+    ext: "Channel signal", teacherSig: "Instructor analysis", openSrc: "View on Telegram ↗" } };
+const SPx = () => { const o = Object.assign({}, SP.fa, SP[lang] || {}); for (const k of ["cats", "cf", "impL", "ct", "st"]) o[k] = Object.assign({}, SP.fa[k], SP[lang]?.[k] || {}); return o; };
+const SUBP = { tool: ["🧮", "mTools"], acad: ["🎓", "mAcad"], about: ["🏢", "mAbout"], inst: ["👨‍🏫", "mInst"], contact: ["📞", "mContact"], pay: ["💳", "mPay"] };
+function subHead(k){ const S = SPx(), [ic, t] = SUBP[k] || ["", ""]; return `<div class="subh rise"><button type="button" class="jback" data-back="1">→ ${S.back}</button><h2>${ic} ${S[t] || ""}</h2></div>`; }
+document.addEventListener("click", e => { if (e.target.closest("[data-back]")) { e.preventDefault(); if (tabHist) history.back(); else setPage("sig"); } });
+function miniToast(t){ let b = $("mtoast"); if (!b) { b = document.createElement("div"); b.id = "mtoast"; b.className = "mtoast"; document.body.appendChild(b); }
+  b.textContent = t; b.classList.add("show"); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("show"), 2200); }
+
+/* ----- منوی ⋮ و خروج ----- */
+function openMore(){
+  let m = $("moremenu"); if (m) { m.remove(); return; }
+  const S = SPx(), inFeed = view === "feed";
+  m = document.createElement("div"); m.id = "moremenu"; m.className = "moremenu glass"; m.setAttribute("role", "menu");
+  m.innerHTML = [["tool", "🧮", S.mTools], ["acad", "🎓", S.mAcad], ["about", "🏢", S.mAbout], ["inst", "👨‍🏫", S.mInst], ["contact", "📞", S.mContact], ["pay", "💳", S.mPay]]
+    .filter(([k]) => inFeed || k === "pay" || k === "contact").map(([k, ic, t]) => `<button type="button" role="menuitem" data-mp="${k}"><span>${ic}</span>${t}</button>`).join("")
+    + `<hr><button type="button" role="menuitem" data-mp="out" class="mout"><span>⎋</span>${S.mOut}</button>`;
+  document.body.appendChild(m); requestAnimationFrame(() => m.classList.add("show"));
+  m.onclick = e => { const b = e.target.closest("[data-mp]"); if (!b) return; m.remove(); const k = b.dataset.mp;
+    if (k === "out") return confirmLogout();
+    if (!inFeed) return k === "pay" ? openPlans() : openContact();
+    setPage(k); };
+}
+document.addEventListener("click", e => { const m = $("moremenu"); if (m && !e.target.closest("#moremenu,#more3")) m.remove(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("moremenu")?.remove(); });
+function confirmLogout(){
+  const S = SPx(), v = document.createElement("div"); v.className = "cdlg"; v.setAttribute("role", "dialog");
+  v.innerHTML = `<div class="cdb glass"><div class="cdi">⎋</div><p>${S.outQ}</p><div class="cdr"><button type="button" class="ghost2" data-c="0">${S.cancel}</button><button type="button" class="cta red" data-c="1">${S.outBtn}</button></div></div>`;
+  document.body.appendChild(v); requestAnimationFrame(() => v.classList.add("show"));
+  v.onclick = async e => { const b = e.target.closest("[data-c]"); if (!b && e.target !== v) return; v.classList.remove("show"); setTimeout(() => v.remove(), 250); if (b?.dataset.c === "1") await doLogout(); };
+}
+async function doLogout(){ clearInterval(sessTimer); store.set("cache_me", null); store.set("cache_msgs", []); try { await pushTeardown(); } catch {} try { await sb.rpc("release_session"); } catch {} await sb.auth.signOut(); }
+
+/* ----- صفحه‌های مستقل ----- */
+function drawSpecPage(el){
+  if (page === "news") return drawNewsPage(el);
+  if (page === "cal") return drawCalPage(el);
+  if (page === "pay") { el.innerHTML = subHead("pay") + `<div id="paybox"><div class="sk"></div></div>`; return renderPay($("paybox")); }
+  if (page === "about" || page === "inst" || page === "contact") { drawInfoPage(el); if (Date.now() - acadAt > 60000) loadAcademy(); return; }
+}
+let acadAt = 0;
+
+/* ----- نرخ ارز: وضعیت اتصال و واحدهای طلا ----- */
+function paintRStat(){
+  const el = $("rstat"); if (!el) return; const S = SPx(), p = prices || {};
+  const age = p.at ? Date.now() - new Date(p.at).getTime() : Infinity, st = offline || age > 5 * 60000 ? "off" : age > 45000 ? "slow" : "ok";
+  el.className = "rstat " + st;
+  el.innerHTML = `<span class="ldot"></span><b>${st === "ok" ? S.connOk : st === "slow" ? S.connSlow : S.connOff}</b><small>${S.lastUpd}: ${agoTxt(p.at)}${p.closed ? " · 🌙 " + T.mktClosed : ""}</small><small class="rsrc">${S.srcs}</small>`;
+}
+setInterval(() => { if (page === "prc" && view === "feed" && !document.hidden) paintRStat(); }, 5000);
+const TOLA = 11.664;
+function drawGoldUnits(){
+  const el = $("gunits"); if (!el) return; const S = SPx(), p = prices || {}, afn = usdAfn();
+  const xau = p.xau?.price, xag = p.xag?.price; const age = p.at ? Date.now() - new Date(p.at).getTime() : Infinity;
+  if (!xau && !xag) { el.innerHTML = ""; return; }
+  const U = [["oz", OZ], ["g", 1], ["mq", GPM], ["tola", TOLA], ["kg", 1000]];
+  const c = (oz, g, cur) => oz ? (cur === "afn" ? (afn ? nf(oz / OZ * g * afn, g >= 1000 ? 0 : g >= OZ ? 0 : 1) : "—") : "$" + nf(oz / OZ * g, g >= 1000 ? 0 : 2)) : "—";
+  el.innerHTML = `<div class="acard glass rise gunits ${age > 5 * 60000 ? "stale" : ""}"><h3>⚖️ ${S.gunT}</h3><div class="gtab"><div class="gh"><span>${S.unitT}</span><span>🥇 ${S.goldT}</span><span>🥈 ${S.silverT}</span></div>
+    ${U.map(([k, g]) => `<div><span>${S[k]}</span><span><b class="ltr">${c(xau, g)}</b><small class="ltr">${c(xau, g, "afn")} ؋</small></span><span><b class="ltr">${c(xag, g)}</b><small class="ltr">${c(xag, g, "afn")} ؋</small></span></div>`).join("")}</div>
+    <p class="src">${S.gunNote}</p></div>`;
+}
+let tvSym = store.get("tv_sym", "FOREXCOM:XAUUSD");
+const TVS = [["FOREXCOM:XAUUSD", "🥇 XAU/USD"], ["FOREXCOM:XAGUSD", "🥈 XAG/USD"], ["TVC:DXY", "💵 DXY"], ["FX_IDC:USDAFN", "🇦🇫 USD/AFN"], ["BITSTAMP:BTCUSD", "₿ BTC/USD"], ["BITSTAMP:ETHUSD", "Ξ ETH/USD"], ["FX:EURUSD", "EUR/USD"], ["FX:GBPUSD", "GBP/USD"], ["FX:USDJPY", "USD/JPY"], ["TVC:USOIL", "🛢 WTI"]];
+function tvChart(){
+  const box = $("tvchart"); if (!box) return; const S = SPx();
+  box.innerHTML = `<div class="qchips tvsyms" id="tvsyms">${TVS.map(([k, t]) => `<button data-tv="${k}" class="${k === tvSym ? "on" : ""}">${t}</button>`).join("")}</div>
+    <div class="tvadv glass"><div class="tradingview-widget-container" style="height:100%;width:100%"><div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div></div></div><p class="src">${S.chartNote}</p>`;
+  const s = document.createElement("script"); s.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"; s.async = true;
+  s.textContent = JSON.stringify({ autosize: true, symbol: tvSym, interval: "15", timezone: "Asia/Kabul", theme: getTheme() === "dark" ? "dark" : "light", style: "1",
+    locale: lang === "en" ? "en" : "fa_IR", allow_symbol_change: true, hide_side_toolbar: false, withdateranges: true, details: true, calendar: false, support_host: "https://www.tradingview.com" });
+  box.querySelector(".tradingview-widget-container").appendChild(s);
+  $("tvsyms").onclick = e => { const b = e.target.closest("[data-tv]"); if (!b) return; tvSym = b.dataset.tv; store.set("tv_sym", tvSym); tvChart(); };
+}
+
+/* ----- اخبار اقتصادی ----- */
+const NCAT = ["all", "af", "world", "markets", "metals", "fx", "teacher"];
+let newsCat2 = store.get("ncat", "all"), extNews = store.get("cache_extnews", []), extNames = {}, extNewsAt = 0, wantNews = new URLSearchParams(location.search).get("news");
+function catOf(p){ const c = String(p.category || "").trim(); if (NCAT.includes(c)) return c;
+  if (/افغان|کابل|بانک مرکزی|مالیه|سرای/.test(c)) return "af"; if (/طلا|نقره|gold|silver/i.test(c)) return "metals"; if (/دالر|ارز|اسعار|currenc|dollar/i.test(c)) return "fx";
+  if (/بازار|بورس|market|کریپتو|نفت/i.test(c)) return "markets"; if (/استاد|تحلیل/.test(c)) return "teacher"; return "world"; }
+const orgCat = i => i.org === "gold" ? "metals" : i.org === "wb" ? "world" : i.org === "afaaq" ? (i.kind === "gold" ? "metals" : i.kind === "fx" ? "fx" : "af") : "af";
+const NIC = { af: "🇦🇫", world: "🌍", markets: "📊", metals: "🥇", fx: "💵", teacher: "🧠" };
+function newsItems(){
+  const out = [];
+  for (const p of posts) { if (p.status === "draft") continue;
+    if (p.kind === "news") out.push({ id: "p" + p.id, post: p, title: p.title, sum: (p.body || "").slice(0, 220), body: p.body || "", src: p.source || teacher.name || "", url: p.source_url || "", at: p.created_at, cat: catOf(p), cover: p.cover_path });
+    else if (p.kind === "article") out.push({ id: "p" + p.id, post: p, title: p.title, sum: (p.body || "").slice(0, 220), body: p.body || "", src: p.author || teacher.name || "", at: p.created_at, cat: "teacher", cover: p.cover_path, analysis: true }); }
+  for (const i of (news?.items || [])) if (i.kind === "news" || i.org === "afaaq") { if (!/^https?:\/\//.test(i.link || "")) continue;
+    out.push({ id: "a" + i.link, title: lang === "en" && i.title_en ? i.title_en : i.title, sum: i.desc || "", src: i.src || "", url: i.link, at: i.at, cat: orgCat(i), auto: true }); }
+  for (const x of extNews) { const txt = String(x.text || "").replace(/\n+/g, " ").trim(); if (!txt) continue;
+    out.push({ id: "x" + x.channel + x.msg_id, title: txt.slice(0, 140), sum: txt.length > 140 ? txt.slice(140, 360) : "", body: x.text, src: "📡 " + (extNames[x.channel] || x.channel) + " · " + SPx().tg,
+      url: `https://t.me/${encodeURIComponent(x.channel)}/${x.msg_id}`, at: x.posted_at, cat: "markets", ext: true }); }
+  return out.sort((a, b) => new Date(b.at || 0) - new Date(a.at || 0));
+}
+async function loadExtNews(){
+  if (Date.now() - extNewsAt < 120000) return; extNewsAt = Date.now();
+  const [{ data: x }, { data: c }] = await Promise.all([sb.from("ext_posts").select("channel,msg_id,posted_at,text").eq("kind", "news").order("posted_at", { ascending: false }).limit(30),
+    sb.from("ext_channels").select("handle,name")]);
+  (c || []).forEach(r => extNames[r.handle] = r.name); if (x) { extNews = x; store.set("cache_extnews", x); }
+  if (page === "news") paintNewsList();
+}
+function drawNewsPage(el){
+  const S = SPx();
+  el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📰 ${S.nNews} <span class="ldot" style="display:inline-block;margin-inline-start:6px"></span></h3></div>
+    <div class="qchips ncats" id="ncats"></div><div id="nlist"><div class="sk"></div><div class="sk"></div></div>`;
+  $("ncats").onclick = e => { const b = e.target.closest("[data-nc]"); if (!b) return; newsCat2 = b.dataset.nc; store.set("ncat", newsCat2); paintNewsList(); };
+  $("nlist").onclick = e => { const sh = e.target.closest("[data-nsh]"); const c = e.target.closest("[data-nid]"); if (!c) return; const it = newsItems().find(x => x.id === c.dataset.nid); if (!it) return;
+    if (sh) { e.stopPropagation(); return shareNews(it); } openNewsItem(it); };
+  paintNewsList();
+  if (Date.now() - newsAt > 120000) loadNews(); if (Date.now() - acadAt > 60000) loadAcademy(); loadExtNews();
+}
+function paintNewsList(){
+  const box = $("nlist"), cats = $("ncats"); if (!box || !cats) return; const S = SPx(), all2 = newsItems();
+  cats.innerHTML = NCAT.map(k => `<button data-nc="${k}" class="${k === newsCat2 ? "on" : ""}">${k === "all" ? "" : NIC[k] + " "}${S.cats[k]} <small>${k === "all" ? all2.length : all2.filter(i => i.cat === k).length}</small></button>`).join("");
+  const L = all2.filter(i => newsCat2 === "all" || i.cat === newsCat2).slice(0, 60);
+  box.innerHTML = L.length ? L.map(i => `<article class="ncard glass rise" data-nid="${esc(i.id)}">
+      <div class="nimg">${i.cover ? `<img data-mpath="${esc(i.cover)}" alt="" loading="lazy">` : `<span>${NIC[i.cat] || "📰"}</span>`}</div>
+      <div class="nbd"><span class="ncat">${S.cats[i.cat]}</span><h4>${esc(i.title)}</h4>${i.sum ? `<p>${esc(i.sum)}${i.sum.length >= 200 ? "…" : ""}</p>` : ""}
+        <div class="nft"><small>${S.src}: ${esc(i.src || "—")} · ${i.at ? fmtFull(i.at) : ""}</small><button type="button" class="nshare" data-nsh="1" aria-label="${S.share}">↗️ ${S.share}</button></div></div></article>`).join("")
+    : `<div class="empty glass rise"><div style="font-size:44px">📰</div><h2>${S.noNews}</h2></div>`;
+  box.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
+  if (wantNews) { const it = all2.find(x => x.id === "p" + wantNews); if (it) { wantNews = null; openNewsItem(it); } }
+}
+async function shareNews(it){
+  const S = SPx(), url = it.post ? location.origin + location.pathname + "?pg=news&news=" + it.post.id : it.url;
+  try { if (navigator.share) { await navigator.share({ title: it.title, text: it.sum || it.title, url }); return; } } catch (e) { if (e?.name === "AbortError") return; }
+  try { await navigator.clipboard.writeText(it.title + "\n" + url); miniToast(S.copied); } catch {}
+}
+function openNewsItem(it){
+  if (it.analysis && it.post) return openAnalysis(it.post);
+  if ($("nwpanel")) return; const S = SPx(), v = document.createElement("div"); v.className = "npanel"; v.id = "nwpanel";
+  v.innerHTML = `<div class="nphd"><b>${NIC[it.cat] || "📰"} ${S.cats[it.cat]}</b><button class="ib" id="nwx" aria-label="close">${I.x}</button></div>
+    <div class="nwbody">${it.cover ? `<img class="nwcov" data-mpath="${esc(it.cover)}" alt="">` : ""}<h2>${esc(it.title)}</h2>
+      <div class="nwmeta">${S.src}: ${esc(it.src || "—")} · ${it.at ? fmtFull(it.at) : ""}</div>
+      ${it.body ? `<div class="nwtxt">${esc(it.body)}</div>` : it.sum ? `<div class="nwtxt">${esc(it.sum)}</div>` : ""}
+      ${it.url && /^https?:\/\//.test(it.url) ? `<a class="cta press" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${it.ext ? S.openSrc : S.readSrc}</a>` : ""}
+      <button type="button" class="ghost2" id="nwsh">↗️ ${S.share}</button></div>`;
+  document.body.appendChild(v); lockBody();
+  const close = () => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); };
+  overlayPush(close); requestAnimationFrame(() => v.classList.add("show"));
+  $("nwx").onclick = () => history.back(); $("nwsh").onclick = () => shareNews(it);
+  v.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
+}
+
+/* ----- تقویم اقتصادی ----- */
+let calF = store.get("calf", "week"), calDay = "", calCountry = "all", calCur = "all", calImp = "all", calTz = store.get("caltz", "Asia/Kabul");
+const CTRY = { af: ["AFN", "افغانستان", "Afghanistan"], us: ["USD", "آمریکا", "United States"], eu: ["EUR", "اروپا", "Euro area"], gb: ["GBP", "انگلستان", "UK"], cn: ["CNY", "چین", "China"], jp: ["JPY", "ژاپن", "Japan"] };
+const CUR2C = { USD: ["آمریکا", "United States"], EUR: ["اروپا", "Euro area"], GBP: ["انگلستان", "UK"], JPY: ["ژاپن", "Japan"], CNY: ["چین", "China"], CAD: ["کانادا", "Canada"], AUD: ["استرالیا", "Australia"], NZD: ["نیوزیلند", "New Zealand"], CHF: ["سوئیس", "Switzerland"], AFN: ["افغانستان", "Afghanistan"], ALL: ["جهانی", "Global"] };
+const tzOpt = () => calTz === "device" ? {} : { timeZone: calTz };
+const dayKey = d => new Intl.DateTimeFormat("en-CA", { ...tzOpt(), year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(d));
+const tzTime = d => new Intl.DateTimeFormat("en-GB", { ...tzOpt(), hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(d));
+function calEvents(){
+  const out = [];
+  for (const e of (cal?.events || [])) { const cur = String(e.country || "").toUpperCase();
+    out.push({ title: calTitle(e), cur, cname: lang === "en" ? (CUR2C[cur]?.[1] || cur) : (e.country_fa || CUR2C[cur]?.[0] || cur), at: e.at, imp: e.impact === "holiday" ? "low" : e.impact, prev: e.previous, fc: e.forecast, act: e.actual || "", allDay: e.impact === "low" && !/T\d\d:\d\d/.test(e.at || "") }); }
+  for (const p of posts) if (p.kind === "event" && p.status !== "draft" && p.event_at) {
+    const c = CTRY[p.country] || null, cur = c ? c[0] : String(p.country || "").toUpperCase();
+    out.push({ title: p.title, cur, cname: c ? (lang === "en" ? c[2] : c[1]) : (CUR2C[cur]?.[lang === "en" ? 1 : 0] || p.country || "—"), at: p.event_at, imp: p.importance || "low", prev: p.previous, fc: p.forecast, act: p.actual, body: p.body, admin: true, af: p.country === "af" });
+  }
+  return out.filter(e => !isNaN(new Date(e.at))).sort((a, b) => new Date(a.at) - new Date(b.at));
+}
+function calRange(){
+  const today = dayKey(Date.now()), d0 = new Date(today + "T00:00:00Z"), add = n => new Date(d0.getTime() + n * DAY).toISOString().slice(0, 10);
+  const dow = d0.getUTCDay(), toSat = (dow + 1) % 7; // week starts on Saturday
+  if (calF === "today") return [today, today];
+  if (calF === "tom") return [add(1), add(1)];
+  if (calF === "week") return [add(-toSat), add(6 - toSat)];
+  if (calF === "next") return [add(7 - toSat), add(13 - toSat)];
+  if (calF === "month") return [today.slice(0, 7) + "-01", today.slice(0, 7) + "-31"];
+  if (calF === "date") return calDay ? [calDay, calDay] : [today, today];
+  return [today, add(6)];
+}
+function drawCalPage(el){
+  const S = SPx();
+  el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>🗓 ${S.nCal}</h3></div>
+    <div class="qchips" id="calfs">${Object.keys(S.cf).map(k => `<button data-cf="${k}" class="${k === calF ? "on" : ""}">${S.cf[k]}</button>`).join("")}</div>
+    <div class="calsel"><input type="date" id="calday" value="${esc(calDay)}" ${calF === "date" ? "" : "hidden"}>
+      <label>${S.country}<select id="calc"></select></label><label>${S.cur}<select id="calcur"></select></label>
+      <label>${S.imp}<select id="calimp"><option value="all">${S.allX}</option>${["high", "medium", "low"].map(k => `<option value="${k}" ${k === calImp ? "selected" : ""}>${S.impL[k]}</option>`).join("")}</select></label>
+      <label>${S.tz}<select id="caltz">${[["Asia/Kabul", S.tzKabul], ["device", S.tzDev], ["UTC", S.tzUtc]].map(([k, t]) => `<option value="${k}" ${k === calTz ? "selected" : ""}>${t}</option>`).join("")}</select></label></div>
+    <div class="impleg"><span class="lvl-high">● ${S.impL.high}</span><span class="lvl-medium">● ${S.impL.medium}</span><span class="lvl-low">● ${S.impL.low}</span></div>
+    <div id="calist"><div class="sk"></div></div><p class="src">${S.calNote}</p>`;
+  $("calfs").onclick = e => { const b = e.target.closest("[data-cf]"); if (!b) return; calF = b.dataset.cf; store.set("calf", calF); $("calfs").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); $("calday").hidden = calF !== "date"; paintCal(); };
+  $("calday").onchange = e => { calDay = e.target.value; paintCal(); };
+  $("calc").onchange = e => { calCountry = e.target.value; paintCal(); }; $("calcur").onchange = e => { calCur = e.target.value; paintCal(); };
+  $("calimp").onchange = e => { calImp = e.target.value; paintCal(); }; $("caltz").onchange = e => { calTz = e.target.value; store.set("caltz", calTz); paintCal(); };
+  paintCal(); loadCalendar(); if (Date.now() - acadAt > 60000) loadAcademy();
+}
+function paintCal(){
+  const box = $("calist"); if (!box) return; const S = SPx(), evs = calEvents();
+  const cs = [...new Set(evs.map(e => e.cname))].sort(), us = [...new Set(evs.map(e => e.cur).filter(Boolean))].sort();
+  const fill = (id, arr, cur) => { const s = $(id); if (!s) return; s.innerHTML = `<option value="all">${S.allX}</option>` + arr.map(x => `<option value="${esc(x)}" ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join(""); };
+  fill("calc", cs, calCountry); fill("calcur", us, calCur);
+  const [a, b] = calRange();
+  const L = evs.filter(e => { const k = dayKey(e.at); return k >= a && k <= b && (calCountry === "all" || e.cname === calCountry) && (calCur === "all" || e.cur === calCur) && (calImp === "all" || e.imp === calImp); });
+  if (!L.length) { box.innerHTML = `<div class="empty glass rise"><div style="font-size:40px">🗓</div><h2>${cal || posts.length ? S.noEv : T.noContent}</h2></div>`; return; }
+  const now = Date.now(); let last = "", h = "";
+  for (const e of L) { const k = dayKey(e.at);
+    if (k !== last) { last = k; h += `<div class="cday">${k === dayKey(now) ? "📍 " + S.cf.today + " · " : k === dayKey(now + DAY) ? S.cf.tom + " · " : ""}${fmtDate(new Date(k + "T12:00:00Z"))}</div>`; }
+    const past = new Date(e.at).getTime() < now - 3600000;
+    h += `<div class="cev2 glass imp-${e.imp} ${past ? "past" : ""} ${e.af ? "afev" : ""}"><div class="ct">${e.allDay ? T.allDay : tzTime(e.at)}</div><div class="cb"><b>${e.af ? "🇦🇫 " : ""}${esc(e.title)}</b>
+      <div class="cm"><span class="tag2 lvl-${e.imp}">● ${S.impL[e.imp] || e.imp}</span><span class="tag2">${esc(e.cname)}</span>${e.cur ? `<span class="tag2 ltr">${esc(e.cur)}</span>` : ""}</div>
+      <div class="cvals"><span>${S.prev}<b class="ltr">${esc(e.prev || "—")}</b></span><span>${S.fc}<b class="ltr">${esc(e.fc || "—")}</b></span><span class="${e.act ? "has" : ""}">${S.act}<b class="ltr">${esc(e.act || "—")}</b></span></div>
+      ${e.body ? `<p>${esc(e.body)}</p>` : ""}</div></div>`; }
+  box.innerHTML = h;
+}
+
+/* ----- درباره ما / معرفی استاد / راه‌های ارتباطی ----- */
+function drawInfoPage(el){
+  const S = SPx(), A = academy || {}, tn = teacher.name || T.teacher;
+  const blk = (t, v) => v ? `<div class="iblk"><h4>${t}</h4><p>${esc(v)}</p></div>` : "";
+  let h = subHead(page);
+  if (page === "about") {
+    const any = A.about || A.goals || A.activities || A.services || A.founded || A.licenses;
+    h += `<div class="acard glass rise"><div class="top2"><span class="pp2 logo2"><img src="logo-mark.png" alt=""></span><div><h2>${esc(A.name || "Market Analysts")}</h2><div class="sub2">${esc(A.tagline || "")}</div></div></div>
+      ${A.about ? `<p>${esc(A.about)}</p>` : ""}<div class="kv">${A.founded ? `<div><span>${S.founded}</span><b>${esc(A.founded)}</b></div>` : ""}${A.licenses ? `<div><span>${S.licenses}</span><b>${esc(A.licenses)}</b></div>` : ""}</div>
+      ${blk("🎯 " + S.goals, A.goals)}${blk("📌 " + S.acts, A.activities)}${blk("🧩 " + S.services, A.services)}${any ? "" : `<p class="upd">${S.noInfo}</p>`}</div>`;
+  } else if (page === "inst") {
+    h += `<div class="acard glass glow rise" style="--bd:9s"><div class="top2">${teacher.photo ? `<img class="pp2" src="${esc(teacher.photo)}" alt="">` : `<span class="pp2">${esc([...tn.replace("استاد", "").trim()][0] || "م")}</span>`}
+      <div><h2>${esc(tn)}</h2><div class="sub2">${esc(A.specialty || "")}</div></div></div>
+      ${A.inst_bio || A.bio ? `<p>${esc(A.inst_bio || A.bio)}</p>` : ""}
+      <div class="kv">${A.years ? `<div><span>${S.years}</span><b>${esc(A.years)}</b></div>` : ""}${A.certs ? `<div><span>${S.certs}</span><b>${esc(A.certs)}</b></div>` : ""}</div>
+      ${blk("🎓 " + S.edu, A.education)}${blk("💼 " + S.work, A.work)}${blk("🧠 " + S.expert, A.expertise)}${blk("📚 " + S.courses, A.courses)}${blk("🏆 " + S.ach, A.achievements)}</div>`;
+  } else {
+    const clean = v => String(v || "").trim(), digits = v => toEn(clean(v)).replace(/[^0-9+]/g, "");
+    const L = [["telegram", "✈️", v => "https://t.me/" + clean(v).replace(/^@|https?:\/\/t\.me\//g, "").replace(/\s+/g, "")],
+      ["whatsapp", "💬", v => "https://wa.me/" + digits(v).replace(/^\+/, "")], ["instagram", "📸", v => /^https?:/.test(clean(v)) ? clean(v) : "https://instagram.com/" + clean(v).replace(/^@/, "")],
+      ["phone", "📞", v => "tel:" + digits(v)], ["email", "✉️", v => "mailto:" + clean(v)], ["facebook", "📘", v => /^https?:/.test(clean(v)) ? clean(v) : "https://facebook.com/" + clean(v)],
+      ["youtube", "▶️", v => /^https?:/.test(clean(v)) ? clean(v) : "https://youtube.com/@" + clean(v).replace(/^@/, "")], ["tiktok", "🎵", v => /^https?:/.test(clean(v)) ? clean(v) : "https://tiktok.com/@" + clean(v).replace(/^@/, "")],
+      ["website", "🌐", v => /^https?:/.test(clean(v)) ? clean(v) : "https://" + clean(v)]].filter(([k]) => clean(A[k]));
+    h += `<div class="ctgrid rise">${L.map(([k, ic, u]) => `<a class="ctcard glass" href="${esc(u(A[k]))}" target="_blank" rel="noopener noreferrer"><span>${ic}</span><b>${S.ct[k]}</b><small class="ltr">${esc(A[k])}</small></a>`).join("")}
+      <button type="button" class="ctcard glass" id="ctchat"><span>💭</span><b>${S.chatT}</b><small>${esc(tn)}</small></button></div>${L.length ? "" : `<p class="upd">${S.noInfo}</p>`}`;
+  }
+  el.innerHTML = h;
+  if ($("ctchat")) $("ctchat").onclick = () => { if ($("chat")) openChat(); };
+}
+
+/* ----- پرداخت: روش‌های تعریف‌شده توسط مدیر + ارسال رسید + وضعیت ----- */
+async function renderPay(box){
+  if (!box) return; const S = SPx();
+  const [{ data: plans }, { data: pays }, { data: pms }, gwr] = await Promise.all([
+    sb.from("plans").select("*").eq("active", true).order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(20),
+    sb.from("payment_methods").select("*").eq("active", true).order("sort"), sb.rpc("gateway_enabled").then(r => r, () => ({ data: false }))]);
+  if (!box.isConnected) return;
+  const gw = !!gwr?.data, days = me.expires_at ? Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY)) : 0;
+  const nm = p => (lang === "ps" ? p.name_ps : lang === "en" ? p.name_en : p.name_fa) || p.name_fa;
+  const money = (v, c) => v != null && v !== "" ? `${Number(v).toLocaleString("en-US")} ${esc(c || "")}` : "";
+  let selPlan = (plans || [])[0]?.id || null;
+  const draw = () => {
+    box.innerHTML = `<div class="plcur"><span>${S.curSub}</span><b>${planName(me.plan)}</b><small><b class="num">${days}</b> ${S.daysLeft}</small></div>
+      <h4 class="plg">${S.plans}</h4><div class="plpick">${(plans || []).map(p => `<button type="button" class="plc2 ${p.id === selPlan ? "on" : ""}" data-pp="${p.id}"><b>${esc(nm(p))}</b>
+        <span><b class="ltr">${Number(p.price_afn).toLocaleString("en-US")}</b> ${S.afn} · ${p.months} ${S.mon}</span>${(p.features || []).length ? `<small>${(p.features || []).slice(0, 3).map(esc).join(" · ")}</small>` : ""}</button>`).join("")}</div>
+      <h4 class="plg">${S.methods}</h4><p class="nphint">${S.payNote}</p>
+      ${gw ? `<div class="pmc glass"><div class="pmh"><span class="pml">💳</span><div><b>HesabPay</b><small>${S.online}</small></div></div><button type="button" class="cta press" data-gw="1">${S.onlineBtn}</button></div>` : ""}
+      ${(pms || []).map(m => `<div class="pmc glass" data-pm="${m.id}"><div class="pmh">${m.logo_url && /^https:\/\//.test(m.logo_url) ? `<img class="pml" src="${esc(m.logo_url)}" alt="">` : `<span class="pml">${esc([...m.name][0] || "💳")}</span>`}
+          <div><b>${esc(m.name)}</b>${m.description ? `<small>${esc(m.description)}</small>` : ""}</div>${m.amount != null ? `<span class="pma ltr">${money(m.amount, m.currency)}</span>` : m.currency ? `<span class="pma ltr">${esc(m.currency)}</span>` : ""}</div>
+        ${m.account ? `<div class="bnrow"><span>${S.account}</span><b class="ltr">${esc(m.account)}</b><button type="button" class="bncp" data-cp="${esc(m.account)}">${S.copy}</button></div>` : ""}
+        <div class="pmb2">${m.link && /^https:\/\//.test(m.link) ? `<a class="cta press" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">${S.payNow}</a>` : ""}<button type="button" class="ghost2" data-rc="${m.id}">${S.sendRc}</button></div></div>`).join("")}
+      ${!gw && !(pms || []).length ? `<div class="empty glass"><div style="font-size:40px">💳</div><h2>${S.noMethods}</h2><button class="cta" id="pychat">💬 ${T.msgBtn}</button></div>` : ""}
+      <div id="rcform"></div>
+      ${(pays || []).length ? `<h4 class="plg">${S.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}<small>${esc(x.note || x.provider || "")}${x.payer_ref ? " · " + esc(x.payer_ref) : ""}${x.reject_reason ? " · " + esc(x.reject_reason) : ""}</small></span>
+        <b class="pst ${x.status}">${S.st[x.status] || x.status}</b></div>`).join("")}` : ""}<div class="plerr" id="plerr"></div>`;
+  };
+  draw();
+  box.onclick = async e => {
+    const t = e.target;
+    const pp = t.closest("[data-pp]"); if (pp) { selPlan = Number(pp.dataset.pp); box.querySelectorAll("[data-pp]").forEach(x => x.classList.toggle("on", x === pp)); return; }
+    const cp = t.closest("[data-cp]"); if (cp) { try { await navigator.clipboard.writeText(cp.dataset.cp); cp.textContent = S.copiedS; setTimeout(() => cp.textContent = S.copy, 1600); } catch {} return; }
+    if (t.closest("#pychat")) { if ($("chat")) openChat(); return; }
+    if (t.closest("[data-gw]")) { const b = t.closest("[data-gw]"); b.disabled = true; const old = b.textContent; b.innerHTML = '<span class="spin"></span>';
+      try { const { data: ss } = await sb.auth.getSession();
+        const r = await fetch(SUPABASE_URL + "/functions/v1/pay-checkout", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + ss.session.access_token, apikey: SUPABASE_KEY }, body: JSON.stringify({ plan_id: selPlan }) });
+        const j = await r.json().catch(() => ({})); if (r.ok && j.url) { store.set("pay_pending", j.payment_id); location.href = j.url; return; }
+        $("plerr").textContent = S.err; } catch { $("plerr").textContent = S.err; } b.disabled = false; b.textContent = old; return; }
+    const rc = t.closest("[data-rc]"); if (rc) return rcForm(Number(rc.dataset.rc));
+  };
+  function rcForm(mid){
+    const m = (pms || []).find(x => x.id === mid), f = $("rcform"); if (!m || !f) return;
+    f.innerHTML = `<form class="plc jform rcf glass" id="rcf"><h4 class="plg">${S.sendRc} · ${esc(m.name)}</h4><div class="fgrid">
+      <label style="grid-column:1/-1">${S.pickPlan}<select class="inp" id="rc_plan">${(plans || []).map(p => `<option value="${p.id}" ${p.id === selPlan ? "selected" : ""}>${esc(nm(p))} · ${Number(p.price_afn).toLocaleString("en-US")} ${S.afn}</option>`).join("")}</select></label>
+      <label style="grid-column:1/-1">${S.txid}<input class="inp ltr" id="rc_ref" maxlength="120" required autocomplete="off"></label>
+      <label>${S.paidAmt}${m.currency ? ` (${esc(m.currency)})` : ""}<input class="inp ltr" id="rc_amt" inputmode="decimal" value="${m.amount ?? ""}"></label><label>${S.note}<input class="inp" id="rc_note" maxlength="300"></label></div>
+      <label class="jip" style="margin-top:10px"><span>${S.photo}</span><img id="rc_img" alt="" hidden><i>📷 ${S.photo}</i><input type="file" accept="image/*" hidden id="rc_file"></label>
+      <button class="cta press" id="rc_send" style="margin-top:12px">${S.send}</button><div class="cmerr" id="rc_err"></div></form>`;
+    f.scrollIntoView({ behavior: "smooth", block: "start" }); let file = null;
+    $("rc_file").onchange = e => { file = e.target.files[0] || null; const im = $("rc_img"); if (file) { im.src = URL.createObjectURL(file); im.hidden = false; } };
+    $("rcf").onsubmit = async e => { e.preventDefault(); const ref = $("rc_ref").value.trim(); if (!ref) { $("rc_err").textContent = S.need; return $("rc_ref").focus(); }
+      const btn = $("rc_send"); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>'; $("rc_err").textContent = ""; let proof = null;
+      try {
+        if (file) { const blob = await compressImage(file, 1600); proof = `${me.id}/${Date.now()}.jpg`; const up = await sb.storage.from("payproof").upload(proof, blob, { contentType: "image/jpeg" }); if (up.error) throw up.error; }
+        const amt = Number(toEn($("rc_amt").value).replace(/[^0-9.]/g, "")) || null;
+        const { error } = await sb.rpc("submit_manual_payment", { p_provider: "pm:" + mid, p_plan: Number($("rc_plan").value), p_ref: ref, p_amount: amt, p_proof: proof, p_note: $("rc_note").value.trim() || null });
+        if (error) throw error;
+        f.innerHTML = `<div class="plc glass" style="text-align:center"><div style="font-size:44px">⏳</div><h3>${S.sent}</h3><p class="nphint">${S.sentS}</p></div>`; sfx("button", .4);
+        setTimeout(() => renderPay(box), 2500);
+      } catch (err) { btn.disabled = false; btn.textContent = S.send; const msg = String(err.message || err); $("rc_err").textContent = /duplicate|unique/i.test(msg) ? S.dup : /too many/i.test(msg) ? S.many : S.err + ": " + msg; }
+    };
+  }
+}
+
+/* ----- امنیت حساب در پروفایل: تغییر ایمیل و رمز با رمز فعلی ----- */
+async function accountAction(body){
+  const { data } = await sb.auth.getSession(); const t = data?.session?.access_token;
+  const r = await fetch(SUPABASE_URL + "/functions/v1/account", { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY, Authorization: "Bearer " + t }, body: JSON.stringify(body) });
+  return await r.json().catch(() => ({ error: "x" }));
+}
+function secFormHTML(){ const S = SPx();
+  return `<div class="pform psec"><h3>🔐 ${S.secT}</h3>
+    <details><summary>✉️ ${S.chEmail}</summary><label class="pfl">${S.newEmail}<input id="se_email" type="email" dir="ltr" maxlength="120"></label><label class="pfl">${S.curPw}<input id="se_pw" type="password" dir="ltr" autocomplete="current-password"></label><button class="cta" id="se_go">${S.save}</button><div class="err" id="se_err"></div></details>
+    <details><summary>🔑 ${S.chPw}</summary><label class="pfl">${S.curPw}<input id="sp_cur" type="password" dir="ltr" autocomplete="current-password"></label><label class="pfl">${S.newPw}<input id="sp_new" type="password" dir="ltr" minlength="8" autocomplete="new-password"></label><button class="cta" id="sp_go">${S.save}</button><div class="err" id="sp_err"></div></details></div>`; }
+function bindSecForm(){ const S = SPx(), msg = e => ({ wrong_password: S.wrongPw, email_exists: S.inUse, weak_password: S.weak, pwned_password: S.weak, email: S.badEmail })[e] || S.tryLater;
+  if ($("se_go")) $("se_go").onclick = async () => { const b = $("se_go"), er = $("se_err"); er.textContent = ""; const email = toEn($("se_email").value.trim()).toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) { er.textContent = S.badEmail; return; } b.disabled = true;
+    const j = await accountAction({ action: "email", email, password: $("se_pw").value }); b.disabled = false;
+    if (!j.ok) { er.textContent = msg(j.error); return; } me.email = email; store.set("cache_me", me); er.textContent = S.done; $("se_pw").value = ""; };
+  if ($("sp_go")) $("sp_go").onclick = async () => { const b = $("sp_go"), er = $("sp_err"); er.textContent = ""; const np = $("sp_new").value;
+    if (np.length < 8) { er.textContent = S.weak; return; } b.disabled = true;
+    const j = await accountAction({ action: "password", password: $("sp_cur").value, new_password: np }); b.disabled = false;
+    if (!j.ok) { er.textContent = msg(j.error); return; } er.textContent = S.done; $("sp_cur").value = $("sp_new").value = ""; };
+}
 const wBadge = s => MKW[s.market] ? `<span class="wsym">${MKW[s.market].ic} <b class="ltr">${MKW[s.market].sym}</b> · ${T.m[s.market] || ""}</span>` : "";
-let market = store.get("mk2", "xau"); if (!MK[market]) market = "xau";
+let market = store.get("mk3", "all"); if (!MK[market]) market = "all";
 const EMBED_TH = new URLSearchParams(location.search).get("theme");
 let embedTheme = EMBED_TH === "dark" || EMBED_TH === "light" ? EMBED_TH : null;
 const getTheme = () => embedTheme || store.get("theme2", "light");
@@ -1653,14 +2086,15 @@ const PFL = { fa: { t: "اطلاعات من", name: "نام و نام خانوا
   en: { t: "My details", name: "Full name", phone: "Phone", wa: "WhatsApp", tg: "Telegram ID", country: "Country", city: "City", exp: "Years in markets", lv: "Experience level", lvs: { "": "—", beginner: "Beginner", intermediate: "Intermediate", pro: "Professional" }, skills: "Skills", bio: "About me", join: "Member since", save: "Save details", ok: "Saved ✓", email: "Email (only admin can change)" } };
 function profFormHTML(){ const L = PFL[lang] || PFL.fa, f = (id, l, v, a = "") => `<label class="pfl">${l}<input id="${id}" value="${esc(v ?? "")}" ${a}></label>`;
   return `<div class="pform"><h3>👤 ${L.t}</h3><div class="pfjoin">${L.join}: <b>${fmtDate(me.created_at)}</b></div>
-    ${f("pf_name", L.name, me.name, 'maxlength="80"')}<div class="pf2">${f("pf_phone", L.phone, me.phone, 'dir="ltr" inputmode="tel"')}${f("pf_wa", L.wa, me.whatsapp, 'dir="ltr" inputmode="tel"')}</div>
+    <div class="pf2">${f("pf_fn", SPx().fn, me.first_name ?? String(me.name || "").split(" ")[0], 'maxlength="40" autocomplete="given-name"')}${f("pf_ln", SPx().ln, me.last_name ?? String(me.name || "").split(" ").slice(1).join(" "), 'maxlength="40" autocomplete="family-name"')}</div>
+    <div class="pfl pfro"><span>✉️ ${T.email || "Email"}</span><b class="ltr">${esc(me.email || "")}</b></div><div class="pf2">${f("pf_phone", L.phone, me.phone, 'dir="ltr" inputmode="tel"')}${f("pf_wa", L.wa, me.whatsapp, 'dir="ltr" inputmode="tel"')}</div>
     <div class="pf2">${f("pf_tg", L.tg, me.telegram, 'dir="ltr"')}${f("pf_exp", L.exp, me.experience_years, 'dir="ltr" inputmode="numeric"')}</div>
     <div class="pf2">${f("pf_country", L.country, me.country)}${f("pf_city", L.city, me.city)}</div>
     <label class="pfl">${L.lv}<select id="pf_lv">${Object.entries(L.lvs).map(([k, v]) => `<option value="${k}" ${k === (me.level || "") ? "selected" : ""}>${v}</option>`).join("")}</select></label>
     ${f("pf_skills", L.skills, me.skills, 'maxlength="300"')}<label class="pfl">${L.bio}<textarea id="pf_bio" rows="3" maxlength="1000">${esc(me.bio || "")}</textarea></label>
     <button class="cta" id="pfsave">${L.save}</button><div class="err" id="pferr"></div></div>`; }
 async function saveProfForm(){ const L = PFL[lang] || PFL.fa, b = $("pfsave"), g = id => $(id).value;
-  const p = { name: g("pf_name"), phone: g("pf_phone"), whatsapp: g("pf_wa"), telegram: g("pf_tg"), country: g("pf_country"), city: g("pf_city"), experience_years: g("pf_exp").replace(/[^0-9]/g, ""), level: g("pf_lv"), skills: g("pf_skills"), bio: g("pf_bio") };
+  const p = { first_name: g("pf_fn"), last_name: g("pf_ln"), phone: g("pf_phone"), whatsapp: g("pf_wa"), telegram: g("pf_tg"), country: g("pf_country"), city: g("pf_city"), experience_years: g("pf_exp").replace(/[^0-9]/g, ""), level: g("pf_lv"), skills: g("pf_skills"), bio: g("pf_bio") };
   b.disabled = true; const { error } = await sb.rpc("update_my_profile", { p }); b.disabled = false;
   if (error) { $("pferr").textContent = error.message; return; }
   const { data } = await sb.from("profiles").select("*").eq("id", me.id).maybeSingle(); if (data) { me = data; store.set("cache_me", me); }
@@ -1680,11 +2114,12 @@ function openProfile(){
         <button class="ghost2 instbtn" onclick="installApp()">🖥 ${lang === "en" ? "Install on this computer/phone" : lang === "ps" ? "په کمپیوټر/موبایل نصب کړئ" : "نصب برنامه روی همین کامپیوتر/گوشی"}</button>
         ${days != null ? `<div class="pdays">${tt(T.subDays, { n: `<b class="num">${days}</b>` })} · ${planName(me.plan)}</div><button class="cta" id="prenew" style="margin-top:10px">${PT().renew}</button>` : ""}
         ${pick ? `<button class="cta" id="psave">${T.savePhoto}</button>` : ""}
-        ${me.role !== "admin" ? profFormHTML() : ""}
+        ${me.role !== "admin" ? `<button type="button" class="ghost2 pnotif" id="pnotif">🔔 ${SPx().notifs} <b class="bdg2" id="pbdg">${notifs.filter(x => x.id > seenId()).length || ""}</b></button>` + profFormHTML() + secFormHTML() : ""}
         ${me.avatar && !pick ? `<button class="ghost2" id="pdel">${T.removePhoto}</button>` : ""}
         <div class="err" id="perr"></div></div>`;
     $("px").onclick = () => history.back();
     if ($("pfsave")) $("pfsave").onclick = saveProfForm;
+    bindSecForm(); if ($("pnotif")) $("pnotif").onclick = () => { history.back(); setTimeout(openNotifs, 420); };
     if ($("prenew")) $("prenew").onclick = () => { history.back(); setTimeout(openPlans, 450); };
     $("pfile").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { pick = await squareJpeg(f); draw(); } catch { $("perr").textContent = T.badPhoto; } };
     if ($("psave")) $("psave").onclick = async () => {
@@ -1711,19 +2146,18 @@ function topbar(){
   return `<div class="top rise">
     <div class="brand"><div class="lgo"><img src="logo-mark.png" alt=""></div><div class="wm"><b>MARKET</b><small>ANALYSTS</small></div></div>
     <div class="icons">
-      ${me && me.role !== "admin" ? `<button class="ib bell" id="bell" aria-label="notifications">🔔<b class="bdg" id="bdg" hidden></b></button>` : ""}
-      ${me ? `<button class="ib meav" id="meav" aria-label="${T.myProfile}">${myAvatarHTML()}</button>` : ""}
+      ${me ? `<button class="ib meav" id="meav" aria-label="${T.myProfile}">${myAvatarHTML()}<b class="bdg" id="bdg" hidden></b></button>` : ""}
       <button class="ib" id="lg" aria-label="${T.lang}">${I.globe}</button>
       <button class="ib" id="th" aria-label="theme">${getTheme()==="dark"?I.sun:I.moon}</button>
-      <button class="ib" id="out" aria-label="logout">${I.out}</button>
+      ${me ? `<button class="ib more3" id="more3" aria-label="menu" aria-haspopup="true">⋮</button>` : ""}
       <div class="pop glass" id="pop">${langsHTML()}<button type="button" class="sndt" id="sndt" role="switch" aria-checked="${sndOn}">${sndOn ? "🔊" : "🔇"} ${T.sound}<span class="sw3 ${sndOn ? "on" : ""}"><i></i></span></button></div>
     </div></div>${EMBED ? "" : `<div class="mtk" id="mtk" hidden></div>`}${me?.role === "admin" || new URLSearchParams(location.search).get("from") === "admin" ? `<a class="toadm" href="modir.html">↩ پنل مدیر</a>` : ""}`;
 }
 function bindTop(){
   tkSig = ""; loadTicker(true);
   if ($("meav")) $("meav").onclick = openProfile;
-  if ($("bell")) { $("bell").onclick = openNotifs; paintBell(); }
-  $("out").onclick = async () => { store.set("cache_me", null); store.set("cache_msgs", []); await pushTeardown(); try { await sb.rpc("release_session"); } catch {} sb.auth.signOut(); };
+  paintBell();
+  if ($("more3")) $("more3").onclick = e => { e.stopPropagation(); openMore(); };
   $("th").onclick = () => { store.set("theme2", getTheme()==="dark"?"light":"dark"); applyTheme(); $("th").innerHTML = getTheme()==="dark"?I.sun:I.moon; if (page === "prc") tvWidget(); };
   $("lg").onclick = e => { e.stopPropagation(); $("pop").classList.toggle("show"); };
   if ($("hc")) $("hc").onclick = () => { if (me?.role === "admin") location.href = "modir.html?tab=msgs"; else if ($("chat")) openChat(); };
@@ -1886,9 +2320,9 @@ Object.assign(L3.ps, { toTarget:"تر هدف پورې پرمختګ", toStop:"د 
 Object.assign(L3.en, { toTarget:"Progress to target", toStop:"Near stop loss", nowPx:"Now", waitEntry:"Waiting for entry", autoBadge:"Result recorded automatically from live price", entered:"Entry", resPrice:"Result price", validTill:"Valid until" });
 for (const k in L3) { Object.assign(L[k], L3[k]); L[k].st.expired = k === "fa" ? "فعال نشد (منقضی)" : k === "ps" ? "فعال نه شو (پای ته ورسېد)" : "Not triggered (expired)"; }
 for (const k in L2) { Object.assign(L[k], L2[k]); L[k].st.tp3 = k === "fa" ? "تیک پروفیت 3 خورد" : k === "ps" ? "درېیم هدف ته ورسېد" : "Take profit 3 hit"; L[k].disc = L2[k].disc2; }
-for (const [lg, o] of Object.entries({ fa: { world: "جهانی", eurusd: "یورو/دالر", gbpusd: "پوند/دالر", usdjpy: "دالر/ین", usdchf: "دالر/فرانک", btcusd: "بیت‌کوین", ethusd: "اتریوم", wti: "نفت WTI", brent: "نفت برنت" },
-    ps: { world: "نړیوال", eurusd: "یورو/ډالر", gbpusd: "پونډ/ډالر", usdjpy: "ډالر/ین", usdchf: "ډالر/فرانک", btcusd: "بټ کوین", ethusd: "ایتریوم", wti: "تېل WTI", brent: "برنټ تېل" },
-    en: { world: "World", eurusd: "EUR/USD", gbpusd: "GBP/USD", usdjpy: "USD/JPY", usdchf: "USD/CHF", btcusd: "Bitcoin", ethusd: "Ethereum", wti: "WTI Oil", brent: "Brent Oil" } })) {
+for (const [lg, o] of Object.entries({ fa: { all: "همه", world: "ارزهای جهانی", eurusd: "یورو/دالر", gbpusd: "پوند/دالر", usdjpy: "دالر/ین", usdchf: "دالر/فرانک", btcusd: "بیت‌کوین", ethusd: "اتریوم", wti: "نفت WTI", brent: "نفت برنت" },
+    ps: { all: "ټول", world: "نړیوال بازارونه", eurusd: "یورو/ډالر", gbpusd: "پونډ/ډالر", usdjpy: "ډالر/ین", usdchf: "ډالر/فرانک", btcusd: "بټ کوین", ethusd: "ایتریوم", wti: "تېل WTI", brent: "برنټ تېل" },
+    en: { all: "All", world: "Global markets", eurusd: "EUR/USD", gbpusd: "GBP/USD", usdjpy: "USD/JPY", usdchf: "USD/CHF", btcusd: "Bitcoin", ethusd: "Ethereum", wti: "WTI Oil", brent: "Brent Oil" } })) {
   if (!L[lg]) continue; Object.assign(L[lg].m, o); Object.assign(L[lg].unit, lg === "en" ? { jpy: "JPY", chf: "CHF" } : lg === "ps" ? { jpy: "ین", chf: "فرانک" } : { jpy: "ین", chf: "فرانک" });
   L[lg].per = lg === "en" ? { all: "All", day: "Today", yest: "Yesterday", w1: "1 week", w2: "2 weeks", m1: "1 month", m3: "3 months", m6: "6 months", y1: "1 year", custom: "📅 Custom dates" }
     : lg === "ps" ? { all: "ټول", day: "نن", yest: "پرون", w1: "یوه اونۍ", w2: "دوه اونۍ", m1: "یوه میاشت", m3: "درې میاشتې", m6: "شپږ میاشتې", y1: "یو کال", custom: "📅 ټاکلې نېټه" }
@@ -1920,7 +2354,7 @@ if (EMBED && parent !== window) { let lastH = 0;
   const sendH = () => { const a = document.querySelector(".app") || document.body; const h = Math.ceil(a.getBoundingClientRect().height) + 8;
     if (Math.abs(h - lastH) > 2) { lastH = h; parent.postMessage({ maEmbedH: h }, "*"); } };
   addEventListener("load", () => { new ResizeObserver(sendH).observe(document.body); sendH(); }); setInterval(sendH, 1500); }
-let page = EMBED === "prc" || EMBED === "dash" ? EMBED : (new URLSearchParams(location.search).get("pg") || store.get("page", "sig")); if (!["sig","dash","prc","tool","acad"].includes(page)) page = "sig"; document.documentElement.dataset.pg = page;
+let page = EMBED === "prc" || EMBED === "dash" ? EMBED : (new URLSearchParams(location.search).get("pg") || store.get("page", "sig")); if (!PAGES.includes(page)) page = "sig"; document.documentElement.dataset.pg = page;
 let per = store.get("per", "all"), sortBy = store.get("sort", "new");
 if (!T.per[per]) per = ({ week: "w1", month: "m1", year: "y1" })[per] || "all";
 let perFrom = store.get("per_from", ""), perTo = store.get("per_to", "");
@@ -2042,7 +2476,7 @@ setInterval(() => {
   document.querySelectorAll("[data-ago]").forEach(el => { el.textContent = agoTxt(prices?.at); });
   document.querySelectorAll("[data-ts]").forEach(el => { if (el.dataset.ts) el.textContent = agoTxt(el.dataset.ts); });
   if (!document.hidden && view === "feed" && (page === "prc" || page === "tool" || page === "dash")) loadPrices();
-  if (!document.hidden && view === "feed" && page === "acad") { if (Date.now() - newsAt > 60000) loadNews(); if (Date.now() - calAt > 5 * 60000) loadCalendar(); }
+  if (!document.hidden && view === "feed" && (page === "news" || page === "cal")) { if (page === "news" && Date.now() - newsAt > 60000) { loadNews(); loadExtNews(); } if (page === "cal" && Date.now() - calAt > 5 * 60000) loadCalendar(); }
 }, 1000);
 function tvWidget(){
   const box = $("tvbox"); if (!box) return;
@@ -2473,41 +2907,13 @@ const PT = () => PL[lang] || PL.fa;
 const planName = c => !c ? PT().legacy : PT()[c] || c;
 const planHas = f => !me?.plan || me.plan === "vip" || me.plan === f;
 async function openPlans(){
-  if ($("plpanel")) return;
-  const L = PT(), v = document.createElement("div"); v.className = "npanel"; v.id = "plpanel";
-  v.innerHTML = `<div class="nphd"><b>💳 ${L.t}</b><button class="ib" id="plx" aria-label="close">${I.x}</button></div><p class="nphint">${L.sub}</p><div id="plbody"><span class="spin"></span></div>`;
+  if (view === "feed" && $("pg")) return setPage("pay");
+  if ($("plpanel")) return; const S = SPx(), v = document.createElement("div"); v.className = "npanel"; v.id = "plpanel";
+  v.innerHTML = `<div class="nphd"><b>💳 ${S.mPay}</b><button class="ib" id="plx" aria-label="close">${I.x}</button></div><div id="plbody"><span class="spin"></span></div>`;
   document.body.appendChild(v); lockBody();
   const close = () => { v.classList.remove("show"); unlockBody(); setTimeout(() => v.remove(), 350); };
   overlayPush(close); requestAnimationFrame(() => v.classList.add("show")); $("plx").onclick = () => history.back();
-  const [{ data: plans }, { data: pays }] = await Promise.all([sb.from("plans").select("*").eq("active", true).order("sort"), sb.from("payments").select("*").order("created_at", { ascending: false }).limit(5)]);
-  const days = me.expires_at ? Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY)) : 0;
-  const nm = p => (lang === "ps" ? p.name_ps : lang === "en" ? p.name_en : p.name_fa) || p.name_fa;
-  const groups = ["trader", "sarraf", "all"].map(g => [g, (plans || []).filter(p => p.audience === g)]).filter(([, a]) => a.length);
-  $("plbody").innerHTML = `<div class="plcur"><span>${L.cur}</span><b>${planName(me.plan)}</b><small><b class="num">${days}</b> ${L.days}</small></div>
-    ${groups.map(([g, a]) => `<h4 class="plg">${L.groups[g]}</h4>${a.map(p => `<div class="plc ${p.popular ? "plstar" : ""}">${p.popular ? `<span class="plpop">⭐ ${L.pop}</span>` : ""}
-      <div class="plh"><b>${esc(nm(p))}</b><span class="plp"><b class="ltr">${Number(p.price_afn).toLocaleString("en-US")}</b> ${L.afn}<small> / ${p.months} ${L.mon}</small></span></div>
-      <ul>${(p.features || []).map(f => `<li>${esc(f)}</li>`).join("")}</ul><button class="cta press" data-plan="${p.id}">${L.pay}</button></div>`).join("")}`).join("")}
-    <div class="plerr" id="plerr"></div>
-    ${(pays || []).length ? `<h4 class="plg">${L.hist}</h4>${pays.map(x => `<div class="plh2"><span>${fmtFull(x.created_at)}<small>${x.provider === "binance" ? "Binance" : "HesabPay"}${x.reject_reason ? ` · ${BT().why}: ${esc(x.reject_reason)}` : ""}</small></span><span class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} AFN</span><span class="pst ${x.status}">${L.st[x.status] || x.status}</span></div>`).join("")}` : ""}`;
-  const [{ data: bnS }, { data: hpOn }, { data: hmS }] = await Promise.all([sb.from("settings").select("value").eq("key", "pay_binance").maybeSingle(), sb.rpc("gateway_enabled"), sb.from("settings").select("value").eq("key", "pay_hesabpay_manual").maybeSingle()]);
-  const BN = bnS?.value || {}, HM = hmS?.value || {};
-  $("plbody").addEventListener("click", e => { const b = e.target.closest("[data-plan]"); if (!b || b.dataset.via) return; e.stopImmediatePropagation();
-    const pl = (plans || []).find(p => p.id === Number(b.dataset.plan)); if (!pl) return; const B = BT();
-    actionSheetHTML(`<h4 class="pmh">${B.how}</h4><button class="pmo" data-m="hp" ${hpOn ? "" : "disabled"}><b>💳 ${B.hp}</b><small>${hpOn ? B.hpS : B.off}</small></button>${HM.enabled ? `<button class="pmo" data-m="hm"><b>📲 ${B.hm}</b><small>${B.hmS}</small></button>` : ""}<button class="pmo" data-m="bn" ${BN.enabled ? "" : "disabled"}><b>🟡 ${B.bn}</b><small>${BN.enabled ? B.bnS : B.off}</small></button>`).then(m => {
-      if (m === "hp") { b.dataset.via = "hp"; b.click(); delete b.dataset.via; } else if (m === "bn") binancePay(pl, BN); else if (m === "hm") binancePay(pl, HM, "hesabpay_manual"); }); }, true);
-  $("plbody").onclick = async e => {
-    const b = e.target.closest("[data-plan]"); if (!b) return; const er = $("plerr"); er.textContent = "";
-    b.disabled = true; const old = b.innerHTML; b.innerHTML = `<span class="spin"></span> ${L.wait}`;
-    try {
-      const { data: ss } = await sb.auth.getSession();
-      const r = await fetch(SUPABASE_URL + "/functions/v1/pay-checkout", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ss.session.access_token, "apikey": SUPABASE_KEY }, body: JSON.stringify({ plan_id: Number(b.dataset.plan) }) });
-      const j = await r.json().catch(() => ({}));
-      if (r.ok && j.url) { store.set("pay_pending", j.payment_id); location.href = j.url; return; }
-      er.innerHTML = (j.error === "gateway_not_configured" ? L.off : L.err) + ` <button class="ghost2" id="plchat">💬 ${T.msgBtn}</button>`;
-      if ($("plchat")) $("plchat").onclick = () => { history.back(); setTimeout(() => openChat(), 400); };
-    } catch { er.textContent = L.err; }
-    b.disabled = false; b.innerHTML = old;
-  };
+  renderPay($("plbody"));
 }
 // return from HesabPay checkout
 async function handlePayReturn(){
@@ -2925,6 +3331,7 @@ function sgGridHTML(st){
     <div class="sgc wide perf ${st.sumR > 0 ? "w" : st.sumR < 0 ? "l" : ""}" title="${L.perfH}"><small>${L.perf}</small><b class="ltr">${st.nr ? r(st.sumR) : L.none}</b><span>${L.avg}: <bdi class="ltr">${r(st.avgR)}</bdi>${st.other ? ` · ${L.other}: ${st.other}` : ""}</span></div>
   </div>`; }
 function drawPrices(){
+  if (page === "prc") { paintRStat(); drawGoldUnits(); }
   const el = $("pcards"); if (!el || page !== "prc") return;
   const sigP = JSON.stringify([tgc?.at ? tgc.heratToman?.cash : 0, prices?.xau?.price, prices?.xag?.price, prices?.dxy?.price, prices?.afn?.rate, local?.at, (prices?.xau?.spark || []).length, rates[0]?.id, lang]);
   if (sigP === pSig && el.firstChild) return;
@@ -3113,10 +3520,10 @@ async function loadNews(){
   try { const r = await fnFetch("news"); if (r.ok) { const n = await r.json();
     const was = news?.items?.find(i => i.kind === "news")?.link, now = n?.items?.find(i => i.kind === "news");
     news = n; store.set("cache_news", n);
-    if (was && now && now.link !== was && view === "feed") banner("📰", esc(now.title), T.tapView, () => setPage("acad"));
+    if (was && now && now.link !== was && view === "feed") banner("📰", esc(now.title), T.tapView, () => setPage("news"));
     if (n?.items?.some(i => i.kind !== "news" && (!local?.at || new Date(i.at) > new Date(local.at)))) { localAt = 0; }
   } } catch {}
-  drawNews();
+  drawNews(); if (page === "news") paintNewsList();
 }
 function drawNews(){
   const box = $("newsbox"); if (!box) return;
@@ -3142,6 +3549,7 @@ const calTitle = e => {
   return e.title;
 };
 function drawCal(){
+  if (page === "cal") paintCal();
   const box = $("calbox"); if (!box) return;
   const ev = (cal?.events || []).filter(e => e.impact !== "low" || e.country === "USD");
   if (!ev.length) { box.innerHTML = `<div class="upd">${cal ? T.calEmpty : T.noContent}</div>`; return; }
@@ -3192,6 +3600,7 @@ async function openAnalysis(p){
   $("anfv").onclick = async () => { await toggleFav(p.id); const on = favs.has(p.id); $("anfv").classList.toggle("on", on); $("anfv").textContent = (on ? "⭐ " : "☆ ") + C.favs; };
 }
 async function loadAcademy(){
+  acadAt = Date.now();
   const [{ data: a }, { data: ps }, { data: pl }] = await Promise.all([
     sb.from("settings").select("value").eq("key", "academy").maybeSingle(),
     sb.from("posts").select("*").order("created_at", { ascending: false }).limit(60),
@@ -3202,6 +3611,8 @@ async function loadAcademy(){
   if (poll) { const [{ data: r }, { data: v }] = await Promise.all([sb.rpc("poll_results", { p_poll: poll.id }), sb.from("poll_votes").select("choice").eq("poll_id", poll.id).eq("user_id", me.id).maybeSingle()]);
     pollRes = r || {}; myVote = v ? v.choice : null; }
   if (page === "acad") drawAcademy();
+  else if (view === "feed" && page === "news") paintNewsList(); else if (view === "feed" && page === "cal") paintCal();
+  else if (view === "feed" && ["about", "inst", "contact"].includes(page)) drawInfoPage($("pg"));
 }
 const impHTML = imp => `<div class="imp">${["xau","xag","usd"].filter(k => imp?.[k]).map(k => `<span class="${imp[k] === "up" ? "up" : imp[k] === "down" ? "dn" : ""}">${T.m[k]}: ${imp[k] === "up" ? "▲ " + T.upI : imp[k] === "down" ? "▼ " + T.dnI : "• " + T.neuI}</span>`).join("")}</div>`;
 function drawAcademy(){
@@ -3217,39 +3628,17 @@ function drawAcademy(){
       <div class="afb"><b>${esc(e.title)}</b><div class="tags"><span class="tag2 st-${e.event_status || "upcoming"}">${C.evst[e.event_status || "upcoming"]}</span><span class="tag2 lvl-${e.importance || "low"}">● ${T.imp[e.importance || "low"]}</span>${e.previous ? `<span class="tag2">${T.prevV}: <bdi class="ltr">${esc(e.previous)}</bdi></span>` : ""}${e.forecast ? `<span class="tag2">${T.fcV}: <bdi class="ltr">${esc(e.forecast)}</bdi></span>` : ""}${e.actual ? `<span class="tag2">${T.actV}: <bdi class="ltr">${esc(e.actual)}</bdi></span>` : ""}</div>
       ${e.body ? `<p>${esc(e.body)}</p>` : ""}<div class="nsrc">${C.src}: ${e.source_url ? `<a href="${esc(e.source_url)}" target="_blank" rel="noopener">${esc(e.source || e.source_url)} ↗</a>` : esc(e.source || "—")}</div></div></div>`;
   const tot = Object.values(pollRes).reduce((a, b) => a + Number(b), 0);
-  el.innerHTML = `
-    <div class="acard glass glow rise" style="--bd:9s"><div class="top2">${teacher.photo ? `<img class="pp2" src="${esc(teacher.photo)}" alt="">` : `<span class="pp2">${esc([...tn.replace("استاد", "").trim()][0] || "م")}</span>`}
-      <div><h2>${esc(tn)}</h2><div class="sub2">${esc(A.specialty || "")}</div></div></div>
-      ${A.bio ? `<p>${esc(A.bio)}</p>` : ""}
-      <div class="kv">${A.years ? `<div><span>${T.years}</span><b>${esc(A.years)}</b></div>` : ""}${A.certs ? `<div><span>${T.certs}</span><b>${esc(A.certs)}</b></div>` : ""}</div>
-      ${wa || tg ? `<div class="contact2">${wa ? `<a class="wa" href="${wa}" target="_blank" rel="noopener">💬 ${T.whatsapp}</a>` : ""}${tg ? `<a class="tg" href="${tg}" target="_blank" rel="noopener">✈ ${T.telegram}</a>` : ""}</div>` : ""}</div>
-    ${A.name || A.services ? `<div class="acard glass rise" style="--i:1"><h2>${esc(A.name || T.about)}</h2>
-      <div class="kv">${A.founded ? `<div><span>${T.founded}</span><b>${esc(A.founded)}</b></div>` : ""}${A.licenses ? `<div><span>${T.licenses}</span><b>${esc(A.licenses)}</b></div>` : ""}</div>
-      ${A.services ? `<p><b>${T.services}:</b> ${esc(A.services)}</p>` : ""}</div>` : ""}
+  el.innerHTML = subHead("acad") + `
     ${poll ? `<div class="acard glass glow rise poll" style="--i:2;--bd:7s"><h2>📊 ${T.pollT}</h2><p style="margin-top:6px">${esc(poll.question)}</p>
       ${(poll.options || []).map((o, i) => { const c = Number(pollRes[i] || 0), pc = tot ? Math.round(c / tot * 100) : 0;
         return `<button class="opt ${myVote === i ? "mine" : ""}" data-vote="${i}" ${myVote != null ? "disabled" : ""}><span class="bar" style="width:${myVote != null ? pc : 0}%"></span><span>${esc(o)}</span>${myVote != null ? `<em>${pc}%</em>` : ""}</button>`; }).join("")}
       ${myVote != null ? `<div class="upd" style="margin:8px 0 0">${T.voted} · ${tot}</div>` : ""}</div>` : ""}
-    <div class="sec2"><h3>🗓 ${T.calT}</h3></div>
-    <div class="acard glass rise cal" id="calbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
-    <div class="sec2"><h3>🇦🇫 ${C.afCal}</h3></div>
-    <div class="acard glass rise afcal" style="--i:3">${afUp.length || afPast.length ? afUp.map(afItem).join("") + (afPast.length ? `<details class="afpast"><summary>${C.past} (${afPast.length})</summary>${afPast.map(afItem).join("")}</details>` : "") : `<div class="upd">${C.afNone}</div>`}
-      <div class="src">${C.afNote}</div></div>
-    <div class="sec2"><h3>📰 ${T.afNews} <span class="ldot" style="display:inline-block;margin-inline-start:6px"></span></h3></div>
-    <div class="acard glass rise news" id="newsbox" style="--i:3"><div class="sk" style="height:80px"></div></div>
-    <div class="sec2"><h3>📌 ${T.newsT}</h3></div>
-    ${nCats.length ? `<div class="qchips acats" data-cg="news">${[["all", C.all], ...nCats.map(c => [c, c])].map(([k, t]) => `<button data-c="${esc(k)}" class="${k === newsCat ? "on" : ""}">${esc(t)}</button>`).join("")}</div>` : ""}
-    <div class="acard glass rise news" style="--i:3">${newsV.length ? newsV.map(p => `<div class="nitem">${p.cover_path ? `<img class="ncov" data-mpath="${esc(p.cover_path)}" alt="">` : ""}<b>${esc(p.title)}</b>
-      <div class="nmeta">${p.category ? `<span class="tag2">${esc(p.category)}</span>` : ""}${p.source ? `<span>${C.src}: ${p.source_url ? `<a href="${esc(p.source_url)}" target="_blank" rel="noopener">${esc(p.source)} ↗</a>` : esc(p.source)}</span>` : ""}</div>
-      ${p.kind === "event" ? `<div class="tags"><span class="tag2 lvl-${p.importance || "low"}">● ${T.imp[p.importance || "low"]}</span>${p.event_at ? `<span class="tag2">${fmtFull(p.event_at)}</span>` : ""}${p.previous ? `<span class="tag2">${T.prevV}: ${esc(p.previous)}</span>` : ""}${p.forecast ? `<span class="tag2">${T.fcV}: ${esc(p.forecast)}</span>` : ""}${p.actual ? `<span class="tag2">${T.actV}: ${esc(p.actual)}</span>` : ""}</div>` : `<div class="upd" style="text-align:start;margin:2px 0">${fmtFull(p.created_at)}</div>`}
-      ${p.body ? (p.body.length > 320 ? `<p class="nclip">${esc(p.body)}</p><button type="button" class="nmore">${C.more}</button>` : `<p>${esc(p.body)}</p>`) : ""}${impHTML(p.impact)}</div>`).join("") : `<div class="upd">${T.noContent}</div>`}</div>
     <div class="sec2"><h3>🧠 ${C.anT}</h3></div>
     <div class="qchips acats" data-cg="an">${[["all", C.all], ["fav", "⭐ " + C.favs], ...aCats.map(c => [c, c])].map(([k, t]) => `<button data-c="${esc(k)}" class="${k === anCat ? "on" : ""}">${esc(t)}</button>`).join("")}</div>
     <div class="angrid rise" style="--i:4">${analV.length ? analV.map(p => `<div class="ancard" data-an="${p.id}">${p.cover_path ? `<img data-mpath="${esc(p.cover_path)}" alt="">` : `<span class="anph">${p.kind === "video" ? "🎬" : "🧠"}</span>`}
       <button type="button" class="anfav ${favs.has(p.id) ? "on" : ""}" data-fav="${p.id}" aria-label="favorite">${favs.has(p.id) ? "⭐" : "☆"}</button>${p.kind === "video" ? `<span class="anplay">▶</span>` : ""}
       <div class="anb"><b>${esc(p.title)}</b><small>${[p.category, p.author, fmtFull(p.created_at).split(" · ")[0]].filter(Boolean).map(esc).join(" · ")}</small></div></div>`).join("") : `<div class="upd">${anCat === "fav" ? C.noFav : T.noContent}</div>`}</div>
 `;
-  drawCal(); loadCalendar(); drawNews(); loadNews();
   el.querySelectorAll("img[data-mpath]").forEach(async im => { const u = await mediaUrl(im.dataset.mpath); if (u) im.src = u; });
   el.querySelectorAll(".acats").forEach(g => g.onclick = e => { const b = e.target.closest("[data-c]"); if (!b) return; if (g.dataset.cg === "news") newsCat = b.dataset.c; else anCat = b.dataset.c; drawAcademy(); });
   el.querySelectorAll(".nmore").forEach(b => b.onclick = () => { const p = b.previousElementSibling; p.classList.toggle("nclip"); b.textContent = p.classList.contains("nclip") ? C.more : C.less; });
@@ -3263,7 +3652,7 @@ function drawAcademy(){
 }
 
 /* ----- پوسته و ناوبری ----- */
-function bnavHTML(){ return `<nav class="bnav" id="bnav">${[["sig","📈"],["dash","📊"],["prc","💹"],["tool","🧮"],["acad","🎓"]].map(([k, ic]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${T.nav[k]}</button>`).join("")}</nav>`; }
+function bnavHTML(){ const S = SPx(); return `<nav class="bnav" id="bnav">${[["sig","📈",S.nSig],["prc","💹",S.nRates],["news","📰",S.nNews],["cal","🗓",S.nCal]].map(([k, ic, t]) => `<button data-pg="${k}" class="${k === page ? "on" : ""}"><span>${ic}</span>${t}</button>`).join("")}</nav>`; }
 let tabHist = false;
 function setPage(p, fromBack){
   if (EMBED) return;
@@ -3296,10 +3685,13 @@ function drawPage(){
     if (all.length || offline) drawFeed();
     if (offline) statusLine("off");
     drawStoryBar(); if (Date.now() - storyAt > 60000) loadStories();
-  } else if (page === "prc") { shown = {}; pSig = ""; el.innerHTML = `<div class="sec2" style="margin-top:0"><h3>📡 ${T.tvT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div><div id="fxboard"></div>`; tvWidget(); drawPrices(); loadPrices(true); loadFx(true); }
+  } else if (page === "prc") { shown = {}; pSig = ""; const S = SPx(); el.innerHTML = `<div id="rstat" class="rstat"></div><div class="sec2" style="margin-top:0"><h3>🇦🇫 ${S.locT}</h3></div><div id="fxboard"></div>
+      <div class="sec2"><h3>🌐 ${S.worldT}</h3></div><div class="tvbox" id="tvbox"></div><div id="pcards"></div><div id="gunits"></div>
+      <div class="sec2"><h3>📈 ${S.chartT}</h3></div><div id="tvchart"></div>`; tvWidget(); tvChart(); drawPrices(); drawGoldUnits(); loadPrices(true); loadFx(true); }
   else if (page === "dash") { el.innerHTML = `<div class="sk"></div>`; drawDash(); loadDash(); loadPrices(true); loadFx(true); }
-  else if (page === "tool") { drawTools(); loadPrices(); }
-  else if (page === "acad") { el.innerHTML = `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
+  else if (page === "tool") { drawTools(); loadPrices(); el.insertAdjacentHTML("afterbegin", subHead("tool")); }
+  else if (page === "acad") { el.innerHTML = subHead("acad") + `<div class="sk"></div>`; if (posts.length || academy.bio) drawAcademy(); loadAcademy(); }
+  else drawSpecPage(el);
 }
 function subLine(){ if (me.role === "admin") return ""; const days = Math.max(0, Math.ceil((new Date(me.expires_at) - Date.now()) / DAY)); return `<span style="${days <= 5 ? "color:var(--amber)" : ""}">${tt(T.subDays, {n: `<b class="num">${days}</b>`})}</span>`; }
 
@@ -3447,10 +3839,18 @@ function resultHTML(s){
 }
 const chipCls = s => s.status === "active" ? (s.auto && s.phase === "waiting" ? "wait" : "active") : s.status === "sl" ? "lose" : (s.status || "").startsWith("tp") ? "win" : "";
 const tagsHTML = s => { const rr = rrOf(s); return (s.timeframe || rr) ? `<div class="tags">${s.timeframe?`<span class="tag2">⏱ ${T.tf[s.timeframe]||s.timeframe}</span>`:""}${rr?`<span class="tag2 rr">${T.rr} <b class="ltr">1:${rr.toFixed(1)}</b></span>`:""}</div>` : ""; };
+function pubHTML(s, big){
+  const ext = !!s.source, S = SPx(), mk = mkOf(s);
+  const name = ext ? (s.source_name || String(s.source).replace(/^tg:/, "")) : (teacher.name || T.teacher);
+  const av = ext ? `<span class="pav ext">📡</span>` : teacher.photo ? `<img class="pav" src="${esc(teacher.photo)}" alt="">` : `<span class="pav">${esc([...String(name).replace("استاد", "").trim()][0] || "م")}</span>`;
+  const th = MK[s.market]?.th ? `<img class="pth" src="${MK[s.market].th}" alt="">` : `<span class="pth">${MKW[s.market]?.ic || MK[mk]?.ic || "📈"}</span>`;
+  return `<div class="pubh ${big ? "big" : ""}">${av}<div class="pubn"><b>${esc(name)}</b><small>${ext ? "📡 " + S.ext : "✔︎ " + S.teacherSig} · ${fmtFull(s.created_at)}</small></div>
+    <span class="pcat">${th}${T.m[s.market] || MKW[s.market]?.sym || ""}</span></div>${ext && big && /^https:\/\/t\.me\//.test(s.source_url || "") ? `<a class="psrc" href="${esc(s.source_url)}" target="_blank" rel="noopener noreferrer">${S.openSrc}</a>` : ""}`;
+}
 function hero(s){
   const b = s.type === "buy", m = MK[s.market] || MKW[s.market] || MK.xag;
   return `<div class="hero glass glow ${b?"buy":"sell"} ${s.id===freshId?"fresh":""}" style="--bd:7s"><span class="shine"></span><i class="sbr" aria-hidden="true"><b></b></i>${wBadge(s)}
-    <div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
+    ${pubHTML(s, true)}<div class="hh"><div class="side"><span class="arrow">${b?I.up:I.down}</span>${b?T.buy:T.sell}</div><span class="chip ${chipCls(s)}">${stLabel(s)}</span></div>
     <div class="entry">${b?T.buyPrice:T.sellPrice} (${T.unit[m.unit]})<b class="num ltr">${range(s)}</b></div>
     ${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}
     <div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}${socHTML(s)}</div>`;
@@ -3460,14 +3860,14 @@ function item(s, i){
   return `<div class="it rise" data-id="${s.id}" style="--i:${i+2}">
     <div class="row"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
       <div><div class="t">${MKW[s.market] ? `<small class="wsym2">${MKW[s.market].ic} ${MKW[s.market].sym}</small> ` : ""}${b?T.buy:T.sell} <span class="num ltr">${range(s)}</span></div>
-        <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div></div>
+        <div class="s">${s.tp1!=null?`${T.target} <span class="num">${fa(s.tp1)}</span>`:""}${s.sl!=null?` · ${T.loss} <span class="num">${fa(s.sl)}</span>`:""}${s.voice_path?" · 🎙":""}</div><div class="s pubs">${s.source ? "📡 " + esc(s.source_name || s.source.replace(/^tg:/, "")) : "👤 " + esc(teacher.name || T.teacher)} · ${MK[mkOf(s)]?.ic || ""} ${T.m[s.market] || MKW[s.market]?.sym || ""}</div></div>
       <div class="e"><span class="chip ${chipCls(s)}">${stLabel(s)}</span><br>${fmtDate(s.created_at)}</div></div>
-    <div class="more"><div>${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div>${socHTML(s)}</div>`;
+    <div class="more"><div>${pubHTML(s)}${tagsHTML(s)}${lv(s)}${progHTML(s)}${resultHTML(s)}${noteHTML(s)}${s.voice_path?voiceHTML(s.voice_path):""}<div class="when">${T.posted}: ${fmtFull(s.created_at)}</div>${starsHTML(s)}</div></div>${socHTML(s)}</div>`;
 }
 function drawFeed(){
   const el = $("feed"); if (!el) return;
   const open = [...el.querySelectorAll(".it.open")].map(e => e.dataset.id);
-  const mlist = all.filter(s => mkOf(s) === market), list = sortList(mlist.filter(inPeriod)), st = statsOf(list);
+  const mlist = all.filter(s => market === "all" || mkOf(s) === market), list = sortList(mlist.filter(inPeriod)), st = statsOf(list);
   let h = offline ? `<div class="offline glass glow" style="--bd:6s"><span class="oi">${I.wifi}</span><div><b>${T.offTitle}</b><span>${T.offText}</span></div></div>` : "";
   if (!mlist.length && !planHas("trader")) h += `<div class="empty glass glow rise"><h2>🔒 ${PT().trader_up}</h2><button class="cta" id="upg">${PT().up}</button></div>`;
   else if (!mlist.length) h += `<div class="empty glass glow rise">${MK[market].th ? `<img src="${MK[market].th}" alt="">` : `<div style="font-size:54px">${MK[market].ic}</div>`}<h2>${tt(T.empty, {m: T.m[market]})}</h2><div>${T.emptySub}</div></div>`;
@@ -3588,7 +3988,7 @@ function patchProg(list){
   }));
 }
 function selectMarket(m){
-  if (!MK[m]) return; market = m; store.set("mk2", m); applyTheme();
+  if (!MK[m]) return; market = m; store.set("mk3", m); applyTheme();
   document.querySelectorAll(".mk button").forEach(x => { x.classList.toggle("on", x.dataset.m === m); if (x.dataset.m === m) x.classList.remove("new"); });
   if (page === "sig") drawFeed();
 }

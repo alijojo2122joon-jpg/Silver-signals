@@ -764,6 +764,9 @@
   .dkc.w b{color:var(--buy)} .dkc.warn{outline:2px solid #f59e0b88;cursor:pointer} .dkc[data-dgo]{cursor:pointer}
   .dcard{padding:14px;border-radius:22px;background:var(--tile,var(--field));box-shadow:var(--raise);margin-bottom:12px;min-width:0} .dcard h4{margin:0 0 8px;font-size:14px}
   .pl.newsg{background:var(--amber-bg);color:var(--amber)}
+  .srcb{font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;background:#e7f1ff;color:#2f6fda}
+  .pmlogo{width:22px;height:22px;border-radius:6px;object-fit:contain;vertical-align:middle;background:#fff} .pmlrow{display:flex;gap:8px;align-items:center} .pmlrow .in{flex:1}
+  .ghostbtn{white-space:nowrap;font-size:12px;font-weight:800;padding:10px 12px;border-radius:14px;background:var(--field);cursor:pointer}
   .qrbox{display:grid;place-items:center;padding:12px;background:#fff;border-radius:18px;margin:8px auto;width:max-content} .qrbox img{width:190px;height:190px;display:block}
   .mcode{letter-spacing:8px;text-align:center;font-size:20px;font-weight:800} .okline{font-size:13px;font-weight:700;color:var(--buy);line-height:1.9;margin:0 0 8px}
   #maxd .chip,#sgopen .chip{border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:800;padding:8px 14px;background:var(--field);color:var(--text)} #maxd .chip.on,#sgopen .chip.on{background:var(--buy-bg);color:var(--buy)}
@@ -797,7 +800,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 /* ===== به‌روزرسانی خودکار نسخه ===== */
-const BUILD = "1794223919";
+const BUILD = "1794287940";
 async function checkVersion(){
   try { const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) return;
     const v = (await r.json()).build; if (v && v !== BUILD) { const k = "reloaded_" + v; if (!sessionStorage.getItem(k)) { sessionStorage.setItem(k, 1); location.reload(); } } } catch {}
@@ -1070,12 +1073,13 @@ function drawPane(){
   if (tab === "prices") { $("pane").innerHTML = `<div class="sec rise"><h3>قیمت‌ها و نرخ‌های زنده</h3><a class="add press" href="index.html?pg=prc" target="_blank" rel="noopener">👁 صفحه‌ی اعضا</a></div>
       <div class="fxadm glass rise" id="fxadm"><span class="spin"></span></div><div id="fxapane"></div>`; loadFxAdmin(); return; }
   $("pane").innerHTML = tab === "signals"
-    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="dashbtn">📊 داشبورد: آمار سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد</button><div id="list"></div>`
+    ? `<div class="sec rise"><h3>سیگنال‌ها</h3><button class="add press" data-act="newSignal">${I.plus}سیگنال جدید</button></div><button class="dashbtn glass press rise" id="dashbtn">📊 داشبورد: آمار سیگنال‌ها · وضعیت داده · ماشین حساب ریسک · گزارش عملکرد</button><button class="dashbtn glass press rise" id="chbtn">📡 کانال‌های تلگرام: سیگنال و اخبار خودکار، کارنامه‌ی هر کانال</button><div id="list"></div>`
     : `<div class="sec rise"><h3>اعضا</h3><button class="add press" data-act="newMember">${I.plus}عضو جدید</button></div><button class="dashbtn glass press rise" id="billbtn">💳 اشتراک‌ها، قیمت پلان‌ها و پرداخت‌های آنلاین</button><button class="dashbtn glass press rise" id="secbtn">🛡 امنیت: ورود دو مرحله‌ای مدیر، محدودیت دستگاه و دستگاه‌های فعال اعضا</button>
        <label class="search glass rise" style="--i:1">${I.search}<input id="q" placeholder="جستجوی نام، ایمیل، شماره، تلگرام یا شهر…" value="${esc(q)}"></label><div id="list"></div>`;
   if ($("billbtn")) $("billbtn").onclick = sheetBilling;
   if ($("secbtn")) $("secbtn").onclick = sheetSecurity;
   if ($("dashbtn")) $("dashbtn").onclick = () => window.open("index.html?pg=dash", "_blank");
+  if ($("chbtn")) $("chbtn").onclick = sheetChannels;
   if ($("q")) $("q").oninput = e => { q = e.target.value; drawList(); };
   drawList();
 }
@@ -1120,7 +1124,7 @@ function drawList(){
       const b = s.type === "buy";
       const c = s.status === "sl" ? "off" : s.status === "closed" || s.status === "expired" ? "mute" : s.auto && s.phase === "waiting" ? "warn" : "on";
       return `<div class="it" data-sig="${s.id}"><span class="av ${b?"buy":"sell"}">${b?I.up:I.down}</span>
-        <div><div class="t num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</div><div class="s"><span class="msym">${(MARKETS[s.market]||MARKETS.xag).sym}</span>${s.tp1!=null?` · هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""} · ${ago(s.created_at)}</div></div>
+        <div><div class="t num">${(MARKETS[s.market]||MARKETS.xag).name} · ${b?"خرید":"فروش"} ${range(s)}</div><div class="s"><span class="msym">${(MARKETS[s.market]||MARKETS.xag).sym}</span>${s.tp1!=null?` · هدف ${fa(s.tp1)}`:""}${s.sl!=null?` · ضرر ${fa(s.sl)}`:""}${s.voice_path?" · 🎙":""} · ${ago(s.created_at)}${s.source ? ` · <span class="srcb">📡 ${esc(s.source_name || s.source.replace(/^tg:/, ""))}</span>` : ""}</div></div>
         <span class="chip ${c}">${s.auto && s.phase === "waiting" ? "⏳ در انتظار ورود" : STATUS[s.status]}${s.auto ? " 🤖" : ""}</span></div>`; }).join("")
       : `<div class="empty"><div class="big">📈</div>هنوز سیگنالی منتشر نکرده‌اید.<br>دکمه‌ی «سیگنال جدید» را بزنید.</div>`}</div>`;
   } else {
@@ -1179,7 +1183,7 @@ const TF = { m15:"اسکالپ 15 دقیقه", h1:"1 ساعته", h4:"نوسان
 /* ===== محتوا: نرخ‌ها، آکادمی، اخبار، آموزش، ویدیو، نظرسنجی ===== */
 const PLACES = { kabul:"کابل (سرای شهزاده)", herat:"هرات", mazar:"مزار شریف", kandahar:"کندهار", jalalabad:"جلال‌آباد" };
 const KINDS = { news:"📰 خبر", event:"🗓 رویداد تقویم", afevent:"🇦🇫 تقویم افغانستان", article:"🧠 تحلیل/آموزش", video:"🎬 ویدیو" };
-const PCATS = { news: ["اقتصاد افغانستان","بانکی و ارزی","طلا و فلزات","بازار جهانی","تجارت و گمرک","سیاست پولی"], article: ["تحلیل طلا","تحلیل نقره","تحلیل دالر/افغانی","فارکس","آموزش","روانشناسی معامله","مدیریت ریسک"] };
+const PCATS = { news: ["اقتصاد افغانستان","اقتصاد جهان","بازارهای مالی","طلا و نقره","دالر و ارزها","تحلیل‌های استاد"], article: ["تحلیل طلا","تحلیل نقره","تحلیل دالر/افغانی","فارکس","آموزش","روانشناسی معامله","مدیریت ریسک"] };
 PCATS.video = PCATS.article;
 const EVST = { upcoming: "⏳ پیش رو", released: "✅ منتشر شد", postponed: "⏸ به تعویق افتاد", cancelled: "✖ لغو شد" };
 const postKind = p => p.kind === "event" && p.country === "af" ? "afevent" : p.kind;
@@ -1302,21 +1306,27 @@ function sheetRates(){
 async function sheetAcademy(){
   const { data } = await sb.from("settings").select("value").eq("key", "academy").maybeSingle();
   const A = data?.value || {};
-  const f = (id, lab, ph = "", area = false) => `<label class="l">${lab}</label>${area ? `<textarea class="in" id="a_${id}" rows="3" placeholder="${ph}">${esc(A[id] || "")}</textarea>` : `<input class="in" id="a_${id}" placeholder="${ph}" value="${esc(A[id] || "")}">`}`;
-  openSheet(`<h2>آکادمی و استاد</h2><p class="hint">نام و عکس استاد از دکمه‌ی 👤 بالا تنظیم می‌شود.</p>
-    ${f("specialty", "تخصص اصلی", "مثلاً: متخصص پرایس اکشن در بازار طلا")}
-    ${f("years", "سابقه", "مثلاً: 12 سال در بازار طلا و ارز")}
-    ${f("certs", "گواهینامه‌ها", "مثلاً: CMT")}
-    ${f("bio", "معرفی کوتاه استاد", "", true)}
-    ${f("name", "نام آکادمی", "Market Analysts")}
-    ${f("founded", "تاریخ تأسیس", "مثلاً: 1398")}
-    ${f("licenses", "مجوزها", "مثلاً: اتحادیه صرافان، وزارت صنعت و تجارت")}
-    ${f("services", "خدمات ویژه", "مثلاً: دوره جامع تحلیل طلا و نقره", true)}
-    <label class="l">شماره واتس‌اپ (با کد کشور)</label><input class="in num" id="a_whatsapp" dir="ltr" placeholder="+93 7xx xxx xxx" value="${esc(A.whatsapp || "")}">
-    <label class="l">آیدی تلگرام</label><input class="in" id="a_telegram" dir="ltr" placeholder="@username" value="${esc(A.telegram || "")}">
+  const f = (id, lab, ph = "", area = false, ltr = false) => `<label class="l">${lab}</label>${area ? `<textarea class="in" id="a_${id}" rows="3" placeholder="${ph}">${esc(A[id] || "")}</textarea>` : `<input class="in" id="a_${id}" ${ltr ? 'dir="ltr"' : ""} placeholder="${ph}" value="${esc(A[id] || "")}">`}`;
+  openSheet(`<h2>درباره ما، معرفی استاد و راه‌های ارتباطی</h2><p class="hint">هر چه اینجا بنویسید همان لحظه در صفحه‌های «درباره ما»، «معرفی استاد» و «راه‌های ارتباطی» (منوی ⋮ اعضا) نمایش داده می‌شود. نام و عکس استاد از دکمه‌ی 👤 بالا تنظیم می‌شود.</p>
+    <h3 class="bh">🏢 درباره ما</h3>
+    ${f("name", "نام مجموعه", "Market Analysts")}${f("tagline", "شعار / معرفی یک‌خطی", "مثلاً: تحلیل تخصصی طلا، نقره و ارز برای صرافان")}
+    ${f("about", "معرفی مجموعه", "", true)}${f("goals", "اهداف", "", true)}${f("activities", "فعالیت‌ها", "", true)}${f("services", "خدمات", "", true)}
+    <div class="two"><div>${f("founded", "سال تأسیس", "مثلاً: 1402")}</div><div>${f("licenses", "مجوزها", "مثلاً: اتحادیه صرافان")}</div></div>
+    <h3 class="bh">👨‍🏫 معرفی استاد</h3>
+    ${f("specialty", "تخصص اصلی", "مثلاً: تحلیلگر بازارهای مالی")}<div class="two"><div>${f("years", "تجربه کاری", "مثلاً: ۱۲ سال")}</div><div>${f("certs", "گواهی‌نامه‌ها", "مثلاً: CMT")}</div></div>
+    ${f("inst_bio", "معرفی کامل استاد", "", true)}${f("education", "سوابق تحصیلی", "", true)}${f("work", "سوابق کاری", "", true)}
+    ${f("expertise", "تخصص‌ها", "", true)}${f("courses", "دوره‌های آموزشی", "", true)}${f("achievements", "فعالیت‌ها و دستاوردها", "", true)}
+    <h3 class="bh">📞 راه‌های ارتباطی</h3>
+    <div class="two"><div>${f("telegram", "تلگرام", "@username", false, true)}</div><div>${f("whatsapp", "واتساپ (با کد کشور)", "+93 7xx xxx xxx", false, true)}</div></div>
+    <div class="two"><div>${f("instagram", "اینستاگرام", "@username", false, true)}</div><div>${f("phone", "شماره تماس", "+93 7xx xxx xxx", false, true)}</div></div>
+    <div class="two"><div>${f("email", "ایمیل", "info@...", false, true)}</div><div>${f("website", "وب‌سایت", "example.com", false, true)}</div></div>
+    <div class="two"><div>${f("facebook", "فیسبوک", "", false, true)}</div><div>${f("youtube", "یوتیوب", "@channel", false, true)}</div></div>
+    ${f("tiktok", "تیک‌تاک", "@username", false, true)}
     <button class="cta press" id="asave">ذخیره</button>`);
+  const KEYS = ["name","tagline","about","goals","activities","services","founded","licenses","specialty","years","certs","inst_bio","education","work","expertise","courses","achievements","telegram","whatsapp","instagram","phone","email","website","facebook","youtube","tiktok"];
   $("asave").onclick = async () => {
-    const v = {}; ["specialty","years","certs","bio","name","founded","licenses","services","whatsapp","telegram"].forEach(k => { const x = $("a_" + k).value.trim(); if (x) v[k] = x; });
+    const v = { ...A }; KEYS.forEach(k => { const x = $("a_" + k).value.trim(); if (x) v[k] = x.slice(0, 3000); else delete v[k]; });
+    if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) return toast("ایمیل درست نیست", true);
     busy($("asave"), true);
     const { error } = await sb.from("settings").upsert({ key: "academy", value: v, updated_at: new Date().toISOString() });
     if (error) { busy($("asave"), false, "ذخیره"); return toast("خطا: " + error.message, true); }
@@ -1587,15 +1597,15 @@ async function sheetBilling(){
   const cnt = c => (profs || []).filter(p => (p.plan || "legacy") === c && new Date(p.expires_at) > Date.now()).length;
   const ST = { pending: ["warn", "در انتظار درگاه"], review: ["warn", "⏳ منتظر تأیید شما"], paid: ["on", "پرداخت‌شده"], failed: ["off", "ناموفق"], expired: ["mute", "منقضی"], rejected: ["off", "رد شد"] };
   const rev = (pays || []).filter(x => x.status === "review");
-  const PV = { hesabpay: "HesabPay (آنلاین)", binance: "Binance", hesabpay_manual: "HesabPay (انتقال دستی)" };
+  const PV = { hesabpay: "HesabPay (آنلاین)", binance: "Binance", hesabpay_manual: "HesabPay (انتقال دستی)", manual: "پرداخت دستی" };
   el.innerHTML = `<div class="bsum"><div><small>درآمد این ماه</small><b class="ltr">${mon.toLocaleString("en-US")} ؋</b></div><div><small>کل درآمد آنلاین</small><b class="ltr">${all.toLocaleString("en-US")} ؋</b></div>
       <div><small>معامله‌گر</small><b>${cnt("trader")}</b></div><div><small>صراف</small><b>${cnt("sarraf")}</b></div><div><small>VIP</small><b>${cnt("vip")}</b></div><div><small>قدیمی (کامل)</small><b>${cnt("legacy")}</b></div></div>
     <h3 class="bh">⏳ پرداخت‌های منتظر تأیید <b>${rev.length}</b></h3>
-    ${rev.length ? rev.map(x => `<div class="bplan brev" data-rid="${x.id}"><div class="bph"><b>${esc(nm[x.user_id] || "—")}</b><span class="chip warn">${PV[x.provider] || x.provider} · منتظر تأیید</span></div>
+    ${rev.length ? rev.map(x => `<div class="bplan brev" data-rid="${x.id}"><div class="bph"><b>${esc(nm[x.user_id] || "—")}</b><span class="chip warn">${esc(x.provider === "manual" ? (x.note || "").split(" · ")[0] || PV.manual : PV[x.provider] || x.provider)} · منتظر تأیید</span></div>
       <div class="hint">${fmtFull(x.created_at)} · ${esc(x.plan_code || "")} · ${x.months} ماه · قیمت پلان <b class="ltr">${Number(x.amount_afn).toLocaleString("en-US")} ؋</b></div>
       <div class="bkv"><span>شناسه تراکنش / Order ID</span><b class="ltr">${esc(x.payer_ref || "—")}</b><span>مبلغ اعلام‌شده</span><b class="ltr">${x.amount_usd != null ? Number(x.amount_usd).toLocaleString("en-US") + " USDT" : x.provider === "hesabpay_manual" ? Number(x.amount_afn).toLocaleString("en-US") + " AFN" : "—"}</b>${x.note ? `<span>یادداشت عضو</span><b>${esc(x.note)}</b>` : ""}</div>
       ${x.proof_path ? `<img class="bproof" data-proof="${esc(x.proof_path)}" alt="رسید">` : `<p class="hint">رسید تصویری ارسال نشده.</p>`}
-      <p class="hint">پیش از تأیید، در ${x.provider === "binance" ? "اپ بایننس" : "حساب HesabPay"} خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
+      <p class="hint">پیش از تأیید، در حساب ${x.provider === "binance" ? "بایننس" : x.provider === "manual" ? esc((x.note || "").split(" · ")[0] || "مربوطه") : "HesabPay"} خود دریافت همین شناسه و مبلغ را بررسی کنید.</p>
       <div class="fxabtn"><button data-rv="ok">✅ تأیید و فعال‌سازی</button><button data-rv="no" class="red">✖ رد</button></div></div>`).join("") : `<p class="hint">پرداختی منتظر تأیید نیست.</p>`}
     <h3 class="bh">⚙️ تنظیمات درگاه HesabPay</h3>
     <div class="bplan" id="hpset"><div class="hpst" id="hpst"><span class="spin"></span></div>
@@ -1608,19 +1618,7 @@ async function sheetBilling(){
       <div class="hpwh"><code class="ltr" id="hp_wh">${SUPABASE_URL}/functions/v1/pay-webhook</code><button type="button" id="hp_cp">کپی</button></div>
       <div class="fxabtn"><button id="hp_save">ذخیره</button><button id="hp_test">🔌 آزمایش اتصال</button><button id="hp_del" class="red">حذف کلید</button></div>
       <div class="hint" id="hp_res"></div></div>
-    <h3 class="bh">⚙️ HesabPay — انتقال دستی (بدون کلید API)</h3>
-    <div class="bplan" id="hmset"><div class="tgl2"><label class="swt"><input type="checkbox" id="hm_on" ${HM.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (عضو به حساب شما انتقال می‌دهد و شما تأیید می‌کنید)</span></div>
-      <div class="two"><div><label class="l">شماره / شناسه حساب HesabPay</label><input class="in ltr" id="hm_acc" maxlength="60" value="${esc(HM.account || "")}"></div><div><label class="l">نام صاحب حساب</label><input class="in" id="hm_name" maxlength="80" value="${esc(HM.name || "")}"></div></div>
-      <label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="hm_link" maxlength="300" value="${esc(HM.link || "")}" placeholder="https://">
-      <label class="l">راهنما برای عضو</label><textarea class="in" id="hm_note" rows="2" maxlength="500">${esc(HM.note || "")}</textarea>
-      <div class="fxabtn"><button id="hm_save">ذخیره تنظیمات HesabPay دستی</button></div></div>
-    <h3 class="bh">⚙️ تنظیمات پرداخت بایننس</h3>
-    <div class="bplan" id="bnset"><div class="tgl2"><label class="swt"><input type="checkbox" id="bn_on" ${BN.enabled ? "checked" : ""}><i></i></label><span>فعال باشد (اعضا گزینه‌ی Binance را ببینند)</span></div>
-      <div class="two"><div><label class="l">Binance Pay ID</label><input class="in ltr" id="bn_id" maxlength="40" value="${esc(BN.pay_id || "")}"></div><div><label class="l">نام حساب</label><input class="in" id="bn_name" maxlength="80" value="${esc(BN.name || "")}"></div></div>
-      <label class="l">آدرس کیف پول USDT (اختیاری)</label><input class="in ltr" id="bn_addr" maxlength="120" value="${esc(BN.address || "")}">
-      <div class="two"><div><label class="l">شبکه</label><input class="in ltr" id="bn_net" maxlength="30" value="${esc(BN.network || "TRC20")}"></div><div><label class="l">لینک پرداخت (اختیاری)</label><input class="in ltr" id="bn_link" maxlength="300" value="${esc(BN.link || "")}" placeholder="https://"></div></div>
-      <label class="l">راهنما برای عضو</label><textarea class="in" id="bn_note" rows="2" maxlength="500">${esc(BN.note || "")}</textarea>
-      <div class="fxabtn"><button id="bn_save">ذخیره تنظیمات بایننس</button></div></div>
+    <h3 class="bh">💳 مدیریت روش‌های پرداخت</h3><div id="pmadm"><span class="spin"></span></div>
     <h3 class="bh">پلان‌ها و قیمت‌ها</h3>
     ${(plans || []).map(p => `<div class="bplan" data-pid="${p.id}"><div class="bph"><b>${esc(p.name_fa)}</b><span class="chip ${p.active ? "on" : "mute"}">${p.active ? "فعال" : "غیرفعال"}</span></div>
       <div class="two"><div><label class="l">قیمت (افغانی)</label><input class="in num" data-f="price_afn" inputmode="decimal" dir="ltr" value="${p.price_afn}"></div><div><label class="l">مدت (ماه)</label><input class="in num" data-f="months" inputmode="numeric" dir="ltr" value="${p.months}"></div></div>
@@ -1651,14 +1649,7 @@ async function sheetBilling(){
         : d?.error === "gateway_not_configured" ? "⚠️ اول کلید API را ذخیره کنید."
         : `❌ اتصال ناموفق${d?.http ? " (HTTP " + d.http + ")" : ""}${d?.message ? ": " + esc(String(d.message)) : ""}. کلید یا حالت (آزمایشی/واقعی) را بررسی کنید — کلید Sandbox فقط در حالت آزمایشی کار می‌کند.`;
     } catch (e) { r.textContent = "خطا: " + e.message; } b.disabled = false; };
-  $("hm_save").onclick = async () => { const v = { enabled: $("hm_on").checked, account: $("hm_acc").value.trim(), name: $("hm_name").value.trim(), link: $("hm_link").value.trim(), note: $("hm_note").value.trim() };
-    if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
-    if (v.enabled && !v.account && !v.link) return toast("شماره حساب یا لینک پرداخت لازم است", true);
-    const { error } = await sb.from("settings").upsert({ key: "pay_hesabpay_manual", value: v, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true); toast("ذخیره شد ✓"); };
-  $("bn_save").onclick = async () => { const v = { enabled: $("bn_on").checked, pay_id: $("bn_id").value.trim(), name: $("bn_name").value.trim(), address: $("bn_addr").value.trim(), network: $("bn_net").value.trim(), link: $("bn_link").value.trim(), note: $("bn_note").value.trim() };
-    if (v.link && !/^https:\/\//.test(v.link)) return toast("لینک باید با https:// شروع شود", true);
-    if (v.enabled && !v.pay_id && !v.address) return toast("حداقل Pay ID یا آدرس کیف پول لازم است", true);
-    const { error } = await sb.from("settings").upsert({ key: "pay_binance", value: v, updated_at: new Date().toISOString() }); if (error) return toast("خطا: " + error.message, true); toast("تنظیمات بایننس ذخیره شد ✓"); };
+  pmAdmin();
   el.addEventListener("click", async e => { const f = e.target.closest("[data-bf]"); if (f) { billF = f.dataset.bf; return sheetBilling(); }
     const r = e.target.closest("[data-rv]"); if (!r) return; const id = r.closest("[data-rid]").dataset.rid, ok = r.dataset.rv === "ok";
     let reason = null; if (ok) { if (!confirm("دریافت این مبلغ را در بایننس بررسی کرده‌اید؟ با تأیید، اشتراک عضو فعال می‌شود.")) return; } else { reason = prompt("دلیل رد (برای عضو نمایش داده می‌شود):", "پرداخت با این شناسه در حساب بایننس دریافت نشد."); if (reason === null) return; }
@@ -2567,6 +2558,78 @@ async function sheetHealth(){
     dashX.at = 0; loadTicker(true); loadFxAdmin(); await draw(); };
 }
 
+
+/* ===== مدیریت روش‌های پرداخت ===== */
+async function pmAdmin(){
+  const box = $("pmadm"); if (!box) return;
+  const { data: ms, error } = await sb.from("payment_methods").select("*").order("sort").order("id");
+  if (error) { box.innerHTML = `<p class="hint">خطا: ${esc(error.message)}</p>`; return; }
+  const card = m => `<div class="bplan pmadm" data-pm="${m.id}"><div class="bph"><b>${m.logo_url ? `<img class="pmlogo" src="${esc(m.logo_url)}" alt="">` : "💳"} ${esc(m.name)}</b><span class="chip ${m.active ? "on" : "mute"}">${m.active ? "فعال · اعضا می‌بینند" : "غیرفعال"}</span></div>
+    <div class="two"><div><label class="l">نام روش پرداخت</label><input class="in" data-f="name" maxlength="60" value="${esc(m.name)}"></div><div><label class="l">واحد پول</label><input class="in ltr" data-f="currency" maxlength="10" value="${esc(m.currency || "")}" placeholder="USDT / USD / AFN"></div></div>
+    <label class="l">لینک پرداخت (Pay Now)</label><input class="in ltr" data-f="link" maxlength="400" value="${esc(m.link || "")}" placeholder="https://">
+    <label class="l">آدرس حساب / شناسه پرداخت (اعضا کپی می‌کنند)</label><input class="in ltr" data-f="account" maxlength="200" value="${esc(m.account || "")}">
+    <label class="l">توضیحات برای عضو</label><textarea class="in" data-f="description" rows="2" maxlength="600">${esc(m.description || "")}</textarea>
+    <div class="two"><div><label class="l">مبلغ (اختیاری)</label><input class="in num ltr" data-f="amount" inputmode="decimal" value="${m.amount ?? ""}"></div><div><label class="l">ترتیب نمایش</label><input class="in num ltr" data-f="sort" inputmode="numeric" value="${m.sort ?? 100}"></div></div>
+    <label class="l">لوگو</label><div class="pmlrow"><input class="in ltr" data-f="logo_url" maxlength="400" value="${esc(m.logo_url || "")}" placeholder="https://… یا بارگذاری"><label class="ghostbtn">📷 بارگذاری<input type="file" accept="image/png,image/jpeg,image/webp" hidden data-logo="1"></label></div>
+    <div class="fxabtn"><button data-pa="save">ذخیره</button><button data-pa="act">${m.active ? "غیرفعال کن" : "فعال کن"}</button><button data-pa="del" class="red">حذف</button></div></div>`;
+  box.innerHTML = `<p class="hint">روش‌های فعال در صفحه‌ی «پرداخت» اعضا با لوگو، توضیح، مبلغ و دکمه‌ی «Pay Now» نمایش داده می‌شوند. عضو با دکمه به لینک رسمی شما می‌رود و بعد شماره‌ی تراکنش و عکس رسید را می‌فرستد؛ کلیک روی لینک پرداخت حساب نمی‌شود و اشتراک فقط بعد از تأیید شما فعال می‌شود.</p>
+    ${(ms || []).map(card).join("")}<button class="cta press" id="pm_new">＋ افزودن روش پرداخت جدید</button>`;
+  $("pm_new").onclick = async () => { const max = Math.max(0, ...(ms || []).map(x => x.sort || 0));
+    const { error } = await sb.from("payment_methods").insert({ name: "روش جدید", active: false, sort: max + 10, currency: "USD" }); if (error) return toast("خطا: " + error.message, true); pmAdmin(); };
+  box.querySelectorAll("[data-logo]").forEach(inp => inp.onchange = async e => { const f = e.target.files[0]; if (!f) return; if (f.size > 2e6) return toast("حداکثر ۲ مگابایت", true);
+    const card2 = inp.closest("[data-pm]"), path = `pm-${card2.dataset.pm}-${Date.now()}.${(f.type.split("/")[1] || "png").replace("jpeg", "jpg")}`;
+    const up = await sb.storage.from("avatars").upload(path, f, { contentType: f.type, upsert: true }); if (up.error) return toast("بارگذاری نشد: " + up.error.message, true);
+    card2.querySelector('[data-f="logo_url"]').value = sb.storage.from("avatars").getPublicUrl(path).data.publicUrl; toast("لوگو بارگذاری شد؛ «ذخیره» را بزنید"); });
+  box.onclick = async e => { const b = e.target.closest("[data-pa]"); if (!b) return; const c = b.closest("[data-pm]"), id = Number(c.dataset.pm), m = (ms || []).find(x => x.id === id); if (!m) return;
+    const g = k => c.querySelector(`[data-f="${k}"]`).value.trim();
+    if (b.dataset.pa === "del") { if (!confirm(`روش «${m.name}» حذف شود؟ پرداخت‌های قبلی باقی می‌مانند.`)) return;
+      const { error } = await sb.from("payment_methods").delete().eq("id", id); if (error) return toast("خطا: " + error.message, true); toast("حذف شد"); return pmAdmin(); }
+    let patch;
+    if (b.dataset.pa === "act") { if (!m.active && !m.link && !m.account) return toast("اول لینک پرداخت یا آدرس حساب را وارد و ذخیره کنید", true); patch = { active: !m.active }; }
+    else { patch = { name: g("name"), currency: g("currency").toUpperCase() || null, link: g("link") || null, account: g("account") || null, description: g("description") || null,
+      amount: g("amount") ? Number(toEnA(g("amount")).replace(/[^0-9.]/g, "")) : null, sort: parseInt(toEnA(g("sort"))) || 100, logo_url: g("logo_url") || null };
+      if (!patch.name) return toast("نام لازم است", true);
+      if (patch.link && !/^https:\/\//.test(patch.link)) return toast("لینک پرداخت باید با https:// شروع شود", true);
+      if (patch.logo_url && !/^https:\/\//.test(patch.logo_url)) return toast("آدرس لوگو باید با https:// شروع شود", true); }
+    patch.updated_at = new Date().toISOString(); b.disabled = true;
+    const { error } = await sb.from("payment_methods").update(patch).eq("id", id); b.disabled = false;
+    if (error) return toast("خطا: " + error.message, true); toast("ذخیره شد ✓"); pmAdmin(); };
+}
+
+/* ===== کانال‌های تلگرام (سیگنال و اخبار خودکار) ===== */
+async function sheetChannels(){
+  openSheet(`<h2>📡 کانال‌های تلگرام</h2><p class="hint">سیستم هر دقیقه پست‌های عمومی این کانال‌ها را می‌خواند. سیگنال‌هایی که نماد، جهت، ورود، حد ضرر و هدف دارند و به قیمت لحظه‌ای نزدیک‌اند، خودکار با نام کانال برای اعضا منتشر و با قیمت زنده دنبال می‌شوند. پست‌های مربوط به بازار ایران، تبلیغات و نتایج ادعایی کنار گذاشته می‌شوند. اعلان فوری فقط برای سیگنال‌های خود استاد فرستاده می‌شود.</p><div id="chb"><span class="spin"></span></div>`);
+  const draw = async () => {
+    const [{ data: ch }, { data: sg }, { data: ps }] = await Promise.all([sb.from("ext_channels").select("*").order("created_at"),
+      sb.from("signals").select("id,source,status,phase").not("source", "is", null).limit(1000),
+      sb.from("ext_posts").select("channel,kind,reason,created_at").gt("created_at", new Date(Date.now() - 864e5).toISOString()).limit(2000)]);
+    const el = $("chb"); if (!el) return;
+    const R = { iran: "مربوط به ایران", ad: "تبلیغ", old: "قدیمی", no_symbol: "بدون نماد", no_entry: "بدون ورود", no_stop: "بدون حد ضرر", no_target: "بدون هدف", far_from_price: "دور از قیمت لحظه‌ای", levels_inconsistent: "سطوح نامعتبر", no_side: "بدون جهت", no_live_price: "قیمت زنده نبود" };
+    el.innerHTML = (ch || []).map(c => { const S = (sg || []).filter(x => x.source === "tg:" + c.handle), done = S.filter(x => x.phase === "done"), w = done.filter(x => /^tp/.test(x.status)).length, l = done.filter(x => x.status === "sl").length;
+      const P = (ps || []).filter(x => x.channel === c.handle), sk = {}; P.filter(x => x.kind === "skip").forEach(x => sk[x.reason] = (sk[x.reason] || 0) + 1);
+      return `<div class="bplan" data-ch="${esc(c.handle)}"><div class="bph"><b>${esc(c.name)} <a class="ltr" href="https://t.me/${esc(c.handle)}" target="_blank" rel="noopener">@${esc(c.handle)}</a></b><span class="chip ${c.enabled ? (c.last_error ? "warn" : "on") : "mute"}">${c.enabled ? (c.last_error ? "خطا" : "فعال") : "خاموش"}</span></div>
+        <div class="bsum"><div><small>سیگنال‌ها</small><b>${S.length}</b></div><div><small>موفق</small><b style="color:var(--buy)">${w}</b></div><div><small>ناموفق</small><b style="color:var(--sell)">${l}</b></div><div><small>درصد موفقیت</small><b>${w + l ? Math.round(w / (w + l) * 100) + "%" : "—"}</b></div><div><small>باز</small><b>${S.length - done.length}</b></div></div>
+        <div class="tgl2"><label class="swt"><input type="checkbox" data-t="enabled" ${c.enabled ? "checked" : ""}><i></i></label><span>کانال فعال باشد</span></div>
+        <div class="tgl2"><label class="swt"><input type="checkbox" data-t="take_signals" ${c.take_signals ? "checked" : ""}><i></i></label><span>سیگنال‌هایش برای اعضا منتشر شود</span></div>
+        <div class="tgl2"><label class="swt"><input type="checkbox" data-t="take_news" ${c.take_news ? "checked" : ""}><i></i></label><span>اخبار اقتصادی‌اش در بخش اخبار بیاید</span></div>
+        <p class="hint">آخرین بررسی: ${c.last_run ? ago(c.last_run) : "هنوز نه"}${c.last_error ? " · ⚠️ " + esc(c.last_error) : ""} · ۲۴ ساعت اخیر: ${P.length} پست، ${P.filter(x => x.kind === "signal").length} سیگنال، ${P.filter(x => x.kind === "news").length} خبر${Object.keys(sk).length ? " · کنارگذاشته: " + Object.entries(sk).map(([k, n]) => `${R[k] || k} ${n}`).join("، ") : ""}</p>
+        <div class="fxabtn"><button data-cd="1" class="red">حذف کانال</button></div></div>`; }).join("")
+      + `<h3 class="bh">＋ افزودن کانال عمومی</h3><div class="bplan"><div class="two"><div><label class="l">آیدی کانال</label><input class="in ltr" id="ch_h" placeholder="@channel یا t.me/channel"></div><div><label class="l">نام نمایشی</label><input class="in" id="ch_n" maxlength="60"></div></div>
+        <p class="hint">فقط کانال‌های عمومی که بدون ورود در t.me/s/… دیده می‌شوند.</p><button class="cta press" id="ch_add">افزودن</button></div>
+        <button class="ghost2" id="ch_run" style="margin-top:10px">🔄 بررسی فوری همه‌ی کانال‌ها</button>`;
+  };
+  await draw();
+  $("chb").onchange = async e => { const t = e.target.closest("[data-t]"); if (!t) return; const h = t.closest("[data-ch]").dataset.ch;
+    const { error } = await sb.from("ext_channels").update({ [t.dataset.t]: t.checked }).eq("handle", h); if (error) { t.checked = !t.checked; return toast("خطا: " + error.message, true); } toast("ذخیره شد ✓"); draw(); };
+  $("chb").onclick = async e => {
+    if (e.target.closest("#ch_add")) { const h = $("ch_h").value.trim().replace(/^@|^https?:\/\/t\.me\/(s\/)?/g, "").replace(/\/.*$/, ""), n = $("ch_n").value.trim() || h;
+      if (!/^[A-Za-z0-9_]{4,40}$/.test(h)) return toast("آیدی کانال درست نیست", true);
+      const { error } = await sb.from("ext_channels").insert({ handle: h, name: n }); if (error) return toast("خطا: " + error.message, true); toast("اضافه شد ✓"); return draw(); }
+    if (e.target.closest("#ch_run")) { const b = e.target.closest("#ch_run"); b.disabled = true; try { await fnFetch("tg-signals"); } catch {} b.disabled = false; toast("بررسی شد"); return draw(); }
+    const d = e.target.closest("[data-cd]"); if (d) { const h = d.closest("[data-ch]").dataset.ch; if (!confirm(`کانال @${h} حذف شود؟ سیگنال‌های قبلی باقی می‌مانند.`)) return;
+      const { error } = await sb.from("ext_channels").delete().eq("handle", h); if (error) return toast("خطا: " + error.message, true); draw(); }
+  };
+}
 /* ===== اخبار خودکار (همان فید بخش اعضا) ===== */
 async function sheetAutoNews(){
   openSheet(`<h2>📡 اخبار خودکار</h2><p class="hint">همین اخبار در بخش «آکادمی › اخبار» برای اعضا نمایش داده می‌شود و هر چند دقیقه خودکار از منابع به‌روز می‌شود. خبرهای انگلیسی بعد از ترجمه به فارسی اضافه می‌شوند.</p>
